@@ -17,7 +17,7 @@ main_dict = {}
 SMOOTH_SIZE = 1
 LOOP_BYPASS = 3
 MIN_WIN = 20
-
+SECONDARY_MINIMA_THRESHOLD = 10
 
 def MakeHydrophobicityGrade():
     global hydrophobicity_polyval
@@ -143,36 +143,6 @@ def UniprotParser():
                     break
 
 
-# def CalculateWindowGrades():
-#     ### go over all 22AA windows in all protein sequecnes in main_dict, and calculate relevant
-#     ### hydrophobicity grades
-#     global window_grades
-#     for protein in main_dict:
-#         full_grades = []
-#         third_grades = []
-#         two_thirds_grades = []
-#         full_grades_inverse = []
-#         third_grades_inverse = []
-#         two_thirds_grades_inverse = []
-#         starters = []
-#         window_grades[protein] = {}
-#         for first in range(0, len(main_dict[protein]['sequence']) - 22):
-#             full_grades.append(hydrophobicity_grade_full(main_dict[protein]['sequence'][first:first+22]))
-#             full_grades_inverse.append(hydrophobicity_grade_full(main_dict[protein]['sequence'][first:first+22][::-1]))
-#             third_grades.append(hydrophobicity_grade_third(main_dict[protein]['sequence'][first:first+22]))
-#             third_grades_inverse.append(hydrophobicity_grade_third(main_dict[protein]['sequence'][first:first+22][::-1]))
-#             two_thirds_grades.append(hydrophobicity_grade_two_third((main_dict[protein]['sequence'][first:first+22])))
-#             two_thirds_grades_inverse.append(hydrophobicity_grade_two_third((main_dict[protein]['sequence'][first:first+22][::-1])))
-#             starters.append(first)
-#         window_grades[protein]['full_grades'] = full_grades
-#         window_grades[protein]['full_grades_inverse'] = full_grades_inverse
-#         window_grades[protein]['third_grades'] = third_grades
-#         window_grades[protein]['third_grades_inverse'] = third_grades_inverse
-#         window_grades[protein]['two_thirds_grades'] = two_thirds_grades
-#         window_grades[protein]['two_thirds_grades_inverse'] = two_thirds_grades_inverse
-#         window_grades[protein]['starters'] = starters
-
-
 def WriteDataSetToTSV(file):
     out = open(file, 'a')
     out.write('name\tsequence\ttransmem\tfull_window_grades\tthird_window_grades\ttwo_thirds_window_grades\tstarters\tfull_grades_inverse\tthird_grades_inverse\ttwo_thirds_grades_inverse\n')
@@ -244,8 +214,9 @@ def WindowGradesForSingleSequence(seq, name='default'):
     return window_grades_single_chain
 
 
-def PymolMark(name, minima_tuples):
+def PymolMark(name, minima_tuples, sec_tuples=False):
     print minima_tuples
+    print sec_tuples
     file = '/Users/jonathan/Desktop/test.pml'
     with open(file, 'wa+') as f:
         f.writelines('load ' + name + '.pdb,' + name + '\n')
@@ -255,6 +226,13 @@ def PymolMark(name, minima_tuples):
             f.writelines('select TM' + str(i) + ', ' + name + ' and resi ' + str(TM[0]) + '-' + str(TM[0]+TM[1]) + '\n')
             f.writelines('color red, TM' + str(i) + '\n')
             i += 1
+        i = 1
+        if sec_tuples:
+            for TM in sec_tuples:
+                print '\n\nASSAF', TM[0], TM[1], '\n\n'
+                f.writelines('select TM_S' + str(i) + ', ' + name + ' and resi ' + str(TM[0]) + '-' + str(TM[0]+TM[1]) + '\n')
+                f.writelines('color blue, TM_S' + str(i) + '\n')
+                i += 1
     subprocess.call(['/opt/local/bin/pymol', file])
 
 
@@ -363,6 +341,32 @@ def LocalMinima(grds, wins):
     return minimas
 
 
+def SecondaryMinimas(grds, minimas, wins):
+    sec_minimas = np.empty(shape=(6, len(grds[0])))
+    sec_minimas[:] = np.NAN
+    bound = []
+    blocked = []
+    for minima in minimas:
+        [blocked.append(int(x)) for x in range(minima[0], minima[0]+minima[1]+1)]
+    point = 0
+    while point < len(grds[0]):
+        print point, len(grds[0]), len(wins)
+        if not any(x in blocked for x in range(point, point+int(wins[point]))):
+            bound.append(point)
+        else:
+            if len(bound) != 0:
+                bound_min = np.min(grds[:, bound[0]:bound[-1]])
+                if bound_min <= SECONDARY_MINIMA_THRESHOLD:
+                    min_ind = np.where(grds == bound_min)
+                    sec_minimas[min_ind[0], min_ind[1]] = bound_min
+                bound = []
+                for minima in minimas:
+                    if minima[0] <= point+wins[point] < minima[0]+minima[1]:
+                        point = minima[0]+minima[1]
+        point += 1
+    return sec_minimas
+
+
 def PlotSinglePeptideWindows(grades):
     grd_smh = np.empty(shape=(6, len(grades['full_grades'])))
     win_smh = np.empty(shape=(6, len(grades['full_grades'])))
@@ -382,7 +386,9 @@ def PlotSinglePeptideWindows(grades):
     # print minimas
 
     minima_tuples = MinimaTuples(minimas, win_of_min)
-    PymolMark(grades['name'], minima_tuples)
+    minimas_secondary = SecondaryMinimas(grd_smh, minima_tuples, win_of_min)
+    sec_minima_tuples = MinimaTuples(minimas_secondary, win_of_min)
+    PymolMark(grades['name'], minima_tuples, sec_minima_tuples)
 
     plot_array = np.empty(shape=[6, len(grades['starters'])])
     plot_array[:] = np.NAN
@@ -405,6 +411,13 @@ def PlotSinglePeptideWindows(grades):
     twm = ax1.scatter(grades['starters'], minimas[4], s=120, c='b', marker='D')
     twmi = ax1.scatter(grades['starters'], minimas[5], s=120, c='b', marker='x')
 
+    fsm = ax1.scatter(grades['starters'], minimas_secondary[0], s=200, c='k', marker='8')
+    fsmi = ax1.scatter(grades['starters'], minimas_secondary[1], s=200, c='k', marker='s')
+    tsm = ax1.scatter(grades['starters'], minimas_secondary[2], s=200, c='r', marker='8')
+    tsmi = ax1.scatter(grades['starters'], minimas_secondary[3], s=200, c='r', marker='s')
+    twsm = ax1.scatter(grades['starters'], minimas_secondary[4], s=200, c='b', marker='8')
+    twsmi = ax1.scatter(grades['starters'], minimas_secondary[5], s=200, c='b', marker='s')
+
     ax1.plot(grades['starters'], [0]*len(grades['starters']), 'k--')
     for minima in minima_tuples:
         ax1.plot((minima[0], minima[0]), (-50, 50), 'k--')
@@ -418,12 +431,10 @@ def PlotSinglePeptideWindows(grades):
     ax1.set_xlabel('Window')
     ax1.set_ylabel('ddG')
     # ax2.set_ylabel('Window Length')
-    ax1.legend((f, fi, t, ti, tw, twi, fm, fmi, tm, tmi, twm, twmi), ('Full', 'Full -1', 'Third', 'Third -1',
-                                                                      'Two-Thirds', 'Two-Thirds -1', 'full minima',
-                                                                      'full -1 minima', 'third minima',
-                                                                      'third -1 minima', 'two thirds minima',
-                                                                      'two thirds -1 minima'),
-               scatterpoints=1, ncol=6, loc='lower left')
+    ax1.legend((f, fi, t, ti, tw, twi, fm, fmi, tm, tmi, twm, twmi, fsm, fsmi, tsm, tsmi, twsm, twsmi),
+               ('Full', 'Full -1', 'Third', 'Third -1', 'Two-Thirds', 'Two-Thirds -1', 'Full minima', 'Full -1 minima',
+                'Third minima', 'Third -1 minima', 'Two Thirds minima', 'Two Thirds -1 minima', 'Full SM', 'Full -1 SM',
+                'Third SM', 'Third -1 SM', 'Two Thirds SM', 'Two Thirds -1 SM'), scatterpoints=1, ncol=6, loc='lower left')
     plt.suptitle(grades['name']+' plot with smooth '+str(SMOOTH_SIZE)+' and loop-bypass '+str(LOOP_BYPASS), fontsize=20)
     plt.show()
 
@@ -470,10 +481,10 @@ MakeHydrophobicityGrade()
 # UniprotParser()
 # CalculateWindowGrades()
 # WriteDataSetToTSV('/Users/jonathan/Desktop/python_temp.txt')
-# ss_grades = WindowGradesForSingleSequence('MNGTEGPNFYVPFSNKTGVVRSPFEAPQYYLAEPWQFSMLAAYMFLLIMLGFPINFLTLYVTVQHKKLRTPLNYILLNLAVADLFMVFGGFTTTLYTSLHGYFVFGPTGCNLEGFFATLGGEIALWSLVVLAIERYVVVCKPMSNFRFGENHAIMGVAFTWVMALACAAPPLVGWSRYIPEGMQCSCGIDYYTPHEETNNESFVIYMFVVHFIIPLIVIFFCYGQLVFTVKEAAAQQQESATTQKAEKEVTRMVIIMVIAFLICWLPYAGVAFYIFTHQGSDFGPIFMTIPAFFAKTSAVYNPVIYIMMNKQFRNCMVTTLCCGKN', '4j4q')
+ss_grades = WindowGradesForSingleSequence('MNGTEGPNFYVPFSNKTGVVRSPFEAPQYYLAEPWQFSMLAAYMFLLIMLGFPINFLTLYVTVQHKKLRTPLNYILLNLAVADLFMVFGGFTTTLYTSLHGYFVFGPTGCNLEGFFATLGGEIALWSLVVLAIERYVVVCKPMSNFRFGENHAIMGVAFTWVMALACAAPPLVGWSRYIPEGMQCSCGIDYYTPHEETNNESFVIYMFVVHFIIPLIVIFFCYGQLVFTVKEAAAQQQESATTQKAEKEVTRMVIIMVIAFLICWLPYAGVAFYIFTHQGSDFGPIFMTIPAFFAKTSAVYNPVIYIMMNKQFRNCMVTTLCCGKN', '4j4q')
 # ss_grades = WindowGradesForSingleSequence('TGRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVPAIAFTMYLSMLLGYGLTMVPFGGEQNPIYWARYADWLFTTPLLLLDLALLVDADQGTILALVGADGIMIGTGLVGALTKVYSYRFVWWAISTAAMLYILYVLFFGFSMRPEVATFKVLRNVTVVLWSAYPVVWLIGSEGAGIVPLNIETLLFMVLDVSAKVGFGLILLRSRAIFG', '1c3w')
 # ss_grades = WindowGradesForSingleSequence('MELEEDLKGRADKNFSKMGKKSKKEKKEKKPAVSVLTMFRYAGWLDRLYMLVGTLAAIIHGVALPLMMLIFGDMTDSFASVGNVSKNSTNMSEADKRAMFAKLEEEMTTYAYYYTGIGAGVLIVAYIQVSFWCLAAGRQIHKIRQKFFHAIMNQEIGWFDVHDVGELNTRLTDDVSKINEGIGDKIGMFFQAMATFFGGFIIGFTRGWKLTLVILAISPVLGLSAGIWAKILSSFTDKELHAYAKAGAVAEEVLAAIRTVIAFGGQKKELERYNNNLEEAKRLGIKKAITANISMGAAFLLIYASYALAFWYGTSLVISKEYSIGQVLTVFFSVLIGAFSVGQASPNIEAFANARGAAYEVFKIIDNKPSIDSFSKSGHKPDNIQGNLEFKNIHFSYPSRKEVQILKGLNLKVKSGQTVALVGNSGCGKSTTVQLMQRLYDPLDGMVSIDGQDIRTINVRYLREIIGVVSQEPVLFATTIAENIRYGREDVTMDEIEKAVKEANAYDFIMKLPHQFDTLVGERGAQLSGGQKQRIAIARALVRNPKILLLDEATSALDTESEAVVQAALDKAREGRTTIVIAHRLSTVRNADVIAGFDGGVIVEQGNHDELMREKGIYFKLVMTQTAGNEIELGNEACKSKDEIDNLDMSSKDSGSSLIRRRSTRKSICGPHDQDRKLSTKEALDEDVPPASFWRILKLNSTEWPYFVVGIFCAIINGGLQPAFSVIFSKVVGVFTNGGPPETQRQNSNLFSLLFLILGIISFITFFLQGFTFGKAGEILTKRLRYMVFKSMLRQDVSWFDDPKNTTGALTTRLANDAAQVKGATGSRLAVIFQNIANLGTGIIISLIYGWQLTLLLLAIVPIIAIAGVVEMKMLSGQALKDKKELEGSGKIATEAIENFRTVVSLTREQKFETMYAQSLQIPYRNAMKKAHVFGITFSFTQAMMYFSYAACFRFGAYLVTQQLMTFENVLLVFSAIVFGAMAVGQVSSFAPDYAKATVSASHIIRIIEKTPEIDSYSTQGLKPNMLEGNVQFSGVVFNYPTRPSIPVLQGLSLEVKKGQTLALVGSSGCGKSTVVQLLERFYDPMAGSVFLDGKEIKQLNVQWLRAQLGIVSQEPILFDCSIAENIAYGDNSRVVSYEEIVRAAKEANIHQFIDSLPDKYNTRVGDKGTQLSGGQKQRIAIARALVRQPHILLLDEATSALDTESEKVVQEALDKAREGRTCIVIAHRLSTIQNADLIVVIQNGKVKEHGTHQQLLAQKGIYFSMVSVQAGAKRSYVHH', '3g61')
-ss_grades = WindowGradesForSingleSequence('GRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVPAIAFTMYLSMLLGYGLTMVPFGGEQNPIYWARYADWLFTTPLLLLDLALLVDADQGTILALVGADGIMIGTGLVGALTKVYSYRFVWWAISTAAMLYILYVLVASTFKVLRNVTVVLWSAYPVVWLIGSEGAGIVPLNIETLLFMVLDVSAKVGFGLILLRSRA', '1BRX')
+# ss_grades = WindowGradesForSingleSequence('GRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVPAIAFTMYLSMLLGYGLTMVPFGGEQNPIYWARYADWLFTTPLLLLDLALLVDADQGTILALVGADGIMIGTGLVGALTKVYSYRFVWWAISTAAMLYILYVLVASTFKVLRNVTVVLWSAYPVVWLIGSEGAGIVPLNIETLLFMVLDVSAKVGFGLILLRSRA', '1BRX')
 # WriteSingleSeqToTSV(ss_grades, '/Users/jonathan/Desktop/bassaf_seq.txt')
 # WriteSingleSeqToTSVusingCSV(ss_grades, '/Users/jonathan/Desktop/4j4q_win_gds.csv')
 
