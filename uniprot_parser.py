@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import csv
 import math
 import subprocess
+# import os
 
 # MEMEBRANE_RANGE = range(-15, 15, 30 / 21)
 MEMBRANE_FULL = range(0, 35)
@@ -189,6 +190,7 @@ def PymolMark(name, minima_tuples, sec_tuples=False):
     file = '/Users/jonathan/Desktop/test.pml'
     with open(file, 'wa+') as f:
         f.writelines('load ' + name + '.pdb,' + name + '\n')
+        f.writelines('cmd.show_as("cartoon", "all")\n')
         # f.writelines('fetch ' + name + ',' + name + '\n')
         i = 1
         for TM in minima_tuples:
@@ -201,7 +203,7 @@ def PymolMark(name, minima_tuples, sec_tuples=False):
                 f.writelines('select TM_S' + str(i) + ', ' + name + ' and resi ' + str(TM[0]) + '-' + str(TM[0]+TM[1]) + '\n')
                 f.writelines('color blue, TM_S' + str(i) + '\n')
                 i += 1
-    subprocess.call(['/opt/local/bin/pymol -q', file])
+    subprocess.call(['/opt/local/bin/pymol', '-q', file])
 
 
 def MinimaTuples(min_array, wins):
@@ -323,7 +325,6 @@ def SecondaryMinimas(grds, minimas, wins):
     # iterates over all positions, collects non-blocked ones into bound, which is empty after the next blocked block
     # is reached.
     while point < len(grds[0]):
-        print point, len(grds[0]), len(wins)
         if not any(x in blocked for x in range(point, point+int(wins[point]))):
             bound.append(point)
         else:
@@ -356,19 +357,18 @@ def PlotSinglePeptideWindows(grades):
 
     minimas = LocalMinima(grd_smh, win_of_min)
     # np.set_printoptions(threshold=np.inf)
-    # print grd_smh
-    # print minimas
 
     minima_tuples = MinimaTuples(minimas, win_of_min)
     minimas_secondary = SecondaryMinimas(grd_smh, minima_tuples, win_of_min)
     sec_minima_tuples = MinimaTuples(minimas_secondary, win_of_min)
-    PymolMark(grades['name'], minima_tuples, sec_minima_tuples)
+    # PymolMark(grades['name'], minima_tuples, sec_minima_tuples)
 
     plot_array = np.empty(shape=[6, len(grades['starters'])])
     plot_array[:] = np.NAN
     for col, row in enumerate(min_ind):
         plot_array[row][col] = grd_smh[row][col]
 
+    PlotParams()
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
     f = ax1.scatter(grades['starters'], plot_array[0], s=50, c='k')
@@ -396,21 +396,39 @@ def PlotSinglePeptideWindows(grades):
     for minima in minima_tuples:
         ax1.plot((minima[0], minima[0]), (-50, 50), 'k--')
         ax1.plot((minima[0]+minima[1], minima[0]+minima[1]), (-50, 50), 'r--')
+    for minima in sec_minima_tuples:
+        ax1.plot((minima[0], minima[0]), (-50, 50), 'k--')
+        ax1.plot((minima[0]+minima[1], minima[0]+minima[1]), (-50, 50), 'r--')
     plt.ylim((-12, 20))
     # ax2 = ax1.twinx()
     # ax2.scatter(grades['starters'], win_of_min, 32, c='b', marker='.')
     plt.xlim((-5, len(grades['starters'])+5))
     # plt.ylim(np.amin(plot_array)-2, 15)
     plt.xticks(range(0, len(grades['starters']), 20), rotation=90)
-    ax1.set_xlabel('Window')
-    ax1.set_ylabel('ddG')
+    ax1.set_xlabel('Window Start Residue', fontsize=36)
+    ax1.set_ylabel('ddG', fontsize=36)
     # ax2.set_ylabel('Window Length')
     ax1.legend((f, fi, t, ti, tw, twi, fm, fmi, tm, tmi, twm, twmi, fsm, fsmi, tsm, tsmi, twsm, twsmi),
                ('Full', 'Full -1', 'Third', 'Third -1', 'Two-Thirds', 'Two-Thirds -1', 'Full minima', 'Full -1 minima',
                 'Third minima', 'Third -1 minima', 'Two Thirds minima', 'Two Thirds -1 minima', 'Full SM', 'Full -1 SM',
-                'Third SM', 'Third -1 SM', 'Two Thirds SM', 'Two Thirds -1 SM'), scatterpoints=1, ncol=6, loc='lower left')
-    plt.suptitle(grades['name']+' plot with smooth '+str(SMOOTH_SIZE)+' and loop-bypass '+str(LOOP_BYPASS), fontsize=20)
+                'Third SM', 'Third -1 SM', 'Two Thirds SM', 'Two Thirds -1 SM'), scatterpoints=1, ncol=9,
+               loc='lower center', prop={'size': 12})
+    plt.suptitle(grades['name']+' plot with smooth '+str(SMOOTH_SIZE)+' and loop-bypass '+str(LOOP_BYPASS), fontsize=48)
     plt.show()
+
+
+def PlotParams():
+    # by: http://damon-is-a-geek.com/publication-ready-the-first-time-beautiful-reproducible-plots-with-matplotlib.html
+    from matplotlib import rcParams
+    rcParams['axes.labelsize'] = 9
+    rcParams['xtick.labelsize'] = 9
+    rcParams['ytick.labelsize'] = 9
+    rcParams['legend.fontsize'] = 9
+
+    # os.environ['PATH'] = os.environ['PATH'] + ':/usr/texbin'
+    rcParams['font.family'] = 'serif'
+    rcParams['font.serif'] = ['Computer Modern Roman']
+    # rcParams['text.usetex'] = True
 
 
 # def PlotSinglePeptideWindows(grades):
