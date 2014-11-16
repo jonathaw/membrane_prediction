@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6a73546c-b0e1-4c73-9c98-48c4af466cd3" name="Default" comment="added and debugged (with success)">
+    <list default="true" id="6a73546c-b0e1-4c73-9c98-48c4af466cd3" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/uniprot_parser.py" afterPath="$PROJECT_DIR$/uniprot_parser.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -29,13 +29,11 @@
       <file leaf-file-name="uniprot_parser.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/uniprot_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-2.4253247" vertical-offset="1836" max-vertical-offset="4968">
-              <caret line="19" column="31" selection-start-line="19" selection-start-column="31" selection-end-line="19" selection-end-column="31" />
+            <state vertical-scroll-proportion="-0.65097404" vertical-offset="1535" max-vertical-offset="3978">
+              <caret line="203" column="45" selection-start-line="203" selection-start-column="45" selection-end-line="203" selection-end-column="45" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
-                <element signature="e#9055#9934#0" expanded="true" />
-                <element signature="e#13517#14469#0" expanded="true" />
-                <element signature="e#14514#18647#0" expanded="true" />
+                <element signature="e#13962#18108#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -274,7 +272,11 @@
       <created>1416146101393</created>
       <updated>1416146101393</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="added and debugged (with success) SecondaryMinimas which finds minimas that were not found originally because they were skipped. PymolMark was also improved to color secondary minimas in blue">
+      <created>1416157739148</created>
+      <updated>1416157739148</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -317,7 +319,8 @@
       <TodoPanelSettings />
     </option>
     <MESSAGE value="push test" />
-    <option name="LAST_COMMIT_MESSAGE" value="push test" />
+    <MESSAGE value="added and debugged (with success) SecondaryMinimas which finds minimas that were not found originally because they were skipped. PymolMark was also improved to color secondary minimas in blue" />
+    <option name="LAST_COMMIT_MESSAGE" value="added and debugged (with success) SecondaryMinimas which finds minimas that were not found originally because they were skipped. PymolMark was also improved to color secondary minimas in blue" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -331,9 +334,7 @@
           <caret line="467" column="12" selection-start-line="467" selection-start-column="12" selection-end-line="467" selection-end-column="12" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
-            <element signature="e#9055#9934#0" expanded="true" />
-            <element signature="e#13517#14469#0" expanded="true" />
-            <element signature="e#14514#18647#0" expanded="true" />
+            <element signature="e#13962#18108#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -344,22 +345,18 @@
           <caret line="467" column="12" selection-start-line="467" selection-start-column="12" selection-end-line="467" selection-end-column="12" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
-            <element signature="e#9055#9934#0" expanded="true" />
-            <element signature="e#13517#14469#0" expanded="true" />
-            <element signature="e#14514#18647#0" expanded="true" />
+            <element signature="e#13962#18108#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/uniprot_parser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.4253247" vertical-offset="1836" max-vertical-offset="4968">
-          <caret line="19" column="31" selection-start-line="19" selection-start-column="31" selection-end-line="19" selection-end-column="31" />
+        <state vertical-scroll-proportion="-0.65097404" vertical-offset="1535" max-vertical-offset="3978">
+          <caret line="203" column="45" selection-start-line="203" selection-start-column="45" selection-end-line="203" selection-end-column="45" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
-            <element signature="e#9055#9934#0" expanded="true" />
-            <element signature="e#13517#14469#0" expanded="true" />
-            <element signature="e#14514#18647#0" expanded="true" />
+            <element signature="e#13962#18108#0" expanded="true" />
           </folding>
         </state>
       </provider>
