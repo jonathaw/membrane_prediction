@@ -17,7 +17,7 @@ main_dict = {}
 SMOOTH_SIZE = 1
 LOOP_BYPASS = 3
 MIN_WIN = 20
-SECONDARY_MINIMA_THRESHOLD = 5
+SECONDARY_MINIMA_THRESHOLD = 7
 PRIMARY_MINIMA_THRESHOLD = 4
 
 
@@ -331,8 +331,6 @@ def SecondaryMinimas(grds, minimas, wins):
             bound.append(point)
         else:
             if len(bound) != 0:
-                print bound, bound[0], bound[-1]
-                print grds[:, bound[0]:bound[-1]]
                 if len(bound) == 1:
                     bound_min = np.min(grds[:, bound])
                 else:
@@ -413,7 +411,7 @@ def PlotSinglePeptideWindows(grades):
     # plt.ylim(np.amin(plot_array)-2, 15)
     plt.xticks(range(0, len(grades['starters']), 20), rotation=90)
     ax1.set_xlabel('Window Start Residue', fontsize=36)
-    ax1.set_ylabel('ddG', fontsize=36)
+    ax1.set_ylabel('$\Delta$G$_{transfer}$', fontsize=36)
     # ax2.set_ylabel('Window Length')
     ax1.legend((f, fi, t, ti, tw, twi, fm, fmi, tm, tmi, twm, twmi, fsm, fsmi, tsm, tsmi, twsm, twsmi),
                ('Full', 'Full -1', 'Third', 'Third -1', 'Two-Thirds', 'Two-Thirds -1', 'Full minima', 'Full -1 minima',
@@ -436,43 +434,6 @@ def PlotParams():
     rcParams['font.family'] = 'serif'
     rcParams['font.serif'] = ['Computer Modern Roman']
     # rcParams['text.usetex'] = True
-
-
-# def PlotSinglePeptideWindows(grades):
-#     grd_smh = np.empty(shape=[6, len(grades['full_grades'])])
-#     win_smh = np.empty(shape=[6, len(grades['full_grades'])])
-#     (grd_smh[0], win_smh[0]) = SmoothenCurve(grades['full_grades'], grades['full_grades_win_len'])
-#     (grd_smh[1], win_smh[1]) = SmoothenCurve(grades['full_grades_inverse'], grades['full_grades_inverse_win_len'])
-#     (grd_smh[2], win_smh[2]) = SmoothenCurve(grades['third_grades'], grades['third_grades_win_len'])
-#     (grd_smh[3], win_smh[3]) = SmoothenCurve(grades['third_grades_inverse'], grades['third_grades_inverse_win_len'])
-#     (grd_smh[4], win_smh[4]) = SmoothenCurve(grades['two_thirds_grades'], grades['two_thirds_grades_win_len'])
-#     (grd_smh[5], win_smh[5]) = SmoothenCurve(grades['two_thirds_grades_inverse'], grades['two_thirds_grades_inverse_win_len'])
-#     grd_min = np.amin(grd_smh, axis=0)
-    # min_ind = np.argmin(grd_smh, axis=0)
-    # win_of_min = MatrixByVecIndex(win_smh, min_ind)
-    #
-    # plot_array = np.empty(shape=[6, len(grades['starters'])])
-    # plot_array[:] = np.NAN
-    # for col, row in enumerate(min_ind):
-    #     plot_array[row][col] = grd_smh[row][col]
-    #
-    # fig = plt.figure()
-    # ax1 = fig.add_subplot(111)
-    # f   = ax1.scatter(grades['starters'], plot_array[0], s=50, c='k')
-    # fi  = ax1.scatter(grades['starters'], plot_array[1], s=50, facecolors='none', edgecolors='k')
-    # t   = ax1.scatter(grades['starters'], plot_array[2], s=50, c='r')
-    # ti  = ax1.scatter(grades['starters'], plot_array[3], s=50, facecolors='none', edgecolors='r')
-    # tw  = ax1.scatter(grades['starters'], plot_array[4], s=50, c='b')
-    # twi = ax1.scatter(grades['starters'], plot_array[5], s=50, facecolors='none', edgecolors='b')
-    # ax2 = ax1.twinx()
-    # ax2.scatter(grades['starters'], win_of_min, 32, c='b', marker='.')
-    # plt.xlim((-5, len(grades['starters'])+5))
-    # ax1.set_xlabel('Window')
-    # ax1.set_ylabel('ddG')
-    # ax2.set_ylabel('Window Length')
-    # ax1.legend((f, fi, t, ti, tw, twi), ('Full', 'Full -1', 'Third', 'Third -1', 'Two-Thirds', 'Two-Thirds -1'),
-    #            scatterpoints=1, ncol=6, loc='lower left')
-    # plt.show()
 
 
 ### MAIN ###
