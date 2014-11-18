@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6a73546c-b0e1-4c73-9c98-48c4af466cd3" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database_parser.py" afterPath="$PROJECT_DIR$/database_parser.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/uniprot_parser.py" afterPath="$PROJECT_DIR$/uniprot_parser.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -29,9 +30,24 @@
       <file leaf-file-name="uniprot_parser.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/uniprot_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.262987" vertical-offset="590" max-vertical-offset="1962">
-              <caret line="517" column="0" selection-start-line="517" selection-start-column="0" selection-end-line="517" selection-end-column="0" />
-              <folding />
+            <state vertical-scroll-proportion="0.35714287" vertical-offset="1184" max-vertical-offset="2394">
+              <caret line="431" column="37" selection-start-line="431" selection-start-column="37" selection-end-line="431" selection-end-column="37" />
+              <folding>
+                <element signature="e#0#9#0" expanded="true" />
+                <element signature="e#23254#23619#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="database_parser.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/database_parser.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="235" max-vertical-offset="1026">
+              <caret line="51" column="24" selection-start-line="51" selection-start-column="24" selection-end-line="51" selection-end-column="24" />
+              <folding>
+                <element signature="e#538#1752#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -49,12 +65,13 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
+        <option value="$PROJECT_DIR$/database_parser.py" />
         <option value="$PROJECT_DIR$/uniprot_parser.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1" />
+    <option name="x" value="864" />
     <option name="y" value="23" />
     <option name="width" value="1061" />
     <option name="height" value="1045" />
@@ -86,14 +103,7 @@
     </navigator>
     <panes>
       <pane id="ProjectPane">
-        <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="membrane_prediciton" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
+        <subPane />
       </pane>
       <pane id="Scope" />
     </panes>
@@ -124,6 +134,24 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="membrane_prediciton" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/uniprot_parser.py" />
+      <option name="PARAMETERS" value="" />
+      <RunnerSettings RunnerId="PythonRunner" />
+      <ConfigurationWrapper RunnerId="PythonRunner" />
+      <method />
+    </configuration>
+    <configuration default="false" name="database_parser" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="membrane_prediciton" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/database_parser.py" />
       <option name="PARAMETERS" value="" />
       <RunnerSettings RunnerId="PythonRunner" />
       <ConfigurationWrapper RunnerId="PythonRunner" />
@@ -250,12 +278,14 @@
       <option name="USE_PATTERN" value="false" />
       <method />
     </configuration>
-    <list size="1">
+    <list size="2">
       <item index="0" class="java.lang.String" itemvalue="Python.uniprot_parser" />
+      <item index="1" class="java.lang.String" itemvalue="Python.database_parser" />
     </list>
     <recent_temporary>
-      <list size="1">
+      <list size="2">
         <item index="0" class="java.lang.String" itemvalue="Python.uniprot_parser" />
+        <item index="1" class="java.lang.String" itemvalue="Python.database_parser" />
       </list>
     </recent_temporary>
   </component>
@@ -297,11 +327,15 @@
       <created>1416298034023</created>
       <updated>1416298034023</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="split Plot to Plot and Grades2Array">
+      <created>1416298567767</created>
+      <updated>1416298567767</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1" y="23" width="1061" height="1045" extended-state="0" />
+    <frame x="864" y="23" width="1061" height="1045" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
@@ -346,7 +380,8 @@
     <MESSAGE value="inserted PRIMARY_THRESHOLD for evading 'bad' minimas." />
     <MESSAGE value="made new examples. changed axis labels to latex" />
     <MESSAGE value="last commit with Plot in the old fashion" />
-    <option name="LAST_COMMIT_MESSAGE" value="last commit with Plot in the old fashion" />
+    <MESSAGE value="split Plot to Plot and Grades2Array" />
+    <option name="LAST_COMMIT_MESSAGE" value="split Plot to Plot and Grades2Array" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -358,7 +393,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="846" max-vertical-offset="3456">
           <caret line="467" column="12" selection-start-line="467" selection-start-column="12" selection-end-line="467" selection-end-column="12" />
-          <folding />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+            <element signature="e#23254#23619#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -366,7 +404,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="2839" max-vertical-offset="3456">
           <caret line="467" column="12" selection-start-line="467" selection-start-column="12" selection-end-line="467" selection-end-column="12" />
-          <folding />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+            <element signature="e#23254#23619#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -378,11 +419,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/database_parser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="235" max-vertical-offset="1026">
+          <caret line="51" column="24" selection-start-line="51" selection-start-column="24" selection-end-line="51" selection-end-column="24" />
+          <folding>
+            <element signature="e#538#1752#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/uniprot_parser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.262987" vertical-offset="590" max-vertical-offset="1962">
-          <caret line="517" column="0" selection-start-line="517" selection-start-column="0" selection-end-line="517" selection-end-column="0" />
-          <folding />
+        <state vertical-scroll-proportion="0.35714287" vertical-offset="1184" max-vertical-offset="2394">
+          <caret line="431" column="37" selection-start-line="431" selection-start-column="37" selection-end-line="431" selection-end-column="37" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+            <element signature="e#23254#23619#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
