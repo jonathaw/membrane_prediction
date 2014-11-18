@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6a73546c-b0e1-4c73-9c98-48c4af466cd3" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/3g61_TM.pse" afterPath="$PROJECT_DIR$/examples/3g61_TM.pse" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/membrane_prediciton.iml" afterPath="$PROJECT_DIR$/.idea/membrane_prediciton.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/uniprot_parser.py" afterPath="$PROJECT_DIR$/uniprot_parser.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -31,12 +29,9 @@
       <file leaf-file-name="uniprot_parser.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/uniprot_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.79545456" vertical-offset="1994" max-vertical-offset="3348">
-              <caret line="422" column="14" selection-start-line="350" selection-start-column="0" selection-end-line="422" selection-end-column="14" />
-              <folding>
-                <element signature="e#14226#18619#0" expanded="true" />
-                <element signature="e#18644#19136#0" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="1.262987" vertical-offset="590" max-vertical-offset="1962">
+              <caret line="517" column="0" selection-start-line="517" selection-start-column="0" selection-end-line="517" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -298,7 +293,11 @@
       <created>1416215930915</created>
       <updated>1416215930915</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="last commit with Plot in the old fashion">
+      <created>1416298034023</created>
+      <updated>1416298034023</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -346,7 +345,8 @@
     <MESSAGE value="improved plotting, using PlotParams()" />
     <MESSAGE value="inserted PRIMARY_THRESHOLD for evading 'bad' minimas." />
     <MESSAGE value="made new examples. changed axis labels to latex" />
-    <option name="LAST_COMMIT_MESSAGE" value="made new examples. changed axis labels to latex" />
+    <MESSAGE value="last commit with Plot in the old fashion" />
+    <option name="LAST_COMMIT_MESSAGE" value="last commit with Plot in the old fashion" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -358,10 +358,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="846" max-vertical-offset="3456">
           <caret line="467" column="12" selection-start-line="467" selection-start-column="12" selection-end-line="467" selection-end-column="12" />
-          <folding>
-            <element signature="e#14226#18619#0" expanded="true" />
-            <element signature="e#18644#19136#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -369,10 +366,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="2839" max-vertical-offset="3456">
           <caret line="467" column="12" selection-start-line="467" selection-start-column="12" selection-end-line="467" selection-end-column="12" />
-          <folding>
-            <element signature="e#14226#18619#0" expanded="true" />
-            <element signature="e#18644#19136#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -386,12 +380,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/uniprot_parser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.79545456" vertical-offset="1994" max-vertical-offset="3348">
-          <caret line="422" column="14" selection-start-line="350" selection-start-column="0" selection-end-line="422" selection-end-column="14" />
-          <folding>
-            <element signature="e#14226#18619#0" expanded="true" />
-            <element signature="e#18644#19136#0" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="1.262987" vertical-offset="590" max-vertical-offset="1962">
+          <caret line="517" column="0" selection-start-line="517" selection-start-column="0" selection-end-line="517" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>

@@ -348,6 +348,86 @@ def SecondaryMinimas(grds, minimas, wins):
     return sec_minimas
 
 
+def Grades2Arry(grades):
+    grd_smh = np.empty(shape=(6, len(grades['full_grades'])))
+    win_smh = np.empty(shape=(6, len(grades['full_grades'])))
+    (grd_smh[0], grd_smh[1], win_smh[0]) = SmoothenCurveWithDirs(grades['full_grades'], grades['full_grades_win_len'], grades['full_dirs'])
+    win_smh[1] = win_smh[0]
+    (grd_smh[2], grd_smh[3], win_smh[2]) = SmoothenCurveWithDirs(grades['third_grades'], grades['third_grades_win_len'], grades['third_dirs'])
+    win_smh[3] = win_smh[2]
+    (grd_smh[4], grd_smh[5], win_smh[4]) = SmoothenCurveWithDirs(grades['two_thirds_grades'], grades['two_thirds_grades_win_len'], grades['two_thirds_dirs'])
+    win_smh[5] = win_smh[4]
+    # grd_min = np.amin(grd_smh, axis=0)
+    min_ind = np.argmin(grd_smh, axis=0)
+    win_of_min = MatrixByVecIndex(win_smh, min_ind)
+    return grd_smh, win_of_min, min_ind
+
+
+def PlotSinglePeptide(grades):
+    (grd_smh, win_of_min, min_ind) = Grades2Arry(grades)
+
+    minimas = LocalMinima(grd_smh, win_of_min)
+    # np.set_printoptions(threshold=np.inf)
+
+    minima_tuples = MinimaTuples(minimas, win_of_min)
+    minimas_secondary = SecondaryMinimas(grd_smh, minima_tuples, win_of_min)
+    sec_minima_tuples = MinimaTuples(minimas_secondary, win_of_min)
+    PymolMark(grades['name'], minima_tuples, sec_minima_tuples)
+
+    plot_array = np.empty(shape=[6, len(grades['starters'])])
+    plot_array[:] = np.NAN
+    for col, row in enumerate(min_ind):
+        plot_array[row][col] = grd_smh[row][col]
+
+    PlotParams()
+    fig = plt.figure()
+    ax1 = fig.add_subplot(111)
+    f = ax1.scatter(grades['starters'], plot_array[0], s=50, c='k')
+    fi = ax1.scatter(grades['starters'], plot_array[1], s=50, facecolors='none', edgecolors='k')
+    t = ax1.scatter(grades['starters'], plot_array[2], s=50, c='r')
+    ti = ax1.scatter(grades['starters'], plot_array[3], s=50, facecolors='none', edgecolors='r')
+    tw = ax1.scatter(grades['starters'], plot_array[4], s=50, c='b')
+    twi = ax1.scatter(grades['starters'], plot_array[5], s=50, facecolors='none', edgecolors='b')
+
+    fm = ax1.scatter(grades['starters'], minimas[0], s=120, c='k', marker='D')
+    fmi = ax1.scatter(grades['starters'], minimas[1], s=120, c='k', marker='x')
+    tm = ax1.scatter(grades['starters'], minimas[2], s=120, c='r', marker='D')
+    tmi = ax1.scatter(grades['starters'], minimas[3], s=120, c='r', marker='x')
+    twm = ax1.scatter(grades['starters'], minimas[4], s=120, c='b', marker='D')
+    twmi = ax1.scatter(grades['starters'], minimas[5], s=120, c='b', marker='x')
+
+    fsm = ax1.scatter(grades['starters'], minimas_secondary[0], s=200, c='k', marker='8')
+    fsmi = ax1.scatter(grades['starters'], minimas_secondary[1], s=200, c='k', marker='s')
+    tsm = ax1.scatter(grades['starters'], minimas_secondary[2], s=200, c='r', marker='8')
+    tsmi = ax1.scatter(grades['starters'], minimas_secondary[3], s=200, c='r', marker='s')
+    twsm = ax1.scatter(grades['starters'], minimas_secondary[4], s=200, c='b', marker='8')
+    twsmi = ax1.scatter(grades['starters'], minimas_secondary[5], s=200, c='b', marker='s')
+
+    ax1.plot(grades['starters'], [0]*len(grades['starters']), 'k--')
+    for minima in minima_tuples:
+        ax1.plot((minima[0], minima[0]), (-50, 50), 'k--')
+        ax1.plot((minima[0]+minima[1], minima[0]+minima[1]), (-50, 50), 'r--')
+    for minima in sec_minima_tuples:
+        ax1.plot((minima[0], minima[0]), (-50, 50), 'b--')
+        ax1.plot((minima[0]+minima[1], minima[0]+minima[1]), (-50, 50), 'g--')
+    plt.ylim((-12, 20))
+    # ax2 = ax1.twinx()
+    # ax2.scatter(grades['starters'], win_of_min, 32, c='b', marker='.')
+    plt.xlim((-5, len(grades['starters'])+5))
+    # plt.ylim(np.amin(plot_array)-2, 15)
+    plt.xticks(range(0, len(grades['starters']), 20), rotation=90)
+    ax1.set_xlabel('Window Start Residue', fontsize=36)
+    ax1.set_ylabel('$\Delta$G$_{transfer}$', fontsize=36)
+    # ax2.set_ylabel('Window Length')
+    ax1.legend((f, fi, t, ti, tw, twi, fm, fmi, tm, tmi, twm, twmi, fsm, fsmi, tsm, tsmi, twsm, twsmi),
+               ('Full', 'Full -1', 'Third', 'Third -1', 'Two-Thirds', 'Two-Thirds -1', 'Full minima', 'Full -1 minima',
+                'Third minima', 'Third -1 minima', 'Two Thirds minima', 'Two Thirds -1 minima', 'Full SM', 'Full -1 SM',
+                'Third SM', 'Third -1 SM', 'Two Thirds SM', 'Two Thirds -1 SM'), scatterpoints=1, ncol=9,
+               loc='lower center', prop={'size': 12})
+    plt.suptitle(grades['name']+' plot with smooth '+str(SMOOTH_SIZE)+' and loop-bypass '+str(LOOP_BYPASS), fontsize=48)
+    plt.show()
+
+
 def PlotSinglePeptideWindows(grades):
     grd_smh = np.empty(shape=(6, len(grades['full_grades'])))
     win_smh = np.empty(shape=(6, len(grades['full_grades'])))
@@ -455,8 +535,8 @@ ss_grades = WindowGradesForSingleSequence('NGGLQPAFSVIFSKVVGVFTNGGPPETQRQNSNLFSL
 # WriteSingleSeqToTSV(ss_grades, '/Users/jonathan/Desktop/bassaf_seq.txt')
 # WriteSingleSeqToTSVusingCSV(ss_grades, '/Users/jonathan/Desktop/4j4q_win_gds.csv')
 
-PlotSinglePeptideWindows(ss_grades)
-
+# PlotSinglePeptideWindows(ss_grades)
+PlotSinglePeptide(ss_grades)
 
 # array = window_grades['YP_006514311.1']['full_grades']
 # starters = window_grades['YP_006514311.1']['starters']
