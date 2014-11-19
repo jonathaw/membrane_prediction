@@ -187,6 +187,7 @@ def WindowGradesForSingleSequence(seq, name='default'):
 
 
 def PymolMark(name, minima_tuples, sec_tuples=False):
+    # makes a pml file to describe the programs result, and initiates it.
     print '\n\nLocal (primary) minimas are ', minima_tuples
     print 'Local (secondary) minimas are ', sec_tuples, '\n\n'
     file = 'test.pml'
@@ -227,6 +228,7 @@ def SmoothenCurve(grd, win_len):
 
 
 def SmoothenCurveWithDirs(grd, win_len, dirs):
+    # smooths the data over SMOOTH_SIZE windows
     grd_smooth_pos = []
     grd_smooth_inv = []
     win_len_smooth = []
@@ -282,6 +284,9 @@ def MatrixByVecIndex(array, vec):
 
 
 def RecursiveMinima(grds, wins, point):
+    # a recursive function to find primary minimas. returns a point if it's equal to the minimum of the tested window.
+    # if it's not it keeps lokking onward. misses minimas that in their window there's a lower point, even if that point
+    # is not a local minima. that's what SecondaryMinimas is for
     if point+wins[point] >= len(grds[0]):
         min_end_vec = np.min(grds[:, point:len(grds[0])], axis=0)
         min_end_ind = np.argmin(min_end_vec)
@@ -300,6 +305,7 @@ def RecursiveMinima(grds, wins, point):
 
 
 def LocalMinima(grds, wins):
+    # recursively calculates primary local minimas over the grades array. uses RecursiveMinima
     minimas = np.empty(shape=(6, len(grds[0])))
     minimas[:] = np.NAN
     start = 0
@@ -312,7 +318,9 @@ def LocalMinima(grds, wins):
         if start >= len(grds[0]):
             break
     np.set_printoptions(threshold=np.inf)
+    np.seterr(invalid='ignore')
     minimas[minimas > PRIMARY_MINIMA_THRESHOLD] = np.NAN
+    np.seterr(invalid=None)
     return minimas
 
 
@@ -538,7 +546,6 @@ def WriteSW2CSV(num):
         for tup in sec_min_tup:
             all_combined[key]['OUR_secondary_minima'].append([tup[0], tup[0]+tup[1]])
         print all_combined
-        print sec_min_tup
 
     combined.close()
 
