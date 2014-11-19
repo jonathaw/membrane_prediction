@@ -311,6 +311,7 @@ def LocalMinima(grds, wins):
         start = int(point+wins[point])
         if start >= len(grds[0]):
             break
+    np.set_printoptions(threshold=np.inf)
     minimas[minimas > PRIMARY_MINIMA_THRESHOLD] = np.NAN
     return minimas
 
@@ -378,7 +379,7 @@ def PlotSinglePeptide(grades):
     (grd_smh, win_of_min, min_ind) = Grades2Arry(grades)
 
     (minimas, minima_tuples, minimas_secondary, sec_minima_tuples) = MinimaOrganizer(grd_smh, win_of_min)
-    PymolMark(grades['name'], minima_tuples, sec_minima_tuples)
+    # PymolMark(grades['name'], minima_tuples, sec_minima_tuples)
 
     plot_array = np.empty(shape=[6, len(grades['starters'])])
     plot_array[:] = np.NAN
@@ -431,7 +432,7 @@ def PlotSinglePeptide(grades):
                 'Third SM', 'Third -1 SM', 'Two Thirds SM', 'Two Thirds -1 SM'), scatterpoints=1, ncol=9,
                loc='lower center', prop={'size': 12})
     plt.suptitle(grades['name']+' plot with smooth '+str(SMOOTH_SIZE)+' and loop-bypass '+str(LOOP_BYPASS), fontsize=48)
-    plt.show()
+    # plt.show()
 
 
 def PlotSinglePeptideWindows(grades):
@@ -510,14 +511,35 @@ def PlotSinglePeptideWindows(grades):
 
 
 def WriteSW2CSV(num):
+    # reads num sequences out of a csv produced by database_parser.py (2nd funciton), and processes each sequences.
     SW = SWDB_parser_prediciton(num)
     combined = open('/Users/jonathan/Documents/membrane_prediciton_data/combined_results.csv', 'wa+')
     # csv_writer = csv.writer(combined)
-    # combine_rest = {['']}
+    all_combined = {}
+
     for key, val in SW.iteritems():
-        print key, '\n', val
+        # print 'yupidupi', key, '\n', val
         ss_grades = WindowGradesForSingleSequence(val['seq'], key)
-        PlotSinglePeptide(ss_grades)
+        # PlotSinglePeptide(ss_grades)
+        (grds_array, win_of_min, min_ind) = Grades2Arry(ss_grades)
+        (pri_min, pri_min_tup, sec_min, sec_min_tup) = MinimaOrganizer(grds_array, win_of_min)
+        all_combined[key] = {}
+        all_combined[key]['seq'] = val['seq']
+        all_combined[key]['pdb'] = val['pdb']
+        all_combined[key]['terminal'] = val['term']
+        SW_tuples = []
+        for i, begin in enumerate(val['begin']):
+            SW_tuples.append([begin, val['end'][i]])
+        all_combined[key]['SW_tuples'] = SW_tuples
+        all_combined[key]['OUR_primary_minima'] = []
+        for tup in pri_min_tup:
+            all_combined[key]['OUR_primary_minima'].append([tup[0], tup[0]+tup[1]])
+        all_combined[key]['OUR_secondary_minima'] = []
+        for tup in sec_min_tup:
+            all_combined[key]['OUR_secondary_minima'].append([tup[0], tup[0]+tup[1]])
+        print all_combined
+        print sec_min_tup
+
     combined.close()
 
 
@@ -535,7 +557,6 @@ def PlotParams():
     # rcParams['text.usetex'] = True
 
 
-# def
 ### MAIN ###
 MakeHydrophobicityGrade()
 # UniprotParser()
@@ -562,8 +583,3 @@ WriteSW2CSV(1)
 
 # PlotSinglePeptideWindows(ss_grades)
 # PlotSinglePeptide(ss_grades)
-# array = window_grades['YP_006514311.1']['full_grades']
-# starters = window_grades['YP_006514311.1']['starters']
-# plt.scatter(starters, array)
-# print main_dict['YP_006514311.1']['transmem']
-# plt.show()

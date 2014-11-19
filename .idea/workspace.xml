@@ -29,14 +29,9 @@
       <file leaf-file-name="uniprot_parser.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/uniprot_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.18019481" vertical-offset="1671" max-vertical-offset="3816">
-              <caret line="378" column="0" selection-start-line="378" selection-start-column="0" selection-end-line="378" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#9#0" expanded="true" />
-                <element signature="e#14264#15082#0" expanded="true" />
-                <element signature="e#15128#15480#0" expanded="true" />
-                <element signature="e#23467#23859#0" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="0.77540106" vertical-offset="1473" max-vertical-offset="2610">
+              <caret line="540" column="25" selection-start-line="540" selection-start-column="25" selection-end-line="540" selection-end-column="25" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -44,7 +39,7 @@
       <file leaf-file-name="database_parser.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/database_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="235" max-vertical-offset="1026">
+            <state vertical-scroll-proportion="0.0" vertical-offset="271" max-vertical-offset="1026">
               <caret line="51" column="24" selection-start-line="51" selection-start-column="24" selection-end-line="51" selection-end-column="24" />
               <folding>
                 <element signature="e#538#1752#0" expanded="true" />
@@ -336,7 +331,11 @@
       <created>1416303627890</created>
       <updated>1416303627891</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="created minimaOrganizer">
+      <created>1416398446724</created>
+      <updated>1416398446724</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -387,7 +386,8 @@
     <MESSAGE value="last commit with Plot in the old fashion" />
     <MESSAGE value="split Plot to Plot and Grades2Array" />
     <MESSAGE value="first commit of SW_parser." />
-    <option name="LAST_COMMIT_MESSAGE" value="first commit of SW_parser." />
+    <MESSAGE value="created minimaOrganizer" />
+    <option name="LAST_COMMIT_MESSAGE" value="created minimaOrganizer" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -399,12 +399,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="846" max-vertical-offset="3456">
           <caret line="467" column="12" selection-start-line="467" selection-start-column="12" selection-end-line="467" selection-end-column="12" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-            <element signature="e#14264#15082#0" expanded="true" />
-            <element signature="e#15128#15480#0" expanded="true" />
-            <element signature="e#23467#23859#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -412,12 +407,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="2839" max-vertical-offset="3456">
           <caret line="467" column="12" selection-start-line="467" selection-start-column="12" selection-end-line="467" selection-end-column="12" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-            <element signature="e#14264#15082#0" expanded="true" />
-            <element signature="e#15128#15480#0" expanded="true" />
-            <element signature="e#23467#23859#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -441,14 +431,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/uniprot_parser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.18019481" vertical-offset="1671" max-vertical-offset="3816">
-          <caret line="378" column="0" selection-start-line="378" selection-start-column="0" selection-end-line="378" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-            <element signature="e#14264#15082#0" expanded="true" />
-            <element signature="e#15128#15480#0" expanded="true" />
-            <element signature="e#23467#23859#0" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="0.77540106" vertical-offset="1473" max-vertical-offset="2610">
+          <caret line="540" column="25" selection-start-line="540" selection-start-column="25" selection-end-line="540" selection-end-column="25" />
+          <folding />
         </state>
       </provider>
     </entry>
