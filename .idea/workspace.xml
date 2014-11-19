@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6a73546c-b0e1-4c73-9c98-48c4af466cd3" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database_parser.py" afterPath="$PROJECT_DIR$/database_parser.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/uniprot_parser.py" afterPath="$PROJECT_DIR$/uniprot_parser.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -30,11 +29,13 @@
       <file leaf-file-name="uniprot_parser.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/uniprot_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.35714287" vertical-offset="1184" max-vertical-offset="2394">
-              <caret line="431" column="37" selection-start-line="431" selection-start-column="37" selection-end-line="431" selection-end-column="37" />
+            <state vertical-scroll-proportion="0.18019481" vertical-offset="1671" max-vertical-offset="3816">
+              <caret line="378" column="0" selection-start-line="378" selection-start-column="0" selection-end-line="378" selection-end-column="0" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
-                <element signature="e#23254#23619#0" expanded="true" />
+                <element signature="e#14264#15082#0" expanded="true" />
+                <element signature="e#15128#15480#0" expanded="true" />
+                <element signature="e#23467#23859#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -331,7 +332,11 @@
       <created>1416298567767</created>
       <updated>1416298567767</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="first commit of SW_parser.">
+      <created>1416303627890</created>
+      <updated>1416303627891</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -381,7 +386,8 @@
     <MESSAGE value="made new examples. changed axis labels to latex" />
     <MESSAGE value="last commit with Plot in the old fashion" />
     <MESSAGE value="split Plot to Plot and Grades2Array" />
-    <option name="LAST_COMMIT_MESSAGE" value="split Plot to Plot and Grades2Array" />
+    <MESSAGE value="first commit of SW_parser." />
+    <option name="LAST_COMMIT_MESSAGE" value="first commit of SW_parser." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -395,7 +401,9 @@
           <caret line="467" column="12" selection-start-line="467" selection-start-column="12" selection-end-line="467" selection-end-column="12" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
-            <element signature="e#23254#23619#0" expanded="true" />
+            <element signature="e#14264#15082#0" expanded="true" />
+            <element signature="e#15128#15480#0" expanded="true" />
+            <element signature="e#23467#23859#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -406,7 +414,9 @@
           <caret line="467" column="12" selection-start-line="467" selection-start-column="12" selection-end-line="467" selection-end-column="12" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
-            <element signature="e#23254#23619#0" expanded="true" />
+            <element signature="e#14264#15082#0" expanded="true" />
+            <element signature="e#15128#15480#0" expanded="true" />
+            <element signature="e#23467#23859#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -431,11 +441,13 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/uniprot_parser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.35714287" vertical-offset="1184" max-vertical-offset="2394">
-          <caret line="431" column="37" selection-start-line="431" selection-start-column="37" selection-end-line="431" selection-end-column="37" />
+        <state vertical-scroll-proportion="0.18019481" vertical-offset="1671" max-vertical-offset="3816">
+          <caret line="378" column="0" selection-start-line="378" selection-start-column="0" selection-end-line="378" selection-end-column="0" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
-            <element signature="e#23254#23619#0" expanded="true" />
+            <element signature="e#14264#15082#0" expanded="true" />
+            <element signature="e#15128#15480#0" expanded="true" />
+            <element signature="e#23467#23859#0" expanded="true" />
           </folding>
         </state>
       </provider>

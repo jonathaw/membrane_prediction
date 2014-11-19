@@ -364,15 +364,20 @@ def Grades2Arry(grades):
     return grd_smh, win_of_min, min_ind
 
 
-def PlotSinglePeptide(grades):
-    (grd_smh, win_of_min, min_ind) = Grades2Arry(grades)
-
-    minimas = LocalMinima(grd_smh, win_of_min)
+def MinimaOrganizer(grds, win_of_min):
+    minimas = LocalMinima(grds, win_of_min)
     # np.set_printoptions(threshold=np.inf)
 
     minima_tuples = MinimaTuples(minimas, win_of_min)
-    minimas_secondary = SecondaryMinimas(grd_smh, minima_tuples, win_of_min)
+    minimas_secondary = SecondaryMinimas(grds, minima_tuples, win_of_min)
     sec_minima_tuples = MinimaTuples(minimas_secondary, win_of_min)
+    return minimas, minima_tuples, minimas_secondary, sec_minima_tuples
+
+
+def PlotSinglePeptide(grades):
+    (grd_smh, win_of_min, min_ind) = Grades2Arry(grades)
+
+    (minimas, minima_tuples, minimas_secondary, sec_minima_tuples) = MinimaOrganizer(grd_smh, win_of_min)
     PymolMark(grades['name'], minima_tuples, sec_minima_tuples)
 
     plot_array = np.empty(shape=[6, len(grades['starters'])])
@@ -507,12 +512,12 @@ def PlotSinglePeptideWindows(grades):
 def WriteSW2CSV(num):
     SW = SWDB_parser_prediciton(num)
     combined = open('/Users/jonathan/Documents/membrane_prediciton_data/combined_results.csv', 'wa+')
-    csv_writer = csv.writer(combined)
-
+    # csv_writer = csv.writer(combined)
+    # combine_rest = {['']}
     for key, val in SW.iteritems():
         print key, '\n', val
         ss_grades = WindowGradesForSingleSequence(val['seq'], key)
-        # PlotSinglePeptide(ss_grades)
+        PlotSinglePeptide(ss_grades)
     combined.close()
 
 
