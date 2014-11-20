@@ -2,24 +2,20 @@ import numpy as np
 import subprocess
 from collections import Counter
 
-# list_a = [1, 2, 3, 4, 5]
-# list_b = [3, 4, 6]
-#
-# def ListInList(list_a, list_b):
-#     for a in list_a:
-#         if a in list_b:
-#             sumer += 1
+def Range2Tups(ranger):
+    results = []
+    temp = [ranger[0]]
+    for i, val in enumerate(ranger):
+        if val-1 > ranger[i-1]:
+            temp.append(ranger[i-1])
+            results.append(temp[:])
+            temp = [val]
+    temp.append(ranger[-1])
+    results.append(temp)
+    return results
 
-
-
-a = [3,4,5,5,5,6]
-b = [1,3,4,4,5,5,6,7]
-
-a_multiset = Counter(a)
-b_multiset = Counter(b)
-
-overlap = list((a_multiset & b_multiset).elements())
-a_remainder = list((a_multiset - b_multiset).elements())
-b_remainder = list((b_multiset - a_multiset).elements())
-
-print overlap, a_remainder, b_remainder
+a = [1,2,3, 6,7,8,95, 22, 23, 24, 26]
+print a.sort()
+a.sort()
+print a
+# print Range2Tups([1,2,3, 6,7,8, 22, 23, 24, 26].sort())

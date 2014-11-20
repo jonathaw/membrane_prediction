@@ -188,7 +188,7 @@ def WindowGradesForSingleSequence(seq, name='default'):
     return window_grades_single_chain
 
 
-def PymolMark(name, minima_tuples, sec_tuples=False):
+def PymolMark(name, minima_tuples, sec_tuples=False, third_TM=False):
     # makes a pml file to describe the programs result, and initiates it.
     print '\n\nLocal (primary) minimas are ', minima_tuples
     print 'Local (secondary) minimas are ', sec_tuples, '\n\n'
@@ -199,14 +199,48 @@ def PymolMark(name, minima_tuples, sec_tuples=False):
         # f.writelines('fetch ' + name + ',' + name + '\n')
         i = 1
         for TM in minima_tuples:
-            f.writelines('select TM' + str(i) + ', ' + name + ' and resi ' + str(TM[0]) + '-' + str(TM[0]+TM[1]) + '\n')
-            f.writelines('color red, TM' + str(i) + '\n')
+            f.writelines('select TM_1_' + str(i) + ', ' + name + ' and resi ' + str(TM[0]) + '-' + str(TM[0]+TM[1]) + '\n')
+            f.writelines('color red, TM_1_' + str(i) + '\n')
             i += 1
         i = 1
         if sec_tuples:
             for TM in sec_tuples:
-                f.writelines('select TM_S' + str(i) + ', ' + name + ' and resi ' + str(TM[0]) + '-' + str(TM[0]+TM[1]) + '\n')
-                f.writelines('color blue, TM_S' + str(i) + '\n')
+                f.writelines('select TM_2_' + str(i) + ', ' + name + ' and resi ' + str(TM[0]) + '-' + str(TM[0]+TM[1]) + '\n')
+                f.writelines('color blue, TM_2_' + str(i) + '\n')
+                i += 1
+        if third_TM:
+            for TM in third_TM:
+                f.writelines('select TM_3_' + str(i) + ', ' + name + ' and resi ' + str(TM[0]) + '-' + str(TM[0]+TM[1]) + '\n')
+                f.writelines('color yellow, TM_3_' + str(i) + '\n')
+                i += 1
+        f.writelines(['save ', name.lower()+'_TM_temp.pse\n'])
+    subprocess.call(['/opt/local/bin/pymol', '-q', file, '&'])
+
+
+def PymolMarkByRange(name, minima_tuples, sec_tuples=False, third_TM=False):
+    # makes a pml file to describe the programs result, and initiates it.
+    print '\n\nLocal (primary) minimas are ', minima_tuples
+    print 'Local (secondary) minimas are ', sec_tuples, '\n\n'
+    file = 'test.pml'
+    with open(file, 'wa+') as f:
+        f.writelines('load ' + name.lower() + '.pdb,' + name + '\n')
+        f.writelines('cmd.show_as("cartoon", "all")\n')
+        # f.writelines('fetch ' + name + ',' + name + '\n')
+        i = 1
+        for TM in minima_tuples:
+            f.writelines('select TM_1_' + str(i) + ', ' + name + ' and resi ' + str(TM[0]) + '-' + str(TM[1]) + '\n')
+            f.writelines('color red, TM_1_' + str(i) + '\n')
+            i += 1
+        i = 1
+        if sec_tuples:
+            for TM in sec_tuples:
+                f.writelines('select TM_2_' + str(i) + ', ' + name + ' and resi ' + str(TM[0]) + '-' + str(TM[1]) + '\n')
+                f.writelines('color blue, TM_2_' + str(i) + '\n')
+                i += 1
+        if third_TM:
+            for TM in third_TM:
+                f.writelines('select TM_3_' + str(i) + ', ' + name + ' and resi ' + str(TM[0]) + '-' + str(TM[1]) + '\n')
+                f.writelines('color yellow, TM_3_' + str(i) + '\n')
                 i += 1
         f.writelines(['save ', name.lower()+'_TM_temp.pse\n'])
     subprocess.call(['/opt/local/bin/pymol', '-q', file, '&'])
@@ -519,6 +553,19 @@ def PlotSinglePeptideWindows(grades):
     plt.show()
 
 
+def Range2Tups(ranger):
+    results = []
+    temp = [ranger[0]]
+    for i, val in enumerate(ranger):
+        if val-1 > ranger[i-1]:
+            temp.append(ranger[i-1])
+            results.append(temp[:])
+            temp = [val]
+    temp.append(ranger[-1])
+    results.append(temp)
+    return results
+
+
 def CompareOverlap(sw_tuples, our_tuples):
     SW_range = []
     [SW_range.append(range(int(tup[0]), int(tup[1]))) for tup in sw_tuples]
@@ -614,14 +661,18 @@ def WriteSW2CSV(num=False, name=False):
         all_combined[key]['OUR_secondary_minima'] = []
         for tup in sec_min_tup:
             all_combined[key]['OUR_secondary_minima'].append([tup[0], tup[0]+tup[1]])
-        all_our_tuples = []
+        all_our_tuples = [] # import re-initializisation
         all_our_tuples = all_combined[key]['OUR_primary_minima'][:]
         [all_our_tuples.append(x) for x in all_combined[key]['OUR_secondary_minima']]
         (overlap_score, overlap_list, sw_remainder, our_remainder) = CompareOverlap(SW_tuples, all_our_tuples)
+        overlap_list.sort()
+        sw_remainder.sort()
+        our_remainder.sort()
         # AlignForPyMol(val['seq'], val['pdb'][0], SW_tuples, all_our_tuples)
+        PymolMarkByRange(val['pdb'][0], Range2Tups(overlap_list), Range2Tups(sw_remainder), Range2Tups(our_remainder))
         # SW2PDB(val['seq'], val['pdb'][0], SW_tuples, all_our_tuples)
         print overlap_score, ' for ', val['pdb']
-        print SW_tuples, all_our_tuples
+        # print SW_tuples, all_our_tuples
 
 
     combined.close()
@@ -658,8 +709,8 @@ MakeHydrophobicityGrade()
 # ss_grades = WindowGradesForSingleSequence('DRPIFAWVIAIIIMLAGGLAILKLPVAQYPTIAPPAVTISASYPGADAKTVQDTVTQVIEQNMNGIDNLMYMSSNSDSTGTVQITLTFESGTDADIAQVQVQNKLQLAMPLLPQEVQQQGVSVEKSSSSFLMVVGVINTDGTMTQEDISDYVAANMKDAISRTSGVGDVQLFGSQYAMRIWMNPNELNKFQLTPVDVITAIKAQNAQVAAGQLGGTPPVKGQQLNASIIAQTRLTSTEEFGKILLKVNQDGSRVLLRDVAKIELGGENYDIIAEFNGQPASGLGIKLATGANALDTAAAIRAELAKMEPFFPSGLKIVYPYDTTPFVKISIHEVVKTLVEAIILVFLVMYLFLQNFRATLIPTIAVPVVLLGTFAVLAAFGFSINTLTMFGMVLAIGLLVDDAIVVVENVERVMAEEGLPPKEATRKSMGQIQGALVGIAMVLSAVFVPMAFFGGSTGAIYRQFSITIVSAMALSVLVALILTPALCATMLKFGWFNRMFEKSTHHYTDSVGGILRSTGRYLVLYLIIVVGMAYLFVRLPSSFLPDEDQGVFMTMVQLPAGATQERTQKVLNEVTHYYLTKEKNNVESVFAVNGFGFAGRGQNTGIAFVSLKDWADRPGEENKVEAITMRATRAFSQIKDAMVFAFNLPAIVELGTATGFDFELIDQAGLGHEKLTQARNQLLAEAAKHPMLTSVRPNGLEDTPQFKIDIDQEKAQALGVSINDINTTLGAAWGGSYVNDFIDRGRVKKVYVMSEAKYRMLPDDIGDWYVRAADGQMVPFSAFSSSRWEYGSPRLERYNGLPSMEILGQAAPGKSTGEAMELMEQLASKLPTGVGYDWSGNQAPSLYAISLIVVFLCLAALYESWSIPFSVMLVVPLGVIGALLAATFRGLTNDVYFQVGLLTTIGLSAKNAILIVEFAKDLMDKEGKGLIEATLDAVRMRLRPILMTSLAFILGVMPLVISTGAGSGAQNAVGTGVMGGMVTATVLAIFFVPVFFVVVRRRFSRK', '1iwg')
 ## 1brx with SW sequence
 # ss_grades = WindowGradesForSingleSequence('GRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVPAIAFTMYLSMLLGYGLTMVPFGGEQNPIYWARYADWLFTTPLLLLDLALLVDADQGTILALVGADGIMIGTGLVGALTKVYSYRFVWWAISTAAMLYILYVLVASTFKVLRNVTVVLWSAYPVVWLIGSEGAGIVPLNIETLLFMVLDVSAKVGFGLILLRSRA', '1BRX')
-# WriteSW2CSV(name='1afo')
-WriteSW2CSV(20)
+WriteSW2CSV(name='1brx')
+# WriteSW2CSV(20)
 
 # SW = SWDB_parser_prediciton(1)
 # ss_grades = WindowGradesForSingleSequence(SW[SW.keys()[0]]['seq'], SW[SW.keys()[0]]['uniprot'])
