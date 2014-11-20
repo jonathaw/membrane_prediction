@@ -1,33 +1,25 @@
 import numpy as np
 import subprocess
-# half = 2
-# lis = [1, 2, 3, 4, 5, 6, 1]
-# print lis[-half:]
-#
-# lis = [1, 1, 1]
-# print len(set(lis)) == 1
-#
-#
-# print -1.5 < 1
-#
-#
-# print np.mean([-1, -2, 3, 15])
+from collections import Counter
 
-# array = np.array([[1,2,3,4], [5,6,7,8]])
-# print array
+# list_a = [1, 2, 3, 4, 5]
+# list_b = [3, 4, 6]
 #
-# print array[np.argmin(array[:, 1:2])][1]
-#
-# subprocess.call(['/opt/local/bin/pymol', '-q'])
-# subprocess.call(['fetch', '1c3w'])
+# def ListInList(list_a, list_b):
+#     for a in list_a:
+#         if a in list_b:
+#             sumer += 1
 
 
-# file = '/Users/jonathan/Desktop/test.pml'
-# with open(file, 'wa+') as f:
-#     f.write('fetch 1c3w')
-# subprocess.call(['/opt/local/bin/pymol', file])
 
+a = [3,4,5,5,5,6]
+b = [1,3,4,4,5,5,6,7]
 
-# print '+'.join(str(range(0, 20)))
+a_multiset = Counter(a)
+b_multiset = Counter(b)
 
-print 97 % (201 - 183 + 1)
+overlap = list((a_multiset & b_multiset).elements())
+a_remainder = list((a_multiset - b_multiset).elements())
+b_remainder = list((b_multiset - a_multiset).elements())
+
+print overlap, a_remainder, b_remainder

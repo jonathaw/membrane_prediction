@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 import csv
 import math
 import subprocess
-from database_parser import SWDB_parser_prediciton
+from database_parser import SWDB_parser_prediciton, SWDB_parser_prediciton_by_name
+
 # import os
 
 # MEMEBRANE_RANGE = range(-15, 15, 30 / 21)
@@ -388,7 +389,6 @@ def PlotSinglePeptide(grades):
 
     (minimas, minima_tuples, minimas_secondary, sec_minima_tuples) = MinimaOrganizer(grd_smh, win_of_min)
     # PymolMark(grades['name'], minima_tuples, sec_minima_tuples)
-
     plot_array = np.empty(shape=[6, len(grades['starters'])])
     plot_array[:] = np.NAN
     for col, row in enumerate(min_ind):
@@ -440,7 +440,7 @@ def PlotSinglePeptide(grades):
                 'Third SM', 'Third -1 SM', 'Two Thirds SM', 'Two Thirds -1 SM'), scatterpoints=1, ncol=9,
                loc='lower center', prop={'size': 12})
     plt.suptitle(grades['name']+' plot with smooth '+str(SMOOTH_SIZE)+' and loop-bypass '+str(LOOP_BYPASS), fontsize=48)
-    # plt.show()
+    plt.show()
 
 
 def PlotSinglePeptideWindows(grades):
@@ -518,9 +518,43 @@ def PlotSinglePeptideWindows(grades):
     plt.show()
 
 
-def WriteSW2CSV(num):
+def CompareOverlap(sw_tuples, our_tuples):
+    from collections import Counter
+    SW_range = []
+    [SW_range.append(range(int(tup[0]), int(tup[1]))) for tup in sw_tuples]
+    SW_range = [y for x in SW_range for y in x]
+    OUR_range = []
+    [OUR_range.append(range(int(tup[0]), int(tup[1]))) for tup in our_tuples]
+    OUR_range = [y for x in OUR_range for y in x]
+
+    a_multiset = Counter(SW_range)
+    b_multiset = Counter(OUR_range)
+    overlap = list((a_multiset & b_multiset).elements())
+    a_remainder = list((a_multiset - b_multiset).elements())
+    b_remainder = list((b_multiset - a_multiset).elements())
+
+    result = float((len(overlap) - len(a_remainder) - len(b_remainder))) / len(SW_range)
+    return result
+
+
+def AlignForPyMol(sw_seq, pdb_seq):
+    from Bio import pairwise2
+    from Bio.SubsMat import MatrixInfo as matlist
+    matrix = matlist.blosum62
+    gap_open = -10
+    gap_extend = -0.5
+    top_aln = pairwise2.align.globalds(sw_seq, pdb_seq, matrix, gap_open, gap_extend)[0]
+    (sw_aln, pdb_aln, score, begin, end) = top_aln
+    print sw_aln
+    print pdb_aln
+    
+
+def WriteSW2CSV(num=False, name=False):
     # reads num sequences out of a csv produced by database_parser.py (2nd funciton), and processes each sequences.
-    SW = SWDB_parser_prediciton(num)
+    if num:
+        SW = SWDB_parser_prediciton(num)
+    elif name:
+        SW = SWDB_parser_prediciton_by_name(name)
     combined = open('/Users/jonathan/Documents/membrane_prediciton_data/combined_results.csv', 'wa+')
     # csv_writer = csv.writer(combined)
     all_combined = {}
@@ -545,7 +579,13 @@ def WriteSW2CSV(num):
         all_combined[key]['OUR_secondary_minima'] = []
         for tup in sec_min_tup:
             all_combined[key]['OUR_secondary_minima'].append([tup[0], tup[0]+tup[1]])
-        print all_combined
+        all_our_tuples = all_combined[key]['OUR_primary_minima'][:]
+        [all_our_tuples.append(x) for x in all_combined[key]['OUR_secondary_minima']]
+        overlap_score = CompareOverlap(SW_tuples, all_our_tuples)
+        print overlap_score
+        PymolMark(name.upper(), pri_min_tup, sec_min_tup)
+
+        # print 'last combined ', all_combined
 
     combined.close()
 
@@ -580,7 +620,7 @@ MakeHydrophobicityGrade()
 # ss_grades = WindowGradesForSingleSequence('YAQALQSVPETQVSQLDNGVRVASEQSSQPTCTVGVWIDAGSRYESEKNNGAGYFLEHLAFKGTKNRPQNALEKEVESMGAHLNAYSSREHTAYYIKALSKDVPKAVELLADIVQNCSLEDSQIEKERDVIVRELQENDTSMREVVFNYLHATAFQGTGLAQSVEGPSENIRKLSRADLTEYLSTHYTAPRMVLAAAGGVEHQQLLELAQKHFGGVPFTYDDDAVPTLSKCRFTGSQIRHREDGLPLAHVAIAVEGPGWAHPDLVALQVANAIIGHYDRTYGGGLHSSSPLASIAVTNKLCQSFQTFSICYSETGLFGFYFVCDRMSIDDMMFVLQGQWMRLCTSISESEVLRGKNFLRNALVSHLDGTTPVCEDIGRELLTYGRRIPLEEWEERLAEVDARMVREVCSKYIYDQCPAVAGPGPIEQLPDYNRIRSGMFWLRPPHPQDLEITKLPNGLVIASLENYSPGSTIGVFIKAGSRYENSSNLGTSHLLRLASSLTTKGASSFKITRGIEAVGGKLSVESTRENMAYTVECLRDDVEILMEFLLNVTTAPEFRPWEVADLQPQLKIDKAVAFQNPQTHVIENLHAAAYRNALADSLYCPDYRIGKVTSVELHDFVQNHFTSARMALVGLGVSHPVLKNVAEQLLNIRGGLGLSGAKAKYRGGEIREQNGDSLVHAAIVAESAAIGGAEANAFSVLQHVLGANPHVKRGNPFDVSAFNASYSDSGLFGFYTISQAAYAGQVIKAAYNQVKTIAQGNVSNENVQAAKNKLKAKYLMSVESSEGFLEEVGSQALAAGSYNPPSTVLQQIDAVADADVIKAAKKFVSRQKSMAASGNLGHTPFVDELAPNIRKSHPLLKMINNSLIDLPAPSNISAWWNFGSLLAVCLMTQILTGLLLAMHYTADTSLAFSSVAHTCRNVQYGWLIRNLHANGASFFFICIFLHIGRGLYYGSYLYKETWNTGVILLLTLMATAFVGYVLPWGQMSFWGATVITNLFSAIPYIGHTLVEWAWGGFSVDNPTLTRFFALHFLLPFAIAGITIIHLTFLHESGSNNPLGISSDSDKIPFHPYYSFKDILGLTLMLTPFLTLALFSPNLLGDPENFTPANPLVTPPHIKPEWYFLFAYAILRSIPNKLGGVLALAASVLILFLIPFLHKSKQRTMTFRPLSQTLFWLLVANLLILTWIGSQPVEHPFIIIGQMASLSYFTILLILFPTIGTLENKMLNYSDLELHPPSYPWSHRGPLSSLDHTSIRRGFQVYKQVCSSCHSMDYVAYRHLVGVCYTEDEAKALAEEVEVQDGPNEDGEMFMRPGKLSDYFPKPYPNPEAARAANNGALPPDLSYIVRARHGGEDYVFSLLTGYCEPPTGVSVREGLYFNPYFPGQAIGMAPPIYNDVLEFDDGTPATMSQVAKDVCTFLRWAAEPEHDHRKRMGLKMLLMMGLLVPLVYYMKRHKWSVLKSRKLAYRPPKSHTDIKVPNFSDYRRPPDDYSTKSSRESDPSRKGFSYLVTAVTTLGVAYAAKNVVTQFVSSMSASADVLAMSKIEIKLSDIPEGKNMAFKWRGKPLFVRHRTKKEIDQEAAVEVSQLRDPQHDLERVKKPEWVILIGVCTHLGCVPIANAGDFGGYYCPCHGSHYDASGRIRKGPAPLNLEVPSYEFTSDDMVIVGSRWLEGIRKWYYNAAGFNKYGLMRDDTIYENDDVKEAIRRLPENLYDDRMFRIKRALDLNMRQQILPKEQWTKYEEDVPYLEPYLKEVIRERKEREEWDKRQFGHLTRVRHLITYSLSPFEQRPFPHYFSKGVPNVWRRLRACILRVAPPFLAFYLLYTWGTQEFEKSKRKNPAAYVNLVDPLTTVREQCEQLEKCVKARERLELCDERVSSRSQTEEDCTEELFDFLHARDHCVAHKLFNSLKTLTARLYSLLFRRTSTFALTIVVGALLFERAFDQGADAIYEHINEGKLWKHIKHKYENK', '1bcc')
 # ss_grades = WindowGradesForSingleSequence('DRPIFAWVIAIIIMLAGGLAILKLPVAQYPTIAPPAVTISASYPGADAKTVQDTVTQVIEQNMNGIDNLMYMSSNSDSTGTVQITLTFESGTDADIAQVQVQNKLQLAMPLLPQEVQQQGVSVEKSSSSFLMVVGVINTDGTMTQEDISDYVAANMKDAISRTSGVGDVQLFGSQYAMRIWMNPNELNKFQLTPVDVITAIKAQNAQVAAGQLGGTPPVKGQQLNASIIAQTRLTSTEEFGKILLKVNQDGSRVLLRDVAKIELGGENYDIIAEFNGQPASGLGIKLATGANALDTAAAIRAELAKMEPFFPSGLKIVYPYDTTPFVKISIHEVVKTLVEAIILVFLVMYLFLQNFRATLIPTIAVPVVLLGTFAVLAAFGFSINTLTMFGMVLAIGLLVDDAIVVVENVERVMAEEGLPPKEATRKSMGQIQGALVGIAMVLSAVFVPMAFFGGSTGAIYRQFSITIVSAMALSVLVALILTPALCATMLKFGWFNRMFEKSTHHYTDSVGGILRSTGRYLVLYLIIVVGMAYLFVRLPSSFLPDEDQGVFMTMVQLPAGATQERTQKVLNEVTHYYLTKEKNNVESVFAVNGFGFAGRGQNTGIAFVSLKDWADRPGEENKVEAITMRATRAFSQIKDAMVFAFNLPAIVELGTATGFDFELIDQAGLGHEKLTQARNQLLAEAAKHPMLTSVRPNGLEDTPQFKIDIDQEKAQALGVSINDINTTLGAAWGGSYVNDFIDRGRVKKVYVMSEAKYRMLPDDIGDWYVRAADGQMVPFSAFSSSRWEYGSPRLERYNGLPSMEILGQAAPGKSTGEAMELMEQLASKLPTGVGYDWSGNQAPSLYAISLIVVFLCLAALYESWSIPFSVMLVVPLGVIGALLAATFRGLTNDVYFQVGLLTTIGLSAKNAILIVEFAKDLMDKEGKGLIEATLDAVRMRLRPILMTSLAFILGVMPLVISTGAGSGAQNAVGTGVMGGMVTATVLAIFFVPVFFVVVRRRFSRK', '1iwg')
 
-WriteSW2CSV(1)
+WriteSW2CSV(name='1brx')
 # SW = SWDB_parser_prediciton(1)
 # ss_grades = WindowGradesForSingleSequence(SW[SW.keys()[0]]['seq'], SW[SW.keys()[0]]['uniprot'])
 # PlotSinglePeptide(ss_grades)
