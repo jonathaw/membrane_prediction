@@ -388,7 +388,7 @@ def PlotSinglePeptide(grades):
     (grd_smh, win_of_min, min_ind) = Grades2Arry(grades)
 
     (minimas, minima_tuples, minimas_secondary, sec_minima_tuples) = MinimaOrganizer(grd_smh, win_of_min)
-    # PymolMark(grades['name'], minima_tuples, sec_minima_tuples)
+    PymolMark(grades['name'], minima_tuples, sec_minima_tuples)
     plot_array = np.empty(shape=[6, len(grades['starters'])])
     plot_array[:] = np.NAN
     for col, row in enumerate(min_ind):
@@ -537,16 +537,19 @@ def CompareOverlap(sw_tuples, our_tuples):
     return result
 
 
-def AlignForPyMol(sw_seq, pdb_seq):
+def AlignForPyMol(sw_seq, pdb_name):
     from Bio import pairwise2
     from Bio.SubsMat import MatrixInfo as matlist
+    from pdb_sequences import pdb_seq_retrieve
+    pdb_seq = pdb_seq_retrieve(pdb_name)
     matrix = matlist.blosum62
     gap_open = -10
     gap_extend = -0.5
     top_aln = pairwise2.align.globalds(sw_seq, pdb_seq, matrix, gap_open, gap_extend)[0]
     (sw_aln, pdb_aln, score, begin, end) = top_aln
-    print sw_aln
-    print pdb_aln
+    print 'sw ', sw_aln
+    print 'pdb ', pdb_aln
+    
     
 
 def WriteSW2CSV(num=False, name=False):
@@ -565,6 +568,9 @@ def WriteSW2CSV(num=False, name=False):
         # PlotSinglePeptide(ss_grades)
         (grds_array, win_of_min, min_ind) = Grades2Arry(ss_grades)
         (pri_min, pri_min_tup, sec_min, sec_min_tup) = MinimaOrganizer(grds_array, win_of_min)
+
+        AlignForPyMol(val['seq'], val['pdb'][0])
+
         all_combined[key] = {}
         all_combined[key]['seq'] = val['seq']
         all_combined[key]['pdb'] = val['pdb']
@@ -582,8 +588,9 @@ def WriteSW2CSV(num=False, name=False):
         all_our_tuples = all_combined[key]['OUR_primary_minima'][:]
         [all_our_tuples.append(x) for x in all_combined[key]['OUR_secondary_minima']]
         overlap_score = CompareOverlap(SW_tuples, all_our_tuples)
+        # AlignForPyMol(val['seq'], val['pdb'][0])
         print overlap_score
-        PymolMark(name.upper(), pri_min_tup, sec_min_tup)
+
 
         # print 'last combined ', all_combined
 
@@ -621,6 +628,7 @@ MakeHydrophobicityGrade()
 # ss_grades = WindowGradesForSingleSequence('DRPIFAWVIAIIIMLAGGLAILKLPVAQYPTIAPPAVTISASYPGADAKTVQDTVTQVIEQNMNGIDNLMYMSSNSDSTGTVQITLTFESGTDADIAQVQVQNKLQLAMPLLPQEVQQQGVSVEKSSSSFLMVVGVINTDGTMTQEDISDYVAANMKDAISRTSGVGDVQLFGSQYAMRIWMNPNELNKFQLTPVDVITAIKAQNAQVAAGQLGGTPPVKGQQLNASIIAQTRLTSTEEFGKILLKVNQDGSRVLLRDVAKIELGGENYDIIAEFNGQPASGLGIKLATGANALDTAAAIRAELAKMEPFFPSGLKIVYPYDTTPFVKISIHEVVKTLVEAIILVFLVMYLFLQNFRATLIPTIAVPVVLLGTFAVLAAFGFSINTLTMFGMVLAIGLLVDDAIVVVENVERVMAEEGLPPKEATRKSMGQIQGALVGIAMVLSAVFVPMAFFGGSTGAIYRQFSITIVSAMALSVLVALILTPALCATMLKFGWFNRMFEKSTHHYTDSVGGILRSTGRYLVLYLIIVVGMAYLFVRLPSSFLPDEDQGVFMTMVQLPAGATQERTQKVLNEVTHYYLTKEKNNVESVFAVNGFGFAGRGQNTGIAFVSLKDWADRPGEENKVEAITMRATRAFSQIKDAMVFAFNLPAIVELGTATGFDFELIDQAGLGHEKLTQARNQLLAEAAKHPMLTSVRPNGLEDTPQFKIDIDQEKAQALGVSINDINTTLGAAWGGSYVNDFIDRGRVKKVYVMSEAKYRMLPDDIGDWYVRAADGQMVPFSAFSSSRWEYGSPRLERYNGLPSMEILGQAAPGKSTGEAMELMEQLASKLPTGVGYDWSGNQAPSLYAISLIVVFLCLAALYESWSIPFSVMLVVPLGVIGALLAATFRGLTNDVYFQVGLLTTIGLSAKNAILIVEFAKDLMDKEGKGLIEATLDAVRMRLRPILMTSLAFILGVMPLVISTGAGSGAQNAVGTGVMGGMVTATVLAIFFVPVFFVVVRRRFSRK', '1iwg')
 
 WriteSW2CSV(name='1brx')
+
 # SW = SWDB_parser_prediciton(1)
 # ss_grades = WindowGradesForSingleSequence(SW[SW.keys()[0]]['seq'], SW[SW.keys()[0]]['uniprot'])
 # PlotSinglePeptide(ss_grades)
