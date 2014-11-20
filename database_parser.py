@@ -40,6 +40,7 @@ def SWDB_parser_prediciton(num):
         if mptopp_re.search(line):
             temp_dict['seq_length'] = len(temp_dict['seq'])
             result_dict[temp_dict['uniprot']] = temp_dict
+            print 'will return ', temp_dict['pdb']
             temp_dict = {}
             temp_dict['pdb'] = []
             temp_dict['begin'] = []
@@ -76,10 +77,12 @@ def SWDB_parser_prediciton_by_name(name):
         if mptopp_re.search(line):
             temp_dict['seq_length'] = len(temp_dict['seq'])
             result_dict[temp_dict['uniprot']] = temp_dict
-            if [name.upper() is y.upper() for y in temp_dict['pdb']]:
-                a = {}
-                a[temp_dict['uniprot']] = temp_dict
-                return a
+            for pdb in temp_dict['pdb']:
+                if name.upper() == pdb.upper():
+                    a = {}
+                    a[temp_dict['uniprot']] = temp_dict
+                    print 'returning ', temp_dict['uniprot'], ' with pdb ', temp_dict['pdb']
+                    return a
             temp_dict = {}
             temp_dict['pdb'] = []
             temp_dict['begin'] = []

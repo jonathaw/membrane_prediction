@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import csv
 import math
 import subprocess
+from collections import Counter
 from database_parser import SWDB_parser_prediciton, SWDB_parser_prediciton_by_name
 
 # import os
@@ -17,7 +18,7 @@ window_grades = {}
 uniprot_entris = 0
 main_dict = {}
 SMOOTH_SIZE = 1
-LOOP_BYPASS = 3
+LOOP_BYPASS = 8
 MIN_WIN = 20
 SECONDARY_MINIMA_THRESHOLD = 7
 PRIMARY_MINIMA_THRESHOLD = 4
@@ -193,7 +194,7 @@ def PymolMark(name, minima_tuples, sec_tuples=False):
     print 'Local (secondary) minimas are ', sec_tuples, '\n\n'
     file = 'test.pml'
     with open(file, 'wa+') as f:
-        f.writelines('load ' + name + '.pdb,' + name + '\n')
+        f.writelines('load ' + name.lower() + '.pdb,' + name + '\n')
         f.writelines('cmd.show_as("cartoon", "all")\n')
         # f.writelines('fetch ' + name + ',' + name + '\n')
         i = 1
@@ -207,7 +208,7 @@ def PymolMark(name, minima_tuples, sec_tuples=False):
                 f.writelines('select TM_S' + str(i) + ', ' + name + ' and resi ' + str(TM[0]) + '-' + str(TM[0]+TM[1]) + '\n')
                 f.writelines('color blue, TM_S' + str(i) + '\n')
                 i += 1
-        f.writelines(['save ', name+'_TM_temp.pse\n'])
+        f.writelines(['save ', name.lower()+'_TM_temp.pse\n'])
     subprocess.call(['/opt/local/bin/pymol', '-q', file, '&'])
 
 
@@ -519,7 +520,6 @@ def PlotSinglePeptideWindows(grades):
 
 
 def CompareOverlap(sw_tuples, our_tuples):
-    from collections import Counter
     SW_range = []
     [SW_range.append(range(int(tup[0]), int(tup[1]))) for tup in sw_tuples]
     SW_range = [y for x in SW_range for y in x]
@@ -534,10 +534,10 @@ def CompareOverlap(sw_tuples, our_tuples):
     b_remainder = list((b_multiset - a_multiset).elements())
 
     result = float((len(overlap) - len(a_remainder) - len(b_remainder))) / len(SW_range)
-    return result
+    return result, overlap, a_remainder, b_remainder
 
 
-def AlignForPyMol(sw_seq, pdb_name):
+def AlignForPyMol(sw_seq, pdb_name, sw_tups, our_tups):
     from Bio import pairwise2
     from Bio.SubsMat import MatrixInfo as matlist
     from pdb_sequences import pdb_seq_retrieve
@@ -545,12 +545,43 @@ def AlignForPyMol(sw_seq, pdb_name):
     matrix = matlist.blosum62
     gap_open = -10
     gap_extend = -0.5
+    # top_aln = pairwise2.align.globalds(sw_seq, pdb_seq, matrix, gap_open, gap_extend)[0]
     top_aln = pairwise2.align.globalds(sw_seq, pdb_seq, matrix, gap_open, gap_extend)[0]
     (sw_aln, pdb_aln, score, begin, end) = top_aln
     print 'sw ', sw_aln
     print 'pdb ', pdb_aln
-    
-    
+    sw_new_tups = []
+
+
+def SW2PDB(sw_seq, pdb_name, sw_tups, our_tups):
+    from pdb_sequences import pdb_seq_retrieve
+    pdb_seq = pdb_seq_retrieve(pdb_name)
+    sw_pdb_tups = []
+    sw_color = []
+    for tup in sw_tups:
+        start = pdb_seq.find(sw_seq[int(tup[0]):int(tup[1])])
+        i = 0
+        while start == -1:
+            i += 1
+            start = pdb_seq.find(sw_seq[int(tup[0])+i:int(tup[1])-i])
+        end = start + int(tup[1]) - int(tup[0]) - i
+        sw_color.append([start, end-start])
+        sw_pdb_tups.append([start, end])
+    our_pdb_tups = []
+    our_color = []
+    for tup in our_tups:
+        start = pdb_seq.find(sw_seq[int(tup[0]):int(tup[1])])
+        i = 0
+        while start == -1:
+            i += 1
+            start = pdb_seq.find(sw_seq[int(tup[0])+i:int(tup[1])-i])
+        end = start + int(tup[1]) - int(tup[0]) - i
+        our_pdb_tups.append([start, end])
+        our_color.append([start, end-start])
+    PymolMark(pdb_name, sw_color, our_color)
+    # print sw_pdb_tups, sw_tups
+    # print our_pdb_tups, our_tups
+
 
 def WriteSW2CSV(num=False, name=False):
     # reads num sequences out of a csv produced by database_parser.py (2nd funciton), and processes each sequences.
@@ -569,8 +600,6 @@ def WriteSW2CSV(num=False, name=False):
         (grds_array, win_of_min, min_ind) = Grades2Arry(ss_grades)
         (pri_min, pri_min_tup, sec_min, sec_min_tup) = MinimaOrganizer(grds_array, win_of_min)
 
-        AlignForPyMol(val['seq'], val['pdb'][0])
-
         all_combined[key] = {}
         all_combined[key]['seq'] = val['seq']
         all_combined[key]['pdb'] = val['pdb']
@@ -585,14 +614,15 @@ def WriteSW2CSV(num=False, name=False):
         all_combined[key]['OUR_secondary_minima'] = []
         for tup in sec_min_tup:
             all_combined[key]['OUR_secondary_minima'].append([tup[0], tup[0]+tup[1]])
+        all_our_tuples = []
         all_our_tuples = all_combined[key]['OUR_primary_minima'][:]
         [all_our_tuples.append(x) for x in all_combined[key]['OUR_secondary_minima']]
-        overlap_score = CompareOverlap(SW_tuples, all_our_tuples)
-        # AlignForPyMol(val['seq'], val['pdb'][0])
-        print overlap_score
+        (overlap_score, overlap_list, sw_remainder, our_remainder) = CompareOverlap(SW_tuples, all_our_tuples)
+        # AlignForPyMol(val['seq'], val['pdb'][0], SW_tuples, all_our_tuples)
+        # SW2PDB(val['seq'], val['pdb'][0], SW_tuples, all_our_tuples)
+        print overlap_score, ' for ', val['pdb']
+        print SW_tuples, all_our_tuples
 
-
-        # print 'last combined ', all_combined
 
     combined.close()
 
@@ -626,8 +656,10 @@ MakeHydrophobicityGrade()
 # ss_grades = WindowGradesForSingleSequence('MDMLFAKTVVLAASAVGAGTAMIAGIGPGVGQGYAAGKAVESVARQPEAKGDIISTMVLGQAVAESTGIYSLVIALILLYANPFVGLLG', '1yce')
 # ss_grades = WindowGradesForSingleSequence('YAQALQSVPETQVSQLDNGVRVASEQSSQPTCTVGVWIDAGSRYESEKNNGAGYFLEHLAFKGTKNRPQNALEKEVESMGAHLNAYSSREHTAYYIKALSKDVPKAVELLADIVQNCSLEDSQIEKERDVIVRELQENDTSMREVVFNYLHATAFQGTGLAQSVEGPSENIRKLSRADLTEYLSTHYTAPRMVLAAAGGVEHQQLLELAQKHFGGVPFTYDDDAVPTLSKCRFTGSQIRHREDGLPLAHVAIAVEGPGWAHPDLVALQVANAIIGHYDRTYGGGLHSSSPLASIAVTNKLCQSFQTFSICYSETGLFGFYFVCDRMSIDDMMFVLQGQWMRLCTSISESEVLRGKNFLRNALVSHLDGTTPVCEDIGRELLTYGRRIPLEEWEERLAEVDARMVREVCSKYIYDQCPAVAGPGPIEQLPDYNRIRSGMFWLRPPHPQDLEITKLPNGLVIASLENYSPGSTIGVFIKAGSRYENSSNLGTSHLLRLASSLTTKGASSFKITRGIEAVGGKLSVESTRENMAYTVECLRDDVEILMEFLLNVTTAPEFRPWEVADLQPQLKIDKAVAFQNPQTHVIENLHAAAYRNALADSLYCPDYRIGKVTSVELHDFVQNHFTSARMALVGLGVSHPVLKNVAEQLLNIRGGLGLSGAKAKYRGGEIREQNGDSLVHAAIVAESAAIGGAEANAFSVLQHVLGANPHVKRGNPFDVSAFNASYSDSGLFGFYTISQAAYAGQVIKAAYNQVKTIAQGNVSNENVQAAKNKLKAKYLMSVESSEGFLEEVGSQALAAGSYNPPSTVLQQIDAVADADVIKAAKKFVSRQKSMAASGNLGHTPFVDELAPNIRKSHPLLKMINNSLIDLPAPSNISAWWNFGSLLAVCLMTQILTGLLLAMHYTADTSLAFSSVAHTCRNVQYGWLIRNLHANGASFFFICIFLHIGRGLYYGSYLYKETWNTGVILLLTLMATAFVGYVLPWGQMSFWGATVITNLFSAIPYIGHTLVEWAWGGFSVDNPTLTRFFALHFLLPFAIAGITIIHLTFLHESGSNNPLGISSDSDKIPFHPYYSFKDILGLTLMLTPFLTLALFSPNLLGDPENFTPANPLVTPPHIKPEWYFLFAYAILRSIPNKLGGVLALAASVLILFLIPFLHKSKQRTMTFRPLSQTLFWLLVANLLILTWIGSQPVEHPFIIIGQMASLSYFTILLILFPTIGTLENKMLNYSDLELHPPSYPWSHRGPLSSLDHTSIRRGFQVYKQVCSSCHSMDYVAYRHLVGVCYTEDEAKALAEEVEVQDGPNEDGEMFMRPGKLSDYFPKPYPNPEAARAANNGALPPDLSYIVRARHGGEDYVFSLLTGYCEPPTGVSVREGLYFNPYFPGQAIGMAPPIYNDVLEFDDGTPATMSQVAKDVCTFLRWAAEPEHDHRKRMGLKMLLMMGLLVPLVYYMKRHKWSVLKSRKLAYRPPKSHTDIKVPNFSDYRRPPDDYSTKSSRESDPSRKGFSYLVTAVTTLGVAYAAKNVVTQFVSSMSASADVLAMSKIEIKLSDIPEGKNMAFKWRGKPLFVRHRTKKEIDQEAAVEVSQLRDPQHDLERVKKPEWVILIGVCTHLGCVPIANAGDFGGYYCPCHGSHYDASGRIRKGPAPLNLEVPSYEFTSDDMVIVGSRWLEGIRKWYYNAAGFNKYGLMRDDTIYENDDVKEAIRRLPENLYDDRMFRIKRALDLNMRQQILPKEQWTKYEEDVPYLEPYLKEVIRERKEREEWDKRQFGHLTRVRHLITYSLSPFEQRPFPHYFSKGVPNVWRRLRACILRVAPPFLAFYLLYTWGTQEFEKSKRKNPAAYVNLVDPLTTVREQCEQLEKCVKARERLELCDERVSSRSQTEEDCTEELFDFLHARDHCVAHKLFNSLKTLTARLYSLLFRRTSTFALTIVVGALLFERAFDQGADAIYEHINEGKLWKHIKHKYENK', '1bcc')
 # ss_grades = WindowGradesForSingleSequence('DRPIFAWVIAIIIMLAGGLAILKLPVAQYPTIAPPAVTISASYPGADAKTVQDTVTQVIEQNMNGIDNLMYMSSNSDSTGTVQITLTFESGTDADIAQVQVQNKLQLAMPLLPQEVQQQGVSVEKSSSSFLMVVGVINTDGTMTQEDISDYVAANMKDAISRTSGVGDVQLFGSQYAMRIWMNPNELNKFQLTPVDVITAIKAQNAQVAAGQLGGTPPVKGQQLNASIIAQTRLTSTEEFGKILLKVNQDGSRVLLRDVAKIELGGENYDIIAEFNGQPASGLGIKLATGANALDTAAAIRAELAKMEPFFPSGLKIVYPYDTTPFVKISIHEVVKTLVEAIILVFLVMYLFLQNFRATLIPTIAVPVVLLGTFAVLAAFGFSINTLTMFGMVLAIGLLVDDAIVVVENVERVMAEEGLPPKEATRKSMGQIQGALVGIAMVLSAVFVPMAFFGGSTGAIYRQFSITIVSAMALSVLVALILTPALCATMLKFGWFNRMFEKSTHHYTDSVGGILRSTGRYLVLYLIIVVGMAYLFVRLPSSFLPDEDQGVFMTMVQLPAGATQERTQKVLNEVTHYYLTKEKNNVESVFAVNGFGFAGRGQNTGIAFVSLKDWADRPGEENKVEAITMRATRAFSQIKDAMVFAFNLPAIVELGTATGFDFELIDQAGLGHEKLTQARNQLLAEAAKHPMLTSVRPNGLEDTPQFKIDIDQEKAQALGVSINDINTTLGAAWGGSYVNDFIDRGRVKKVYVMSEAKYRMLPDDIGDWYVRAADGQMVPFSAFSSSRWEYGSPRLERYNGLPSMEILGQAAPGKSTGEAMELMEQLASKLPTGVGYDWSGNQAPSLYAISLIVVFLCLAALYESWSIPFSVMLVVPLGVIGALLAATFRGLTNDVYFQVGLLTTIGLSAKNAILIVEFAKDLMDKEGKGLIEATLDAVRMRLRPILMTSLAFILGVMPLVISTGAGSGAQNAVGTGVMGGMVTATVLAIFFVPVFFVVVRRRFSRK', '1iwg')
-
-WriteSW2CSV(name='1brx')
+## 1brx with SW sequence
+# ss_grades = WindowGradesForSingleSequence('GRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVPAIAFTMYLSMLLGYGLTMVPFGGEQNPIYWARYADWLFTTPLLLLDLALLVDADQGTILALVGADGIMIGTGLVGALTKVYSYRFVWWAISTAAMLYILYVLVASTFKVLRNVTVVLWSAYPVVWLIGSEGAGIVPLNIETLLFMVLDVSAKVGFGLILLRSRA', '1BRX')
+# WriteSW2CSV(name='1afo')
+WriteSW2CSV(20)
 
 # SW = SWDB_parser_prediciton(1)
 # ss_grades = WindowGradesForSingleSequence(SW[SW.keys()[0]]['seq'], SW[SW.keys()[0]]['uniprot'])
