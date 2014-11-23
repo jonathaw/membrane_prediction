@@ -125,3 +125,23 @@ def SW_parser_for_csv():
             temp_dict['pdb'] = []
             temp_dict['begin'] = []
             temp_dict['end'] = []
+
+def GetFastasOnly():
+    temp_dict = {}
+    temp_dict['seq'] = ''
+    temp_dict['uniprot'] = ''
+
+    for line in database:
+        if uniprot_re.search(line):
+            temp_dict['uniprot'] = uniprot_re.search(line).group(1)
+        if seq_re.search(line):
+            temp_dict['seq'] = seq_re.search(line).group(1)
+        if mptopp_re.search(line):
+            print temp_dict, '\n\n'
+            output = open('/Users/jonathan/Documents/membrane_prediciton_data/' + temp_dict['uniprot'] + '.fasta', 'wa+')
+            output.writelines('>' + temp_dict['uniprot'] + '\n')
+            output.writelines(temp_dict['seq'])
+            temp_dict = {}
+            temp_dict['uniprot'] = ''
+
+# GetFastasOnly()

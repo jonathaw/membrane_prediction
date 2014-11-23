@@ -6,6 +6,7 @@ import math
 import subprocess
 from collections import Counter
 from database_parser import SWDB_parser_prediciton, SWDB_parser_prediciton_by_name
+from other_functions import PsiReader
 
 # import os
 
@@ -18,7 +19,7 @@ window_grades = {}
 uniprot_entris = 0
 main_dict = {}
 SMOOTH_SIZE = 1
-LOOP_BYPASS = 8
+LOOP_BYPASS = 3
 MIN_WIN = 20
 SECONDARY_MINIMA_THRESHOLD = 7
 PRIMARY_MINIMA_THRESHOLD = 4
@@ -67,6 +68,22 @@ def grade_seq(seq, mode):
 
 
 def hydrophobicity_grade_increments(seq, mode):
+    results = []
+    dirs = []
+    temp = grade_seq(seq[0:MIN_WIN], mode)
+    results.append(temp[0])
+    dirs.append(temp[1])
+    for inc in range(1, 14):
+        if inc+MIN_WIN <= len(seq):
+            temp = grade_seq(seq[0:MIN_WIN+inc], mode)
+            results.append(temp[0])
+            dirs.append(temp[1])
+    min_val = min(results)
+    min_val_index = results.index(min_val)
+    return min_val, min_val_index+MIN_WIN, dirs[min_val_index], results
+
+
+def hydrophobicity_grade_increments_ss_aware(seq, mode):
     results = []
     dirs = []
     temp = grade_seq(seq[0:MIN_WIN], mode)
@@ -190,8 +207,9 @@ def WindowGradesForSingleSequence(seq, name='default'):
 
 def PymolMark(name, minima_tuples, sec_tuples=False, third_TM=False):
     # makes a pml file to describe the programs result, and initiates it.
-    print '\n\nLocal (primary) minimas are ', minima_tuples
-    print 'Local (secondary) minimas are ', sec_tuples, '\n\n'
+    print '\n\nFirst minima list is (red): ', minima_tuples
+    print 'Second minima list is (blue): ', sec_tuples
+    if third_TM: 'Third minima List is (yellow) :', third_TM, '\n\n'
     file = 'test.pml'
     with open(file, 'wa+') as f:
         f.writelines('load ' + name.lower() + '.pdb,' + name + '\n')
@@ -219,8 +237,9 @@ def PymolMark(name, minima_tuples, sec_tuples=False, third_TM=False):
 
 def PymolMarkByRange(name, minima_tuples, sec_tuples=False, third_TM=False):
     # makes a pml file to describe the programs result, and initiates it.
-    print '\n\nLocal (primary) minimas are ', minima_tuples
-    print 'Local (secondary) minimas are ', sec_tuples, '\n\n'
+    print '\n\nFirst minima list is (red): ', minima_tuples
+    print 'Second minima list is (blue): ', sec_tuples
+    if third_TM: 'Third minima List is (yellow) :', third_TM, '\n\n'
     file = 'test.pml'
     with open(file, 'wa+') as f:
         f.writelines('load ' + name.lower() + '.pdb,' + name + '\n')
@@ -432,28 +451,28 @@ def PlotSinglePeptide(grades):
     PlotParams()
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
-    f = ax1.scatter(grades['starters'], plot_array[0], s=50, c='k')
-    fi = ax1.scatter(grades['starters'], plot_array[1], s=50, facecolors='none', edgecolors='k')
-    t = ax1.scatter(grades['starters'], plot_array[2], s=50, c='r')
-    ti = ax1.scatter(grades['starters'], plot_array[3], s=50, facecolors='none', edgecolors='r')
-    tw = ax1.scatter(grades['starters'], plot_array[4], s=50, c='b')
-    twi = ax1.scatter(grades['starters'], plot_array[5], s=50, facecolors='none', edgecolors='b')
+    f = ax1.scatter(grades['starters'], plot_array[0], s=100, c='k')
+    fi = ax1.scatter(grades['starters'], plot_array[1], s=100, facecolors='none', edgecolors='k')
+    t = ax1.scatter(grades['starters'], plot_array[2], s=100, c='r')
+    ti = ax1.scatter(grades['starters'], plot_array[3], s=100, facecolors='none', edgecolors='r')
+    tw = ax1.scatter(grades['starters'], plot_array[4], s=100, c='b')
+    twi = ax1.scatter(grades['starters'], plot_array[5], s=100, facecolors='none', edgecolors='b')
 
-    fm = ax1.scatter(grades['starters'], minimas[0], s=120, c='k', marker='D')
-    fmi = ax1.scatter(grades['starters'], minimas[1], s=120, c='k', marker='x')
-    tm = ax1.scatter(grades['starters'], minimas[2], s=120, c='r', marker='D')
-    tmi = ax1.scatter(grades['starters'], minimas[3], s=120, c='r', marker='x')
-    twm = ax1.scatter(grades['starters'], minimas[4], s=120, c='b', marker='D')
-    twmi = ax1.scatter(grades['starters'], minimas[5], s=120, c='b', marker='x')
+    fm = ax1.scatter(grades['starters'], minimas[0], s=300, c='k', marker='D')
+    fmi = ax1.scatter(grades['starters'], minimas[1], s=300, c='k', marker='*')
+    tm = ax1.scatter(grades['starters'], minimas[2], s=300, c='r', marker='D')
+    tmi = ax1.scatter(grades['starters'], minimas[3], s=300, c='r', marker='*')
+    twm = ax1.scatter(grades['starters'], minimas[4], s=300, c='b', marker='D')
+    twmi = ax1.scatter(grades['starters'], minimas[5], s=300, c='b', marker='*')
 
-    fsm = ax1.scatter(grades['starters'], minimas_secondary[0], s=200, c='k', marker='8')
-    fsmi = ax1.scatter(grades['starters'], minimas_secondary[1], s=200, c='k', marker='s')
-    tsm = ax1.scatter(grades['starters'], minimas_secondary[2], s=200, c='r', marker='8')
-    tsmi = ax1.scatter(grades['starters'], minimas_secondary[3], s=200, c='r', marker='s')
-    twsm = ax1.scatter(grades['starters'], minimas_secondary[4], s=200, c='b', marker='8')
-    twsmi = ax1.scatter(grades['starters'], minimas_secondary[5], s=200, c='b', marker='s')
+    fsm = ax1.scatter(grades['starters'], minimas_secondary[0], s=280, c='k', marker='8')
+    fsmi = ax1.scatter(grades['starters'], minimas_secondary[1], s=280, c='k', marker='s')
+    tsm = ax1.scatter(grades['starters'], minimas_secondary[2], s=280, c='r', marker='8')
+    tsmi = ax1.scatter(grades['starters'], minimas_secondary[3], s=280, c='r', marker='s')
+    twsm = ax1.scatter(grades['starters'], minimas_secondary[4], s=280, c='b', marker='8')
+    twsmi = ax1.scatter(grades['starters'], minimas_secondary[5], s=280, c='b', marker='s')
 
-    ax1.plot(grades['starters'], [0]*len(grades['starters']), 'k--')
+    ax1.plot(grades['starters'], [0]*len(grades['starters']), 'k--', linewidth=3)
     for minima in minima_tuples:
         ax1.plot((minima[0], minima[0]), (-50, 50), 'k--')
         ax1.plot((minima[0]+minima[1], minima[0]+minima[1]), (-50, 50), 'r--')
@@ -466,14 +485,15 @@ def PlotSinglePeptide(grades):
     plt.xlim((-5, len(grades['starters'])+5))
     # plt.ylim(np.amin(plot_array)-2, 15)
     plt.xticks(range(0, len(grades['starters']), 20), rotation=90)
-    ax1.set_xlabel('Window Start Residue', fontsize=36)
-    ax1.set_ylabel('$\Delta$G$_{transfer}$', fontsize=36)
+    ax1.set_xlabel('Window Start Residue', fontsize=40)
+    ax1.set_ylabel('$\Delta$G$_{transfer}$', fontsize=40)
     # ax2.set_ylabel('Window Length')
     ax1.legend((f, fi, t, ti, tw, twi, fm, fmi, tm, tmi, twm, twmi, fsm, fsmi, tsm, tsmi, twsm, twsmi),
                ('Full', 'Full -1', 'Third', 'Third -1', 'Two-Thirds', 'Two-Thirds -1', 'Full minima', 'Full -1 minima',
                 'Third minima', 'Third -1 minima', 'Two Thirds minima', 'Two Thirds -1 minima', 'Full SM', 'Full -1 SM',
                 'Third SM', 'Third -1 SM', 'Two Thirds SM', 'Two Thirds -1 SM'), scatterpoints=1, ncol=9,
                loc='lower center', prop={'size': 12})
+    ax1.tick_params(axis='both', which='major', labelsize=20)
     plt.suptitle(grades['name']+' plot with smooth '+str(SMOOTH_SIZE)+' and loop-bypass '+str(LOOP_BYPASS), fontsize=48)
     plt.show()
 
@@ -661,7 +681,7 @@ def WriteSW2CSV(num=False, name=False):
         all_combined[key]['OUR_secondary_minima'] = []
         for tup in sec_min_tup:
             all_combined[key]['OUR_secondary_minima'].append([tup[0], tup[0]+tup[1]])
-        all_our_tuples = [] # import re-initializisation
+        all_our_tuples = [] # important re-initializisation
         all_our_tuples = all_combined[key]['OUR_primary_minima'][:]
         [all_our_tuples.append(x) for x in all_combined[key]['OUR_secondary_minima']]
         (overlap_score, overlap_list, sw_remainder, our_remainder) = CompareOverlap(SW_tuples, all_our_tuples)
@@ -709,7 +729,8 @@ MakeHydrophobicityGrade()
 # ss_grades = WindowGradesForSingleSequence('DRPIFAWVIAIIIMLAGGLAILKLPVAQYPTIAPPAVTISASYPGADAKTVQDTVTQVIEQNMNGIDNLMYMSSNSDSTGTVQITLTFESGTDADIAQVQVQNKLQLAMPLLPQEVQQQGVSVEKSSSSFLMVVGVINTDGTMTQEDISDYVAANMKDAISRTSGVGDVQLFGSQYAMRIWMNPNELNKFQLTPVDVITAIKAQNAQVAAGQLGGTPPVKGQQLNASIIAQTRLTSTEEFGKILLKVNQDGSRVLLRDVAKIELGGENYDIIAEFNGQPASGLGIKLATGANALDTAAAIRAELAKMEPFFPSGLKIVYPYDTTPFVKISIHEVVKTLVEAIILVFLVMYLFLQNFRATLIPTIAVPVVLLGTFAVLAAFGFSINTLTMFGMVLAIGLLVDDAIVVVENVERVMAEEGLPPKEATRKSMGQIQGALVGIAMVLSAVFVPMAFFGGSTGAIYRQFSITIVSAMALSVLVALILTPALCATMLKFGWFNRMFEKSTHHYTDSVGGILRSTGRYLVLYLIIVVGMAYLFVRLPSSFLPDEDQGVFMTMVQLPAGATQERTQKVLNEVTHYYLTKEKNNVESVFAVNGFGFAGRGQNTGIAFVSLKDWADRPGEENKVEAITMRATRAFSQIKDAMVFAFNLPAIVELGTATGFDFELIDQAGLGHEKLTQARNQLLAEAAKHPMLTSVRPNGLEDTPQFKIDIDQEKAQALGVSINDINTTLGAAWGGSYVNDFIDRGRVKKVYVMSEAKYRMLPDDIGDWYVRAADGQMVPFSAFSSSRWEYGSPRLERYNGLPSMEILGQAAPGKSTGEAMELMEQLASKLPTGVGYDWSGNQAPSLYAISLIVVFLCLAALYESWSIPFSVMLVVPLGVIGALLAATFRGLTNDVYFQVGLLTTIGLSAKNAILIVEFAKDLMDKEGKGLIEATLDAVRMRLRPILMTSLAFILGVMPLVISTGAGSGAQNAVGTGVMGGMVTATVLAIFFVPVFFVVVRRRFSRK', '1iwg')
 ## 1brx with SW sequence
 # ss_grades = WindowGradesForSingleSequence('GRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVPAIAFTMYLSMLLGYGLTMVPFGGEQNPIYWARYADWLFTTPLLLLDLALLVDADQGTILALVGADGIMIGTGLVGALTKVYSYRFVWWAISTAAMLYILYVLVASTFKVLRNVTVVLWSAYPVVWLIGSEGAGIVPLNIETLLFMVLDVSAKVGFGLILLRSRA', '1BRX')
-WriteSW2CSV(name='1brx')
+
+WriteSW2CSV(name='1e12')
 # WriteSW2CSV(20)
 
 # SW = SWDB_parser_prediciton(1)

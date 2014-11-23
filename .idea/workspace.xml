@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6a73546c-b0e1-4c73-9c98-48c4af466cd3" name="Default" comment="added Range2">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/temp.py" afterPath="$PROJECT_DIR$/temp.py" />
+    <list default="true" id="6a73546c-b0e1-4c73-9c98-48c4af466cd3" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/other_functions.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database_parser.py" afterPath="$PROJECT_DIR$/database_parser.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/uniprot_parser.py" afterPath="$PROJECT_DIR$/uniprot_parser.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -55,11 +56,13 @@
       <file leaf-file-name="database_parser.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/database_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="415" max-vertical-offset="2376">
-              <caret line="42" column="48" selection-start-line="42" selection-start-column="48" selection-end-line="42" selection-end-column="48" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2718">
+              <caret line="146" column="17" selection-start-line="146" selection-start-column="17" selection-end-line="146" selection-end-column="17" />
               <folding>
+                <element signature="e#637#1902#0" expanded="true" />
                 <element signature="e#1951#3378#0" expanded="true" />
                 <element signature="e#3410#4728#0" expanded="true" />
+                <element signature="e#4755#5438#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -68,10 +71,23 @@
       <file leaf-file-name="uniprot_parser.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/uniprot_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.21266234" vertical-offset="1345" max-vertical-offset="3222">
-              <caret line="555" column="23" selection-start-line="555" selection-start-column="23" selection-end-line="555" selection-end-column="23" />
+            <state vertical-scroll-proportion="0.9415584" vertical-offset="446" max-vertical-offset="3096">
+              <caret line="93" column="54" selection-start-line="93" selection-start-column="54" selection-end-line="93" selection-end-column="54" />
               <folding>
-                <element signature="e#28593#30817#0" expanded="true" />
+                <element signature="e#0#9#0" expanded="true" />
+                <element signature="e#2223#2676#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="other_functions.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/other_functions.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="450">
+              <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+              <folding>
+                <element signature="e#28#772#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -80,8 +96,8 @@
       <file leaf-file-name="test.pml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test.pml">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="882">
-              <caret line="20" column="34" selection-start-line="20" selection-start-column="34" selection-end-line="20" selection-end-column="34" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="181" max-vertical-offset="810">
+              <caret line="39" column="0" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -100,9 +116,11 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/database_parser.py" />
         <option value="$PROJECT_DIR$/pdb_sequences.py" />
         <option value="$PROJECT_DIR$/temp.py" />
+        <option value="$PROJECT_DIR$/test.pml" />
+        <option value="$PROJECT_DIR$/database_parser.py" />
+        <option value="$PROJECT_DIR$/other_functions.py" />
         <option value="$PROJECT_DIR$/uniprot_parser.py" />
       </list>
     </option>
@@ -174,7 +192,7 @@
       <console-settings />
     </option>
   </component>
-  <component name="RunManager" selected="Python.uniprot_parser">
+  <component name="RunManager" selected="Python.other_functions">
     <configuration default="false" name="uniprot_parser" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -224,6 +242,24 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="membrane_prediciton" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/temp.py" />
+      <option name="PARAMETERS" value="" />
+      <RunnerSettings RunnerId="PythonRunner" />
+      <ConfigurationWrapper RunnerId="PythonRunner" />
+      <method />
+    </configuration>
+    <configuration default="false" name="other_functions" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="membrane_prediciton" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/other_functions.py" />
       <option name="PARAMETERS" value="" />
       <RunnerSettings RunnerId="PythonRunner" />
       <ConfigurationWrapper RunnerId="PythonRunner" />
@@ -350,16 +386,18 @@
       <option name="USE_PATTERN" value="false" />
       <method />
     </configuration>
-    <list size="3">
+    <list size="4">
       <item index="0" class="java.lang.String" itemvalue="Python.uniprot_parser" />
       <item index="1" class="java.lang.String" itemvalue="Python.database_parser" />
       <item index="2" class="java.lang.String" itemvalue="Python.temp" />
+      <item index="3" class="java.lang.String" itemvalue="Python.other_functions" />
     </list>
     <recent_temporary>
-      <list size="3">
-        <item index="0" class="java.lang.String" itemvalue="Python.uniprot_parser" />
-        <item index="1" class="java.lang.String" itemvalue="Python.temp" />
-        <item index="2" class="java.lang.String" itemvalue="Python.database_parser" />
+      <list size="4">
+        <item index="0" class="java.lang.String" itemvalue="Python.other_functions" />
+        <item index="1" class="java.lang.String" itemvalue="Python.database_parser" />
+        <item index="2" class="java.lang.String" itemvalue="Python.uniprot_parser" />
+        <item index="3" class="java.lang.String" itemvalue="Python.temp" />
       </list>
     </recent_temporary>
   </component>
@@ -425,7 +463,11 @@
       <created>1416494517400</created>
       <updated>1416494517400</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="added Range2Tups, for coloring stuff. and made a new PymolMark that colors by start-end (not start+win).">
+      <created>1416504614154</created>
+      <updated>1416504614154</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -480,7 +522,8 @@
     <MESSAGE value="improvments to combined writer. now" />
     <MESSAGE value="alignment now working" />
     <MESSAGE value="now we can score multiple entries" />
-    <option name="LAST_COMMIT_MESSAGE" value="now we can score multiple entries" />
+    <MESSAGE value="added Range2Tups, for coloring stuff. and made a new PymolMark that colors by start-end (not start+win)." />
+    <option name="LAST_COMMIT_MESSAGE" value="added Range2Tups, for coloring stuff. and made a new PymolMark that colors by start-end (not start+win)." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -493,7 +536,8 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="774" max-vertical-offset="2124">
           <caret line="188" column="0" selection-start-line="188" selection-start-column="0" selection-end-line="188" selection-end-column="53" />
           <folding>
-            <element signature="e#28593#30817#0" expanded="true" />
+            <element signature="e#0#9#0" expanded="true" />
+            <element signature="e#2223#2676#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -503,8 +547,10 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="846" max-vertical-offset="954">
           <caret line="47" column="0" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
           <folding>
+            <element signature="e#637#1902#0" expanded="true" />
             <element signature="e#1951#3378#0" expanded="true" />
             <element signature="e#3410#4728#0" expanded="true" />
+            <element signature="e#4755#5438#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -514,7 +560,8 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="846" max-vertical-offset="3456">
           <caret line="467" column="12" selection-start-line="467" selection-start-column="12" selection-end-line="467" selection-end-column="12" />
           <folding>
-            <element signature="e#28593#30817#0" expanded="true" />
+            <element signature="e#0#9#0" expanded="true" />
+            <element signature="e#2223#2676#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -524,7 +571,8 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="2839" max-vertical-offset="3456">
           <caret line="467" column="12" selection-start-line="467" selection-start-column="12" selection-end-line="467" selection-end-column="12" />
           <folding>
-            <element signature="e#28593#30817#0" expanded="true" />
+            <element signature="e#0#9#0" expanded="true" />
+            <element signature="e#2223#2676#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -536,13 +584,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/database_parser.py">
+    <entry file="file://$PROJECT_DIR$/test.pml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="415" max-vertical-offset="2376">
-          <caret line="42" column="48" selection-start-line="42" selection-start-column="48" selection-end-line="42" selection-end-column="48" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="181" max-vertical-offset="810">
+          <caret line="39" column="0" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/other_functions.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.028616853" vertical-offset="0" max-vertical-offset="126">
+          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
           <folding>
-            <element signature="e#1951#3378#0" expanded="true" />
-            <element signature="e#3410#4728#0" expanded="true" />
+            <element signature="e#28#772#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -568,20 +623,36 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test.pml">
+    <entry file="file://$PROJECT_DIR$/other_functions.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="882">
-          <caret line="20" column="34" selection-start-line="20" selection-start-column="34" selection-end-line="20" selection-end-column="34" />
-          <folding />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="450">
+          <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+          <folding>
+            <element signature="e#28#772#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/database_parser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2084" max-vertical-offset="2718">
+          <caret line="146" column="17" selection-start-line="146" selection-start-column="17" selection-end-line="146" selection-end-column="17" />
+          <folding>
+            <element signature="e#637#1902#0" expanded="true" />
+            <element signature="e#1951#3378#0" expanded="true" />
+            <element signature="e#3410#4728#0" expanded="true" />
+            <element signature="e#4755#5438#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/uniprot_parser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.21266234" vertical-offset="1345" max-vertical-offset="3222">
-          <caret line="555" column="23" selection-start-line="555" selection-start-column="23" selection-end-line="555" selection-end-column="23" />
+        <state vertical-scroll-proportion="0.9415584" vertical-offset="446" max-vertical-offset="3096">
+          <caret line="93" column="54" selection-start-line="93" selection-start-column="54" selection-end-line="93" selection-end-column="54" />
           <folding>
-            <element signature="e#28593#30817#0" expanded="true" />
+            <element signature="e#0#9#0" expanded="true" />
+            <element signature="e#2223#2676#0" expanded="true" />
           </folding>
         </state>
       </provider>
