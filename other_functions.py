@@ -5,8 +5,6 @@ def PsiReader(uniprot):
     result = []
     for line in ss2_file:
         if line_re.search(line):
-            print line.strip()
-            print line_re.search(line).group(3)
             if line_re.search(line).group(3) == 'C':
                 temp = line_re.search(line).group(4)
             elif line_re.search(line).group(3) == 'H':

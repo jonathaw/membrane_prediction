@@ -82,18 +82,26 @@ def hydrophobicity_grade_increments(seq, mode):
     min_val_index = results.index(min_val)
     return min_val, min_val_index+MIN_WIN, dirs[min_val_index], results
 
-
-def hydrophobicity_grade_increments_ss_aware(seq, mode):
+# think - the non helix can be in the incs, and the minimal windows. handle this!
+def hydrophobicity_grade_increments_ss_aware(seq, mode, psi_pred):
     results = []
     dirs = []
     temp = grade_seq(seq[0:MIN_WIN], mode)
     results.append(temp[0])
     dirs.append(temp[1])
+    print seq
+    # print seq[0:MIN_WIN]
+    # print len(psi_pred), len(seq)
     for inc in range(1, 14):
         if inc+MIN_WIN <= len(seq):
-            temp = grade_seq(seq[0:MIN_WIN+inc], mode)
-            results.append(temp[0])
-            dirs.append(temp[1])
+            if psi_pred[MIN_WIN+inc-1][0] == 'H' and psi_pred[MIN_WIN+inc-1][1] > 0.8:
+                print 'accepted: ', seq[MIN_WIN+inc-1], psi_pred[MIN_WIN+inc-1][0], psi_pred[MIN_WIN+inc-1][1]
+                temp = grade_seq(seq[0:MIN_WIN+inc], mode)
+                results.append(temp[0])
+                dirs.append(temp[1])
+            else:
+                # print 'rejected: ', seq[MIN_WIN+inc-1], psi_pred[MIN_WIN+inc-1][0], psi_pred[MIN_WIN+inc-1][1]
+                break
     min_val = min(results)
     min_val_index = results.index(min_val)
     return min_val, min_val_index+MIN_WIN, dirs[min_val_index], results
@@ -165,6 +173,46 @@ def WriteSingleSeqToTSVusingCSV(grades, file):
         writer.writerow(grades.values())
 
 
+# def WindowGradesForSingleSequence(seq, name='default'):
+#     window_grades_single_chain = {}
+#     window_grades_single_chain['name'] = name
+#     full_grades = []
+#     full_grades_win_len = []
+#     full_dir = []
+#     third_grades = []
+#     third_grades_win_len = []
+#     third_dir = []
+#     two_thirds_grades = []
+#     two_thirds_grades_win_len = []
+#     two_thirds_dir = []
+#     starters = []
+#     for first in range(0, len(seq) - MIN_WIN):
+#         temp = hydrophobicity_grade_increments(seq[first:first+36], 'full')
+#         full_grades.append(temp[0])
+#         full_grades_win_len.append(temp[1])
+#         full_dir.append(temp[2])
+#         temp = hydrophobicity_grade_increments(seq[first:first+36], 'third')
+#         third_grades.append(temp[0])
+#         third_grades_win_len.append(temp[1])
+#         third_dir.append(temp[2])
+#         temp = hydrophobicity_grade_increments(seq[first:first+36], 'two_thirds')
+#         two_thirds_grades.append(temp[0])
+#         two_thirds_grades_win_len.append(temp[1])
+#         two_thirds_dir.append(temp[2])
+#         starters.append(first)
+#     window_grades_single_chain['full_grades'] = full_grades
+#     window_grades_single_chain['full_grades_win_len'] = full_grades_win_len
+#     window_grades_single_chain['full_dirs'] = full_dir
+#     window_grades_single_chain['third_grades'] = third_grades
+#     window_grades_single_chain['third_grades_win_len'] = third_grades_win_len
+#     window_grades_single_chain['third_dirs'] = third_dir
+#     window_grades_single_chain['two_thirds_grades'] = two_thirds_grades
+#     window_grades_single_chain['two_thirds_grades_win_len'] = two_thirds_grades_win_len
+#     window_grades_single_chain['two_thirds_dirs'] = two_thirds_dir
+#     window_grades_single_chain['starters'] = starters
+#     return window_grades_single_chain
+
+
 def WindowGradesForSingleSequence(seq, name='default'):
     window_grades_single_chain = {}
     window_grades_single_chain['name'] = name
@@ -178,16 +226,17 @@ def WindowGradesForSingleSequence(seq, name='default'):
     two_thirds_grades_win_len = []
     two_thirds_dir = []
     starters = []
+    psi_pred = PsiReader('3g61')
     for first in range(0, len(seq) - MIN_WIN):
-        temp = hydrophobicity_grade_increments(seq[first:first+36], 'full')
+        temp = hydrophobicity_grade_increments_ss_aware(seq[first:first+36], 'full', psi_pred[first:first+36])
         full_grades.append(temp[0])
         full_grades_win_len.append(temp[1])
         full_dir.append(temp[2])
-        temp = hydrophobicity_grade_increments(seq[first:first+36], 'third')
+        temp = hydrophobicity_grade_increments_ss_aware(seq[first:first+36], 'third', psi_pred[first:first+36])
         third_grades.append(temp[0])
         third_grades_win_len.append(temp[1])
         third_dir.append(temp[2])
-        temp = hydrophobicity_grade_increments(seq[first:first+36], 'two_thirds')
+        temp = hydrophobicity_grade_increments_ss_aware(seq[first:first+36], 'two_thirds', psi_pred[first:first+36])
         two_thirds_grades.append(temp[0])
         two_thirds_grades_win_len.append(temp[1])
         two_thirds_dir.append(temp[2])
@@ -729,13 +778,14 @@ MakeHydrophobicityGrade()
 # ss_grades = WindowGradesForSingleSequence('DRPIFAWVIAIIIMLAGGLAILKLPVAQYPTIAPPAVTISASYPGADAKTVQDTVTQVIEQNMNGIDNLMYMSSNSDSTGTVQITLTFESGTDADIAQVQVQNKLQLAMPLLPQEVQQQGVSVEKSSSSFLMVVGVINTDGTMTQEDISDYVAANMKDAISRTSGVGDVQLFGSQYAMRIWMNPNELNKFQLTPVDVITAIKAQNAQVAAGQLGGTPPVKGQQLNASIIAQTRLTSTEEFGKILLKVNQDGSRVLLRDVAKIELGGENYDIIAEFNGQPASGLGIKLATGANALDTAAAIRAELAKMEPFFPSGLKIVYPYDTTPFVKISIHEVVKTLVEAIILVFLVMYLFLQNFRATLIPTIAVPVVLLGTFAVLAAFGFSINTLTMFGMVLAIGLLVDDAIVVVENVERVMAEEGLPPKEATRKSMGQIQGALVGIAMVLSAVFVPMAFFGGSTGAIYRQFSITIVSAMALSVLVALILTPALCATMLKFGWFNRMFEKSTHHYTDSVGGILRSTGRYLVLYLIIVVGMAYLFVRLPSSFLPDEDQGVFMTMVQLPAGATQERTQKVLNEVTHYYLTKEKNNVESVFAVNGFGFAGRGQNTGIAFVSLKDWADRPGEENKVEAITMRATRAFSQIKDAMVFAFNLPAIVELGTATGFDFELIDQAGLGHEKLTQARNQLLAEAAKHPMLTSVRPNGLEDTPQFKIDIDQEKAQALGVSINDINTTLGAAWGGSYVNDFIDRGRVKKVYVMSEAKYRMLPDDIGDWYVRAADGQMVPFSAFSSSRWEYGSPRLERYNGLPSMEILGQAAPGKSTGEAMELMEQLASKLPTGVGYDWSGNQAPSLYAISLIVVFLCLAALYESWSIPFSVMLVVPLGVIGALLAATFRGLTNDVYFQVGLLTTIGLSAKNAILIVEFAKDLMDKEGKGLIEATLDAVRMRLRPILMTSLAFILGVMPLVISTGAGSGAQNAVGTGVMGGMVTATVLAIFFVPVFFVVVRRRFSRK', '1iwg')
 ## 1brx with SW sequence
 # ss_grades = WindowGradesForSingleSequence('GRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVPAIAFTMYLSMLLGYGLTMVPFGGEQNPIYWARYADWLFTTPLLLLDLALLVDADQGTILALVGADGIMIGTGLVGALTKVYSYRFVWWAISTAAMLYILYVLVASTFKVLRNVTVVLWSAYPVVWLIGSEGAGIVPLNIETLLFMVLDVSAKVGFGLILLRSRA', '1BRX')
-
-WriteSW2CSV(name='1e12')
+# new 3g61:
+ss_grades = WindowGradesForSingleSequence('VSVLTMFRYAGWLDRLYMLVGTLAAIIHGVALPLMMLIFGDMTDSFASVGNVSKNSTNMSEADKRAMFAKLEEEMTTYAYYYTGIGAGVLIVAYIQVSFWCLAAGRQIHKIRQKFFHAIMNQEIGWFDVHDVGELNTRLTDDVSKINEGIGDKIGMFFQAMATFFGGFIIGFTRGWKLTLVILAISPVLGLSAGIWAKILSSFTDKELHAYAKAGAVAEEVLAAIRTVIAFGGQKKELERYNNNLEEAKRLGIKKAITANISMGAAFLLIYASYALAFWYGTSLVISKEYSIGQVLTVFFSVLIGAFSVGQASPNIEAFANARGAAYEVFKIIDNKPSIDSFSKSGHKPDNIQGNLEFKNIHFSYPSRKEVQILKGLNLKVKSGQTVALVGNSGCGKSTTVQLMQRLYDPLDGMVSIDGQDIRTINVRYLREIIGVVSQEPVLFATTIAENIRYGREDVTMDEIEKAVKEANAYDFIMKLPHQFDTLVGERGAQLSGGQKQRIAIARALVRNPKILLLDEATSALDTESEAVVQAALDKAREGRTTIVIAHRLSTVRNADVIAGFDGGVIVEQGNHDELMREKGIYFKLVMTQTLDEDVPPASFWRILKLNSTEWPYFVVGIFCAIINGGLQPAFSVIFSKVVGVFTNGGPPETQRQNSNLFSLLFLILGIISFITFFLQGFTFGKAGEILTKRLRYMVFKSMLRQDVSWFDDPKNTTGALTTRLANDAAQVKGATGSRLAVIFQNIANLGTGIIISLIYGWQLTLLLLAIVPIIAIAGVVEMKMLSGQALKDKKELEGSGKIATEAIENFRTVVSLTREQKFETMYAQSLQIPYRNAMKKAHVFGITFSFTQAMMYFSYAACFRFGAYLVTQQLMTFENVLLVFSAIVFGAMAVGQVSSFAPDYAKATVSASHIIRIIEKTPEIDSYSTQGLKPNMLEGNVQFSGVVFNYPTRPSIPVLQGLSLEVKKGQTLALVGSSGCGKSTVVQLLERFYDPMAGSVFLDGKEIKQLNVQWLRAQLGIVSQEPILFDCSIAENIAYGDNSRVVSYEEIVRAAKEANIHQFIDSLPDKYNTRVGDKGTQLSGGQKQRIAIARALVRQPHILLLDEATSALDTESEKVVQEALDKAREGRTCIVIAHRLSTIQNADLIVVIQNGKVKEHGTHQQLLAQKGIYFSMVSVQA', '3g61')
+# WriteSW2CSV(name='1e12')
 # WriteSW2CSV(20)
 
 # SW = SWDB_parser_prediciton(1)
 # ss_grades = WindowGradesForSingleSequence(SW[SW.keys()[0]]['seq'], SW[SW.keys()[0]]['uniprot'])
-# PlotSinglePeptide(ss_grades)
+PlotSinglePeptide(ss_grades)
 
 # WriteSingleSeqToTSV(ss_grades, '/Users/jonathan/Desktop/bassaf_seq.txt')
 # WriteSingleSeqToTSVusingCSV(ss_grades, '/Users/jonathan/Desktop/4j4q_win_gds.csv')
