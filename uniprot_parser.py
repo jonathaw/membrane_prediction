@@ -6,7 +6,7 @@ import math
 import subprocess
 from collections import Counter
 from database_parser import SWDB_parser_prediciton, SWDB_parser_prediciton_by_name
-from other_functions import PsiReader
+from other_functions import PsiReaderHelix
 
 # import os
 
@@ -23,6 +23,7 @@ LOOP_BYPASS = 3
 MIN_WIN = 20
 SECONDARY_MINIMA_THRESHOLD = 7
 PRIMARY_MINIMA_THRESHOLD = 4
+PSI_CUTOFF = 0.76
 
 
 def MakeHydrophobicityGrade():
@@ -82,25 +83,22 @@ def hydrophobicity_grade_increments(seq, mode):
     min_val_index = results.index(min_val)
     return min_val, min_val_index+MIN_WIN, dirs[min_val_index], results
 
-# think - the non helix can be in the incs, and the minimal windows. handle this!
+
 def hydrophobicity_grade_increments_ss_aware(seq, mode, psi_pred):
+    # a working version with psi-pred awareness. an increment which is lower than PSI_CUTOFF as a helix
+    # will not be added
     results = []
     dirs = []
     temp = grade_seq(seq[0:MIN_WIN], mode)
     results.append(temp[0])
     dirs.append(temp[1])
-    print seq
-    # print seq[0:MIN_WIN]
-    # print len(psi_pred), len(seq)
     for inc in range(1, 14):
         if inc+MIN_WIN <= len(seq):
-            if psi_pred[MIN_WIN+inc-1][0] == 'H' and psi_pred[MIN_WIN+inc-1][1] > 0.8:
-                print 'accepted: ', seq[MIN_WIN+inc-1], psi_pred[MIN_WIN+inc-1][0], psi_pred[MIN_WIN+inc-1][1]
-                temp = grade_seq(seq[0:MIN_WIN+inc], mode)
+            if float(psi_pred[MIN_WIN+inc]) > PSI_CUTOFF:
+                temp = grade_seq(seq[0:MIN_WIN+inc-1], mode)
                 results.append(temp[0])
                 dirs.append(temp[1])
             else:
-                # print 'rejected: ', seq[MIN_WIN+inc-1], psi_pred[MIN_WIN+inc-1][0], psi_pred[MIN_WIN+inc-1][1]
                 break
     min_val = min(results)
     min_val_index = results.index(min_val)
@@ -213,7 +211,9 @@ def WriteSingleSeqToTSVusingCSV(grades, file):
 #     return window_grades_single_chain
 
 
-def WindowGradesForSingleSequence(seq, name='default'):
+def WindowGradesForSingleSequence(seq, name='default', uniprot='default'):
+    # runs through an entire sequence, and sends segments of MIN_WIN+36 to hydrophobicity_grade_increments_ss_aware
+    # doesn't do that when the WIN_MIN has a non helix residue, adds 1000 instead.
     window_grades_single_chain = {}
     window_grades_single_chain['name'] = name
     full_grades = []
@@ -226,8 +226,19 @@ def WindowGradesForSingleSequence(seq, name='default'):
     two_thirds_grades_win_len = []
     two_thirds_dir = []
     starters = []
-    psi_pred = PsiReader('3g61')
+    psi_pred = PsiReaderHelix(uniprot)
     for first in range(0, len(seq) - MIN_WIN):
+        if not all(float(i) > PSI_CUTOFF for i in psi_pred[first:first+MIN_WIN]):
+            full_grades.append(1000)
+            full_grades_win_len.append(MIN_WIN)
+            full_dir.append(0)
+            third_grades.append(1000)
+            third_grades_win_len.append(MIN_WIN)
+            third_dir.append(0)
+            two_thirds_grades.append(1000)
+            two_thirds_grades_win_len.append(MIN_WIN)
+            two_thirds_dir.append(0)
+            continue
         temp = hydrophobicity_grade_increments_ss_aware(seq[first:first+36], 'full', psi_pred[first:first+36])
         full_grades.append(temp[0])
         full_grades_win_len.append(temp[1])
@@ -711,7 +722,7 @@ def WriteSW2CSV(num=False, name=False):
 
     for key, val in SW.iteritems():
         # print 'yupidupi', key, '\n', val
-        ss_grades = WindowGradesForSingleSequence(val['seq'], key)
+        ss_grades = WindowGradesForSingleSequence(val['seq'], key, val['uniprot'])
         # PlotSinglePeptide(ss_grades)
         (grds_array, win_of_min, min_ind) = Grades2Arry(ss_grades)
         (pri_min, pri_min_tup, sec_min, sec_min_tup) = MinimaOrganizer(grds_array, win_of_min)
@@ -779,13 +790,13 @@ MakeHydrophobicityGrade()
 ## 1brx with SW sequence
 # ss_grades = WindowGradesForSingleSequence('GRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVPAIAFTMYLSMLLGYGLTMVPFGGEQNPIYWARYADWLFTTPLLLLDLALLVDADQGTILALVGADGIMIGTGLVGALTKVYSYRFVWWAISTAAMLYILYVLVASTFKVLRNVTVVLWSAYPVVWLIGSEGAGIVPLNIETLLFMVLDVSAKVGFGLILLRSRA', '1BRX')
 # new 3g61:
-ss_grades = WindowGradesForSingleSequence('VSVLTMFRYAGWLDRLYMLVGTLAAIIHGVALPLMMLIFGDMTDSFASVGNVSKNSTNMSEADKRAMFAKLEEEMTTYAYYYTGIGAGVLIVAYIQVSFWCLAAGRQIHKIRQKFFHAIMNQEIGWFDVHDVGELNTRLTDDVSKINEGIGDKIGMFFQAMATFFGGFIIGFTRGWKLTLVILAISPVLGLSAGIWAKILSSFTDKELHAYAKAGAVAEEVLAAIRTVIAFGGQKKELERYNNNLEEAKRLGIKKAITANISMGAAFLLIYASYALAFWYGTSLVISKEYSIGQVLTVFFSVLIGAFSVGQASPNIEAFANARGAAYEVFKIIDNKPSIDSFSKSGHKPDNIQGNLEFKNIHFSYPSRKEVQILKGLNLKVKSGQTVALVGNSGCGKSTTVQLMQRLYDPLDGMVSIDGQDIRTINVRYLREIIGVVSQEPVLFATTIAENIRYGREDVTMDEIEKAVKEANAYDFIMKLPHQFDTLVGERGAQLSGGQKQRIAIARALVRNPKILLLDEATSALDTESEAVVQAALDKAREGRTTIVIAHRLSTVRNADVIAGFDGGVIVEQGNHDELMREKGIYFKLVMTQTLDEDVPPASFWRILKLNSTEWPYFVVGIFCAIINGGLQPAFSVIFSKVVGVFTNGGPPETQRQNSNLFSLLFLILGIISFITFFLQGFTFGKAGEILTKRLRYMVFKSMLRQDVSWFDDPKNTTGALTTRLANDAAQVKGATGSRLAVIFQNIANLGTGIIISLIYGWQLTLLLLAIVPIIAIAGVVEMKMLSGQALKDKKELEGSGKIATEAIENFRTVVSLTREQKFETMYAQSLQIPYRNAMKKAHVFGITFSFTQAMMYFSYAACFRFGAYLVTQQLMTFENVLLVFSAIVFGAMAVGQVSSFAPDYAKATVSASHIIRIIEKTPEIDSYSTQGLKPNMLEGNVQFSGVVFNYPTRPSIPVLQGLSLEVKKGQTLALVGSSGCGKSTVVQLLERFYDPMAGSVFLDGKEIKQLNVQWLRAQLGIVSQEPILFDCSIAENIAYGDNSRVVSYEEIVRAAKEANIHQFIDSLPDKYNTRVGDKGTQLSGGQKQRIAIARALVRQPHILLLDEATSALDTESEKVVQEALDKAREGRTCIVIAHRLSTIQNADLIVVIQNGKVKEHGTHQQLLAQKGIYFSMVSVQA', '3g61')
-# WriteSW2CSV(name='1e12')
+# ss_grades = WindowGradesForSingleSequence('VSVLTMFRYAGWLDRLYMLVGTLAAIIHGVALPLMMLIFGDMTDSFASVGNVSKNSTNMSEADKRAMFAKLEEEMTTYAYYYTGIGAGVLIVAYIQVSFWCLAAGRQIHKIRQKFFHAIMNQEIGWFDVHDVGELNTRLTDDVSKINEGIGDKIGMFFQAMATFFGGFIIGFTRGWKLTLVILAISPVLGLSAGIWAKILSSFTDKELHAYAKAGAVAEEVLAAIRTVIAFGGQKKELERYNNNLEEAKRLGIKKAITANISMGAAFLLIYASYALAFWYGTSLVISKEYSIGQVLTVFFSVLIGAFSVGQASPNIEAFANARGAAYEVFKIIDNKPSIDSFSKSGHKPDNIQGNLEFKNIHFSYPSRKEVQILKGLNLKVKSGQTVALVGNSGCGKSTTVQLMQRLYDPLDGMVSIDGQDIRTINVRYLREIIGVVSQEPVLFATTIAENIRYGREDVTMDEIEKAVKEANAYDFIMKLPHQFDTLVGERGAQLSGGQKQRIAIARALVRNPKILLLDEATSALDTESEAVVQAALDKAREGRTTIVIAHRLSTVRNADVIAGFDGGVIVEQGNHDELMREKGIYFKLVMTQTLDEDVPPASFWRILKLNSTEWPYFVVGIFCAIINGGLQPAFSVIFSKVVGVFTNGGPPETQRQNSNLFSLLFLILGIISFITFFLQGFTFGKAGEILTKRLRYMVFKSMLRQDVSWFDDPKNTTGALTTRLANDAAQVKGATGSRLAVIFQNIANLGTGIIISLIYGWQLTLLLLAIVPIIAIAGVVEMKMLSGQALKDKKELEGSGKIATEAIENFRTVVSLTREQKFETMYAQSLQIPYRNAMKKAHVFGITFSFTQAMMYFSYAACFRFGAYLVTQQLMTFENVLLVFSAIVFGAMAVGQVSSFAPDYAKATVSASHIIRIIEKTPEIDSYSTQGLKPNMLEGNVQFSGVVFNYPTRPSIPVLQGLSLEVKKGQTLALVGSSGCGKSTVVQLLERFYDPMAGSVFLDGKEIKQLNVQWLRAQLGIVSQEPILFDCSIAENIAYGDNSRVVSYEEIVRAAKEANIHQFIDSLPDKYNTRVGDKGTQLSGGQKQRIAIARALVRQPHILLLDEATSALDTESEKVVQEALDKAREGRTCIVIAHRLSTIQNADLIVVIQNGKVKEHGTHQQLLAQKGIYFSMVSVQA', '3g61')
+WriteSW2CSV(name='1brx')
 # WriteSW2CSV(20)
 
 # SW = SWDB_parser_prediciton(1)
 # ss_grades = WindowGradesForSingleSequence(SW[SW.keys()[0]]['seq'], SW[SW.keys()[0]]['uniprot'])
-PlotSinglePeptide(ss_grades)
+# PlotSinglePeptide(ss_grades)
 
 # WriteSingleSeqToTSV(ss_grades, '/Users/jonathan/Desktop/bassaf_seq.txt')
 # WriteSingleSeqToTSVusingCSV(ss_grades, '/Users/jonathan/Desktop/4j4q_win_gds.csv')
