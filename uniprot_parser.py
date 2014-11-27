@@ -21,9 +21,9 @@ main_dict = {}
 SMOOTH_SIZE = 1
 LOOP_BYPASS = 3
 MIN_WIN = 20
-SECONDARY_MINIMA_THRESHOLD = 4
-PRIMARY_MINIMA_THRESHOLD = 3
-PSI_CUTOFF = 0.05
+SECONDARY_MINIMA_THRESHOLD = 8
+PRIMARY_MINIMA_THRESHOLD = 5
+PSI_CUTOFF = 0.001
 PSI_RES_PREC_CUTOFF = 0.2
 
 
@@ -513,6 +513,15 @@ def MinimaOrganizer(grds, win_of_min):
     minima_tuples = MinimaTuples(minimas, win_of_min)
     minimas_secondary = SecondaryMinimas(grds, minima_tuples, win_of_min)
     sec_minima_tuples = MinimaTuples(minimas_secondary, win_of_min)
+    all_minimas_tuples = minima_tuples[:]
+    [all_minimas_tuples.append(x) for x in sec_minima_tuples]
+    ter_minimas = SecondaryMinimas(grds, all_minimas_tuples, win_of_min)
+    for row in range(0, 6):
+        for col, val in enumerate(ter_minimas[row]):
+            if val != np.NAN:
+                minimas_secondary[row][col] = val
+    ter_minimas_tuples = MinimaTuples(ter_minimas, win_of_min)
+    [sec_minima_tuples.append(x) for x in ter_minimas_tuples]
     return minimas, minima_tuples, minimas_secondary, sec_minima_tuples
 
 
@@ -767,7 +776,9 @@ def WriteSW2CSV(num=False, name=False):
         sw_remainder.sort()
         our_remainder.sort()
         # AlignForPyMol(val['seq'], val['pdb'][0], SW_tuples, all_our_tuples)
-        PymolMarkByRange(val['pdb'][0], Range2Tups(overlap_list), Range2Tups(sw_remainder), Range2Tups(our_remainder))
+        # PymolMarkByRange(val['pdb'][0], Range2Tups(overlap_list), Range2Tups(sw_remainder), Range2Tups(our_remainder))
+        # for complexes with multiple chains separated into uniprot names pdbs
+        PymolMarkByRange('P18401', Range2Tups(overlap_list), Range2Tups(sw_remainder), Range2Tups(our_remainder))
         # SW2PDB(val['seq'], val['pdb'][0], SW_tuples, all_our_tuples)
         print overlap_score, ' for ', val['pdb']
         # print SW_tuples, all_our_tuples
@@ -809,7 +820,7 @@ MakeHydrophobicityGrade()
 # ss_grades = WindowGradesForSingleSequence('GRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVPAIAFTMYLSMLLGYGLTMVPFGGEQNPIYWARYADWLFTTPLLLLDLALLVDADQGTILALVGADGIMIGTGLVGALTKVYSYRFVWWAISTAAMLYILYVLVASTFKVLRNVTVVLWSAYPVVWLIGSEGAGIVPLNIETLLFMVLDVSAKVGFGLILLRSRA', '1BRX')
 # new 3g61:
 # ss_grades = WindowGradesForSingleSequence('VSVLTMFRYAGWLDRLYMLVGTLAAIIHGVALPLMMLIFGDMTDSFASVGNVSKNSTNMSEADKRAMFAKLEEEMTTYAYYYTGIGAGVLIVAYIQVSFWCLAAGRQIHKIRQKFFHAIMNQEIGWFDVHDVGELNTRLTDDVSKINEGIGDKIGMFFQAMATFFGGFIIGFTRGWKLTLVILAISPVLGLSAGIWAKILSSFTDKELHAYAKAGAVAEEVLAAIRTVIAFGGQKKELERYNNNLEEAKRLGIKKAITANISMGAAFLLIYASYALAFWYGTSLVISKEYSIGQVLTVFFSVLIGAFSVGQASPNIEAFANARGAAYEVFKIIDNKPSIDSFSKSGHKPDNIQGNLEFKNIHFSYPSRKEVQILKGLNLKVKSGQTVALVGNSGCGKSTTVQLMQRLYDPLDGMVSIDGQDIRTINVRYLREIIGVVSQEPVLFATTIAENIRYGREDVTMDEIEKAVKEANAYDFIMKLPHQFDTLVGERGAQLSGGQKQRIAIARALVRNPKILLLDEATSALDTESEAVVQAALDKAREGRTTIVIAHRLSTVRNADVIAGFDGGVIVEQGNHDELMREKGIYFKLVMTQTLDEDVPPASFWRILKLNSTEWPYFVVGIFCAIINGGLQPAFSVIFSKVVGVFTNGGPPETQRQNSNLFSLLFLILGIISFITFFLQGFTFGKAGEILTKRLRYMVFKSMLRQDVSWFDDPKNTTGALTTRLANDAAQVKGATGSRLAVIFQNIANLGTGIIISLIYGWQLTLLLLAIVPIIAIAGVVEMKMLSGQALKDKKELEGSGKIATEAIENFRTVVSLTREQKFETMYAQSLQIPYRNAMKKAHVFGITFSFTQAMMYFSYAACFRFGAYLVTQQLMTFENVLLVFSAIVFGAMAVGQVSSFAPDYAKATVSASHIIRIIEKTPEIDSYSTQGLKPNMLEGNVQFSGVVFNYPTRPSIPVLQGLSLEVKKGQTLALVGSSGCGKSTVVQLLERFYDPMAGSVFLDGKEIKQLNVQWLRAQLGIVSQEPILFDCSIAENIAYGDNSRVVSYEEIVRAAKEANIHQFIDSLPDKYNTRVGDKGTQLSGGQKQRIAIARALVRQPHILLLDEATSALDTESEKVVQEALDKAREGRTCIVIAHRLSTIQNADLIVVIQNGKVKEHGTHQQLLAQKGIYFSMVSVQA', '3g61')
-WriteSW2CSV(name='1iwg')
+WriteSW2CSV(name='1fft')
 # WriteSW2CSV(20)
 
 # SW = SWDB_parser_prediciton(1)
