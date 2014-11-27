@@ -22,5 +22,5 @@ def PsiReaderHelix(uniprot):
     result = []
     for line in ss2_file:
         if line_re.search(line):
-            result.append(line_re.search(line).group(5))
+            result.append(float(line_re.search(line).group(5)))
     return result

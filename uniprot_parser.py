@@ -21,9 +21,10 @@ main_dict = {}
 SMOOTH_SIZE = 1
 LOOP_BYPASS = 3
 MIN_WIN = 20
-SECONDARY_MINIMA_THRESHOLD = 7
-PRIMARY_MINIMA_THRESHOLD = 4
-PSI_CUTOFF = 0.5
+SECONDARY_MINIMA_THRESHOLD = 4
+PRIMARY_MINIMA_THRESHOLD = 3
+PSI_CUTOFF = 0.05
+PSI_RES_PREC_CUTOFF = 0.2
 
 
 def MakeHydrophobicityGrade():
@@ -94,8 +95,9 @@ def hydrophobicity_grade_increments_ss_aware(seq, mode, psi_pred):
     dirs.append(temp[1])
     for inc in range(1, 14):
         if inc+MIN_WIN <= len(seq):
-            if float(psi_pred[MIN_WIN+inc]) > PSI_CUTOFF:
-                temp = grade_seq(seq[0:MIN_WIN+inc-1], mode)
+            # if float(psi_pred[MIN_WIN+inc-1]) > PSI_CUTOFF:
+            if IsHelical(psi_pred[0:MIN_WIN+inc-1]):
+                temp = grade_seq(seq[0:MIN_WIN+inc], mode)
                 results.append(temp[0])
                 dirs.append(temp[1])
             else:
@@ -103,6 +105,20 @@ def hydrophobicity_grade_increments_ss_aware(seq, mode, psi_pred):
     min_val = min(results)
     min_val_index = results.index(min_val)
     return min_val, min_val_index+MIN_WIN, dirs[min_val_index], results
+
+
+def IsHelical(psi_results):
+    # tests whether a segment of psi-pred results has more non-helical residues
+    # (measured by PSI_PRED helix score < PSI_PSICUTOFF) than PSR_RES_PREC_CUTOFF
+    result = 0
+    for aa in psi_results:
+        if float(aa) < PSI_CUTOFF:
+            result += 1
+    precent = float(result) / len(psi_results)
+    if precent >= PSI_RES_PREC_CUTOFF:
+        return False
+    else:
+        return True
 
 
 def UniprotParser():
@@ -228,7 +244,8 @@ def WindowGradesForSingleSequence(seq, name='default', uniprot='default'):
     starters = []
     psi_pred = PsiReaderHelix(uniprot)
     for first in range(0, len(seq) - MIN_WIN):
-        if not all(float(i) > PSI_CUTOFF for i in psi_pred[first:first+MIN_WIN]):
+        # if not all(float(i) > PSI_CUTOFF for i in psi_pred[first:first+MIN_WIN]):
+        if not IsHelical(psi_pred[first:first+MIN_WIN]):
             full_grades.append(1000)
             full_grades_win_len.append(MIN_WIN)
             full_dir.append(0)
@@ -320,7 +337,7 @@ def PymolMarkByRange(name, minima_tuples, sec_tuples=False, third_TM=False):
         if third_TM:
             for TM in third_TM:
                 f.writelines('select TM_3_' + str(i) + ', ' + name + ' and resi ' + str(TM[0]) + '-' + str(TM[1]) + '\n')
-                f.writelines('color yellow, TM_3_' + str(i) + '\n')
+                f.writelines('color purple, TM_3_' + str(i) + '\n')
                 i += 1
         f.writelines(['save ', name.lower()+'_TM_temp.pse\n'])
     subprocess.call(['/opt/local/bin/pymol', '-q', file, '&'])
@@ -792,7 +809,7 @@ MakeHydrophobicityGrade()
 # ss_grades = WindowGradesForSingleSequence('GRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVPAIAFTMYLSMLLGYGLTMVPFGGEQNPIYWARYADWLFTTPLLLLDLALLVDADQGTILALVGADGIMIGTGLVGALTKVYSYRFVWWAISTAAMLYILYVLVASTFKVLRNVTVVLWSAYPVVWLIGSEGAGIVPLNIETLLFMVLDVSAKVGFGLILLRSRA', '1BRX')
 # new 3g61:
 # ss_grades = WindowGradesForSingleSequence('VSVLTMFRYAGWLDRLYMLVGTLAAIIHGVALPLMMLIFGDMTDSFASVGNVSKNSTNMSEADKRAMFAKLEEEMTTYAYYYTGIGAGVLIVAYIQVSFWCLAAGRQIHKIRQKFFHAIMNQEIGWFDVHDVGELNTRLTDDVSKINEGIGDKIGMFFQAMATFFGGFIIGFTRGWKLTLVILAISPVLGLSAGIWAKILSSFTDKELHAYAKAGAVAEEVLAAIRTVIAFGGQKKELERYNNNLEEAKRLGIKKAITANISMGAAFLLIYASYALAFWYGTSLVISKEYSIGQVLTVFFSVLIGAFSVGQASPNIEAFANARGAAYEVFKIIDNKPSIDSFSKSGHKPDNIQGNLEFKNIHFSYPSRKEVQILKGLNLKVKSGQTVALVGNSGCGKSTTVQLMQRLYDPLDGMVSIDGQDIRTINVRYLREIIGVVSQEPVLFATTIAENIRYGREDVTMDEIEKAVKEANAYDFIMKLPHQFDTLVGERGAQLSGGQKQRIAIARALVRNPKILLLDEATSALDTESEAVVQAALDKAREGRTTIVIAHRLSTVRNADVIAGFDGGVIVEQGNHDELMREKGIYFKLVMTQTLDEDVPPASFWRILKLNSTEWPYFVVGIFCAIINGGLQPAFSVIFSKVVGVFTNGGPPETQRQNSNLFSLLFLILGIISFITFFLQGFTFGKAGEILTKRLRYMVFKSMLRQDVSWFDDPKNTTGALTTRLANDAAQVKGATGSRLAVIFQNIANLGTGIIISLIYGWQLTLLLLAIVPIIAIAGVVEMKMLSGQALKDKKELEGSGKIATEAIENFRTVVSLTREQKFETMYAQSLQIPYRNAMKKAHVFGITFSFTQAMMYFSYAACFRFGAYLVTQQLMTFENVLLVFSAIVFGAMAVGQVSSFAPDYAKATVSASHIIRIIEKTPEIDSYSTQGLKPNMLEGNVQFSGVVFNYPTRPSIPVLQGLSLEVKKGQTLALVGSSGCGKSTVVQLLERFYDPMAGSVFLDGKEIKQLNVQWLRAQLGIVSQEPILFDCSIAENIAYGDNSRVVSYEEIVRAAKEANIHQFIDSLPDKYNTRVGDKGTQLSGGQKQRIAIARALVRQPHILLLDEATSALDTESEKVVQEALDKAREGRTCIVIAHRLSTIQNADLIVVIQNGKVKEHGTHQQLLAQKGIYFSMVSVQA', '3g61')
-WriteSW2CSV(name='1brx')
+WriteSW2CSV(name='1iwg')
 # WriteSW2CSV(20)
 
 # SW = SWDB_parser_prediciton(1)
