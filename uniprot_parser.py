@@ -23,7 +23,7 @@ LOOP_BYPASS = 3
 MIN_WIN = 20
 SECONDARY_MINIMA_THRESHOLD = 7
 PRIMARY_MINIMA_THRESHOLD = 4
-PSI_CUTOFF = 0.76
+PSI_CUTOFF = 0.5
 
 
 def MakeHydrophobicityGrade():
@@ -171,44 +171,44 @@ def WriteSingleSeqToTSVusingCSV(grades, file):
         writer.writerow(grades.values())
 
 
-# def WindowGradesForSingleSequence(seq, name='default'):
-#     window_grades_single_chain = {}
-#     window_grades_single_chain['name'] = name
-#     full_grades = []
-#     full_grades_win_len = []
-#     full_dir = []
-#     third_grades = []
-#     third_grades_win_len = []
-#     third_dir = []
-#     two_thirds_grades = []
-#     two_thirds_grades_win_len = []
-#     two_thirds_dir = []
-#     starters = []
-#     for first in range(0, len(seq) - MIN_WIN):
-#         temp = hydrophobicity_grade_increments(seq[first:first+36], 'full')
-#         full_grades.append(temp[0])
-#         full_grades_win_len.append(temp[1])
-#         full_dir.append(temp[2])
-#         temp = hydrophobicity_grade_increments(seq[first:first+36], 'third')
-#         third_grades.append(temp[0])
-#         third_grades_win_len.append(temp[1])
-#         third_dir.append(temp[2])
-#         temp = hydrophobicity_grade_increments(seq[first:first+36], 'two_thirds')
-#         two_thirds_grades.append(temp[0])
-#         two_thirds_grades_win_len.append(temp[1])
-#         two_thirds_dir.append(temp[2])
-#         starters.append(first)
-#     window_grades_single_chain['full_grades'] = full_grades
-#     window_grades_single_chain['full_grades_win_len'] = full_grades_win_len
-#     window_grades_single_chain['full_dirs'] = full_dir
-#     window_grades_single_chain['third_grades'] = third_grades
-#     window_grades_single_chain['third_grades_win_len'] = third_grades_win_len
-#     window_grades_single_chain['third_dirs'] = third_dir
-#     window_grades_single_chain['two_thirds_grades'] = two_thirds_grades
-#     window_grades_single_chain['two_thirds_grades_win_len'] = two_thirds_grades_win_len
-#     window_grades_single_chain['two_thirds_dirs'] = two_thirds_dir
-#     window_grades_single_chain['starters'] = starters
-#     return window_grades_single_chain
+def WindowGradesForSingleSequence_no_ss(seq, name='default'):
+    window_grades_single_chain = {}
+    window_grades_single_chain['name'] = name
+    full_grades = []
+    full_grades_win_len = []
+    full_dir = []
+    third_grades = []
+    third_grades_win_len = []
+    third_dir = []
+    two_thirds_grades = []
+    two_thirds_grades_win_len = []
+    two_thirds_dir = []
+    starters = []
+    for first in range(0, len(seq) - MIN_WIN):
+        temp = hydrophobicity_grade_increments(seq[first:first+36], 'full')
+        full_grades.append(temp[0])
+        full_grades_win_len.append(temp[1])
+        full_dir.append(temp[2])
+        temp = hydrophobicity_grade_increments(seq[first:first+36], 'third')
+        third_grades.append(temp[0])
+        third_grades_win_len.append(temp[1])
+        third_dir.append(temp[2])
+        temp = hydrophobicity_grade_increments(seq[first:first+36], 'two_thirds')
+        two_thirds_grades.append(temp[0])
+        two_thirds_grades_win_len.append(temp[1])
+        two_thirds_dir.append(temp[2])
+        starters.append(first)
+    window_grades_single_chain['full_grades'] = full_grades
+    window_grades_single_chain['full_grades_win_len'] = full_grades_win_len
+    window_grades_single_chain['full_dirs'] = full_dir
+    window_grades_single_chain['third_grades'] = third_grades
+    window_grades_single_chain['third_grades_win_len'] = third_grades_win_len
+    window_grades_single_chain['third_dirs'] = third_dir
+    window_grades_single_chain['two_thirds_grades'] = two_thirds_grades
+    window_grades_single_chain['two_thirds_grades_win_len'] = two_thirds_grades_win_len
+    window_grades_single_chain['two_thirds_dirs'] = two_thirds_dir
+    window_grades_single_chain['starters'] = starters
+    return window_grades_single_chain
 
 
 def WindowGradesForSingleSequence(seq, name='default', uniprot='default'):
@@ -238,6 +238,7 @@ def WindowGradesForSingleSequence(seq, name='default', uniprot='default'):
             two_thirds_grades.append(1000)
             two_thirds_grades_win_len.append(MIN_WIN)
             two_thirds_dir.append(0)
+            starters.append(first)
             continue
         temp = hydrophobicity_grade_increments_ss_aware(seq[first:first+36], 'full', psi_pred[first:first+36])
         full_grades.append(temp[0])
@@ -502,7 +503,7 @@ def PlotSinglePeptide(grades):
     (grd_smh, win_of_min, min_ind) = Grades2Arry(grades)
 
     (minimas, minima_tuples, minimas_secondary, sec_minima_tuples) = MinimaOrganizer(grd_smh, win_of_min)
-    PymolMark(grades['name'], minima_tuples, sec_minima_tuples)
+    # PymolMark(grades['name'], minima_tuples, sec_minima_tuples)
     plot_array = np.empty(shape=[6, len(grades['starters'])])
     plot_array[:] = np.NAN
     for col, row in enumerate(min_ind):
@@ -723,7 +724,7 @@ def WriteSW2CSV(num=False, name=False):
     for key, val in SW.iteritems():
         # print 'yupidupi', key, '\n', val
         ss_grades = WindowGradesForSingleSequence(val['seq'], key, val['uniprot'])
-        # PlotSinglePeptide(ss_grades)
+        PlotSinglePeptide(ss_grades)
         (grds_array, win_of_min, min_ind) = Grades2Arry(ss_grades)
         (pri_min, pri_min_tup, sec_min, sec_min_tup) = MinimaOrganizer(grds_array, win_of_min)
 

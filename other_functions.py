@@ -1,7 +1,6 @@
 def PsiReader(uniprot):
     import re
     ss2_file = open('../psipred/sw_fastas/' + uniprot + '.ss2')
-    print '../psipred/sw_fastas/' + uniprot + '.ss2'
     line_re = re.compile('^\s*([0-9]*)\s*([A-Z]*)\s*([A-Z]*)\s*(0\.[0-9]*)\s*(0\.[0-9]*)\s*(0\.[0-9]*)')
     result = []
     for line in ss2_file:
@@ -19,7 +18,6 @@ def PsiReader(uniprot):
 def PsiReaderHelix(uniprot):
     import re
     ss2_file = open('../psipred/sw_fastas/' + uniprot + '.ss2')
-    print '../psipred/sw_fastas/' + uniprot + '.ss2'
     line_re = re.compile('^\s*([0-9]*)\s*([A-Z]*)\s*([A-Z]*)\s*(0\.[0-9]*)\s*(0\.[0-9]*)\s*(0\.[0-9]*)')
     result = []
     for line in ss2_file:
