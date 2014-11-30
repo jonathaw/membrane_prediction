@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6a73546c-b0e1-4c73-9c98-48c4af466cd3" name="Default" comment="added a second run of secondary minima search, so that neighbouring secondary minnimas will be found.">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database_parser.py" afterPath="$PROJECT_DIR$/database_parser.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/uniprot_parser.py" afterPath="$PROJECT_DIR$/uniprot_parser.py" />
+    <list default="true" id="6a73546c-b0e1-4c73-9c98-48c4af466cd3" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="membrane_prediciton.iws" />
@@ -500,7 +498,11 @@
       <created>1417098500404</created>
       <updated>1417098500404</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="trying to push all files">
+      <created>1417332023054</created>
+      <updated>1417332023054</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -562,7 +564,8 @@
     <MESSAGE value="fixed plotting with psipred awareness problem (didn't add starters for non-helical WIN_MINs)" />
     <MESSAGE value="changed the psi-pred consideration. now IsHelical checks the condition for both increments, and minimal windows. see comment in funciton" />
     <MESSAGE value="added a second run of secondary minima search, so that neighbouring secondary minnimas will be found." />
-    <option name="LAST_COMMIT_MESSAGE" value="added a second run of secondary minima search, so that neighbouring secondary minnimas will be found." />
+    <MESSAGE value="trying to push all files" />
+    <option name="LAST_COMMIT_MESSAGE" value="trying to push all files" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
