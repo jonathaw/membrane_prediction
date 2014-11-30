@@ -49,6 +49,43 @@ def SWDB_parser_prediciton(num):
         if i >= num:
             return result_dict
 
+def SWDB_parser_prediciton_by_uniprot(name):
+    result_dict = {}
+    temp_dict = {}
+    temp_dict['uniprot'] = ''
+    temp_dict['term'] = ''
+    temp_dict['seq'] = ''
+    temp_dict['pdb'] = []
+    temp_dict['begin'] = []
+    temp_dict['end'] = []
+    temp_dict['seq_length'] = ''
+
+    for line in database:
+        if uniprot_re.search(line):
+            temp_dict['uniprot'] = uniprot_re.search(line).group(1)
+        if pdb_re.search(line):
+            temp_dict['pdb'].append(pdb_re.search(line).group(1))
+        if term_re.search(line):
+            temp_dict['term'] = term_re.search(line).group(1)
+        if seq_re.search(line):
+            temp_dict['seq'] = seq_re.search(line).group(1)
+        if begin_re.search(line):
+            temp_dict['begin'].append(begin_re.search(line).group(1))
+        if end_re.search(line):
+            temp_dict['end'].append(end_re.search(line).group(1))
+        if mptopp_re.search(line):
+            temp_dict['seq_length'] = len(temp_dict['seq'])
+            result_dict[temp_dict['uniprot']] = temp_dict
+            if name.upper() == temp_dict['uniprot'].upper():
+                a = {}
+                a[temp_dict['uniprot']] = temp_dict
+                print 'returning ', temp_dict['uniprot'], ' with pdb ', temp_dict['pdb']
+                return a
+            temp_dict = {}
+            temp_dict['pdb'] = []
+            temp_dict['begin'] = []
+            temp_dict['end'] = []
+
 
 def SWDB_parser_prediciton_by_name(name):
     result_dict = {}

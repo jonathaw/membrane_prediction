@@ -5,7 +5,7 @@ import csv
 import math
 import subprocess
 from collections import Counter
-from database_parser import SWDB_parser_prediciton, SWDB_parser_prediciton_by_name
+import database_parser
 from other_functions import PsiReaderHelix
 
 # import os
@@ -21,10 +21,10 @@ main_dict = {}
 SMOOTH_SIZE = 1
 LOOP_BYPASS = 3
 MIN_WIN = 20
-SECONDARY_MINIMA_THRESHOLD = 8
+SECONDARY_MINIMA_THRESHOLD = 7
 PRIMARY_MINIMA_THRESHOLD = 5
-PSI_CUTOFF = 0.001
-PSI_RES_PREC_CUTOFF = 0.2
+PSI_CUTOFF = 0.01
+PSI_RES_PREC_CUTOFF = 0.3
 
 
 def MakeHydrophobicityGrade():
@@ -317,7 +317,8 @@ def PymolMarkByRange(name, minima_tuples, sec_tuples=False, third_TM=False):
     # makes a pml file to describe the programs result, and initiates it.
     print '\n\nFirst minima list is (red): ', minima_tuples
     print 'Second minima list is (blue): ', sec_tuples
-    if third_TM: 'Third minima List is (yellow) :', third_TM, '\n\n'
+    if third_TM:
+        print 'Third minima List is (purple) :', third_TM, '\n\n'
     file = 'test.pml'
     with open(file, 'wa+') as f:
         f.writelines('load ' + name.lower() + '.pdb,' + name + '\n')
@@ -737,12 +738,14 @@ def SW2PDB(sw_seq, pdb_name, sw_tups, our_tups):
     # print our_pdb_tups, our_tups
 
 
-def WriteSW2CSV(num=False, name=False):
+def WriteSW2CSV(num=False, name=False, uniprot=False):
     # reads num sequences out of a csv produced by database_parser.py (2nd funciton), and processes each sequences.
     if num:
-        SW = SWDB_parser_prediciton(num)
+        SW = database_parser.SWDB_parser_prediciton(num)
     elif name:
-        SW = SWDB_parser_prediciton_by_name(name)
+        SW = database_parser.SWDB_parser_prediciton_by_name(name)
+    elif uniprot:
+        SW = database_parser.SWDB_parser_prediciton_by_uniprot(uniprot)
     combined = open('/Users/jonathan/Documents/membrane_prediciton_data/combined_results.csv', 'wa+')
     # csv_writer = csv.writer(combined)
     all_combined = {}
@@ -778,7 +781,7 @@ def WriteSW2CSV(num=False, name=False):
         # AlignForPyMol(val['seq'], val['pdb'][0], SW_tuples, all_our_tuples)
         # PymolMarkByRange(val['pdb'][0], Range2Tups(overlap_list), Range2Tups(sw_remainder), Range2Tups(our_remainder))
         # for complexes with multiple chains separated into uniprot names pdbs
-        PymolMarkByRange('P18401', Range2Tups(overlap_list), Range2Tups(sw_remainder), Range2Tups(our_remainder))
+        PymolMarkByRange(uniprot, Range2Tups(overlap_list), Range2Tups(sw_remainder), Range2Tups(our_remainder))
         # SW2PDB(val['seq'], val['pdb'][0], SW_tuples, all_our_tuples)
         print overlap_score, ' for ', val['pdb']
         # print SW_tuples, all_our_tuples
@@ -820,7 +823,7 @@ MakeHydrophobicityGrade()
 # ss_grades = WindowGradesForSingleSequence('GRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVPAIAFTMYLSMLLGYGLTMVPFGGEQNPIYWARYADWLFTTPLLLLDLALLVDADQGTILALVGADGIMIGTGLVGALTKVYSYRFVWWAISTAAMLYILYVLVASTFKVLRNVTVVLWSAYPVVWLIGSEGAGIVPLNIETLLFMVLDVSAKVGFGLILLRSRA', '1BRX')
 # new 3g61:
 # ss_grades = WindowGradesForSingleSequence('VSVLTMFRYAGWLDRLYMLVGTLAAIIHGVALPLMMLIFGDMTDSFASVGNVSKNSTNMSEADKRAMFAKLEEEMTTYAYYYTGIGAGVLIVAYIQVSFWCLAAGRQIHKIRQKFFHAIMNQEIGWFDVHDVGELNTRLTDDVSKINEGIGDKIGMFFQAMATFFGGFIIGFTRGWKLTLVILAISPVLGLSAGIWAKILSSFTDKELHAYAKAGAVAEEVLAAIRTVIAFGGQKKELERYNNNLEEAKRLGIKKAITANISMGAAFLLIYASYALAFWYGTSLVISKEYSIGQVLTVFFSVLIGAFSVGQASPNIEAFANARGAAYEVFKIIDNKPSIDSFSKSGHKPDNIQGNLEFKNIHFSYPSRKEVQILKGLNLKVKSGQTVALVGNSGCGKSTTVQLMQRLYDPLDGMVSIDGQDIRTINVRYLREIIGVVSQEPVLFATTIAENIRYGREDVTMDEIEKAVKEANAYDFIMKLPHQFDTLVGERGAQLSGGQKQRIAIARALVRNPKILLLDEATSALDTESEAVVQAALDKAREGRTTIVIAHRLSTVRNADVIAGFDGGVIVEQGNHDELMREKGIYFKLVMTQTLDEDVPPASFWRILKLNSTEWPYFVVGIFCAIINGGLQPAFSVIFSKVVGVFTNGGPPETQRQNSNLFSLLFLILGIISFITFFLQGFTFGKAGEILTKRLRYMVFKSMLRQDVSWFDDPKNTTGALTTRLANDAAQVKGATGSRLAVIFQNIANLGTGIIISLIYGWQLTLLLLAIVPIIAIAGVVEMKMLSGQALKDKKELEGSGKIATEAIENFRTVVSLTREQKFETMYAQSLQIPYRNAMKKAHVFGITFSFTQAMMYFSYAACFRFGAYLVTQQLMTFENVLLVFSAIVFGAMAVGQVSSFAPDYAKATVSASHIIRIIEKTPEIDSYSTQGLKPNMLEGNVQFSGVVFNYPTRPSIPVLQGLSLEVKKGQTLALVGSSGCGKSTVVQLLERFYDPMAGSVFLDGKEIKQLNVQWLRAQLGIVSQEPILFDCSIAENIAYGDNSRVVSYEEIVRAAKEANIHQFIDSLPDKYNTRVGDKGTQLSGGQKQRIAIARALVRQPHILLLDEATSALDTESEKVVQEALDKAREGRTCIVIAHRLSTIQNADLIVVIQNGKVKEHGTHQQLLAQKGIYFSMVSVQA', '3g61')
-WriteSW2CSV(name='1fft')
+WriteSW2CSV(uniprot='P31224')
 # WriteSW2CSV(20)
 
 # SW = SWDB_parser_prediciton(1)
