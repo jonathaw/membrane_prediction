@@ -23,7 +23,7 @@ LOOP_BYPASS = 3
 MIN_WIN = 20
 SECONDARY_MINIMA_THRESHOLD = 7
 PRIMARY_MINIMA_THRESHOLD = 5
-PSI_CUTOFF = 0.01
+PSI_CUTOFF = 0.00
 PSI_RES_PREC_CUTOFF = 0.3
 
 
@@ -95,7 +95,6 @@ def hydrophobicity_grade_increments_ss_aware(seq, mode, psi_pred):
     dirs.append(temp[1])
     for inc in range(1, 14):
         if inc+MIN_WIN <= len(seq):
-            # if float(psi_pred[MIN_WIN+inc-1]) > PSI_CUTOFF:
             if IsHelical(psi_pred[0:MIN_WIN+inc-1]):
                 temp = grade_seq(seq[0:MIN_WIN+inc], mode)
                 results.append(temp[0])
@@ -486,6 +485,8 @@ def SecondaryMinimas(grds, minimas, wins):
                 bound = []
                 for minima in minimas:
                     # jumps point to the end of the next blocked block
+                    if point >= len(wins):
+                        break
                     if minima[0] <= point+wins[point] < minima[0]+minima[1]:
                         point = minima[0]+minima[1]
         point += 1
@@ -738,6 +739,13 @@ def SW2PDB(sw_seq, pdb_name, sw_tups, our_tups):
     # print our_pdb_tups, our_tups
 
 
+def TotalHydroPhobicity(seq):
+    result = 0
+    for aa in seq:
+        result += np.polyval(hydrophobicity_polyval[aa], 0)
+    return result
+
+
 def WriteSW2CSV(num=False, name=False, uniprot=False):
     # reads num sequences out of a csv produced by database_parser.py (2nd funciton), and processes each sequences.
     if num:
@@ -747,11 +755,10 @@ def WriteSW2CSV(num=False, name=False, uniprot=False):
     elif uniprot:
         SW = database_parser.SWDB_parser_prediciton_by_uniprot(uniprot)
     combined = open('/Users/jonathan/Documents/membrane_prediciton_data/combined_results.csv', 'wa+')
-    # csv_writer = csv.writer(combined)
+    csv_writer = csv.writer(combined)
     all_combined = {}
 
     for key, val in SW.iteritems():
-        # print 'yupidupi', key, '\n', val
         ss_grades = WindowGradesForSingleSequence(val['seq'], key, val['uniprot'])
         PlotSinglePeptide(ss_grades)
         (grds_array, win_of_min, min_ind) = Grades2Arry(ss_grades)
@@ -785,7 +792,9 @@ def WriteSW2CSV(num=False, name=False, uniprot=False):
         # SW2PDB(val['seq'], val['pdb'][0], SW_tuples, all_our_tuples)
         print overlap_score, ' for ', val['pdb']
         # print SW_tuples, all_our_tuples
-
+        # csv_writer.writerow([val['uniprot'], overlap_score, len(overlap_list), len(sw_remainder), len(our_remainder)])
+        # print 'aaa', overlap_score, overlap_list, sw_remainder, our_remainder
+        # results_dict = {'uniprot': val['uniprot'], }
 
     combined.close()
 
@@ -823,7 +832,7 @@ MakeHydrophobicityGrade()
 # ss_grades = WindowGradesForSingleSequence('GRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVPAIAFTMYLSMLLGYGLTMVPFGGEQNPIYWARYADWLFTTPLLLLDLALLVDADQGTILALVGADGIMIGTGLVGALTKVYSYRFVWWAISTAAMLYILYVLVASTFKVLRNVTVVLWSAYPVVWLIGSEGAGIVPLNIETLLFMVLDVSAKVGFGLILLRSRA', '1BRX')
 # new 3g61:
 # ss_grades = WindowGradesForSingleSequence('VSVLTMFRYAGWLDRLYMLVGTLAAIIHGVALPLMMLIFGDMTDSFASVGNVSKNSTNMSEADKRAMFAKLEEEMTTYAYYYTGIGAGVLIVAYIQVSFWCLAAGRQIHKIRQKFFHAIMNQEIGWFDVHDVGELNTRLTDDVSKINEGIGDKIGMFFQAMATFFGGFIIGFTRGWKLTLVILAISPVLGLSAGIWAKILSSFTDKELHAYAKAGAVAEEVLAAIRTVIAFGGQKKELERYNNNLEEAKRLGIKKAITANISMGAAFLLIYASYALAFWYGTSLVISKEYSIGQVLTVFFSVLIGAFSVGQASPNIEAFANARGAAYEVFKIIDNKPSIDSFSKSGHKPDNIQGNLEFKNIHFSYPSRKEVQILKGLNLKVKSGQTVALVGNSGCGKSTTVQLMQRLYDPLDGMVSIDGQDIRTINVRYLREIIGVVSQEPVLFATTIAENIRYGREDVTMDEIEKAVKEANAYDFIMKLPHQFDTLVGERGAQLSGGQKQRIAIARALVRNPKILLLDEATSALDTESEAVVQAALDKAREGRTTIVIAHRLSTVRNADVIAGFDGGVIVEQGNHDELMREKGIYFKLVMTQTLDEDVPPASFWRILKLNSTEWPYFVVGIFCAIINGGLQPAFSVIFSKVVGVFTNGGPPETQRQNSNLFSLLFLILGIISFITFFLQGFTFGKAGEILTKRLRYMVFKSMLRQDVSWFDDPKNTTGALTTRLANDAAQVKGATGSRLAVIFQNIANLGTGIIISLIYGWQLTLLLLAIVPIIAIAGVVEMKMLSGQALKDKKELEGSGKIATEAIENFRTVVSLTREQKFETMYAQSLQIPYRNAMKKAHVFGITFSFTQAMMYFSYAACFRFGAYLVTQQLMTFENVLLVFSAIVFGAMAVGQVSSFAPDYAKATVSASHIIRIIEKTPEIDSYSTQGLKPNMLEGNVQFSGVVFNYPTRPSIPVLQGLSLEVKKGQTLALVGSSGCGKSTVVQLLERFYDPMAGSVFLDGKEIKQLNVQWLRAQLGIVSQEPILFDCSIAENIAYGDNSRVVSYEEIVRAAKEANIHQFIDSLPDKYNTRVGDKGTQLSGGQKQRIAIARALVRQPHILLLDEATSALDTESEKVVQEALDKAREGRTCIVIAHRLSTIQNADLIVVIQNGKVKEHGTHQQLLAQKGIYFSMVSVQA', '3g61')
-WriteSW2CSV(uniprot='P31224')
+WriteSW2CSV(uniprot='q56408')
 # WriteSW2CSV(20)
 
 # SW = SWDB_parser_prediciton(1)
