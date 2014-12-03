@@ -17,9 +17,12 @@ MEMBRANE_THIRD = {'1': [0, 3, 4, 7, 11, 14, 15, 18, 22, 25, 26, 29, 33, 37, 38],
                   '2': [0, 1, 4, 8, 11, 12, 15, 19, 22, 23, 26, 30, 33, 34, 37, 41],
                   '3': [0, 4, 7, 8, 11, 15, 18, 19, 22, 26, 29, 30, 33, 37, 40, 41]}
 # MEMBRANE_TWO_THIRDS = [0, 1, 2, 4, 5, 8, 9, 11, 12, 13, 15, 16, 18, 19, 20, 22, 23, 26, 27, 29, 30, 31, 33, 34, 36]
-MEMBRANE_TWO_THIRDS = {'1': [0, 1, 2, 4, 5, 8, 9, 11, 12, 13, 15, 16, 19, 20, 22, 23, 24, 26, 27, 30, 31, 33, 34, 35, 37, 38, 41, 42],
-                       '2': [0, 1, 4, 5, 7, 8, 9, 11, 12, 15, 16, 18, 19, 20, 22, 23, 26, 27, 29, 30, 31, 33, 34, 37, 38, 40, 41, 42],
-                       '3': [0, 1, 3, 4, 5, 7, 8, 11, 12, 14, 15, 16, 18, 19, 22, 23, 25, 26, 27, 29, 30, 33, 34, 36, 37, 38, 40, 41]}
+MEMBRANE_TWO_THIRDS = {'1': [0, 1, 2, 4, 5, 8, 9, 11, 12, 13, 15, 16, 19, 20, 22, 23, 24, 26, 27, 30, 31, 33, 34, 35,
+                             37, 38, 41, 42],
+                       '2': [0, 1, 4, 5, 7, 8, 9, 11, 12, 15, 16, 18, 19, 20, 22, 23, 26, 27, 29, 30, 31, 33, 34, 37,
+                             38, 40, 41, 42],
+                       '3': [0, 1, 3, 4, 5, 7, 8, 11, 12, 14, 15, 16, 18, 19, 22, 23, 25, 26, 27, 29, 30, 33, 34, 36,
+                             37, 38, 40, 41]}
 MEMBRANE_SPANS = {'full': {'1': MEMBRANE_FULL}, 'third': MEMBRANE_THIRD, 'two_thirds': MEMBRANE_TWO_THIRDS}
 hydrophobicity_polyval = {}
 window_grades = {}
@@ -30,8 +33,8 @@ LOOP_BYPASS = 3
 MIN_WIN = 20
 SECONDARY_MINIMA_THRESHOLD = 7
 PRIMARY_MINIMA_THRESHOLD = 5
-PSI_CUTOFF = 0.3
-PSI_RES_PREC_CUTOFF = 0.3
+PSI_CUTOFF = 0.0
+PSI_RES_PREC_CUTOFF = 0.1
 HPHOBICITY_PSIPRED_BYPASS = SECONDARY_MINIMA_THRESHOLD - 2
 
 def MakeHydrophobicityGrade():
@@ -129,30 +132,40 @@ def hydrophobicity_grade_increments(seq, mode):
     return min_val, min_val_index+MIN_WIN, dirs[min_val_index], results
 
 
-def hydrophobicity_grade_increments_ss_aware_with_type(seq, mode, psi_pred):
+def hydrophobicity_grade_increments_ss_aware_with_type(seq, psi_pred):
     # a working version with psi-pred awareness. an increment which is lower than PSI_CUTOFF as a helix
     # will not be added
     results = []
     dirs = []
-    temp = grade_seq(seq[0:MIN_WIN], mode)
+    modes = []
+    types = []
+    temp = grade_seq_single_go(seq[0:MIN_WIN])
     if IsHelical(psi_pred[0:MIN_WIN]) or temp[0] <= HPHOBICITY_PSIPRED_BYPASS:
         results.append(temp[0])
         dirs.append(temp[1])
+        modes.append(temp[2])
+        types.append(temp[3])
     else:
         results.append(1000)
         dirs.append(0)
+        modes.append('full')
+        types.append('1')
     for inc in range(1, 14):
         if inc+MIN_WIN <= len(seq):
-            temp = grade_seq(seq[0:MIN_WIN+inc], mode)
+            temp = grade_seq_single_go(seq[0:MIN_WIN+inc])
             if IsHelical(psi_pred[0:MIN_WIN+inc]) or temp[0] <= HPHOBICITY_PSIPRED_BYPASS:
                 results.append(temp[0])
                 dirs.append(temp[1])
+                modes.append(temp[2])
+                types.append(temp[3])
             else:
                 results.append(1000)
                 dirs.append(0)
+                modes.append('full')
+                types.append('1')
     min_val = min(results)
     min_val_index = results.index(min_val)
-    return min_val, min_val_index+MIN_WIN, dirs[min_val_index], results
+    return min_val, min_val_index+MIN_WIN, dirs[min_val_index], modes[min_val_index], types[min_val_index]
 
 
 def hydrophobicity_grade_increments_ss_aware(seq, mode, psi_pred):
@@ -306,42 +319,33 @@ def WindowGradesForSingleSequence(seq, name='default', uniprot='default'):
     # doesn't do that when the WIN_MIN has a non helix residue, adds 1000 instead.
     window_grades_single_chain = {}
     window_grades_single_chain['name'] = name
-    full_grades = []
-    full_grades_win_len = []
-    full_dir = []
-    third_grades = []
-    third_grades_win_len = []
-    third_dir = []
-    two_thirds_grades = []
-    two_thirds_grades_win_len = []
-    two_thirds_dir = []
+    full_grades = [1000] * (len(seq) - MIN_WIN)
+    full_grades_win_len = [100] * (len(seq) - MIN_WIN)
+    full_dir = [100] * (len(seq) - MIN_WIN)
+    third_grades = [1000] * (len(seq) - MIN_WIN)
+    third_grades_win_len = [100] * (len(seq) - MIN_WIN)
+    third_dir = [100] * (len(seq) - MIN_WIN)
+    two_thirds_grades = [1000] * (len(seq) - MIN_WIN)
+    two_thirds_grades_win_len = [100] * (len(seq) - MIN_WIN)
+    two_thirds_dir = [100] * (len(seq) - MIN_WIN)
+    types = [10] * (len(seq) - MIN_WIN)
     starters = []
     psi_pred = PsiReaderHelix(uniprot)
     for first in range(0, len(seq) - MIN_WIN):
-        # if not IsHelical(psi_pred[first:first+MIN_WIN]):
-        #     full_grades.append(1000)
-        #     full_grades_win_len.append(MIN_WIN)
-        #     full_dir.append(0)
-        #     third_grades.append(1000)
-        #     third_grades_win_len.append(MIN_WIN)
-        #     third_dir.append(0)
-        #     two_thirds_grades.append(1000)
-        #     two_thirds_grades_win_len.append(MIN_WIN)
-        #     two_thirds_dir.append(0)
-        #     starters.append(first)
-        #     continue
-        temp = hydrophobicity_grade_increments_ss_aware(seq[first:first+36], 'full', psi_pred[first:first+36])
-        full_grades.append(temp[0])
-        full_grades_win_len.append(temp[1])
-        full_dir.append(temp[2])
-        temp = hydrophobicity_grade_increments_ss_aware(seq[first:first+36], 'third', psi_pred[first:first+36])
-        third_grades.append(temp[0])
-        third_grades_win_len.append(temp[1])
-        third_dir.append(temp[2])
-        temp = hydrophobicity_grade_increments_ss_aware(seq[first:first+36], 'two_thirds', psi_pred[first:first+36])
-        two_thirds_grades.append(temp[0])
-        two_thirds_grades_win_len.append(temp[1])
-        two_thirds_dir.append(temp[2])
+        temp = hydrophobicity_grade_increments_ss_aware_with_type(seq[first:first+36], psi_pred[first:first+36])
+        if temp[3] == 'full':
+            full_grades[first] = temp[0]
+            full_grades_win_len[first] = temp[1]
+            full_dir[first] = temp[2]
+        elif temp[3] == 'third':
+            third_grades[first] = temp[0]
+            third_grades_win_len[first] = temp[1]
+            third_dir[first] = temp[2]
+        elif temp[3] == 'two_thirds':
+            two_thirds_grades[first] = temp[0]
+            two_thirds_grades_win_len[first] = temp[1]
+            two_thirds_dir[first] = temp[2]
+        types[first] = temp[4]
         starters.append(first)
     window_grades_single_chain['full_grades'] = full_grades
     window_grades_single_chain['full_grades_win_len'] = full_grades_win_len
@@ -352,6 +356,7 @@ def WindowGradesForSingleSequence(seq, name='default', uniprot='default'):
     window_grades_single_chain['two_thirds_grades'] = two_thirds_grades
     window_grades_single_chain['two_thirds_grades_win_len'] = two_thirds_grades_win_len
     window_grades_single_chain['two_thirds_dirs'] = two_thirds_dir
+    window_grades_single_chain['types'] = types
     window_grades_single_chain['starters'] = starters
     return window_grades_single_chain
 
@@ -415,6 +420,44 @@ def PymolMarkByRange(name, minima_tuples, sec_tuples=False, third_TM=False):
                 i += 1
         f.writelines(['save ', name.lower()+'_TM_temp.pse\n'])
     subprocess.call(['/opt/local/bin/pymol', '-q', file, '&'])
+
+
+def PymolMarkExposed(name, grades, minima_tuples):
+    # makes a pml file to describe the programs result, and initiates it.
+    (grades_smh, win_of_min, min_ind) = Grades2Arry(grades)
+    exposed = []
+    for tup in minima_tuples:
+        if min_ind[tup[0]] == 0 or min_ind[tup[0]] == 1:
+            mode = 'full'
+        elif min_ind[tup[0]] == 2 or min_ind[tup[0]] == 3:
+            mode = 'third'
+        elif min_ind[tup[0]] == 4 or min_ind[tup[0]] == 5:
+            mode = 'two_thirds'
+        if min_ind[tup[0]] == 0 or min_ind[tup[0]] == 2 or min_ind[tup[0]] == 4:
+            dir = 0
+        else:
+            dir = 1
+        typer = grades['types'][tup[0]]
+        to_color = []
+        if dir == 1:
+            [to_color.append(x) for x in range(tup[0], tup[1]) if x-tup[0] in MEMBRANE_SPANS[mode][typer]]
+        if dir == 0:
+            membrane_span = MEMBRANE_SPANS[mode][typer]
+            c = []
+            [c.append(x in membrane_span) for x in range(0, 50)]
+            c = c[::-1]
+            [to_color.append(x) for x in range(tup[0], tup[1]) if c[x-tup[0]]]
+        print 'found', to_color, typer, mode
+        exposed.append(to_color)
+    file = 'test.pml'
+    with open(file, 'wa+') as f:
+        f.writelines('load ' + name.lower() + '.pdb,' + name + '\n')
+        f.writelines('cmd.show_as("cartoon", "all")\n')
+        for i, colored in enumerate(exposed):
+            f.writelines('select TM_1_' + str(i) + ', ' + name + ' and resi ' + '+'.join(str(x) for x in colored) + '\n')
+            f.writelines('color red, TM_1_' + str(i) + '\n')
+        f.writelines(['save ', name.lower()+'_TM_temp.pse\n'])
+    subprocess.call(['/opt/local/bin/pymol', '-q', file])
 
 
 def MinimaTuples(min_array, wins):
@@ -832,6 +875,10 @@ def WriteSW2CSV(num=False, name=False, uniprot=False):
     csv_writer = csv.writer(combined)
     all_combined = {}
 
+    results_dict = {'uniprot': '', 'seq_length': 0, 'total_hphobicity': 0, 'overlap': 0, 'sw_remainder': 0,
+                    'our_remainder': 0}
+    csv_writer.writerow(results_dict.keys())
+
     for key, val in SW.iteritems():
         ss_grades = WindowGradesForSingleSequence(val['seq'], key, val['uniprot'])
         PlotSinglePeptide(ss_grades)
@@ -862,13 +909,17 @@ def WriteSW2CSV(num=False, name=False, uniprot=False):
         # AlignForPyMol(val['seq'], val['pdb'][0], SW_tuples, all_our_tuples)
         # PymolMarkByRange(val['pdb'][0], Range2Tups(overlap_list), Range2Tups(sw_remainder), Range2Tups(our_remainder))
         # for complexes with multiple chains separated into uniprot names pdbs
-        PymolMarkByRange(uniprot, Range2Tups(overlap_list), Range2Tups(sw_remainder), Range2Tups(our_remainder))
+        # PymolMarkByRange(uniprot, Range2Tups(overlap_list), Range2Tups(sw_remainder), Range2Tups(our_remainder))
         # SW2PDB(val['seq'], val['pdb'][0], SW_tuples, all_our_tuples)
         print overlap_score, ' for ', val['pdb']
         # print SW_tuples, all_our_tuples
         # csv_writer.writerow([val['uniprot'], overlap_score, len(overlap_list), len(sw_remainder), len(our_remainder)])
         # print 'aaa', overlap_score, overlap_list, sw_remainder, our_remainder
-        # results_dict = {'uniprot': val['uniprot'], }
+        results_dict = {'uniprot': val['uniprot'], 'seq_length': len(val['seq']), 'total_hphobicity':
+            TotalHydroPhobicity(val['seq']), 'overlap': len(overlap_list), 'sw_remainder': len(sw_remainder),
+                        'our_remainder': len(our_remainder)}
+        csv_writer.writerow(results_dict.values())
+        # PymolMarkExposed(uniprot, ss_grades, all_our_tuples)
 
     combined.close()
 
@@ -906,7 +957,7 @@ MakeHydrophobicityGrade()
 # ss_grades = WindowGradesForSingleSequence('GRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVPAIAFTMYLSMLLGYGLTMVPFGGEQNPIYWARYADWLFTTPLLLLDLALLVDADQGTILALVGADGIMIGTGLVGALTKVYSYRFVWWAISTAAMLYILYVLVASTFKVLRNVTVVLWSAYPVVWLIGSEGAGIVPLNIETLLFMVLDVSAKVGFGLILLRSRA', '1BRX')
 # new 3g61:
 # ss_grades = WindowGradesForSingleSequence('VSVLTMFRYAGWLDRLYMLVGTLAAIIHGVALPLMMLIFGDMTDSFASVGNVSKNSTNMSEADKRAMFAKLEEEMTTYAYYYTGIGAGVLIVAYIQVSFWCLAAGRQIHKIRQKFFHAIMNQEIGWFDVHDVGELNTRLTDDVSKINEGIGDKIGMFFQAMATFFGGFIIGFTRGWKLTLVILAISPVLGLSAGIWAKILSSFTDKELHAYAKAGAVAEEVLAAIRTVIAFGGQKKELERYNNNLEEAKRLGIKKAITANISMGAAFLLIYASYALAFWYGTSLVISKEYSIGQVLTVFFSVLIGAFSVGQASPNIEAFANARGAAYEVFKIIDNKPSIDSFSKSGHKPDNIQGNLEFKNIHFSYPSRKEVQILKGLNLKVKSGQTVALVGNSGCGKSTTVQLMQRLYDPLDGMVSIDGQDIRTINVRYLREIIGVVSQEPVLFATTIAENIRYGREDVTMDEIEKAVKEANAYDFIMKLPHQFDTLVGERGAQLSGGQKQRIAIARALVRNPKILLLDEATSALDTESEAVVQAALDKAREGRTTIVIAHRLSTVRNADVIAGFDGGVIVEQGNHDELMREKGIYFKLVMTQTLDEDVPPASFWRILKLNSTEWPYFVVGIFCAIINGGLQPAFSVIFSKVVGVFTNGGPPETQRQNSNLFSLLFLILGIISFITFFLQGFTFGKAGEILTKRLRYMVFKSMLRQDVSWFDDPKNTTGALTTRLANDAAQVKGATGSRLAVIFQNIANLGTGIIISLIYGWQLTLLLLAIVPIIAIAGVVEMKMLSGQALKDKKELEGSGKIATEAIENFRTVVSLTREQKFETMYAQSLQIPYRNAMKKAHVFGITFSFTQAMMYFSYAACFRFGAYLVTQQLMTFENVLLVFSAIVFGAMAVGQVSSFAPDYAKATVSASHIIRIIEKTPEIDSYSTQGLKPNMLEGNVQFSGVVFNYPTRPSIPVLQGLSLEVKKGQTLALVGSSGCGKSTVVQLLERFYDPMAGSVFLDGKEIKQLNVQWLRAQLGIVSQEPILFDCSIAENIAYGDNSRVVSYEEIVRAAKEANIHQFIDSLPDKYNTRVGDKGTQLSGGQKQRIAIARALVRQPHILLLDEATSALDTESEKVVQEALDKAREGRTCIVIAHRLSTIQNADLIVVIQNGKVKEHGTHQQLLAQKGIYFSMVSVQA', '3g61')
-# WriteSW2CSV(uniprot='p18401')
+WriteSW2CSV(uniprot='p02945')
 # WriteSW2CSV(20)
 
 
