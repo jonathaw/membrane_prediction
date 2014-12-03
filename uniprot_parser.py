@@ -12,8 +12,15 @@ from other_functions import PsiReaderHelix
 
 # MEMEBRANE_RANGE = range(-15, 15, 30 / 21)
 MEMBRANE_FULL = range(0, 35)
-MEMBRANE_THIRD = [0, 1, 4, 8, 11, 15, 18, 19, 22, 26, 29, 33, 36]
-MEMBRANE_TWO_THIRDS = [0, 1, 2, 4, 5, 8, 9, 11, 12, 13, 15, 16, 18, 19, 20, 22, 23, 26, 27, 29, 30, 31, 33, 34, 36]
+# MEMBRANE_THIRD = [0, 1, 4, 8, 11, 15, 18, 19, 22, 26, 29, 33, 36]
+MEMBRANE_THIRD = {'1': [0, 3, 4, 7, 11, 14, 15, 18, 22, 25, 26, 29, 33, 37, 38],
+                  '2': [0, 1, 4, 8, 11, 12, 15, 19, 22, 23, 26, 30, 33, 34, 37, 41],
+                  '3': [0, 4, 7, 8, 11, 15, 18, 19, 22, 26, 29, 30, 33, 37, 40, 41]}
+# MEMBRANE_TWO_THIRDS = [0, 1, 2, 4, 5, 8, 9, 11, 12, 13, 15, 16, 18, 19, 20, 22, 23, 26, 27, 29, 30, 31, 33, 34, 36]
+MEMBRANE_TWO_THIRDS = {'1': [0, 1, 2, 4, 5, 8, 9, 11, 12, 13, 15, 16, 19, 20, 22, 23, 24, 26, 27, 30, 31, 33, 34, 35, 37, 38, 41, 42],
+                       '2': [0, 1, 4, 5, 7, 8, 9, 11, 12, 15, 16, 18, 19, 20, 22, 23, 26, 27, 29, 30, 31, 33, 34, 37, 38, 40, 41, 42],
+                       '3': [0, 1, 3, 4, 5, 7, 8, 11, 12, 14, 15, 16, 18, 19, 22, 23, 25, 26, 27, 29, 30, 33, 34, 36, 37, 38, 40, 41]}
+MEMBRANE_SPANS = {'full': {'1': MEMBRANE_FULL}, 'third': MEMBRANE_THIRD, 'two_thirds': MEMBRANE_TWO_THIRDS}
 hydrophobicity_polyval = {}
 window_grades = {}
 uniprot_entris = 0
@@ -23,9 +30,9 @@ LOOP_BYPASS = 3
 MIN_WIN = 20
 SECONDARY_MINIMA_THRESHOLD = 7
 PRIMARY_MINIMA_THRESHOLD = 5
-PSI_CUTOFF = 0.00
+PSI_CUTOFF = 0.3
 PSI_RES_PREC_CUTOFF = 0.3
-
+HPHOBICITY_PSIPRED_BYPASS = SECONDARY_MINIMA_THRESHOLD - 2
 
 def MakeHydrophobicityGrade():
     global hydrophobicity_polyval
@@ -34,6 +41,43 @@ def MakeHydrophobicityGrade():
         split = line.split(' ')
         hydrophobicity_polyval[split[0]] = [float(n) for n in split[1:6]]
     hydrophobicity_grade.close()
+
+
+def grade_seq_single_go(seq):
+    seq_inverse = seq[::-1]
+    membrane_position = np.linspace(-15, 15, endpoint=True, num=len(seq))
+    best_score = 1000
+    for mode, type in MEMBRANE_SPANS.iteritems():
+        for typex, ranger in type.iteritems():
+            sumer = 0
+            not_span = 0
+            sumer_inverse = 0
+            not_span_inverse = 0
+            for i, aa in enumerate(seq):
+                if i in ranger:
+                    sumer += np.polyval(hydrophobicity_polyval[aa], membrane_position[i])
+                else:
+                    not_span += np.polyval(hydrophobicity_polyval[aa], membrane_position[i])
+            for i, aa in enumerate(seq_inverse):
+                if i in ranger:
+                    sumer_inverse += np.polyval(hydrophobicity_polyval[aa], membrane_position[i])
+                else:
+                    not_span_inverse += np.polyval(hydrophobicity_polyval[aa], membrane_position[i])
+            if not_span >= LOOP_BYPASS:
+                sumer += not_span
+            if not_span_inverse >= LOOP_BYPASS:
+                sumer_inverse += not_span_inverse
+            if sumer < best_score:
+                best_score = sumer
+                dir = 1
+                best_type = typex
+                best_mode = mode
+            if sumer_inverse < best_score:
+                best_score = sumer_inverse
+                dir = 0
+                best_type = typex
+                best_mode = mode
+    return best_score, dir, best_mode, best_type
 
 
 def grade_seq(seq, mode):
@@ -85,22 +129,53 @@ def hydrophobicity_grade_increments(seq, mode):
     return min_val, min_val_index+MIN_WIN, dirs[min_val_index], results
 
 
+def hydrophobicity_grade_increments_ss_aware_with_type(seq, mode, psi_pred):
+    # a working version with psi-pred awareness. an increment which is lower than PSI_CUTOFF as a helix
+    # will not be added
+    results = []
+    dirs = []
+    temp = grade_seq(seq[0:MIN_WIN], mode)
+    if IsHelical(psi_pred[0:MIN_WIN]) or temp[0] <= HPHOBICITY_PSIPRED_BYPASS:
+        results.append(temp[0])
+        dirs.append(temp[1])
+    else:
+        results.append(1000)
+        dirs.append(0)
+    for inc in range(1, 14):
+        if inc+MIN_WIN <= len(seq):
+            temp = grade_seq(seq[0:MIN_WIN+inc], mode)
+            if IsHelical(psi_pred[0:MIN_WIN+inc]) or temp[0] <= HPHOBICITY_PSIPRED_BYPASS:
+                results.append(temp[0])
+                dirs.append(temp[1])
+            else:
+                results.append(1000)
+                dirs.append(0)
+    min_val = min(results)
+    min_val_index = results.index(min_val)
+    return min_val, min_val_index+MIN_WIN, dirs[min_val_index], results
+
+
 def hydrophobicity_grade_increments_ss_aware(seq, mode, psi_pred):
     # a working version with psi-pred awareness. an increment which is lower than PSI_CUTOFF as a helix
     # will not be added
     results = []
     dirs = []
     temp = grade_seq(seq[0:MIN_WIN], mode)
-    results.append(temp[0])
-    dirs.append(temp[1])
+    if IsHelical(psi_pred[0:MIN_WIN]) or temp[0] <= HPHOBICITY_PSIPRED_BYPASS:
+        results.append(temp[0])
+        dirs.append(temp[1])
+    else:
+        results.append(1000)
+        dirs.append(0)
     for inc in range(1, 14):
         if inc+MIN_WIN <= len(seq):
-            if IsHelical(psi_pred[0:MIN_WIN+inc-1]):
-                temp = grade_seq(seq[0:MIN_WIN+inc], mode)
+            temp = grade_seq(seq[0:MIN_WIN+inc], mode)
+            if IsHelical(psi_pred[0:MIN_WIN+inc]) or temp[0] <= HPHOBICITY_PSIPRED_BYPASS:
                 results.append(temp[0])
                 dirs.append(temp[1])
             else:
-                break
+                results.append(1000)
+                dirs.append(0)
     min_val = min(results)
     min_val_index = results.index(min_val)
     return min_val, min_val_index+MIN_WIN, dirs[min_val_index], results
@@ -243,19 +318,18 @@ def WindowGradesForSingleSequence(seq, name='default', uniprot='default'):
     starters = []
     psi_pred = PsiReaderHelix(uniprot)
     for first in range(0, len(seq) - MIN_WIN):
-        # if not all(float(i) > PSI_CUTOFF for i in psi_pred[first:first+MIN_WIN]):
-        if not IsHelical(psi_pred[first:first+MIN_WIN]):
-            full_grades.append(1000)
-            full_grades_win_len.append(MIN_WIN)
-            full_dir.append(0)
-            third_grades.append(1000)
-            third_grades_win_len.append(MIN_WIN)
-            third_dir.append(0)
-            two_thirds_grades.append(1000)
-            two_thirds_grades_win_len.append(MIN_WIN)
-            two_thirds_dir.append(0)
-            starters.append(first)
-            continue
+        # if not IsHelical(psi_pred[first:first+MIN_WIN]):
+        #     full_grades.append(1000)
+        #     full_grades_win_len.append(MIN_WIN)
+        #     full_dir.append(0)
+        #     third_grades.append(1000)
+        #     third_grades_win_len.append(MIN_WIN)
+        #     third_dir.append(0)
+        #     two_thirds_grades.append(1000)
+        #     two_thirds_grades_win_len.append(MIN_WIN)
+        #     two_thirds_dir.append(0)
+        #     starters.append(first)
+        #     continue
         temp = hydrophobicity_grade_increments_ss_aware(seq[first:first+36], 'full', psi_pred[first:first+36])
         full_grades.append(temp[0])
         full_grades_win_len.append(temp[1])
@@ -832,8 +906,10 @@ MakeHydrophobicityGrade()
 # ss_grades = WindowGradesForSingleSequence('GRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVPAIAFTMYLSMLLGYGLTMVPFGGEQNPIYWARYADWLFTTPLLLLDLALLVDADQGTILALVGADGIMIGTGLVGALTKVYSYRFVWWAISTAAMLYILYVLVASTFKVLRNVTVVLWSAYPVVWLIGSEGAGIVPLNIETLLFMVLDVSAKVGFGLILLRSRA', '1BRX')
 # new 3g61:
 # ss_grades = WindowGradesForSingleSequence('VSVLTMFRYAGWLDRLYMLVGTLAAIIHGVALPLMMLIFGDMTDSFASVGNVSKNSTNMSEADKRAMFAKLEEEMTTYAYYYTGIGAGVLIVAYIQVSFWCLAAGRQIHKIRQKFFHAIMNQEIGWFDVHDVGELNTRLTDDVSKINEGIGDKIGMFFQAMATFFGGFIIGFTRGWKLTLVILAISPVLGLSAGIWAKILSSFTDKELHAYAKAGAVAEEVLAAIRTVIAFGGQKKELERYNNNLEEAKRLGIKKAITANISMGAAFLLIYASYALAFWYGTSLVISKEYSIGQVLTVFFSVLIGAFSVGQASPNIEAFANARGAAYEVFKIIDNKPSIDSFSKSGHKPDNIQGNLEFKNIHFSYPSRKEVQILKGLNLKVKSGQTVALVGNSGCGKSTTVQLMQRLYDPLDGMVSIDGQDIRTINVRYLREIIGVVSQEPVLFATTIAENIRYGREDVTMDEIEKAVKEANAYDFIMKLPHQFDTLVGERGAQLSGGQKQRIAIARALVRNPKILLLDEATSALDTESEAVVQAALDKAREGRTTIVIAHRLSTVRNADVIAGFDGGVIVEQGNHDELMREKGIYFKLVMTQTLDEDVPPASFWRILKLNSTEWPYFVVGIFCAIINGGLQPAFSVIFSKVVGVFTNGGPPETQRQNSNLFSLLFLILGIISFITFFLQGFTFGKAGEILTKRLRYMVFKSMLRQDVSWFDDPKNTTGALTTRLANDAAQVKGATGSRLAVIFQNIANLGTGIIISLIYGWQLTLLLLAIVPIIAIAGVVEMKMLSGQALKDKKELEGSGKIATEAIENFRTVVSLTREQKFETMYAQSLQIPYRNAMKKAHVFGITFSFTQAMMYFSYAACFRFGAYLVTQQLMTFENVLLVFSAIVFGAMAVGQVSSFAPDYAKATVSASHIIRIIEKTPEIDSYSTQGLKPNMLEGNVQFSGVVFNYPTRPSIPVLQGLSLEVKKGQTLALVGSSGCGKSTVVQLLERFYDPMAGSVFLDGKEIKQLNVQWLRAQLGIVSQEPILFDCSIAENIAYGDNSRVVSYEEIVRAAKEANIHQFIDSLPDKYNTRVGDKGTQLSGGQKQRIAIARALVRQPHILLLDEATSALDTESEKVVQEALDKAREGRTCIVIAHRLSTIQNADLIVVIQNGKVKEHGTHQQLLAQKGIYFSMVSVQA', '3g61')
-WriteSW2CSV(uniprot='q56408')
+# WriteSW2CSV(uniprot='p18401')
 # WriteSW2CSV(20)
+
+
 
 # SW = SWDB_parser_prediciton(1)
 # ss_grades = WindowGradesForSingleSequence(SW[SW.keys()[0]]['seq'], SW[SW.keys()[0]]['uniprot'])
