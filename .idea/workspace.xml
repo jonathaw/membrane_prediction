@@ -2,9 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6a73546c-b0e1-4c73-9c98-48c4af466cd3" name="Default" comment="">
+      <change type="MOVED" beforePath="$PROJECT_DIR$/1e12_TM_temp.pse" afterPath="$PROJECT_DIR$/1E12_TM_temp.pse" />
       <change type="MOVED" beforePath="$PROJECT_DIR$/p02945_TM_temp.pse" afterPath="$PROJECT_DIR$/P02945_TM_temp.pse" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/p18401_TM_temp.pse" afterPath="$PROJECT_DIR$/p18401_TM_temp.pse" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/temp.py" afterPath="$PROJECT_DIR$/temp.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/1iwg_TM_temp.pse" afterPath="$PROJECT_DIR$/1iwg_TM_temp.pse" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/q56408_TM_temp.pse" afterPath="$PROJECT_DIR$/q56408_TM_temp.pse" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test.pml" afterPath="$PROJECT_DIR$/test.pml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/uniprot_parser.py" afterPath="$PROJECT_DIR$/uniprot_parser.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
@@ -63,10 +64,10 @@
       <file leaf-file-name="database_parser.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/database_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1051" max-vertical-offset="1980">
-              <caret line="78" column="51" selection-start-line="78" selection-start-column="51" selection-end-line="78" selection-end-column="51" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="200" max-vertical-offset="1280">
+              <caret line="128" column="0" selection-start-line="128" selection-start-column="0" selection-end-line="128" selection-end-column="0" />
               <folding>
-                <element signature="e#4844#6162#0" expanded="true" />
+                <element signature="e#637#1902#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -75,10 +76,15 @@
       <file leaf-file-name="uniprot_parser.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/uniprot_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.12337662" vertical-offset="2464" max-vertical-offset="4580">
-              <caret line="865" column="54" selection-start-line="865" selection-start-column="54" selection-end-line="865" selection-end-column="54" />
+            <state vertical-scroll-proportion="0.8042414" vertical-offset="7227" max-vertical-offset="7840">
+              <caret line="992" column="0" selection-start-line="992" selection-start-column="0" selection-end-line="992" selection-end-column="0" />
               <folding>
-                <element signature="e#38792#42087#0" expanded="true" />
+                <element signature="e#5393#6643#0" expanded="true" />
+                <element signature="e#7667#8502#0" expanded="true" />
+                <element signature="e#14041#16359#0" expanded="true" />
+                <element signature="e#16436#17866#0" expanded="true" />
+                <element signature="e#17950#19376#0" expanded="true" />
+                <element signature="e#39468#42858#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -87,8 +93,8 @@
       <file leaf-file-name="other_functions.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/other_functions.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="432" max-vertical-offset="558">
-              <caret line="24" column="63" selection-start-line="24" selection-start-column="63" selection-end-line="24" selection-end-column="63" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="340">
+              <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -97,8 +103,8 @@
       <file leaf-file-name="test.pml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test.pml">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="300" max-vertical-offset="460">
-              <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="660" max-vertical-offset="820">
+              <caret line="35" column="0" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -118,16 +124,16 @@
     <option name="changedFiles">
       <list>
         <option value="$PROJECT_DIR$/pdb_sequences.py" />
-        <option value="$PROJECT_DIR$/other_functions.py" />
         <option value="$PROJECT_DIR$/database_parser.py" />
         <option value="$PROJECT_DIR$/test.pml" />
         <option value="$PROJECT_DIR$/temp.py" />
+        <option value="$PROJECT_DIR$/other_functions.py" />
         <option value="$PROJECT_DIR$/uniprot_parser.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="510" />
+    <option name="x" value="507" />
     <option name="y" value="23" />
     <option name="width" value="1410" />
     <option name="height" value="1045" />
@@ -482,11 +488,15 @@
       <created>1417609202826</created>
       <updated>1417609202826</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="added pymol by exposed for coloring only residues that are supposed to be exposed. doesm't come out very well.">
+      <created>1417619354811</created>
+      <updated>1417619354811</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="510" y="23" width="1410" height="1045" extended-state="0" />
+    <frame x="507" y="23" width="1410" height="1045" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -498,7 +508,7 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32890704" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3319714" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -547,7 +557,8 @@
     <MESSAGE value="trying to push all files" />
     <MESSAGE value="trying to push all files, again" />
     <MESSAGE value="added grade_seq_single_go which checks all modes and types, retrnns best score, with direction, mode and type. also added dictionaries of membrane spanes by type for third and two thirds" />
-    <option name="LAST_COMMIT_MESSAGE" value="added grade_seq_single_go which checks all modes and types, retrnns best score, with direction, mode and type. also added dictionaries of membrane spanes by type for third and two thirds" />
+    <MESSAGE value="added pymol by exposed for coloring only residues that are supposed to be exposed. doesm't come out very well." />
+    <option name="LAST_COMMIT_MESSAGE" value="added pymol by exposed for coloring only residues that are supposed to be exposed. doesm't come out very well." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -560,7 +571,12 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="774" max-vertical-offset="2124">
           <caret line="188" column="0" selection-start-line="188" selection-start-column="0" selection-end-line="188" selection-end-column="53" />
           <folding>
-            <element signature="e#38792#42087#0" expanded="true" />
+            <element signature="e#5393#6643#0" expanded="true" />
+            <element signature="e#7667#8502#0" expanded="true" />
+            <element signature="e#14041#16359#0" expanded="true" />
+            <element signature="e#16436#17866#0" expanded="true" />
+            <element signature="e#17950#19376#0" expanded="true" />
+            <element signature="e#39468#42858#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -570,7 +586,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="846" max-vertical-offset="954">
           <caret line="47" column="0" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
           <folding>
-            <element signature="e#4844#6162#0" expanded="true" />
+            <element signature="e#637#1902#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -580,7 +596,12 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="846" max-vertical-offset="3456">
           <caret line="467" column="12" selection-start-line="467" selection-start-column="12" selection-end-line="467" selection-end-column="12" />
           <folding>
-            <element signature="e#38792#42087#0" expanded="true" />
+            <element signature="e#5393#6643#0" expanded="true" />
+            <element signature="e#7667#8502#0" expanded="true" />
+            <element signature="e#14041#16359#0" expanded="true" />
+            <element signature="e#16436#17866#0" expanded="true" />
+            <element signature="e#17950#19376#0" expanded="true" />
+            <element signature="e#39468#42858#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -590,7 +611,12 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="2839" max-vertical-offset="3456">
           <caret line="467" column="12" selection-start-line="467" selection-start-column="12" selection-end-line="467" selection-end-column="12" />
           <folding>
-            <element signature="e#38792#42087#0" expanded="true" />
+            <element signature="e#5393#6643#0" expanded="true" />
+            <element signature="e#7667#8502#0" expanded="true" />
+            <element signature="e#14041#16359#0" expanded="true" />
+            <element signature="e#16436#17866#0" expanded="true" />
+            <element signature="e#17950#19376#0" expanded="true" />
+            <element signature="e#39468#42858#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -626,18 +652,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/other_functions.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="558">
-          <caret line="24" column="63" selection-start-line="24" selection-start-column="63" selection-end-line="24" selection-end-column="63" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test.pml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="300" max-vertical-offset="460">
-          <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="660" max-vertical-offset="820">
+          <caret line="35" column="0" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -650,22 +668,35 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/other_functions.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="340">
+          <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/database_parser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="162" max-vertical-offset="2754">
-          <caret line="78" column="51" selection-start-line="78" selection-start-column="51" selection-end-line="78" selection-end-column="51" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="280" max-vertical-offset="1280">
+          <caret line="128" column="0" selection-start-line="128" selection-start-column="0" selection-end-line="128" selection-end-column="0" />
           <folding>
-            <element signature="e#4844#6162#0" expanded="true" />
+            <element signature="e#637#1902#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/uniprot_parser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.12337662" vertical-offset="2464" max-vertical-offset="4580">
-          <caret line="865" column="54" selection-start-line="865" selection-start-column="54" selection-end-line="865" selection-end-column="54" />
+        <state vertical-scroll-proportion="0.8042414" vertical-offset="7227" max-vertical-offset="7840">
+          <caret line="992" column="0" selection-start-line="992" selection-start-column="0" selection-end-line="992" selection-end-column="0" />
           <folding>
-            <element signature="e#38792#42087#0" expanded="true" />
+            <element signature="e#5393#6643#0" expanded="true" />
+            <element signature="e#7667#8502#0" expanded="true" />
+            <element signature="e#14041#16359#0" expanded="true" />
+            <element signature="e#16436#17866#0" expanded="true" />
+            <element signature="e#17950#19376#0" expanded="true" />
+            <element signature="e#39468#42858#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -13,29 +13,35 @@ from other_functions import PsiReaderHelix
 # MEMEBRANE_RANGE = range(-15, 15, 30 / 21)
 MEMBRANE_FULL = range(0, 35)
 # MEMBRANE_THIRD = [0, 1, 4, 8, 11, 15, 18, 19, 22, 26, 29, 33, 36]
-MEMBRANE_THIRD = {'1': [0, 3, 4, 7, 11, 14, 15, 18, 22, 25, 26, 29, 33, 37, 38],
-                  '2': [0, 1, 4, 8, 11, 12, 15, 19, 22, 23, 26, 30, 33, 34, 37, 41],
-                  '3': [0, 4, 7, 8, 11, 15, 18, 19, 22, 26, 29, 30, 33, 37, 40, 41]}
 # MEMBRANE_TWO_THIRDS = [0, 1, 2, 4, 5, 8, 9, 11, 12, 13, 15, 16, 18, 19, 20, 22, 23, 26, 27, 29, 30, 31, 33, 34, 36]
-MEMBRANE_TWO_THIRDS = {'1': [0, 1, 2, 4, 5, 8, 9, 11, 12, 13, 15, 16, 19, 20, 22, 23, 24, 26, 27, 30, 31, 33, 34, 35,
-                             37, 38, 41, 42],
-                       '2': [0, 1, 4, 5, 7, 8, 9, 11, 12, 15, 16, 18, 19, 20, 22, 23, 26, 27, 29, 30, 31, 33, 34, 37,
-                             38, 40, 41, 42],
-                       '3': [0, 1, 3, 4, 5, 7, 8, 11, 12, 14, 15, 16, 18, 19, 22, 23, 25, 26, 27, 29, 30, 33, 34, 36,
-                             37, 38, 40, 41]}
+# MEMBRANE_THIRD = {'1': [0, 3, 4, 7, 11, 14, 15, 18, 22, 25, 26, 29, 33, 37, 38],
+#                   '2': [0, 1, 4, 8, 11, 12, 15, 19, 22, 23, 26, 30, 33, 34, 37, 41],
+#                   '3': [0, 4, 7, 8, 11, 15, 18, 19, 22, 26, 29, 30, 33, 37, 40, 41]}
+# MEMBRANE_TWO_THIRDS = {'1': [0, 1, 2, 4, 5, 8, 9, 11, 12, 13, 15, 16, 19, 20, 22, 23, 24, 26, 27, 30, 31, 33, 34, 35,
+#                              37, 38, 41, 42],
+#                        '2': [0, 1, 4, 5, 7, 8, 9, 11, 12, 15, 16, 18, 19, 20, 22, 23, 26, 27, 29, 30, 31, 33, 34, 37,
+#                              38, 40, 41, 42],
+#                        '3': [0, 1, 3, 4, 5, 7, 8, 11, 12, 14, 15, 16, 18, 19, 22, 23, 25, 26, 27, 29, 30, 33, 34, 36,
+#                              37, 38, 40, 41]}
+MEMBRANE_THIRD = {'1': range(0, 35), '2': range(0, 35), '3': range(0, 35)}
+MEMBRANE_TWO_THIRDS = {'1': range(0, 35), '2': range(0, 35), '3': range(0, 35)}
 MEMBRANE_SPANS = {'full': {'1': MEMBRANE_FULL}, 'third': MEMBRANE_THIRD, 'two_thirds': MEMBRANE_TWO_THIRDS}
 hydrophobicity_polyval = {}
 window_grades = {}
 uniprot_entris = 0
 main_dict = {}
 SMOOTH_SIZE = 1
-LOOP_BYPASS = 3
+LOOP_BYPASS = 300
 MIN_WIN = 20
-SECONDARY_MINIMA_THRESHOLD = 7
+SECONDARY_MINIMA_THRESHOLD = 8
 PRIMARY_MINIMA_THRESHOLD = 5
 PSI_CUTOFF = 0.0
 PSI_RES_PREC_CUTOFF = 0.1
-HPHOBICITY_PSIPRED_BYPASS = SECONDARY_MINIMA_THRESHOLD - 2
+HPHOBICITY_PSIPRED_BYPASS = -2 #SECONDARY_MINIMA_THRESHOLD - 2
+PSI_EDGE = 4
+PSI_CUTOFF_EDGE = 0.6
+PSI_EDGE_PREC = 0.25
+
 
 def MakeHydrophobicityGrade():
     global hydrophobicity_polyval
@@ -202,7 +208,19 @@ def IsHelical(psi_results):
         if float(aa) < PSI_CUTOFF:
             result += 1
     precent = float(result) / len(psi_results)
-    if precent >= PSI_RES_PREC_CUTOFF:
+    start = psi_results[0:PSI_EDGE]
+    end = psi_results[-PSI_EDGE:]
+    start_score = 0
+    for aa in start:
+        if float(aa) < PSI_CUTOFF_EDGE:
+            start_score += 1
+    start_score = float(start_score) / len(start)
+    end_score = 0
+    for aa in end:
+        if float(aa) < PSI_CUTOFF_EDGE:
+            end_score += 1
+    end_score = float(end_score) / len(end)
+    if precent >= PSI_RES_PREC_CUTOFF or start_score >= PSI_EDGE_PREC or end_score >= PSI_EDGE_PREC:
         return False
     else:
         return True
@@ -876,10 +894,12 @@ def WriteSW2CSV(num=False, name=False, uniprot=False):
     all_combined = {}
 
     results_dict = {'uniprot': '', 'seq_length': 0, 'total_hphobicity': 0, 'overlap': 0, 'sw_remainder': 0,
-                    'our_remainder': 0}
+                    'our_remainder': 0, 'overlap_score': 0}
     csv_writer.writerow(results_dict.keys())
 
     for key, val in SW.iteritems():
+        if key == '':
+            continue
         ss_grades = WindowGradesForSingleSequence(val['seq'], key, val['uniprot'])
         PlotSinglePeptide(ss_grades)
         (grds_array, win_of_min, min_ind) = Grades2Arry(ss_grades)
@@ -909,7 +929,7 @@ def WriteSW2CSV(num=False, name=False, uniprot=False):
         # AlignForPyMol(val['seq'], val['pdb'][0], SW_tuples, all_our_tuples)
         # PymolMarkByRange(val['pdb'][0], Range2Tups(overlap_list), Range2Tups(sw_remainder), Range2Tups(our_remainder))
         # for complexes with multiple chains separated into uniprot names pdbs
-        # PymolMarkByRange(uniprot, Range2Tups(overlap_list), Range2Tups(sw_remainder), Range2Tups(our_remainder))
+        PymolMarkByRange(uniprot, Range2Tups(overlap_list), Range2Tups(sw_remainder), Range2Tups(our_remainder))
         # SW2PDB(val['seq'], val['pdb'][0], SW_tuples, all_our_tuples)
         print overlap_score, ' for ', val['pdb']
         # print SW_tuples, all_our_tuples
@@ -917,8 +937,8 @@ def WriteSW2CSV(num=False, name=False, uniprot=False):
         # print 'aaa', overlap_score, overlap_list, sw_remainder, our_remainder
         results_dict = {'uniprot': val['uniprot'], 'seq_length': len(val['seq']), 'total_hphobicity':
             TotalHydroPhobicity(val['seq']), 'overlap': len(overlap_list), 'sw_remainder': len(sw_remainder),
-                        'our_remainder': len(our_remainder)}
-        csv_writer.writerow(results_dict.values())
+                        'our_remainder': len(our_remainder), 'overlap_score': overlap_score}
+        # csv_writer.writerow(results_dict.values())
         # PymolMarkExposed(uniprot, ss_grades, all_our_tuples)
 
     combined.close()
@@ -957,7 +977,7 @@ MakeHydrophobicityGrade()
 # ss_grades = WindowGradesForSingleSequence('GRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVPAIAFTMYLSMLLGYGLTMVPFGGEQNPIYWARYADWLFTTPLLLLDLALLVDADQGTILALVGADGIMIGTGLVGALTKVYSYRFVWWAISTAAMLYILYVLVASTFKVLRNVTVVLWSAYPVVWLIGSEGAGIVPLNIETLLFMVLDVSAKVGFGLILLRSRA', '1BRX')
 # new 3g61:
 # ss_grades = WindowGradesForSingleSequence('VSVLTMFRYAGWLDRLYMLVGTLAAIIHGVALPLMMLIFGDMTDSFASVGNVSKNSTNMSEADKRAMFAKLEEEMTTYAYYYTGIGAGVLIVAYIQVSFWCLAAGRQIHKIRQKFFHAIMNQEIGWFDVHDVGELNTRLTDDVSKINEGIGDKIGMFFQAMATFFGGFIIGFTRGWKLTLVILAISPVLGLSAGIWAKILSSFTDKELHAYAKAGAVAEEVLAAIRTVIAFGGQKKELERYNNNLEEAKRLGIKKAITANISMGAAFLLIYASYALAFWYGTSLVISKEYSIGQVLTVFFSVLIGAFSVGQASPNIEAFANARGAAYEVFKIIDNKPSIDSFSKSGHKPDNIQGNLEFKNIHFSYPSRKEVQILKGLNLKVKSGQTVALVGNSGCGKSTTVQLMQRLYDPLDGMVSIDGQDIRTINVRYLREIIGVVSQEPVLFATTIAENIRYGREDVTMDEIEKAVKEANAYDFIMKLPHQFDTLVGERGAQLSGGQKQRIAIARALVRNPKILLLDEATSALDTESEAVVQAALDKAREGRTTIVIAHRLSTVRNADVIAGFDGGVIVEQGNHDELMREKGIYFKLVMTQTLDEDVPPASFWRILKLNSTEWPYFVVGIFCAIINGGLQPAFSVIFSKVVGVFTNGGPPETQRQNSNLFSLLFLILGIISFITFFLQGFTFGKAGEILTKRLRYMVFKSMLRQDVSWFDDPKNTTGALTTRLANDAAQVKGATGSRLAVIFQNIANLGTGIIISLIYGWQLTLLLLAIVPIIAIAGVVEMKMLSGQALKDKKELEGSGKIATEAIENFRTVVSLTREQKFETMYAQSLQIPYRNAMKKAHVFGITFSFTQAMMYFSYAACFRFGAYLVTQQLMTFENVLLVFSAIVFGAMAVGQVSSFAPDYAKATVSASHIIRIIEKTPEIDSYSTQGLKPNMLEGNVQFSGVVFNYPTRPSIPVLQGLSLEVKKGQTLALVGSSGCGKSTVVQLLERFYDPMAGSVFLDGKEIKQLNVQWLRAQLGIVSQEPILFDCSIAENIAYGDNSRVVSYEEIVRAAKEANIHQFIDSLPDKYNTRVGDKGTQLSGGQKQRIAIARALVRQPHILLLDEATSALDTESEKVVQEALDKAREGRTCIVIAHRLSTIQNADLIVVIQNGKVKEHGTHQQLLAQKGIYFSMVSVQA', '3g61')
-WriteSW2CSV(uniprot='p02945')
+WriteSW2CSV(uniprot='q8ysc4')
 # WriteSW2CSV(20)
 
 

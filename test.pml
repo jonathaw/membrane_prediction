@@ -1,17 +1,35 @@
-load p02945.pdb,p02945
+load q8ysc4.pdb,q8ysc4
 cmd.show_as("cartoon", "all")
-select TM_1_0, p02945 and resi 20+21+23+24+25+27+28+31
-color red, TM_1_0
-select TM_1_1, p02945 and resi 53+54+58+62+65+66
+select TM_1_1, q8ysc4 and resi 4-23
 color red, TM_1_1
-select TM_1_2, p02945 and resi 89+93+96+97+100
+select TM_1_2, q8ysc4 and resi 72-90
 color red, TM_1_2
-select TM_1_3, p02945 and resi 143+144+147+148+150+151+152+154+155
+select TM_1_3, q8ysc4 and resi 99-117
 color red, TM_1_3
-select TM_1_4, p02945 and resi 180+181+184+185+187+188+189+191+192
+select TM_1_4, q8ysc4 and resi 131-146
 color red, TM_1_4
-select TM_1_5, p02945 and resi 201+202+204+205+206+208+209+212+213+215+216+217+219+220
+select TM_1_5, q8ysc4 and resi 164-184
 color red, TM_1_5
-select TM_1_6, p02945 and resi 112+113+116+120+123
+select TM_1_6, q8ysc4 and resi 195-208
 color red, TM_1_6
-save p02945_TM_temp.pse
+select TM_2_1, q8ysc4 and resi 3-3
+color blue, TM_2_1
+select TM_2_2, q8ysc4 and resi 24-25
+color blue, TM_2_2
+select TM_2_3, q8ysc4 and resi 34-55
+color blue, TM_2_3
+select TM_2_4, q8ysc4 and resi 118-120
+color blue, TM_2_4
+select TM_2_5, q8ysc4 and resi 125-130
+color blue, TM_2_5
+select TM_2_6, q8ysc4 and resi 159-163
+color blue, TM_2_6
+select TM_3_7, q8ysc4 and resi 91-91
+color purple, TM_3_7
+select TM_3_8, q8ysc4 and resi 98-98
+color purple, TM_3_8
+select TM_3_9, q8ysc4 and resi 147-150
+color purple, TM_3_9
+select TM_3_10, q8ysc4 and resi 209-215
+color purple, TM_3_10
+save q8ysc4_TM_temp.pse
