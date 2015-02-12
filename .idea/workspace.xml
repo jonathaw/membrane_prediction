@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6a73546c-b0e1-4c73-9c98-48c4af466cd3" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/poly_value_11.2.txt" />
+    <list default="true" id="6a73546c-b0e1-4c73-9c98-48c4af466cd3" name="Default" comment="new polyval values">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Topo_DATA_ALL_new.xml" />
       <change type="MOVED" beforePath="$PROJECT_DIR$/1e12_TM_temp.pse" afterPath="$PROJECT_DIR$/1E12_TM_temp.pse" />
       <change type="MOVED" beforePath="$PROJECT_DIR$/p02945_TM_temp.pse" afterPath="$PROJECT_DIR$/P02945_TM_temp.pse" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/p31224_TM_temp.pse" afterPath="$PROJECT_DIR$/p31224_TM_temp.pse" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/q607g3_TM_temp.pse" afterPath="$PROJECT_DIR$/q607g3_TM_temp.pse" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test.pml" afterPath="$PROJECT_DIR$/test.pml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/uniprot_parser.py" afterPath="$PROJECT_DIR$/uniprot_parser.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database_parser.py" afterPath="$PROJECT_DIR$/database_parser.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="membrane_prediciton.iws" />
@@ -62,20 +59,20 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="database_parser.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="database_parser.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/database_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="580">
-              <caret line="128" column="0" selection-start-line="128" selection-start-column="0" selection-end-line="128" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.36727878" vertical-offset="0" max-vertical-offset="600">
+              <caret line="12" column="18" selection-start-line="12" selection-start-column="18" selection-end-line="12" selection-end-column="18" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="uniprot_parser.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="uniprot_parser.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/uniprot_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.85409254" vertical-offset="1000" max-vertical-offset="8780">
+            <state vertical-scroll-proportion="-18.461538" vertical-offset="1000" max-vertical-offset="8780">
               <caret line="74" column="73" selection-start-line="74" selection-start-column="51" selection-end-line="74" selection-end-column="73" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
@@ -154,12 +151,12 @@
     <option name="changedFiles">
       <list>
         <option value="$PROJECT_DIR$/pdb_sequences.py" />
-        <option value="$PROJECT_DIR$/database_parser.py" />
         <option value="$PROJECT_DIR$/test.pml" />
         <option value="$PROJECT_DIR$/temp.py" />
         <option value="$PROJECT_DIR$/other_functions.py" />
         <option value="$PROJECT_DIR$/poly_value_11.2.txt" />
         <option value="$PROJECT_DIR$/uniprot_parser.py" />
+        <option value="$PROJECT_DIR$/database_parser.py" />
       </list>
     </option>
   </component>
@@ -549,18 +546,23 @@
       <created>1418559282163</created>
       <updated>1418559282163</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="new polyval values">
+      <created>1423672440700</created>
+      <updated>1423672440700</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1920" height="1053" extended-state="6" />
     <editor active="false" />
     <layout>
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3299285" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32870865" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32941177" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.12954186" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.12954186" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -570,7 +572,6 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
@@ -591,7 +592,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="push test" />
     <MESSAGE value="added and debugged (with success) SecondaryMinimas which finds minimas that were not found originally because they were skipped. PymolMark was also improved to color secondary minimas in blue" />
     <MESSAGE value="rotated xticks, added some remarks" />
     <MESSAGE value="improved plotting, using PlotParams()" />
@@ -616,7 +616,8 @@
     <MESSAGE value="added grade_seq_single_go which checks all modes and types, retrnns best score, with direction, mode and type. also added dictionaries of membrane spanes by type for third and two thirds" />
     <MESSAGE value="added pymol by exposed for coloring only residues that are supposed to be exposed. doesm't come out very well." />
     <MESSAGE value="tesed some samples" />
-    <option name="LAST_COMMIT_MESSAGE" value="tesed some samples" />
+    <MESSAGE value="new polyval values" />
+    <option name="LAST_COMMIT_MESSAGE" value="new polyval values" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1007,14 +1008,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/database_parser.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="280" max-vertical-offset="1280">
-          <caret line="128" column="0" selection-start-line="128" selection-start-column="0" selection-end-line="128" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/database_new.csv">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.7692308" vertical-offset="0" max-vertical-offset="2740">
@@ -1025,7 +1018,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/uniprot_parser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.85409254" vertical-offset="1000" max-vertical-offset="8780">
+        <state vertical-scroll-proportion="-18.461538" vertical-offset="1000" max-vertical-offset="8780">
           <caret line="74" column="73" selection-start-line="74" selection-start-column="51" selection-end-line="74" selection-end-column="73" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
@@ -1036,6 +1029,14 @@
             <element signature="e#28646#32210#0" expanded="true" />
             <element signature="e#39527#42917#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/database_parser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.36727878" vertical-offset="0" max-vertical-offset="600">
+          <caret line="12" column="18" selection-start-line="12" selection-start-column="18" selection-end-line="12" selection-end-column="18" />
+          <folding />
         </state>
       </provider>
     </entry>

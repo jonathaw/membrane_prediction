@@ -9,7 +9,8 @@ begin_re = re.compile('^.*<beginIndex>(.*)</beginIndex>')
 end_re = re.compile('^.*<endIndex>(.*)</endIndex>')
 mptopp_re = re.compile('^.*</mptopoProtein>')
 
-database = open('/Users/jonathan/Documents/membrane_prediciton_data/Topo_DATA_ALL_new.xml', 'r')
+# database = open('/Users/jonathan/Documents/membrane_prediciton_data/Topo_DATA_ALL_new.xml', 'r')
+database = open('./Topo_DATA_ALL_new.xml', 'r')
 # database = open('/Users/jonathan/Documents/membrane_prediciton_data/temp_SW_single_seq.xml', 'r')
 
 def SWDB_parser_prediciton(num):
