@@ -12,6 +12,7 @@ def main():
     pass
 
 
+
 class HphobicityScore():
     def __init__(self, name, seq):
         self.name = name
