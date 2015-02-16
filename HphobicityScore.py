@@ -72,12 +72,23 @@ class HphobicityScore():
 
     def plot_win_grades(self):
         import matplotlib.pyplot as plt
-        fig = plt.figure()
-        ax1 = fig.add_subplot(111)
+        import matplotlib.lines as mlines
+        plt.figure()
+        for win_grade in self.WinGrades:
+            plt.plot((win_grade.begin, win_grade.end), (win_grade.grade, win_grade.grade),
+                     color='black' if win_grade.direction == 'fwd' else 'grey')
         for minima in self.local_minima_finder():
             print minima.begin, minima.end, minima.grade
-            ax1.plot((minima.begin, minima.end), (minima.grade, minima.grade),
-                     color='red' if minima.direction == 'fwd' else 'blue')
+            plt.plot((minima.begin, minima.end), (minima.grade, minima.grade),
+                     color='blue' if minima.direction == 'fwd' else 'red', lw=2)
+        black_line = mlines.Line2D([], [], color='black', marker='', lw=2, label='Fwd grade')
+        grey_line = mlines.Line2D([], [], color='grey', marker='', lw=2, label='Rev grade')
+        blue_line = mlines.Line2D([], [], color='blue', marker='', lw=2, label='Fwd minima')
+        red_line = mlines.Line2D([], [], color='red', marker='', lw=2, label='Red minima')
+        plt.legend(handles=[black_line, grey_line, blue_line, red_line], ncol=4)
+        plt.xlabel('Sequence Position')
+        plt.ylabel('Energy')
+        plt.title('Win Grades Energy Plot')
         plt.show()
 
     def plot_energy_landscape(self):
