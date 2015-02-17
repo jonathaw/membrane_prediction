@@ -8,11 +8,23 @@ def main():
     # temp = HphobicityScore('temp', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
     # temp = HphobicityScore('temp', 'YSYRFVWWAISTAAMLYILY')
     # temp = HphobicityScore('1E12', 'MSITSVPGVVDAGVLGAQSAAAVRENALLSSSLWVNVALAGIAILVFVYMGRTIRPGRPRLIWGATLMIPLVSISSYLGLLSGLTVGMIEMPAGHALAGEMVRSQWGRYLTWALSTPMILLALGLLADVDLGSLFTVIAADIGMCVTGLAAAMTTSALLFRWAFYAISCAFFVVVLSALVTDWAASASSAGTAEIFDTLRVLTVVLWLGYPIVWAVGVEGLALVQSVGVTSWAYSVLDVFAKYVFAFILLRWVANNERTVAVAGQTLGTMSSDD', hydrophobicity_polyval)
-    # temp = HphobicityScore('1IWG', 'MPNFFIDRPIFAWVIAIIIMLAGGLAILKLPVAQYPTIAPPAVTISASYPGADAKTVQDTVTQVIEQNMNGIDNLMYMSSNSDSTGTVQITLTFESGTDADIAQVQVQNKLQLAMPLLPQEVQQQGVSVEKSSSSFLMVVGVINTDGTMTQEDISDYVAANMKDAISRTSGVGDVQLFGSQYAMRIWMNPNELNKFQLTPVDVITAIKAQNAQVAAGQLGGTPPVKGQQLNASIIAQTRLTSTEEFGKILLKVNQDGSRVLLRDVAKIELGGENYDIIAEFNGQPASGLGIKLATGANALDTAAAIRAELAKMEPFFPSGLKIVYPYDTTPFVKISIHEVVKTLVEAIILVFLVMYLFLQNFRATLIPTIAVPVVLLGTFAVLAAFGFSINTLTMFGMVLAIGLLVDDAIVVVENVERVMAEEGLPPKEATRKSMGQIQGALVGIAMVLSAVFVPMAFFGGSTGAIYRQFSITIVSAMALSVLVALILTPALCATMLKPIAKGDHGEGKKGFFGWFNRMFEKSTHHYTDSVGGILRSTGRYLVLYLIIVVGMAYLFVRLPSSFLPDEDQGVFMTMVQLPAGATQERTQKVLNEVTHYYLTKEKNNVESVFAVNGFGFAGRGQNTGIAFVSLKDWADRPGEENKVEAITMRATRAFSQIKDAMVFAFNLPAIVELGTATGFDFELIDQAGLGHEKLTQARNQLLAEAAKHPDMLTSVRPNGLEDTPQFKIDIDQEKAQALGVSINDINTTLGAAWGGSYVNDFIDRGRVKKVYVMSEAKYRMLPDDIGDWYVRAADGQMVPFSAFSSSRWEYGSPRLERYNGLPSMEILGQAAPGKSTGEAMELMEQLASKLPTGVGYDWTGMSYQERLSGNQAPSLYAISLIVVFLCLAALYESWSIPFSVMLVVPLGVIGALLAATFRGLTNDVYFQVGLLTTIGLSAKNAILIVEFAKDLMDKEGKGLIEATLDAVRMRLRPILMTSLAFILGVMPLVISTGAGSGAQNAVGTGVMGGMVTATVLAIFFVPVFFVVVRRRFSRKNEDIEHSHTVDHH')
-    temp = HphobicityScore('1BRX', 'EAQITGRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVPAIAFTMYLSMLLGYGLTMVPFGGEQNPIYWARYADWLFTTPLLLLDLALLVDADQGTILALVGADGIMIGTGLVGALTKVYSYRFVWWAISTAAMLYILYVLFFGFTSKAESMRPEVASTFKVLRNVTVVLWSAYPVVWLIGSEGAGIVPLNIETLLFMVLDVSAKVGFGLILLRSRAIFGEAEAPEPSAGDGAAATS', hydrophobicity_polyval)
+    # temp = HphobicityScore('1IWG', 'MPNFFIDRPIFAWVIAIIIMLAGGLAILKLPVAQYPTIAPPAVTISASYPGADAKTVQDTVTQVIEQNMNGIDNLMYMSSNSDSTGTVQITLTFESGTDADIAQVQVQNKLQLAMPLLPQEVQQQGVSVEKSSSSFLMVVGVINTDGTMTQEDISDYVAANMKDAISRTSGVGDVQLFGSQYAMRIWMNPNELNKFQLTPVDVITAIKAQNAQVAAGQLGGTPPVKGQQLNASIIAQTRLTSTEEFGKILLKVNQDGSRVLLRDVAKIELGGENYDIIAEFNGQPASGLGIKLATGANALDTAAAIRAELAKMEPFFPSGLKIVYPYDTTPFVKISIHEVVKTLVEAIILVFLVMYLFLQNFRATLIPTIAVPVVLLGTFAVLAAFGFSINTLTMFGMVLAIGLLVDDAIVVVENVERVMAEEGLPPKEATRKSMGQIQGALVGIAMVLSAVFVPMAFFGGSTGAIYRQFSITIVSAMALSVLVALILTPALCATMLKPIAKGDHGEGKKGFFGWFNRMFEKSTHHYTDSVGGILRSTGRYLVLYLIIVVGMAYLFVRLPSSFLPDEDQGVFMTMVQLPAGATQERTQKVLNEVTHYYLTKEKNNVESVFAVNGFGFAGRGQNTGIAFVSLKDWADRPGEENKVEAITMRATRAFSQIKDAMVFAFNLPAIVELGTATGFDFELIDQAGLGHEKLTQARNQLLAEAAKHPDMLTSVRPNGLEDTPQFKIDIDQEKAQALGVSINDINTTLGAAWGGSYVNDFIDRGRVKKVYVMSEAKYRMLPDDIGDWYVRAADGQMVPFSAFSSSRWEYGSPRLERYNGLPSMEILGQAAPGKSTGEAMELMEQLASKLPTGVGYDWTGMSYQERLSGNQAPSLYAISLIVVFLCLAALYESWSIPFSVMLVVPLGVIGALLAATFRGLTNDVYFQVGLLTTIGLSAKNAILIVEFAKDLMDKEGKGLIEATLDAVRMRLRPILMTSLAFILGVMPLVISTGAGSGAQNAVGTGVMGGMVTATVLAIFFVPVFFVVVRRRFSRKNEDIEHSHTVDHH', hydrophobicity_polyval)
+    # temp = HphobicityScore('1BRX', 'EAQITGRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVPAIAFTMYLSMLLGYGLTMVPFGGEQNPIYWARYADWLFTTPLLLLDLALLVDADQGTILALVGADGIMIGTGLVGALTKVYSYRFVWWAISTAAMLYILYVLFFGFTSKAESMRPEVASTFKVLRNVTVVLWSAYPVVWLIGSEGAGIVPLNIETLLFMVLDVSAKVGFGLILLRSRAIFGEAEAPEPSAGDGAAATS', hydrophobicity_polyval)
 
-    # pymol_mark_segments(temp.name, [[[i.begin, i.end] for i in temp.minimas]])
-    temp.plot_win_grades()
+    # pymol_mark_segments(temp.name, [[[i.begin, i.end] for i in temp.topo_minimas]])
+    # temp.plot_win_grades()
+
+    db_entries = parsed_data_base_parser(50)
+    topo_predict_score = {'good': 0, 'bad': 0}
+    for protein in db_entries:
+        temp = HphobicityScore(protein['pdb'], protein['seq'], hydrophobicity_polyval)
+        if temp.n_term_orient == 'rev' and protein['orientation'] == 'out':
+            topo_predict_score['good'] += 1
+            print 'was correct', temp.n_term_orient, protein['orientation'], topo_predict_score
+        else:
+            topo_predict_score['bad'] += 1
+            print 'was wrong', temp.n_term_orient, protein['orientation'], topo_predict_score
+    print 'prediction results:', topo_predict_score
 
 
 def MakeHydrophobicityGrade():
@@ -31,12 +43,12 @@ def MakeHydrophobicityGrade():
 
 
 def pymol_mark_segments(name, segments_set_set):
-    '''
+    """
     :param name: name of PDB file
     :param segments_set_set: a set of sets of two numbered lists, identifying the different types
     and ranges of segments to be colored
     :return: initiates a pymol session where the specified segments are colored
-    '''
+    """
     import subprocess
     from time import gmtime, strftime
     file_name = name + '_' + strftime("%H:%M", gmtime()) + '.pml'
@@ -48,12 +60,28 @@ def pymol_mark_segments(name, segments_set_set):
         colors = ['red', 'purple', 'blue', 'green', 'yellow', 'brown']
         for segment_set in segments_set_set:
             for segment in segment_set:
-                f.writelines('create seg%i, %s and resi %i-%i' % (seg_num, name, segment[0]+1, segment[1])+'\n')
-                f.writelines('color ' + colors[seg_set_num] + ', seg' + str(seg_num) + '\n')
+                f.writelines('select sele, %s and resi %i-%i' % (name, segment[0]+1, segment[1])+'\n')
+                f.writelines('color ' + colors[seg_set_num] + ', sele\n')
+                f.writelines('create seg%i, sele\n' % seg_num)
                 seg_num += 1
             seg_set_num += 1
         f.writelines(['save ', name.lower()+'_TM_temp.pse\n'])
     subprocess.call(['/opt/local/bin/pymol', '-q', file_name])
+
+
+def parsed_data_base_parser(num):
+    results = []
+    with open('./database_new.txt', 'r') as f:
+        for line in f.readlines()[0].split('\r'):
+            line_split = line.split('\t')
+            end_split = line_split[-1].split()
+            starters = [int(a) for a in line_split[0].split()]
+            enders = [int(a) for a in line_split[1].split()]
+            results.append({'pdb':end_split[3], 'seq': line_split[2], 'orientation': end_split[0], 'begin': starters,
+                            'end': enders})
+            if len(results) == num:
+                break
+    return results
 
 
 if __name__ == '__main__':
