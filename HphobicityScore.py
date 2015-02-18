@@ -1,5 +1,5 @@
 class HphobicityScore():
-    def __init__(self, name, seq, hydro_polyval):
+    def __init__(self, name, seq, uniprot, hydro_polyval):
         '''
         :param name: protein's name
         :param seq: protein's sequence
@@ -10,25 +10,41 @@ class HphobicityScore():
         HP_THRESHOLD = 0.
         self.name = name
         self.seq = seq
+        self.uniprot = uniprot
         self.seq_length = len(seq)
         self.polyval = hydro_polyval
         self.WinGrades = self.win_grade_generator()
         self.sorted_grade = self.sort_WinGrades()
         self.minimas = self.local_minima_finder(direction='both')
+        self.fwd_minimas = self.local_minima_finder(direction='fwd')
+        self.rev_minimas = self.local_minima_finder(direction='rev')
         self.topo_minimas = self.topo_determine()
         self.n_term_orient = self.topo_minimas[0].direction
         # self.sorted_grade_norm = self.sort_WinGrades_norm()
         # self.minimas_norm = self.local_minima_finder_norm()
+
+    def __str__(self):
+        """
+        :return: A message with all Fwd/Rev minimas, and the selected topology
+        """
+        message = 'Fwd minimas:\n'
+        message += '\n'.join([str(i) for i in self.fwd_minimas])
+        message += '\nRev minimas\n'
+        message += '\n'.join([str(i) for i in self.rev_minimas])
+        message += '\nSelectod topology:\n'
+        message += '\n'.join([str(i) for i in self.topo_minimas])
+        return message
 
     def win_grade_generator(self):
         '''
         :return:grades all segments of self.seq, and aggregates them as WinGrades
         '''
         from WinGrade import WinGrade
+        psi = self.PsiReaderHelix()
         grades = []
         for i in range(self.seq_length):
             for inc in range(16):
-                if i+20+inc > self.seq_length:
+                if i+20+inc > self.seq_length or self.is_not_helical((i, i+20+inc), psi):
                     continue
                 grades.append(WinGrade(i, i+20+inc, 'fwd', self.seq[i:i+20+inc], self.polyval))
                 grades.append(WinGrade(i, i+20+inc, 'rev', self.seq[i:i+20+inc][::-1], self.polyval))
@@ -89,12 +105,10 @@ class HphobicityScore():
         for win_grade in self.WinGrades:
             plt.plot((win_grade.begin, win_grade.end), (win_grade.grade, win_grade.grade),
                      color='black' if win_grade.direction == 'fwd' else 'grey')
-        for minima in self.minimas:
+        for minima in (self.fwd_minimas + self.rev_minimas):
             plt.plot((minima.begin, minima.end), (minima.grade, minima.grade),
                      color='blue' if minima.direction == 'fwd' else 'red', lw=2)
-        print 'found the following minimas:'
         for minima in self.topo_minimas:
-            print minima
             plt.plot((minima.begin, minima.end), (minima.grade, minima.grade),
                      color='green' if minima.direction == 'fwd' else 'purple', lw=4)
         black_line = mlines.Line2D([], [], color='black', marker='', lw=2, label='Fwd grade')
@@ -137,10 +151,8 @@ class HphobicityScore():
         :return:a sorted list of minimas of flipping direction which has the lowest
         global energy
         """
-        fwd_minimas = self.local_minima_finder(direction='fwd')
-        rev_minimas = self.local_minima_finder(direction='rev')
-        fwd_sorted = sorted(fwd_minimas, key=lambda x: x.begin)
-        rev_sorted = sorted(rev_minimas, key=lambda x: x.begin)
+        fwd_sorted = sorted(self.fwd_minimas, key=lambda x: x.begin)
+        rev_sorted = sorted(self.rev_minimas, key=lambda x: x.begin)
         fwd_start = []
         rev_start = []
         for i in range(max([len(fwd_sorted), len(rev_sorted)])):
@@ -154,3 +166,20 @@ class HphobicityScore():
         rev_score = sum([a.grade for a in rev_start])
         return fwd_start if fwd_score < rev_score and len(fwd_start) >= len(rev_start)\
             else rev_start
+
+    def is_not_helical(self, pos, psi):
+        non_helical = 0
+        for i in range(pos[0], pos[1]):
+            if psi[i] <= 0.5:
+                non_helical += 1
+        return False if non_helical < 3 else True
+
+    def PsiReaderHelix(self):
+        import re
+        ss2_file = open('../psipred/sw_fastas/' + self.uniprot + '.ss2')
+        line_re = re.compile('^\s*([0-9]*)\s*([A-Z]*)\s*([A-Z]*)\s*(0\.[0-9]*)\s*(0\.[0-9]*)\s*(0\.[0-9]*)')
+        result = []
+        for line in ss2_file:
+            if line_re.search(line):
+                result.append(float(line_re.search(line).group(5)))
+        return result

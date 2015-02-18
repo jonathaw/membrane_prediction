@@ -15,9 +15,14 @@ def main():
     # temp.plot_win_grades()
 
     db_entries = parsed_data_base_parser(50)
+    # temp = HphobicityScore(db_entries[1]['pdb'], db_entries[1]['seq'], db_entries[1]['uniprot'], hydrophobicity_polyval)
+    # print temp
+    # temp.plot_win_grades()
+
+    # temp.plot_energy_landscape()
     topo_predict_score = {'good': 0, 'bad': 0}
     for protein in db_entries:
-        temp = HphobicityScore(protein['pdb'], protein['seq'], hydrophobicity_polyval)
+        temp = HphobicityScore(protein['pdb'], protein['seq'], protein['uniprot'], hydrophobicity_polyval)
         if temp.n_term_orient == 'rev' and protein['orientation'] == 'out':
             topo_predict_score['good'] += 1
             print 'was correct', temp.n_term_orient, protein['orientation'], topo_predict_score
@@ -78,7 +83,7 @@ def parsed_data_base_parser(num):
             starters = [int(a) for a in line_split[0].split()]
             enders = [int(a) for a in line_split[1].split()]
             results.append({'pdb':end_split[3], 'seq': line_split[2], 'orientation': end_split[0], 'begin': starters,
-                            'end': enders})
+                            'end': enders, 'uniprot': end_split[2]})
             if len(results) == num:
                 break
     return results
