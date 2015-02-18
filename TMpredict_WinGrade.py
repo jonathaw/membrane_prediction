@@ -14,12 +14,16 @@ def main():
     # pymol_mark_segments(temp.name, [[[i.begin, i.end] for i in temp.topo_minimas]])
     # temp.plot_win_grades()
 
-    db_entries = parsed_data_base_parser(50)
+    # db_entries = parsed_data_base_parser(25,26)
     # temp = HphobicityScore(db_entries[1]['pdb'], db_entries[1]['seq'], db_entries[1]['uniprot'], hydrophobicity_polyval)
     # print temp
     # temp.plot_win_grades()
-
     # temp.plot_energy_landscape()
+
+    '''
+    parses a range of SW entries, and prints the topology predcition reult
+    '''
+    db_entries = parsed_data_base_parser(0,50)
     topo_predict_score = {'good': 0, 'bad': 0}
     for protein in db_entries:
         temp = HphobicityScore(protein['pdb'], protein['seq'], protein['uniprot'], hydrophobicity_polyval)
@@ -74,18 +78,35 @@ def pymol_mark_segments(name, segments_set_set):
     subprocess.call(['/opt/local/bin/pymol', '-q', file_name])
 
 
-def parsed_data_base_parser(num):
+def parsed_data_base_parser(num1=0, num2=1):
+    """
+    :param num1: start at entry #
+    :param num2: finish at entry #
+    :return: dictionary of entries information (PDB, uniprot, sequence, N' term orientation
+    and starts and ends of TM helices
+    """
     results = []
+    i = 0
     with open('./database_new.txt', 'r') as f:
         for line in f.readlines()[0].split('\r'):
+            if i < num1:
+                i += 1
+                continue
             line_split = line.split('\t')
             end_split = line_split[-1].split()
             starters = [int(a) for a in line_split[0].split()]
             enders = [int(a) for a in line_split[1].split()]
             results.append({'pdb':end_split[3], 'seq': line_split[2], 'orientation': end_split[0], 'begin': starters,
                             'end': enders, 'uniprot': end_split[2]})
-            if len(results) == num:
+            assert type(results[-1]['pdb']) is str, "PDB name is not string: %r" % results[-1]['pdb']
+            assert type(results[-1]['uniprot']) is str, "UNIPROT is not string: %r" % results[-1]['uniprot']
+            assert type(results[-1]['seq']) is str, "seq is not string: %r" % results[-1]['seq']
+            assert type(results[-1]['orientation']) is str, "orientation is not string: %r" % results[-1]['orientation']
+            assert type(results[-1]['begin']) is list, "begin list is not a list: %r" % results[-1]['begin']
+            assert type(results[-1]['end']) is list, "begin list is not a list: %r" % results[-1]['end']
+            if i == num2:
                 break
+            i += 1
     return results
 
 

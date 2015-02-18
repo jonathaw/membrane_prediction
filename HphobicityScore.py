@@ -2,6 +2,7 @@ class HphobicityScore():
     def __init__(self, name, seq, uniprot, hydro_polyval):
         '''
         :param name: protein's name
+        :param uniprot: the entrie's uniprot code
         :param seq: protein's sequence
         :param hydro_polyval: polynom valued dictionary
         :return: a stack of WinGrade instances, and their utilities
@@ -132,9 +133,12 @@ class HphobicityScore():
     #     print data
     #     data = [(pos, 20+inc, grade) for pos, windows in enumerate(self.rev_grades) for inc, grade in enumerate(windows)]
     #     print data
-        print [(i.keys()[0], 20+int(inc), grade) for i in self.fwd_grades for inc, grade in enumerate(i.values()[0])]
+    #     print [(i.keys()[0], 20+int(inc), grade) for i in self.WinGrades for inc, grade in enumerate(i.values()[0])]
+        # print '\n\n\n'
+        print [(grd.begin, grd.end,  grd.grade) for grd in self.WinGrades if grd.direction == 'fwd']
         print '\n\n\n'
-        print [(i.keys()[0], 20+int(inc), grade) for i in self.rev_grades for inc, grade in enumerate(i.values()[0])]
+        print [(grd.begin, grd.end,  grd.grade) for grd in self.WinGrades if grd.direction == 'rev']
+        # print [(i.keys()[0], 20+int(inc), grade) for i in self.rev_grades for inc, grade in enumerate(i.values()[0])]
     #     x, y, z = zip(*data)
     #     z = map(float, z)
     #     grid_x, grid_y = np.mgrid[min(x):max(x):100j, min(y):max(y):100j]
