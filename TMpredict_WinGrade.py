@@ -8,32 +8,34 @@ def main():
     # temp = HphobicityScore('temp', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
     # temp = HphobicityScore('temp', 'YSYRFVWWAISTAAMLYILY')
     # temp = HphobicityScore('1E12', 'MSITSVPGVVDAGVLGAQSAAAVRENALLSSSLWVNVALAGIAILVFVYMGRTIRPGRPRLIWGATLMIPLVSISSYLGLLSGLTVGMIEMPAGHALAGEMVRSQWGRYLTWALSTPMILLALGLLADVDLGSLFTVIAADIGMCVTGLAAAMTTSALLFRWAFYAISCAFFVVVLSALVTDWAASASSAGTAEIFDTLRVLTVVLWLGYPIVWAVGVEGLALVQSVGVTSWAYSVLDVFAKYVFAFILLRWVANNERTVAVAGQTLGTMSSDD', hydrophobicity_polyval)
-    # temp = HphobicityScore('1IWG', 'MPNFFIDRPIFAWVIAIIIMLAGGLAILKLPVAQYPTIAPPAVTISASYPGADAKTVQDTVTQVIEQNMNGIDNLMYMSSNSDSTGTVQITLTFESGTDADIAQVQVQNKLQLAMPLLPQEVQQQGVSVEKSSSSFLMVVGVINTDGTMTQEDISDYVAANMKDAISRTSGVGDVQLFGSQYAMRIWMNPNELNKFQLTPVDVITAIKAQNAQVAAGQLGGTPPVKGQQLNASIIAQTRLTSTEEFGKILLKVNQDGSRVLLRDVAKIELGGENYDIIAEFNGQPASGLGIKLATGANALDTAAAIRAELAKMEPFFPSGLKIVYPYDTTPFVKISIHEVVKTLVEAIILVFLVMYLFLQNFRATLIPTIAVPVVLLGTFAVLAAFGFSINTLTMFGMVLAIGLLVDDAIVVVENVERVMAEEGLPPKEATRKSMGQIQGALVGIAMVLSAVFVPMAFFGGSTGAIYRQFSITIVSAMALSVLVALILTPALCATMLKPIAKGDHGEGKKGFFGWFNRMFEKSTHHYTDSVGGILRSTGRYLVLYLIIVVGMAYLFVRLPSSFLPDEDQGVFMTMVQLPAGATQERTQKVLNEVTHYYLTKEKNNVESVFAVNGFGFAGRGQNTGIAFVSLKDWADRPGEENKVEAITMRATRAFSQIKDAMVFAFNLPAIVELGTATGFDFELIDQAGLGHEKLTQARNQLLAEAAKHPDMLTSVRPNGLEDTPQFKIDIDQEKAQALGVSINDINTTLGAAWGGSYVNDFIDRGRVKKVYVMSEAKYRMLPDDIGDWYVRAADGQMVPFSAFSSSRWEYGSPRLERYNGLPSMEILGQAAPGKSTGEAMELMEQLASKLPTGVGYDWTGMSYQERLSGNQAPSLYAISLIVVFLCLAALYESWSIPFSVMLVVPLGVIGALLAATFRGLTNDVYFQVGLLTTIGLSAKNAILIVEFAKDLMDKEGKGLIEATLDAVRMRLRPILMTSLAFILGVMPLVISTGAGSGAQNAVGTGVMGGMVTATVLAIFFVPVFFVVVRRRFSRKNEDIEHSHTVDHH', hydrophobicity_polyval)
-    # temp = HphobicityScore('1BRX', 'EAQITGRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVPAIAFTMYLSMLLGYGLTMVPFGGEQNPIYWARYADWLFTTPLLLLDLALLVDADQGTILALVGADGIMIGTGLVGALTKVYSYRFVWWAISTAAMLYILYVLFFGFTSKAESMRPEVASTFKVLRNVTVVLWSAYPVVWLIGSEGAGIVPLNIETLLFMVLDVSAKVGFGLILLRSRAIFGEAEAPEPSAGDGAAATS', hydrophobicity_polyval)
+    # temp = HphobicityScore('1IWG', 'MPNFFIDRPIFAWVIAIIIMLAGGLAILKLPVAQYPTIAPPAVTISASYPGADAKTVQDTVTQVIEQNMNGIDNLMYMSSNSDSTGTVQITLTFESGTDADIAQVQVQNKLQLAMPLLPQEVQQQGVSVEKSSSSFLMVVGVINTDGTMTQEDISDYVAANMKDAISRTSGVGDVQLFGSQYAMRIWMNPNELNKFQLTPVDVITAIKAQNAQVAAGQLGGTPPVKGQQLNASIIAQTRLTSTEEFGKILLKVNQDGSRVLLRDVAKIELGGENYDIIAEFNGQPASGLGIKLATGANALDTAAAIRAELAKMEPFFPSGLKIVYPYDTTPFVKISIHEVVKTLVEAIILVFLVMYLFLQNFRATLIPTIAVPVVLLGTFAVLAAFGFSINTLTMFGMVLAIGLLVDDAIVVVENVERVMAEEGLPPKEATRKSMGQIQGALVGIAMVLSAVFVPMAFFGGSTGAIYRQFSITIVSAMALSVLVALILTPALCATMLKPIAKGDHGEGKKGFFGWFNRMFEKSTHHYTDSVGGILRSTGRYLVLYLIIVVGMAYLFVRLPSSFLPDEDQGVFMTMVQLPAGATQERTQKVLNEVTHYYLTKEKNNVESVFAVNGFGFAGRGQNTGIAFVSLKDWADRPGEENKVEAITMRATRAFSQIKDAMVFAFNLPAIVELGTATGFDFELIDQAGLGHEKLTQARNQLLAEAAKHPDMLTSVRPNGLEDTPQFKIDIDQEKAQALGVSINDINTTLGAAWGGSYVNDFIDRGRVKKVYVMSEAKYRMLPDDIGDWYVRAADGQMVPFSAFSSSRWEYGSPRLERYNGLPSMEILGQAAPGKSTGEAMELMEQLASKLPTGVGYDWTGMSYQERLSGNQAPSLYAISLIVVFLCLAALYESWSIPFSVMLVVPLGVIGALLAATFRGLTNDVYFQVGLLTTIGLSAKNAILIVEFAKDLMDKEGKGLIEATLDAVRMRLRPILMTSLAFILGVMPLVISTGAGSGAQNAVGTGVMGGMVTATVLAIFFVPVFFVVVRRRFSRKNEDIEHSHTVDHH', 'P31224',hydrophobicity_polyval)
+    # temp = HphobicityScore('1BRX', 'EAQITGRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVPAIAFTMYLSMLLGYGLTMVPFGGEQNPIYWARYADWLFTTPLLLLDLALLVDADQGTILALVGADGIMIGTGLVGALTKVYSYRFVWWAISTAAMLYILYVLFFGFTSKAESMRPEVASTFKVLRNVTVVLWSAYPVVWLIGSEGAGIVPLNIETLLFMVLDVSAKVGFGLILLRSRAIFGEAEAPEPSAGDGAAATS', 'P02945',hydrophobicity_polyval)
 
+    # temp.plot_win_grades()
     # pymol_mark_segments(temp.name, [[[i.begin, i.end] for i in temp.topo_minimas]])
-    # temp.plot_win_grades()
 
-    # db_entries = parsed_data_base_parser(25,26)
-    # temp = HphobicityScore(db_entries[1]['pdb'], db_entries[1]['seq'], db_entries[1]['uniprot'], hydrophobicity_polyval)
-    # print temp
-    # temp.plot_win_grades()
+    db_entries = parsed_data_base_parser(25, 26)
+    temp = HphobicityScore(db_entries[1]['pdb'], db_entries[1]['seq'], db_entries[1]['uniprot'], hydrophobicity_polyval)
+    print temp
+    temp.plot_win_grades()
     # temp.plot_energy_landscape()
+    # print temp.make_topo_string()
+
 
     '''
     parses a range of SW entries, and prints the topology predcition reult
     '''
-    db_entries = parsed_data_base_parser(0,50)
-    topo_predict_score = {'good': 0, 'bad': 0}
-    for protein in db_entries:
-        temp = HphobicityScore(protein['pdb'], protein['seq'], protein['uniprot'], hydrophobicity_polyval)
-        if temp.n_term_orient == 'rev' and protein['orientation'] == 'out':
-            topo_predict_score['good'] += 1
-            print 'was correct', temp.n_term_orient, protein['orientation'], topo_predict_score
-        else:
-            topo_predict_score['bad'] += 1
-            print 'was wrong', temp.n_term_orient, protein['orientation'], topo_predict_score
-    print 'prediction results:', topo_predict_score
+    # db_entries = parsed_data_base_parser(0,100)
+    # topo_predict_score = {'good': 0, 'bad': 0}
+    # for protein in db_entries:
+    #     temp = HphobicityScore(protein['pdb'], protein['seq'], protein['uniprot'], hydrophobicity_polyval)
+    #     if temp.n_term_orient == 'rev' and protein['orientation'] == 'out':
+    #         topo_predict_score['good'] += 1
+    #         print 'was correct', temp.n_term_orient, protein['orientation'], topo_predict_score
+    #     else:
+    #         topo_predict_score['bad'] += 1
+    #         print 'was wrong', temp.n_term_orient, protein['orientation'], topo_predict_score
+    # print 'prediction results:', topo_predict_score
 
 
 def MakeHydrophobicityGrade():
@@ -42,8 +44,9 @@ def MakeHydrophobicityGrade():
     '''
     global hydrophobicity_polyval
     # hydrophobicity_grade = open('Poly_Values.txt', 'r')
+    # hydrophobicity_grade = open('poly_value_11.2.txt', 'r')
+    hydrophobicity_grade = open('poly_vals_23.2.txt', 'r')
     hydrophobicity_polyval = {}
-    hydrophobicity_grade = open('poly_value_11.2.txt', 'r')
     for line in hydrophobicity_grade:
         split = line.split()
         hydrophobicity_polyval[split[0]] = [float(n) for n in split[1:6]]
@@ -96,14 +99,20 @@ def parsed_data_base_parser(num1=0, num2=1):
             end_split = line_split[-1].split()
             starters = [int(a) for a in line_split[0].split()]
             enders = [int(a) for a in line_split[1].split()]
+            assert type(end_split[3]) is str, "for %s PDB name is not string: %r" % \
+                                              (results[-1]['uniprot'], results[-1]['pdb'])
+            assert type(end_split[2]) is str, "for %s UNIPROT is not string: %r" % \
+                                              (results[-1]['pdb'], results[-1]['uniprot'])
+            assert type(line_split[2]) is str, "for %s seq is not string: %r" % \
+                                               (results[-1]['uniprot'], results[-1]['seq'])
+            assert type(end_split[0]) is str, "for %s orientation is not string: %r" % \
+                                              (results[-1]['uniprot'], results[-1]['orientation'])
+            assert type(starters) is list, "for %s begin list is not a list: %r" % \
+                                           (results[-1]['uniprot'], results[-1]['begin'])
+            assert type(enders) is list, "for %s begin list is not a list: %r" % \
+                                         (results[-1]['uniprot'], results[-1]['end'])
             results.append({'pdb':end_split[3], 'seq': line_split[2], 'orientation': end_split[0], 'begin': starters,
                             'end': enders, 'uniprot': end_split[2]})
-            assert type(results[-1]['pdb']) is str, "PDB name is not string: %r" % results[-1]['pdb']
-            assert type(results[-1]['uniprot']) is str, "UNIPROT is not string: %r" % results[-1]['uniprot']
-            assert type(results[-1]['seq']) is str, "seq is not string: %r" % results[-1]['seq']
-            assert type(results[-1]['orientation']) is str, "orientation is not string: %r" % results[-1]['orientation']
-            assert type(results[-1]['begin']) is list, "begin list is not a list: %r" % results[-1]['begin']
-            assert type(results[-1]['end']) is list, "begin list is not a list: %r" % results[-1]['end']
             if i == num2:
                 break
             i += 1

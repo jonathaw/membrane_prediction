@@ -172,13 +172,21 @@ class HphobicityScore():
             else rev_start
 
     def is_not_helical(self, pos, psi):
+        """
+        :param pos:start and end positions of the corresponding window
+        :param psi: a list of alpha-helical propensity grades for the entire sequence
+        :return:True if there are more than x AAs that are less helicla than y
+        """
         non_helical = 0
         for i in range(pos[0], pos[1]):
-            if psi[i] <= 0.5:
+            if psi[i] <= 0.0:
                 non_helical += 1
         return False if non_helical < 3 else True
 
     def PsiReaderHelix(self):
+        """
+        :return:reads the sequence's psipred results. returns them as a string
+        """
         import re
         ss2_file = open('../psipred/sw_fastas/' + self.uniprot + '.ss2')
         line_re = re.compile('^\s*([0-9]*)\s*([A-Z]*)\s*([A-Z]*)\s*(0\.[0-9]*)\s*(0\.[0-9]*)\s*(0\.[0-9]*)')
@@ -187,3 +195,26 @@ class HphobicityScore():
             if line_re.search(line):
                 result.append(float(line_re.search(line).group(5)))
         return result
+
+    def make_topo_string(self):
+        in_or_out = 'out' if self.n_term_orient == 'rev' else 'in'
+        tm_count = 0
+        result = 'x'
+        print self.topo_minimas
+        for i in range(len(self.seq)):
+            if not self.topo_minimas[tm_count].pos_in_wingrade(i) and result[-1] != 'M': # not TM, and not emmidiately after TM
+                result += 'I' if in_or_out == 'in' else 'O'
+                print result, in_or_out, tm_count
+            elif self.topo_minimas[tm_count].pos_in_wingrade(i) and result[-1] != 'M': # first in TM
+                result += 'M'
+                in_or_out = 'in' if in_or_out == 'out' else 'out'
+                print 'changer', result, in_or_out, tm_count
+            elif self.topo_minimas[tm_count].pos_in_wingrade(i) and result[-1] == 'M': # in TM, not first
+                result += 'M'
+                print result, in_or_out, tm_count
+            elif not self.topo_minimas[tm_count].pos_in_wingrade(i) and result[-1] == 'M': # not in TM, emmidiatley after TM
+                tm_count += 1
+                result += 'I' if in_or_out == 'in' else 'O'
+                print result, in_or_out, tm_count
+            # elif not self.topo_minimas[tm_count].pos_in_wingrade(i) and result[-1] == 'M':
+            #     result += 'I' if in_or_out == 'in' else 'O'

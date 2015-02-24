@@ -46,3 +46,6 @@ class WinGrade():
         for i, aa in enumerate(self.seq):
             grade += np.polyval(polyval[aa], membrane_position[i])
         return grade
+
+    def pos_in_wingrade(self, pos):
+        return True if pos >= self.begin and pos <= self.end else False
