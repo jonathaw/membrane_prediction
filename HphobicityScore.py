@@ -1,5 +1,5 @@
 class HphobicityScore():
-    def __init__(self, name, seq, uniprot, hydro_polyval):
+    def __init__(self, name, seq, ss2_file, hydro_polyval):
         '''
         :param name: protein's name
         :param uniprot: the entrie's uniprot code
@@ -11,16 +11,21 @@ class HphobicityScore():
         HP_THRESHOLD = 0.
         self.name = name
         self.seq = seq
-        self.uniprot = uniprot
+        self.ss2_file = ss2_file
         self.seq_length = len(seq)
+        self.psipred = self.PsiReaderHelix()
         self.polyval = hydro_polyval
-        self.WinGrades = self.win_grade_generator()
-        self.sorted_grade = self.sort_WinGrades()
-        self.minimas = self.local_minima_finder(direction='both')
-        self.fwd_minimas = self.local_minima_finder(direction='fwd')
-        self.rev_minimas = self.local_minima_finder(direction='rev')
-        self.topo_minimas = self.topo_determine()
-        self.n_term_orient = self.topo_minimas[0].direction
+        self.topo = self.topo_greedy_chooser()
+        self.n_term_orient = self.topo[0].direction
+        self.WinGrades = self.win_grade_generator(0, self.seq_length, 'both')
+        self.topo_string = self.make_topo_string()
+        # print 'before sort', self.WinGrades
+        # self.sorted_grade = self.sort_WinGrades()
+        # print 'after sort', self.sorted_grade
+        # self.minimas = self.local_minima_finder(direction='both')
+        # self.fwd_minimas = self.local_minima_finder(direction='fwd')
+        # self.rev_minimas = self.local_minima_finder(direction='rev')
+        # self.topo_minimas = self.topo_determine()
         # self.sorted_grade_norm = self.sort_WinGrades_norm()
         # self.minimas_norm = self.local_minima_finder_norm()
 
@@ -28,27 +33,27 @@ class HphobicityScore():
         """
         :return: A message with all Fwd/Rev minimas, and the selected topology
         """
-        message = 'Fwd minimas:\n'
-        message += '\n'.join([str(i) for i in self.fwd_minimas])
-        message += '\nRev minimas\n'
-        message += '\n'.join([str(i) for i in self.rev_minimas])
-        message += '\nSelectod topology:\n'
-        message += '\n'.join([str(i) for i in self.topo_minimas])
-        return message
+        return 'Selectod topology:\n' + '\n'.join([str(i) for i in self.topo])
 
-    def win_grade_generator(self):
+    def win_grade_generator(self, pos1, pos2, fwd_or_rev):
         '''
         :return:grades all segments of self.seq, and aggregates them as WinGrades
         '''
         from WinGrade import WinGrade
-        psi = self.PsiReaderHelix()
+        psi = self.psipred
         grades = []
-        for i in range(self.seq_length):
+        # for i in range(len(self.seq[pos1:pos2])):
+        for i in range(pos1, pos2):
             for inc in range(16):
-                if i+20+inc > self.seq_length or self.is_not_helical((i, i+20+inc), psi):
+                if i+20+inc > pos2 or self.is_not_helical((i, i+20+inc), psi):
                     continue
-                grades.append(WinGrade(i, i+20+inc, 'fwd', self.seq[i:i+20+inc], self.polyval))
-                grades.append(WinGrade(i, i+20+inc, 'rev', self.seq[i:i+20+inc][::-1], self.polyval))
+                if fwd_or_rev == 'both':
+                    grades.append(WinGrade(i, i+20+inc, 'fwd', self.seq[i:i+20+inc], self.polyval))
+                    grades.append(WinGrade(i, i+20+inc, 'rev', self.seq[i:i+20+inc][::-1], self.polyval))
+                elif fwd_or_rev == 'fwd':
+                    grades.append(WinGrade(i, i+20+inc, 'fwd', self.seq[i:i+20+inc], self.polyval))
+                elif fwd_or_rev == 'rev':
+                    grades.append(WinGrade(i, i+20+inc, 'rev', self.seq[i:i+20+inc][::-1], self.polyval))
         return grades
 
     def print_HphobicityScore(self):
@@ -106,10 +111,7 @@ class HphobicityScore():
         for win_grade in self.WinGrades:
             plt.plot((win_grade.begin, win_grade.end), (win_grade.grade, win_grade.grade),
                      color='black' if win_grade.direction == 'fwd' else 'grey')
-        for minima in (self.fwd_minimas + self.rev_minimas):
-            plt.plot((minima.begin, minima.end), (minima.grade, minima.grade),
-                     color='blue' if minima.direction == 'fwd' else 'red', lw=2)
-        for minima in self.topo_minimas:
+        for minima in self.topo:
             plt.plot((minima.begin, minima.end), (minima.grade, minima.grade),
                      color='green' if minima.direction == 'fwd' else 'purple', lw=4)
         black_line = mlines.Line2D([], [], color='black', marker='', lw=2, label='Fwd grade')
@@ -188,7 +190,7 @@ class HphobicityScore():
         :return:reads the sequence's psipred results. returns them as a string
         """
         import re
-        ss2_file = open('../psipred/sw_fastas/' + self.uniprot + '.ss2')
+        ss2_file = open(self.ss2_file)
         line_re = re.compile('^\s*([0-9]*)\s*([A-Z]*)\s*([A-Z]*)\s*(0\.[0-9]*)\s*(0\.[0-9]*)\s*(0\.[0-9]*)')
         result = []
         for line in ss2_file:
@@ -200,21 +202,66 @@ class HphobicityScore():
         in_or_out = 'out' if self.n_term_orient == 'rev' else 'in'
         tm_count = 0
         result = 'x'
-        print self.topo_minimas
         for i in range(len(self.seq)):
-            if not self.topo_minimas[tm_count].pos_in_wingrade(i) and result[-1] != 'M': # not TM, and not emmidiately after TM
+            if tm_count == len(self.topo):
                 result += 'I' if in_or_out == 'in' else 'O'
-                print result, in_or_out, tm_count
-            elif self.topo_minimas[tm_count].pos_in_wingrade(i) and result[-1] != 'M': # first in TM
+            elif not self.topo[tm_count].pos_in_wingrade(i) and result[-1] != 'M': # not TM, and not emmidiately after TM
+                result += 'I' if in_or_out == 'in' else 'O'
+            elif self.topo[tm_count].pos_in_wingrade(i) and result[-1] != 'M': # first in TM
                 result += 'M'
                 in_or_out = 'in' if in_or_out == 'out' else 'out'
-                print 'changer', result, in_or_out, tm_count
-            elif self.topo_minimas[tm_count].pos_in_wingrade(i) and result[-1] == 'M': # in TM, not first
+            elif self.topo[tm_count].pos_in_wingrade(i) and result[-1] == 'M': # in TM, not first
                 result += 'M'
-                print result, in_or_out, tm_count
-            elif not self.topo_minimas[tm_count].pos_in_wingrade(i) and result[-1] == 'M': # not in TM, emmidiatley after TM
+            elif not self.topo[tm_count].pos_in_wingrade(i) and result[-1] == 'M': # not in TM, emmidiatley after TM
                 tm_count += 1
                 result += 'I' if in_or_out == 'in' else 'O'
-                print result, in_or_out, tm_count
-            # elif not self.topo_minimas[tm_count].pos_in_wingrade(i) and result[-1] == 'M':
-            #     result += 'I' if in_or_out == 'in' else 'O'
+        return result[1:]
+
+    def topo_greedy(self, direction):
+        """
+        :param direction:the direction for hte first (N') TM
+        :return: a list of WinGrades starting in the desired direction, describing the minimas
+        """
+        big_win_len = 40
+        result = []
+        fwd_or_rev = direction
+        i = 0
+        last_end = -1
+        while i < range(len(self.seq)-20):
+            temp_win = self.win_grade_generator(i, i+20, fwd_or_rev)
+            if len(temp_win) == 0:
+                i += 1
+                continue
+            if temp_win[0].grade > -4.0:
+                i += 1
+            else:
+                if i <= 10:
+                    t = 0
+                elif 10 < i < last_end + 1:
+                    t = last_end+1
+                else:
+                    t = i
+                win_grade_set = self.win_grade_generator(t, t+big_win_len, fwd_or_rev)
+                min_grd = win_grade_set[0]
+                for grd in win_grade_set:
+                    if grd.grade < min_grd.grade:
+                        min_grd = grd
+                result.append(min_grd)
+                fwd_or_rev = 'rev' if fwd_or_rev == 'fwd' else 'fwd'
+                i = win_grade_set[-1].end + 1
+                last_end = win_grade_set[-1].end
+            if i+big_win_len > self.seq_length:
+                break
+        return result
+
+    def topo_greedy_chooser(self):
+        fwd = self.topo_greedy('fwd')
+        rev = self.topo_greedy('rev')
+        fwd_tot = sum([i.grade for i in fwd])
+        rev_tot = sum([i.grade for i in rev])
+        print 'fwd', fwd_tot, len(fwd)
+        print 'rev', rev_tot, len(rev)
+        if len(fwd) != len(rev):
+            return fwd if len(fwd) > len(rev) else rev
+        else:
+            return fwd if fwd_tot < rev_tot else rev
