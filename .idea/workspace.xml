@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6a73546c-b0e1-4c73-9c98-48c4af466cd3" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HphobicityScore.py" afterPath="$PROJECT_DIR$/HphobicityScore.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TMpredict_WinGrade.py" afterPath="$PROJECT_DIR$/TMpredict_WinGrade.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -27,14 +26,15 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="TMpredict_WinGrade.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="TMpredict_WinGrade.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TMpredict_WinGrade.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.509434" vertical-offset="1190" max-vertical-offset="1720">
-              <caret line="146" column="104" selection-start-line="146" selection-start-column="104" selection-end-line="146" selection-end-column="104" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2000">
+              <caret line="66" column="34" selection-start-line="66" selection-start-column="34" selection-end-line="66" selection-end-column="34" />
               <folding>
                 <element signature="e#0#22#0" expanded="true" />
                 <element signature="e#71#4271#0" expanded="true" />
+                <element signature="e#8167#8445#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -50,10 +50,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="HphobicityScore.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="HphobicityScore.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/HphobicityScore.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1935" max-vertical-offset="4900">
+            <state vertical-scroll-proportion="4.1404805" vertical-offset="0" max-vertical-offset="4900">
               <caret line="116" column="47" selection-start-line="116" selection-start-column="47" selection-end-line="116" selection-end-column="47" />
               <folding>
                 <element signature="e#93#1371#0" expanded="true" />
@@ -74,51 +74,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="database_new.txt" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/database_new.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="20" max-vertical-offset="2720">
-              <caret line="1" column="346" selection-start-line="1" selection-start-column="340" selection-end-line="1" selection-end-column="346" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="WinGrade.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/WinGrade.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0" vertical-offset="1000" max-vertical-offset="1120">
               <caret line="50" column="71" selection-start-line="50" selection-start-column="71" selection-end-line="50" selection-end-column="71" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="poly_vals_25.2.txt" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/poly_vals_25.2.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="500">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="topdb_functions.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/topdb_functions.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="840" max-vertical-offset="1020">
-              <caret line="42" column="0" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="top_ap_TOPDB.txt" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/data_sets/top_ap_TOPDB.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="60" max-vertical-offset="141420">
-              <caret line="3" column="8" selection-start-line="3" selection-start-column="8" selection-end-line="3" selection-end-column="8" />
               <folding />
             </state>
           </provider>
@@ -621,7 +581,15 @@
       <created>1424876122389</created>
       <updated>1424876122389</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="introducing the von heijne db">
+      <created>1425831143705</created>
+      <updated>1425831143705</updated>
+    </task>
+    <task id="LOCAL-00037" summary="added db">
+      <created>1425831180091</created>
+      <updated>1425831180091</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -648,6 +616,7 @@
     <frame x="0" y="23" width="1594" height="1053" extended-state="0" />
     <editor active="true" />
     <layout>
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3299285" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -656,13 +625,12 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39251336" sideWeight="0.5002633" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3906083" sideWeight="0.4997367" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39144385" sideWeight="0.4997367" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
@@ -683,8 +651,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="improvments to combined writer. now" />
-    <MESSAGE value="alignment now working" />
     <MESSAGE value="now we can score multiple entries" />
     <MESSAGE value="added Range2Tups, for coloring stuff. and made a new PymolMark that colors by start-end (not start+win)." />
     <MESSAGE value="added oteher_functions and it's Psi results reading function. changed plotting parameters to bigger fonts and axis ticks." />
@@ -708,7 +674,9 @@
     <MESSAGE value="last commit before changing to new topology prediction." />
     <MESSAGE value="new topology determination algorithm, and integration of TOPDB." />
     <MESSAGE value="new poly vals from assaf" />
-    <option name="LAST_COMMIT_MESSAGE" value="new poly vals from assaf" />
+    <MESSAGE value="introducing the von heijne db" />
+    <MESSAGE value="added db" />
+    <option name="LAST_COMMIT_MESSAGE" value="added db" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -723,6 +691,7 @@
           <folding>
             <element signature="e#0#22#0" expanded="true" />
             <element signature="e#71#4271#0" expanded="true" />
+            <element signature="e#8167#8445#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -804,6 +773,7 @@
           <folding>
             <element signature="e#0#22#0" expanded="true" />
             <element signature="e#71#4271#0" expanded="true" />
+            <element signature="e#8167#8445#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -885,6 +855,7 @@
           <folding>
             <element signature="e#0#22#0" expanded="true" />
             <element signature="e#71#4271#0" expanded="true" />
+            <element signature="e#8167#8445#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -962,6 +933,7 @@
           <folding>
             <element signature="e#0#22#0" expanded="true" />
             <element signature="e#71#4271#0" expanded="true" />
+            <element signature="e#8167#8445#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1146,9 +1118,21 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/TMpredict_WinGrade.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2000">
+          <caret line="66" column="34" selection-start-line="66" selection-start-column="34" selection-end-line="66" selection-end-column="34" />
+          <folding>
+            <element signature="e#0#22#0" expanded="true" />
+            <element signature="e#71#4271#0" expanded="true" />
+            <element signature="e#8167#8445#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/HphobicityScore.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1935" max-vertical-offset="4900">
+        <state vertical-scroll-proportion="4.1404805" vertical-offset="0" max-vertical-offset="4900">
           <caret line="116" column="47" selection-start-line="116" selection-start-column="47" selection-end-line="116" selection-end-column="47" />
           <folding>
             <element signature="e#93#1371#0" expanded="true" />
@@ -1164,17 +1148,6 @@
             <element signature="e#9490#10464#0" expanded="true" />
             <element signature="e#10512#11808#0" expanded="true" />
             <element signature="e#11853#12245#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TMpredict_WinGrade.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.509434" vertical-offset="1190" max-vertical-offset="1720">
-          <caret line="146" column="104" selection-start-line="146" selection-start-column="104" selection-end-line="146" selection-end-column="104" />
-          <folding>
-            <element signature="e#0#22#0" expanded="true" />
-            <element signature="e#71#4271#0" expanded="true" />
           </folding>
         </state>
       </provider>

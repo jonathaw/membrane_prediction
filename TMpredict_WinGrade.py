@@ -64,7 +64,7 @@ def MakeHydrophobicityGrade():
     # hydrophobicity_grade = open('Poly_Values.txt', 'r')
     # hydrophobicity_grade = open('poly_value_11.2.txt', 'r')
     # hydrophobicity_grade = open('poly_vals_23.2.txt', 'r')
-    hydrophobicity_grade = open('/Users/jonathan/eden/membrane_prediciton/poly_vals_25.2.txt', 'r')
+    hydrophobicity_grade = open('./poly_vals_25.2.txt', 'r')
     hydrophobicity_polyval = {}
     for line in hydrophobicity_grade:
         split = line.split()
