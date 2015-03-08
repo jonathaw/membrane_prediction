@@ -18,7 +18,7 @@ class HphobicityScore():
         self.topo = self.topo_greedy_chooser()
         self.n_term_orient = self.topo[0].direction
         self.WinGrades = self.win_grade_generator(0, self.seq_length, 'both')
-        self.topo_string = self.make_topo_string()
+        # self.topo_string = self.make_topo_string()
         # print 'before sort', self.WinGrades
         # self.sorted_grade = self.sort_WinGrades()
         # print 'after sort', self.sorted_grade
@@ -110,11 +110,11 @@ class HphobicityScore():
         plt.figure()
         for win_grade in self.WinGrades:
             plt.plot((win_grade.begin, win_grade.end), (win_grade.grade, win_grade.grade),
-                     color='black' if win_grade.direction == 'fwd' else 'grey')
+                     'k--' if win_grade.direction == 'fwd' else 'grey')
         for minima in self.topo:
             plt.plot((minima.begin, minima.end), (minima.grade, minima.grade),
                      color='green' if minima.direction == 'fwd' else 'purple', lw=4)
-        black_line = mlines.Line2D([], [], color='black', marker='', lw=2, label='Fwd grade')
+        black_line = mlines.Line2D([], [], 'k--', marker='', lw=2, label='Fwd grade')
         grey_line = mlines.Line2D([], [], color='grey', marker='', lw=2, label='Rev grade')
         blue_line = mlines.Line2D([], [], color='blue', marker='', lw=2, label='Fwd minima')
         red_line = mlines.Line2D([], [], color='red', marker='', lw=2, label='Rev minima')
@@ -181,7 +181,8 @@ class HphobicityScore():
         """
         non_helical = 0
         for i in range(pos[0], pos[1]):
-            if psi[i] <= 0.0:
+            if psi[i] <= -1.0:
+                print psi[i], '< 0.0'
                 non_helical += 1
         return False if non_helical < 3 else True
 
