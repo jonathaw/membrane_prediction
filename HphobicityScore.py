@@ -7,27 +7,30 @@ class HphobicityScore():
         :param hydro_polyval: polynom valued dictionary
         :return: a stack of WinGrade instances, and their utilities
         '''
-        global HP_THRESHOLD
-        HP_THRESHOLD = 0.
+        global HP_THRESHOLD, INC_MAX
+        HP_THRESHOLD = 0.0
+        INC_MAX = 8
         self.name = name
         self.seq = seq
         self.ss2_file = ss2_file
         self.seq_length = len(seq)
         self.psipred = self.PsiReaderHelix()
         self.polyval = hydro_polyval
-        self.topo = self.topo_greedy_chooser()
-        self.n_term_orient = self.topo[0].direction
+        # self.topo = self.topo_greedy_chooser()
+        # self.n_term_orient = self.topo[0].direction
         self.WinGrades = self.win_grade_generator(0, self.seq_length, 'both')
         # self.topo_string = self.make_topo_string()
         # print 'before sort', self.WinGrades
-        # self.sorted_grade = self.sort_WinGrades()
+        self.sorted_grade = self.sort_WinGrades()
         # print 'after sort', self.sorted_grade
         # self.minimas = self.local_minima_finder(direction='both')
         # self.fwd_minimas = self.local_minima_finder(direction='fwd')
         # self.rev_minimas = self.local_minima_finder(direction='rev')
+        # self.topo = self.topo_determine_new()
         # self.topo_minimas = self.topo_determine()
         # self.sorted_grade_norm = self.sort_WinGrades_norm()
         # self.minimas_norm = self.local_minima_finder_norm()
+        self.topo = self.topo_brute()
 
     def __str__(self):
         """
@@ -44,7 +47,7 @@ class HphobicityScore():
         grades = []
         # for i in range(len(self.seq[pos1:pos2])):
         for i in range(pos1, pos2):
-            for inc in range(16):
+            for inc in range(INC_MAX):
                 if i+20+inc > pos2 or self.is_not_helical((i, i+20+inc), psi):
                     continue
                 if fwd_or_rev == 'both':
@@ -108,12 +111,18 @@ class HphobicityScore():
         import matplotlib.pyplot as plt
         import matplotlib.lines as mlines
         plt.figure()
-        for win_grade in self.WinGrades:
-            plt.plot((win_grade.begin, win_grade.end), (win_grade.grade, win_grade.grade),
-                     'k--' if win_grade.direction == 'fwd' else 'grey')
+        # for win_grade in self.WinGrades:
+        #     plt.plot((win_grade.begin, win_grade.end), (win_grade.grade, win_grade.grade),
+        #              'k--' if win_grade.direction == 'fwd' else 'grey')
         for minima in self.topo:
             plt.plot((minima.begin, minima.end), (minima.grade, minima.grade),
                      color='green' if minima.direction == 'fwd' else 'purple', lw=4)
+        # for minima in self.fwd_minimas:
+        #     if minima.grade > 0: continue
+        #     plt.plot((minima.begin, minima.end), (minima.grade, minima.grade), 'b--')
+        # for minima in self.rev_minimas:
+        #     if minima.grade > 0: continue
+            plt.plot((minima.begin, minima.end), (minima.grade, minima.grade), 'r--')
         black_line = mlines.Line2D([], [], 'k--', marker='', lw=2, label='Fwd grade')
         grey_line = mlines.Line2D([], [], color='grey', marker='', lw=2, label='Rev grade')
         blue_line = mlines.Line2D([], [], color='blue', marker='', lw=2, label='Fwd minima')
@@ -170,8 +179,34 @@ class HphobicityScore():
         rev_start = [a for a in rev_start if a is not None]
         fwd_score = sum([a.grade for a in fwd_start])
         rev_score = sum([a.grade for a in rev_start])
+        print fwd_start
+        print rev_start
         return fwd_start if fwd_score < rev_score and len(fwd_start) >= len(rev_start)\
             else rev_start
+
+    def topo_determine_new(self):
+            """
+            :return:a sorted list of minimas of flipping direction which has the lowest
+            global energy
+            """
+            fwd_sorted = sorted(self.fwd_minimas, key=lambda x: x.begin)
+            rev_sorted = sorted(self.rev_minimas, key=lambda x: x.begin)
+            fwd_start = []
+            rev_start = []
+
+            # for i in range(max([len(fwd_sorted), len(rev_sorted)])):
+            #     fwd_start.append(fwd_sorted[i] if i % 2 == 0 and i < len(fwd_sorted) else None)
+            #     fwd_start.append(rev_sorted[i] if i % 2 != 0 and i < len(rev_sorted) else None)
+            #     rev_start.append(rev_sorted[i] if i % 2 == 0 and i < len(rev_sorted) else None)
+            #     rev_start.append(fwd_sorted[i] if i % 2 != 0 and i < len(fwd_sorted) else None)
+            fwd_start = [a for a in fwd_start if a is not None]
+            rev_start = [a for a in rev_start if a is not None]
+            fwd_score = sum([a.grade for a in fwd_start])
+            rev_score = sum([a.grade for a in rev_start])
+            print fwd_start
+            print rev_start
+            return fwd_start if fwd_score < rev_score and len(fwd_start) >= len(rev_start)\
+                else rev_start
 
     def is_not_helical(self, pos, psi):
         """
@@ -266,3 +301,28 @@ class HphobicityScore():
             return fwd if len(fwd) > len(rev) else rev
         else:
             return fwd if fwd_tot < rev_tot else rev
+
+    def topo_brute(self):
+        from random import shuffle
+        print "in brute"
+        chosen_set = []
+        chosen_grade = 1000
+        for i in range(1000):
+            all_wins = self.WinGrades[:]
+            shuffle(all_wins)
+            temp_set = [all_wins.pop()]
+            while len(all_wins) != 0:
+                temp_win = all_wins.pop()
+                if not temp_win.set_grade_colliding(temp_set): temp_set.append(temp_win)
+            if sum(a.grade for a in temp_set) < chosen_grade:
+                chosen_set = temp_set[:]
+                chosen_grade = sum(a.grade for a in temp_set)
+        print chosen_set
+        print chosen_grade
+        return chosen_set
+
+"""
+we're thinking of using a greedy algorithm such that where every added winGrade is either rev/fwd/non such that
+it won't affect the topology, but will count. this should solve issues where the fwd/rev_minima are not the correct
+winGrades due to overlapp with neighbouring winGrades, THINK±!!!!!!
+"""

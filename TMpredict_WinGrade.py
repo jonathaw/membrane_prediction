@@ -15,7 +15,7 @@ def main():
 
     vdb_dict = parse_v_db()
     for v_entry in vdb_dict.values():
-        if v_entry['name'].lower() == 'ampe'.lower():
+        if v_entry['name'].lower() == 'btuc'.lower():
             print v_entry
             temp = HphobicityScore(v_entry['name'], v_entry['seq'], 'data_sets/VDB/'+v_entry['name']+'.ss2', hydrophobicity_polyval)
             temp.plot_win_grades()
@@ -148,7 +148,6 @@ def parse_v_db():
         i += 1
     f.close()
     return resutls
-
 
 if __name__ == '__main__':
     main()
