@@ -323,25 +323,32 @@ class HphobicityScore():
         return chosen_set
 
     def topo_graph(self):
+        """
+        topology determination using graph theory. wins are nodes
+        :return:list of WinGrades describing best topologies
+        """
         import networkx as nx
         from WinGrade import WinGrade
-        win_list = [a for a in self.WinGrades if a.grade < 0.]
+        win_list = [a for a in self.WinGrades if a.grade < 0.]  # make copy of negative wingrades list
         G = nx.DiGraph()
-        source_node = WinGrade(0, 0, 'fwd', '', self.polyval)
-        [G.add_edge(source_node, a, weight=a.grade) for a in win_list]
-        for win1 in win_list:
+        source_node = WinGrade(0, 0, 'fwd', '', self.polyval)   # define source win
+        [G.add_edge(source_node, a, weight=a.grade) for a in win_list]  # add all win to source edges
+        for win1 in win_list:   # add all win to win edges where condition applies
             for win2 in win_list:
+                # condition: non-overlapping, 2 is after 1, opposite directions
                 if not win1.grade_grade_colliding(win2) and win2.begin > win1.end and win1.direction != win2.direction:
                     G.add_edge(win1, win2, weight=win2.grade)
+        # use bellman-ford algorithm to find minimum paths to all nodes
         pred, dist = nx.bellman_ford(G, source_node)
         min_val = min(dist.values())
-        path = [k for k, v in dist.items() if v == min_val]
+        path = [k for k, v in dist.items() if v == min_val]  # find last win
+        # find all wins in the minimal energy path from source to last win
         while path[-1].seq != source_node.seq:
             for k, v in pred.items():
-                if v == None:
+                if v is None:
                     continue
                 if k.seq == path[-1].seq:
                     path.append(v)
-        path.pop(-1)
-        path = path[::-1]
+        path.pop(-1)    # get rid of source_node
+        path = path[::-1]   # revert the path to begin->end
         return path
