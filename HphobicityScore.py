@@ -21,7 +21,7 @@ class HphobicityScore():
         self.WinGrades = self.win_grade_generator(0, self.seq_length, 'both')
         # self.topo_string = self.make_topo_string()
         # print 'before sort', self.WinGrades
-        self.sorted_grade = self.sort_WinGrades()
+        # self.sorted_grade = self.sort_WinGrades()
         # print 'after sort', self.sorted_grade
         # self.minimas = self.local_minima_finder(direction='both')
         # self.fwd_minimas = self.local_minima_finder(direction='fwd')
@@ -30,7 +30,8 @@ class HphobicityScore():
         # self.topo_minimas = self.topo_determine()
         # self.sorted_grade_norm = self.sort_WinGrades_norm()
         # self.minimas_norm = self.local_minima_finder_norm()
-        self.topo = self.topo_brute()
+        # self.topo = self.topo_brute()
+        self.topo = self.topo_graph()
 
     def __str__(self):
         """
@@ -111,9 +112,9 @@ class HphobicityScore():
         import matplotlib.pyplot as plt
         import matplotlib.lines as mlines
         plt.figure()
-        # for win_grade in self.WinGrades:
-        #     plt.plot((win_grade.begin, win_grade.end), (win_grade.grade, win_grade.grade),
-        #              'k--' if win_grade.direction == 'fwd' else 'grey')
+        for win_grade in self.WinGrades:
+            plt.plot((win_grade.begin, win_grade.end), (win_grade.grade, win_grade.grade),
+                     'k--' if win_grade.direction == 'fwd' else 'grey')
         for minima in self.topo:
             plt.plot((minima.begin, minima.end), (minima.grade, minima.grade),
                      color='green' if minima.direction == 'fwd' else 'purple', lw=4)
@@ -122,7 +123,7 @@ class HphobicityScore():
         #     plt.plot((minima.begin, minima.end), (minima.grade, minima.grade), 'b--')
         # for minima in self.rev_minimas:
         #     if minima.grade > 0: continue
-            plt.plot((minima.begin, minima.end), (minima.grade, minima.grade), 'r--')
+        #     plt.plot((minima.begin, minima.end), (minima.grade, minima.grade), 'r--')
         black_line = mlines.Line2D([], [], 'k--', marker='', lw=2, label='Fwd grade')
         grey_line = mlines.Line2D([], [], color='grey', marker='', lw=2, label='Rev grade')
         blue_line = mlines.Line2D([], [], color='blue', marker='', lw=2, label='Fwd minima')
@@ -321,8 +322,26 @@ class HphobicityScore():
         print chosen_grade
         return chosen_set
 
-"""
-we're thinking of using a greedy algorithm such that where every added winGrade is either rev/fwd/non such that
-it won't affect the topology, but will count. this should solve issues where the fwd/rev_minima are not the correct
-winGrades due to overlapp with neighbouring winGrades, THINK±!!!!!!
-"""
+    def topo_graph(self):
+        import networkx as nx
+        from WinGrade import WinGrade
+        win_list = [a for a in self.WinGrades if a.grade < 0.]
+        G = nx.DiGraph()
+        source_node = WinGrade(0, 0, 'fwd', '', self.polyval)
+        [G.add_edge(source_node, a, weight=a.grade) for a in win_list]
+        for win1 in win_list:
+            for win2 in win_list:
+                if not win1.grade_grade_colliding(win2) and win2.begin > win1.end and win1.direction != win2.direction:
+                    G.add_edge(win1, win2, weight=win2.grade)
+        pred, dist = nx.bellman_ford(G, source_node)
+        min_val = min(dist.values())
+        path = [k for k, v in dist.items() if v == min_val]
+        while path[-1].seq != source_node.seq:
+            for k, v in pred.items():
+                if v == None:
+                    continue
+                if k.seq == path[-1].seq:
+                    path.append(v)
+        path.pop(-1)
+        path = path[::-1]
+        return path

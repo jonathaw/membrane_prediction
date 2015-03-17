@@ -49,3 +49,6 @@ class WinGrade():
 
     def pos_in_wingrade(self, pos):
         return True if pos >= self.begin and pos <= self.end else False
+
+    def set_grade(self, val):
+        self.grade = self.grade + val
