@@ -14,11 +14,20 @@ def main():
     # temp = HphobicityScore('1BRX', 'EAQITGRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVPAIAFTMYLSMLLGYGLTMVPFGGEQNPIYWARYADWLFTTPLLLLDLALLVDADQGTILALVGADGIMIGTGLVGALTKVYSYRFVWWAISTAAMLYILYVLFFGFTSKAESMRPEVASTFKVLRNVTVVLWSAYPVVWLIGSEGAGIVPLNIETLLFMVLDVSAKVGFGLILLRSRAIFGEAEAPEPSAGDGAAATS', '../psipred/sw_fastas/P02945.ss2',hydrophobicity_polyval)
 
     vdb_dict = parse_v_db()
+    right = 0
+    wrong = 0
     for v_entry in vdb_dict.values():
-        if v_entry['name'].lower() == 'atpe'.lower():
+        if v_entry['name'].lower() == 'bass'.lower():
             print v_entry
             temp = HphobicityScore(v_entry['name'], v_entry['seq'], 'data_sets/VDB/'+v_entry['name']+'.ss2', hydrophobicity_polyval)
             temp.plot_win_grades()
+            if v_entry['cterm'] == temp.c_term:
+                right += 1
+            else:
+                wrong += 1
+            print temp.name, temp.c_term, v_entry['cterm'], right, wrong
+
+
     # temp_topdb = topdb_functions.read_entries(False, 0, 1)
     # for temp_db in temp_topdb:
     #     temp = HphobicityScore(temp_db['name'], temp_db['seq'], temp_db['ss2'], hydrophobicity_polyval)
@@ -31,8 +40,10 @@ def main():
         # print temp_db['topo']
         # pymol_mark_segments(temp.name, [[[i.begin, i.end] for i in temp.topo]])
 
-    # db_entries = parsed_data_base_parser(25, 26)
-    # temp = HphobicityScore(db_entries[1]['pdb'], db_entries[1]['seq'], '../psipred/sw_fastas/'+db_entries[1]['uniprot']+'.ss2', hydrophobicity_polyval)
+    # db_entries = parsed_data_base_parser(1, 2)
+    # print db_entries[0]
+    #
+    # temp = HphobicityScore(db_entries[0]['pdb'], db_entries[0]['seq'], '../psipred/sw_fastas/'+db_entries[0]['uniprot']+'.ss2', hydrophobicity_polyval)
     # print temp
     # temp.plot_win_grades()
     # temp.plot_energy_landscape()

@@ -32,6 +32,7 @@ class HphobicityScore():
         # self.minimas_norm = self.local_minima_finder_norm()
         # self.topo = self.topo_brute()
         self.topo = self.topo_graph()
+        self.c_term = 'out' if self.topo[-1].direction == 'fwd' else 'in'
 
     def __str__(self):
         """
@@ -329,7 +330,7 @@ class HphobicityScore():
         """
         import networkx as nx
         from WinGrade import WinGrade
-        win_list = [a for a in self.WinGrades if a.grade < 0.]  # make copy of negative wingrades list
+        win_list = [a for a in self.WinGrades if a.grade < 1.]  # make copy of negative wingrades list
         G = nx.DiGraph()
         source_node = WinGrade(0, 0, 'fwd', '', self.polyval)   # define source win
         [G.add_edge(source_node, a, weight=a.grade) for a in win_list]  # add all win to source edges
