@@ -12,20 +12,20 @@ def main():
     # temp = HphobicityScore('1E12', 'MSITSVPGVVDAGVLGAQSAAAVRENALLSSSLWVNVALAGIAILVFVYMGRTIRPGRPRLIWGATLMIPLVSISSYLGLLSGLTVGMIEMPAGHALAGEMVRSQWGRYLTWALSTPMILLALGLLADVDLGSLFTVIAADIGMCVTGLAAAMTTSALLFRWAFYAISCAFFVVVLSALVTDWAASASSAGTAEIFDTLRVLTVVLWLGYPIVWAVGVEGLALVQSVGVTSWAYSVLDVFAKYVFAFILLRWVANNERTVAVAGQTLGTMSSDD', '../psipred/sw_fastas/P16102.ss2',hydrophobicity_polyval)
     # temp = HphobicityScore('1IWG', 'MPNFFIDRPIFAWVIAIIIMLAGGLAILKLPVAQYPTIAPPAVTISASYPGADAKTVQDTVTQVIEQNMNGIDNLMYMSSNSDSTGTVQITLTFESGTDADIAQVQVQNKLQLAMPLLPQEVQQQGVSVEKSSSSFLMVVGVINTDGTMTQEDISDYVAANMKDAISRTSGVGDVQLFGSQYAMRIWMNPNELNKFQLTPVDVITAIKAQNAQVAAGQLGGTPPVKGQQLNASIIAQTRLTSTEEFGKILLKVNQDGSRVLLRDVAKIELGGENYDIIAEFNGQPASGLGIKLATGANALDTAAAIRAELAKMEPFFPSGLKIVYPYDTTPFVKISIHEVVKTLVEAIILVFLVMYLFLQNFRATLIPTIAVPVVLLGTFAVLAAFGFSINTLTMFGMVLAIGLLVDDAIVVVENVERVMAEEGLPPKEATRKSMGQIQGALVGIAMVLSAVFVPMAFFGGSTGAIYRQFSITIVSAMALSVLVALILTPALCATMLKPIAKGDHGEGKKGFFGWFNRMFEKSTHHYTDSVGGILRSTGRYLVLYLIIVVGMAYLFVRLPSSFLPDEDQGVFMTMVQLPAGATQERTQKVLNEVTHYYLTKEKNNVESVFAVNGFGFAGRGQNTGIAFVSLKDWADRPGEENKVEAITMRATRAFSQIKDAMVFAFNLPAIVELGTATGFDFELIDQAGLGHEKLTQARNQLLAEAAKHPDMLTSVRPNGLEDTPQFKIDIDQEKAQALGVSINDINTTLGAAWGGSYVNDFIDRGRVKKVYVMSEAKYRMLPDDIGDWYVRAADGQMVPFSAFSSSRWEYGSPRLERYNGLPSMEILGQAAPGKSTGEAMELMEQLASKLPTGVGYDWTGMSYQERLSGNQAPSLYAISLIVVFLCLAALYESWSIPFSVMLVVPLGVIGALLAATFRGLTNDVYFQVGLLTTIGLSAKNAILIVEFAKDLMDKEGKGLIEATLDAVRMRLRPILMTSLAFILGVMPLVISTGAGSGAQNAVGTGVMGGMVTATVLAIFFVPVFFVVVRRRFSRKNEDIEHSHTVDHH', '../psipred/sw_fastas/P31224.ss2',hydrophobicity_polyval)
     # temp = HphobicityScore('1BRX', 'EAQITGRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVPAIAFTMYLSMLLGYGLTMVPFGGEQNPIYWARYADWLFTTPLLLLDLALLVDADQGTILALVGADGIMIGTGLVGALTKVYSYRFVWWAISTAAMLYILYVLFFGFTSKAESMRPEVASTFKVLRNVTVVLWSAYPVVWLIGSEGAGIVPLNIETLLFMVLDVSAKVGFGLILLRSRAIFGEAEAPEPSAGDGAAATS', '../psipred/sw_fastas/P02945.ss2',hydrophobicity_polyval)
-
+    param_list = [0, 20, 0.2, 3]
     vdb_dict = parse_v_db()
     right = 0
     wrong = 0
     for v_entry in vdb_dict.values():
-        if v_entry['name'].lower() == 'bass'.lower():
+        if v_entry['name'].lower() == 'Atpe'.lower():
             print v_entry
-            temp = HphobicityScore(v_entry['name'], v_entry['seq'], 'data_sets/VDB/'+v_entry['name']+'.ss2', hydrophobicity_polyval)
-            temp.plot_win_grades()
-            if v_entry['cterm'] == temp.c_term:
+            temp = HphobicityScore(v_entry['name'], v_entry['seq'], 'data_sets/VDB/'+v_entry['name']+'.ss2', hydrophobicity_polyval, param_list)
+            # temp.plot_win_grades()
+            if v_entry['cterm'] == temp.best_c_term:
                 right += 1
             else:
                 wrong += 1
-            print temp.name, temp.c_term, v_entry['cterm'], right, wrong
+            print temp.name, temp.best_c_term, temp.topo_best_val, temp.sec_best_c_term, temp.topo_sec_best_val, v_entry['cterm']
 
 
     # temp_topdb = topdb_functions.read_entries(False, 0, 1)
@@ -75,7 +75,7 @@ def MakeHydrophobicityGrade():
     # hydrophobicity_grade = open('Poly_Values.txt', 'r')
     # hydrophobicity_grade = open('poly_value_11.2.txt', 'r')
     # hydrophobicity_grade = open('poly_vals_23.2.txt', 'r')
-    hydrophobicity_grade = open('./poly_vals_25.2.txt', 'r')
+    hydrophobicity_grade = open('/home/labs/fleishman/jonathaw/membrane_prediciton/poly_vals_25.2.txt', 'r')
     hydrophobicity_polyval = {}
     for line in hydrophobicity_grade:
         split = line.split()
@@ -150,15 +150,36 @@ def parsed_data_base_parser(num1=0, num2=1):
 
 
 def parse_v_db():
-    f = open('./data_sets/V_Database.txt', 'r')
+    f = open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/V_Database.txt', 'r')
     resutls = {}
     i = 1
     for line in f:
         line_split = line.split()
-        resutls[line_split[0]] = {'name': line_split[0], 'cterm': line_split[1], 'seq': line_split[4][1:]}
+        resutls[line_split[0]] = {'name': line_split[0], 'cterm': line_split[1], 'seq': line_split[4][:]}
         i += 1
     f.close()
     return resutls
 
+
+def ROC():
+    import sys
+    name = sys.argv[1]
+    param_list = [float(sys.argv[2]), int(sys.argv[3]), float(sys.argv[4]), int(sys.argv[5])]
+    vdb_dict = parse_v_db()
+    global hydrophobicity_polyval
+    hydrophobicity_polyval = MakeHydrophobicityGrade()
+    for v_entry in vdb_dict.values():
+        if v_entry['name'].lower() == name.lower():
+            temp = HphobicityScore(v_entry['name'], v_entry['seq'], '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/VDB/'+v_entry['name']+'.ss2', hydrophobicity_polyval, param_list)
+            with open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/VDB/ROC_data/'+name+'_'+
+                    '_'.join(str(a) for a in param_list)+'.data', 'wr+') as f:
+                f.writelines(v_entry['name']+'\n')
+                f.writelines('database c_term\t'+v_entry['cterm']+'\n')
+                f.writelines('predicted best c_term\t%s' % temp.best_c_term+'\n')
+                f.writelines('predicted best grade\t%s' % temp.topo_best_val+'\n')
+                f.writelines('predicted sec best c_term\t%s' % temp.sec_best_c_term+'\n')
+                f.writelines('predicted sec best grade\t%s' % temp.topo_sec_best_val+'\n')
+
 if __name__ == '__main__':
-    main()
+    # main()
+    ROC()

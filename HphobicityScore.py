@@ -1,5 +1,5 @@
 class HphobicityScore():
-    def __init__(self, name, seq, ss2_file, hydro_polyval):
+    def __init__(self, name, seq, ss2_file, hydro_polyval, param_list):
         '''
         :param name: protein's name
         :param uniprot: the entrie's uniprot code
@@ -7,9 +7,12 @@ class HphobicityScore():
         :param hydro_polyval: polynom valued dictionary
         :return: a stack of WinGrade instances, and their utilities
         '''
-        global HP_THRESHOLD, INC_MAX
-        HP_THRESHOLD = 0.0
+        global HP_THRESHOLD, INC_MAX, MIN_LENGTH, PSI_HELIX, PSI_RES_NUM
+        HP_THRESHOLD = param_list[0]
         INC_MAX = 8
+        MIN_LENGTH = param_list[1]
+        PSI_HELIX = param_list[2]
+        PSI_RES_NUM = param_list[3]
         self.name = name
         self.seq = seq
         self.ss2_file = ss2_file
@@ -31,8 +34,9 @@ class HphobicityScore():
         # self.sorted_grade_norm = self.sort_WinGrades_norm()
         # self.minimas_norm = self.local_minima_finder_norm()
         # self.topo = self.topo_brute()
-        self.topo = self.topo_graph()
-        self.c_term = 'out' if self.topo[-1].direction == 'fwd' else 'in'
+        self.topo_best, self.topo_best_val, self.topo_sec_best, self.topo_sec_best_val = self.topo_graph
+        self.best_c_term = 'out' if self.topo_best[-1].direction == 'fwd' else 'in'
+        self.sec_best_c_term = 'out' if self.topo_sec_best[-1].direction == 'fwd' else 'in'
 
     def __str__(self):
         """
@@ -40,26 +44,44 @@ class HphobicityScore():
         """
         return 'Selectod topology:\n' + '\n'.join([str(i) for i in self.topo])
 
+    # def win_grade_generator(self, pos1, pos2, fwd_or_rev):
+    #     '''
+    #     :return:grades all segments of self.seq, and aggregates them as WinGrades
+    #     '''
+    #     from WinGrade import WinGrade
+    #     PSI_HP_THRESHOLD = -8.
+    #     psi = self.psipred
+    #     grades = []
+    #     for i in range(pos1, pos2):
+    #         for inc in range(min(INC_MAX, self.seq_length - 20 - i)):
+    #             is_not_helical = self.is_not_helical((i, i+20+inc), psi)
+    #             fwd_temp = WinGrade(i, i+20+inc, 'fwd', self.seq[i:i+20+inc], self.polyval)
+    #             rev_temp = WinGrade(i, i+20+inc, 'rev', self.seq[i:i+20+inc][::-1], self.polyval)
+    #             if (fwd_or_rev == 'both' or fwd_or_rev == 'fwd') and (not is_not_helical or fwd_temp.grade < PSI_HP_THRESHOLD):
+    #                 grades.append(WinGrade(i, i+20+inc, 'fwd', self.seq[i:i+20+inc], self.polyval))
+    #             if (fwd_or_rev == 'both' or fwd_or_rev == 'rev') and (not is_not_helical or rev_temp.grade < PSI_HP_THRESHOLD):
+    #                 grades.append(WinGrade(i, i+20+inc, 'rev', self.seq[i:i+20+inc][::-1], self.polyval))
+    #     return grades
+
     def win_grade_generator(self, pos1, pos2, fwd_or_rev):
         '''
         :return:grades all segments of self.seq, and aggregates them as WinGrades
         '''
         from WinGrade import WinGrade
+        PSI_HP_THRESHOLD = -8.
         psi = self.psipred
         grades = []
-        # for i in range(len(self.seq[pos1:pos2])):
         for i in range(pos1, pos2):
-            for inc in range(INC_MAX):
-                if i+20+inc > pos2 or self.is_not_helical((i, i+20+inc), psi):
-                    continue
-                if fwd_or_rev == 'both':
-                    grades.append(WinGrade(i, i+20+inc, 'fwd', self.seq[i:i+20+inc], self.polyval))
-                    grades.append(WinGrade(i, i+20+inc, 'rev', self.seq[i:i+20+inc][::-1], self.polyval))
-                elif fwd_or_rev == 'fwd':
-                    grades.append(WinGrade(i, i+20+inc, 'fwd', self.seq[i:i+20+inc], self.polyval))
-                elif fwd_or_rev == 'rev':
-                    grades.append(WinGrade(i, i+20+inc, 'rev', self.seq[i:i+20+inc][::-1], self.polyval))
-        return grades
+            for inc in range(min(INC_MAX, self.seq_length - MIN_LENGTH - i)):
+                is_not_helical = self.is_not_helical((i, i+MIN_LENGTH+inc), psi)
+                fwd_temp = WinGrade(i, i+MIN_LENGTH+inc, 'fwd', self.seq[i:i+MIN_LENGTH+inc], self.polyval)
+                rev_temp = WinGrade(i, i+MIN_LENGTH+inc, 'rev', self.seq[i:i+MIN_LENGTH+inc][::-1], self.polyval)
+                if (fwd_or_rev == 'both' or fwd_or_rev == 'fwd') and (not is_not_helical or fwd_temp.grade < PSI_HP_THRESHOLD):
+                    grades.append(WinGrade(i, i+MIN_LENGTH+inc, 'fwd', self.seq[i:i+MIN_LENGTH+inc], self.polyval))
+                if (fwd_or_rev == 'both' or fwd_or_rev == 'rev') and (not is_not_helical or rev_temp.grade < PSI_HP_THRESHOLD):
+                    grades.append(WinGrade(i, i+MIN_LENGTH+inc, 'rev', self.seq[i:i+MIN_LENGTH+inc][::-1], self.polyval))
+        return grades    
+
 
     def print_HphobicityScore(self):
         '''
@@ -116,12 +138,12 @@ class HphobicityScore():
         for win_grade in self.WinGrades:
             plt.plot((win_grade.begin, win_grade.end), (win_grade.grade, win_grade.grade),
                      'k--' if win_grade.direction == 'fwd' else 'grey')
-        for minima in self.topo:
+        for minima in self.topo_best:
             plt.plot((minima.begin, minima.end), (minima.grade, minima.grade),
                      color='green' if minima.direction == 'fwd' else 'purple', lw=4)
-        # for minima in self.fwd_minimas:
-        #     if minima.grade > 0: continue
-        #     plt.plot((minima.begin, minima.end), (minima.grade, minima.grade), 'b--')
+        for minima in self.topo_sec_best:
+            if minima.grade > 0: continue
+            plt.plot((minima.begin, minima.end), (minima.grade, minima.grade), 'b--', lw=4)
         # for minima in self.rev_minimas:
         #     if minima.grade > 0: continue
         #     plt.plot((minima.begin, minima.end), (minima.grade, minima.grade), 'r--')
@@ -136,32 +158,6 @@ class HphobicityScore():
         plt.ylabel('Energy')
         plt.title('Win Grades Energy Plot for %s' % self.name)
         plt.show()
-
-    def plot_energy_landscape(self):
-        # import matplotlib.pyplot as plt
-        # from mpl_toolkits.mplot3d import Axes3D
-        # from scipy.interpolate import griddata
-        # import numpy as np
-    #     data = [(pos, 20+inc, grade) for pos, windows in enumerate(self.fwd_grades) for inc, grade in enumerate(windows)]
-    #     print data
-    #     data = [(pos, 20+inc, grade) for pos, windows in enumerate(self.rev_grades) for inc, grade in enumerate(windows)]
-    #     print data
-    #     print [(i.keys()[0], 20+int(inc), grade) for i in self.WinGrades for inc, grade in enumerate(i.values()[0])]
-        # print '\n\n\n'
-        print [(grd.begin, grd.end,  grd.grade) for grd in self.WinGrades if grd.direction == 'fwd']
-        print '\n\n\n'
-        print [(grd.begin, grd.end,  grd.grade) for grd in self.WinGrades if grd.direction == 'rev']
-        # print [(i.keys()[0], 20+int(inc), grade) for i in self.rev_grades for inc, grade in enumerate(i.values()[0])]
-    #     x, y, z = zip(*data)
-    #     z = map(float, z)
-    #     grid_x, grid_y = np.mgrid[min(x):max(x):100j, min(y):max(y):100j]
-    #     grid_z = griddata((x, y), z, (grid_x, grid_y), method='cubic')
-    #
-    #     fig = plt.figure()
-    #     ax = fig.gca(projection='3d')
-    #     ax.plot_surface(grid_x, grid_y, grid_z, cmap=plt.cm.Spectral)
-    #     plt.show()
-        pass
 
     def topo_determine(self):
         """
@@ -218,10 +214,9 @@ class HphobicityScore():
         """
         non_helical = 0
         for i in range(pos[0], pos[1]):
-            if psi[i] <= -1.0:
-                print psi[i], '< 0.0'
+            if psi[i] <= PSI_HELIX:
                 non_helical += 1
-        return False if non_helical < 3 else True
+        return False if non_helical < PSI_RES_NUM else True
 
     def PsiReaderHelix(self):
         """
@@ -323,6 +318,19 @@ class HphobicityScore():
         print chosen_grade
         return chosen_set
 
+    def find_graph_path(self, pred, path, source_node):
+        # path = [k for k, v in dist.items() if v == last_val]  # find last win
+        # find all wins in the minimal energy path from source to last win
+        while path[-1].seq != source_node.seq:
+            for k, v in pred.items():
+                if v is None:
+                    continue
+                if k.seq == path[-1].seq:
+                    path.append(v)
+        path.pop(-1)    # get rid of source_node
+        return path[::-1]   # revert the path to begin->end
+
+    @property
     def topo_graph(self):
         """
         topology determination using graph theory. wins are nodes
@@ -330,7 +338,8 @@ class HphobicityScore():
         """
         import networkx as nx
         from WinGrade import WinGrade
-        win_list = [a for a in self.WinGrades if a.grade < 1.]  # make copy of negative wingrades list
+        import operator
+        win_list = [a for a in self.WinGrades if a.grade < HP_THRESHOLD]  # make copy of negative wingrades list
         G = nx.DiGraph()
         source_node = WinGrade(0, 0, 'fwd', '', self.polyval)   # define source win
         [G.add_edge(source_node, a, weight=a.grade) for a in win_list]  # add all win to source edges
@@ -342,14 +351,25 @@ class HphobicityScore():
         # use bellman-ford algorithm to find minimum paths to all nodes
         pred, dist = nx.bellman_ford(G, source_node)
         min_val = min(dist.values())
-        path = [k for k, v in dist.items() if v == min_val]  # find last win
+        best_path_val = [k for k, v in dist.items() if v == min_val]
+        best_path = self.find_graph_path(pred, best_path_val, source_node)
+        for k, v in sorted(dist.items(), key=operator.itemgetter(1)):
+            if k.direction != best_path[-1].direction:
+                sec_best_path = [k]
+                sec_best_val = v
+                break
+        # sec_best_path, sec_best_val = [(k, v) for k, v in sorted(dist.items(), key=operator.itemgetter(1)) if k.direction != best_path[-1].direction]
+        sec_best_path = self.find_graph_path(pred, sec_best_path, source_node)
+        return best_path, min_val, sec_best_path, sec_best_val
+
+        # path = [k for k, v in dist.items() if v == min_val]  # find last win
         # find all wins in the minimal energy path from source to last win
-        while path[-1].seq != source_node.seq:
-            for k, v in pred.items():
-                if v is None:
-                    continue
-                if k.seq == path[-1].seq:
-                    path.append(v)
-        path.pop(-1)    # get rid of source_node
-        path = path[::-1]   # revert the path to begin->end
-        return path
+        # while path[-1].seq != source_node.seq:
+        #     for k, v in pred.items():
+        #         if v is None:
+        #             continue
+        #         if k.seq == path[-1].seq:
+        #             path.append(v)
+        # path.pop(-1)    # get rid of source_node
+        # path = path[::-1]   # revert the path to begin->end
+        # return path

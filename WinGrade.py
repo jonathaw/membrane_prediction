@@ -17,7 +17,7 @@ class WinGrade():
         self.grade = self.grade_segment(polyval)
         self.direction = direction
         self.span = range(self.begin, self.end+1)
-        self.grade_norm = self.grade / (self.end-self.begin-19)
+        # self.grade_norm = self.grade / (self.end-self.begin-19)
 
     def __str__(self):
         return '%-4i to %-4i in %3s => %10f %10f %-35s' % (self.begin, self.end, self.direction, self.grade,
