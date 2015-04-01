@@ -12,20 +12,22 @@ def main():
     # temp = HphobicityScore('1E12', 'MSITSVPGVVDAGVLGAQSAAAVRENALLSSSLWVNVALAGIAILVFVYMGRTIRPGRPRLIWGATLMIPLVSISSYLGLLSGLTVGMIEMPAGHALAGEMVRSQWGRYLTWALSTPMILLALGLLADVDLGSLFTVIAADIGMCVTGLAAAMTTSALLFRWAFYAISCAFFVVVLSALVTDWAASASSAGTAEIFDTLRVLTVVLWLGYPIVWAVGVEGLALVQSVGVTSWAYSVLDVFAKYVFAFILLRWVANNERTVAVAGQTLGTMSSDD', '../psipred/sw_fastas/P16102.ss2',hydrophobicity_polyval)
     # temp = HphobicityScore('1IWG', 'MPNFFIDRPIFAWVIAIIIMLAGGLAILKLPVAQYPTIAPPAVTISASYPGADAKTVQDTVTQVIEQNMNGIDNLMYMSSNSDSTGTVQITLTFESGTDADIAQVQVQNKLQLAMPLLPQEVQQQGVSVEKSSSSFLMVVGVINTDGTMTQEDISDYVAANMKDAISRTSGVGDVQLFGSQYAMRIWMNPNELNKFQLTPVDVITAIKAQNAQVAAGQLGGTPPVKGQQLNASIIAQTRLTSTEEFGKILLKVNQDGSRVLLRDVAKIELGGENYDIIAEFNGQPASGLGIKLATGANALDTAAAIRAELAKMEPFFPSGLKIVYPYDTTPFVKISIHEVVKTLVEAIILVFLVMYLFLQNFRATLIPTIAVPVVLLGTFAVLAAFGFSINTLTMFGMVLAIGLLVDDAIVVVENVERVMAEEGLPPKEATRKSMGQIQGALVGIAMVLSAVFVPMAFFGGSTGAIYRQFSITIVSAMALSVLVALILTPALCATMLKPIAKGDHGEGKKGFFGWFNRMFEKSTHHYTDSVGGILRSTGRYLVLYLIIVVGMAYLFVRLPSSFLPDEDQGVFMTMVQLPAGATQERTQKVLNEVTHYYLTKEKNNVESVFAVNGFGFAGRGQNTGIAFVSLKDWADRPGEENKVEAITMRATRAFSQIKDAMVFAFNLPAIVELGTATGFDFELIDQAGLGHEKLTQARNQLLAEAAKHPDMLTSVRPNGLEDTPQFKIDIDQEKAQALGVSINDINTTLGAAWGGSYVNDFIDRGRVKKVYVMSEAKYRMLPDDIGDWYVRAADGQMVPFSAFSSSRWEYGSPRLERYNGLPSMEILGQAAPGKSTGEAMELMEQLASKLPTGVGYDWTGMSYQERLSGNQAPSLYAISLIVVFLCLAALYESWSIPFSVMLVVPLGVIGALLAATFRGLTNDVYFQVGLLTTIGLSAKNAILIVEFAKDLMDKEGKGLIEATLDAVRMRLRPILMTSLAFILGVMPLVISTGAGSGAQNAVGTGVMGGMVTATVLAIFFVPVFFVVVRRRFSRKNEDIEHSHTVDHH', '../psipred/sw_fastas/P31224.ss2',hydrophobicity_polyval)
     # temp = HphobicityScore('1BRX', 'EAQITGRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLVPAIAFTMYLSMLLGYGLTMVPFGGEQNPIYWARYADWLFTTPLLLLDLALLVDADQGTILALVGADGIMIGTGLVGALTKVYSYRFVWWAISTAAMLYILYVLFFGFTSKAESMRPEVASTFKVLRNVTVVLWSAYPVVWLIGSEGAGIVPLNIETLLFMVLDVSAKVGFGLILLRSRAIFGEAEAPEPSAGDGAAATS', '../psipred/sw_fastas/P02945.ss2',hydrophobicity_polyval)
-    param_list = [0, 20, 0.2, 3]
-    vdb_dict = parse_v_db()
-    right = 0
-    wrong = 0
-    for v_entry in vdb_dict.values():
-        if v_entry['name'].lower() == 'Atpe'.lower():
-            print v_entry
-            temp = HphobicityScore(v_entry['name'], v_entry['seq'], 'data_sets/VDB/'+v_entry['name']+'.ss2', hydrophobicity_polyval, param_list)
-            # temp.plot_win_grades()
-            if v_entry['cterm'] == temp.best_c_term:
-                right += 1
-            else:
-                wrong += 1
-            print temp.name, temp.best_c_term, temp.topo_best_val, temp.sec_best_c_term, temp.topo_sec_best_val, v_entry['cterm']
+
+    ### parameters and setup for running von heijne DB entries:
+    # param_list = [0, 20, 0.2, 3]
+    # vdb_dict = parse_v_db()
+    # right = 0
+    # wrong = 0
+    # for v_entry in vdb_dict.values():
+    #     if v_entry['name'].lower() == 'Atpe'.lower():
+    #         print v_entry
+    #         temp = HphobicityScore(v_entry['name'], v_entry['seq'], 'data_sets/VDB/'+v_entry['name']+'.ss2', hydrophobicity_polyval, param_list)
+    #         temp.plot_win_grades()
+            # if v_entry['cterm'] == temp.best_c_term:
+            #     right += 1
+            # else:
+            #     wrong += 1
+            # print temp.name, temp.best_c_term, temp.topo_best_val, temp.sec_best_c_term, temp.topo_sec_best_val, v_entry['cterm']
 
 
     # temp_topdb = topdb_functions.read_entries(False, 0, 1)
@@ -66,6 +68,50 @@ def main():
     #         print 'was wrong', temp.n_term_orient, protein['orientation'], topo_predict_score
     # print 'prediction results:', topo_predict_score
 
+    ### parsing and running rostlab_db entries:
+    param_list = [0, 20, 0.2, 3]
+    rostlab_db_dict = parse_rostlab_db()
+    for name, entry in rostlab_db_dict.items():
+        if name == 'p00423':
+            print entry
+            temp = HphobicityScore(name, entry['seq'], 'data_sets/rostlab_db/psipred/'+name+'.ss2', hydrophobicity_polyval, param_list)
+            print temp.topo_best
+            topo_string = topo_string_rostlab_format(temp.topo_best, entry['seq'])
+            print topo_string_distance(topo_string, entry['topo_string'])
+
+
+def topo_string_distance(ts1, ts2):
+    '''
+    :param ts1: a topo string
+    :param ts2: a topo string
+    :return:number of disagreements (1/2/0 to h/H difference. disregarding U)
+    '''
+    score = 0
+    assert len(ts1) == len(ts2), 'topo string length2 differ, ts1 %i, ts2 %i' % (len(ts1), len(ts2))
+    for i in range(len(ts1)):
+        if (ts1[i] == '1' or ts1[i] == '2' or ts1[i] == '0') and (ts2[i] == 'H' or ts2[i] == 'h'):
+            score += 1
+        if (ts2[i] == '1' or ts2[i] == '2' or ts2[i] == '0') and (ts1[i] == 'H' or ts1[i] == 'h'):
+            score += 1
+    return score
+
+
+
+def topo_string_rostlab_format(topo, seq):
+    '''
+    :param topo:a topo (list of WinGrades describing a constructed topology)
+    :param seq: the sequence
+    :return:a string describing the topology in rostlab's format where 1:inside, 2: outdise H: TM helix
+    '''
+    topo_string = ''
+    end_of_last = 0
+    for tm in topo:
+        topo_string += '1' * (tm.begin-end_of_last) if tm.direction == 'fwd' else '2' * (tm.begin-end_of_last)
+        topo_string += 'H' * (tm.end - tm.begin)
+        last_tm = tm
+    topo_string += '2' * (len(seq)-last_tm.end) if last_tm.direction == 'fwd' else '1' * (len(seq)-last_tm.end)
+    return topo_string
+
 
 def MakeHydrophobicityGrade():
     '''
@@ -75,7 +121,8 @@ def MakeHydrophobicityGrade():
     # hydrophobicity_grade = open('Poly_Values.txt', 'r')
     # hydrophobicity_grade = open('poly_value_11.2.txt', 'r')
     # hydrophobicity_grade = open('poly_vals_23.2.txt', 'r')
-    hydrophobicity_grade = open('/home/labs/fleishman/jonathaw/membrane_prediciton/poly_vals_25.2.txt', 'r')
+    # hydrophobicity_grade = open('/home/labs/fleishman/jonathaw/membrane_prediciton/poly_vals_25.2.txt', 'r')
+    hydrophobicity_grade = open('./poly_vals_25.2.txt', 'r')
     hydrophobicity_polyval = {}
     for line in hydrophobicity_grade:
         split = line.split()
@@ -150,7 +197,8 @@ def parsed_data_base_parser(num1=0, num2=1):
 
 
 def parse_v_db():
-    f = open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/V_Database.txt', 'r')
+    # f = open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/V_Database.txt', 'r')
+    f = open('./data_sets/V_Database.txt', 'r')
     resutls = {}
     i = 1
     for line in f:
@@ -159,6 +207,20 @@ def parse_v_db():
         i += 1
     f.close()
     return resutls
+
+
+def parse_rostlab_db():
+    f = open('./data_sets/rostlab_db/rostlab_db.txt', 'r')
+    cont_split = f.read().lower().split('>')
+    results = {}
+    for c in cont_split:
+        if len(c.split()) > 3:
+            continue
+        split = c.split()
+        name = split[0].split('|')[0]
+        results[name] = {'name': name, 'seq': split[1].upper(), 'topo_string': split[2]}
+    f.close()
+    return results
 
 
 def ROC():
@@ -170,8 +232,8 @@ def ROC():
     hydrophobicity_polyval = MakeHydrophobicityGrade()
     for v_entry in vdb_dict.values():
         if v_entry['name'].lower() == name.lower():
-            temp = HphobicityScore(v_entry['name'], v_entry['seq'], '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/VDB/'+v_entry['name']+'.ss2', hydrophobicity_polyval, param_list)
-            with open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/VDB/ROC_data/'+name+'_'+
+            temp = HphobicityScore(v_entry['name'], v_entry['seq'], '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/VDB_noSRP/'+v_entry['name']+'.ss2', hydrophobicity_polyval, param_list)
+            with open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/VDB_noSRP/ROC/'+name+'_'+
                     '_'.join(str(a) for a in param_list)+'.data', 'wr+') as f:
                 f.writelines(v_entry['name']+'\n')
                 f.writelines('database c_term\t'+v_entry['cterm']+'\n')
@@ -180,6 +242,7 @@ def ROC():
                 f.writelines('predicted sec best c_term\t%s' % temp.sec_best_c_term+'\n')
                 f.writelines('predicted sec best grade\t%s' % temp.topo_sec_best_val+'\n')
 
+
 if __name__ == '__main__':
-    # main()
-    ROC()
+    main()
+    # ROC()

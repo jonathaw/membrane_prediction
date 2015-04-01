@@ -24,8 +24,7 @@ class WinGrade():
                                                            self.grade_norm, self.seq)
 
     def __repr__(self):
-        return '%-4i to %-4i in %3s => %10f %10f %-35s' % (self.begin, self.end, self.direction, self.grade,
-                                                           self.grade_norm, self.seq)
+        return '%-4i to %-4i in %3s => %10f %-35s' % (self.begin, self.end, self.direction, self.grade, self.seq)
 
     def grade_grade_colliding(self, other):
         return True if len(set(self.span) & set(other.span)) != 0 else False

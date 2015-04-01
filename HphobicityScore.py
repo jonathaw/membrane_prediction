@@ -42,7 +42,7 @@ class HphobicityScore():
         """
         :return: A message with all Fwd/Rev minimas, and the selected topology
         """
-        return 'Selectod topology:\n' + '\n'.join([str(i) for i in self.topo])
+        return 'Selectod topology:\n' + '\n'.join([str(i) for i in self.best_topo])
 
     # def win_grade_generator(self, pos1, pos2, fwd_or_rev):
     #     '''
@@ -81,7 +81,6 @@ class HphobicityScore():
                 if (fwd_or_rev == 'both' or fwd_or_rev == 'rev') and (not is_not_helical or rev_temp.grade < PSI_HP_THRESHOLD):
                     grades.append(WinGrade(i, i+MIN_LENGTH+inc, 'rev', self.seq[i:i+MIN_LENGTH+inc][::-1], self.polyval))
         return grades    
-
 
     def print_HphobicityScore(self):
         '''
@@ -361,15 +360,3 @@ class HphobicityScore():
         # sec_best_path, sec_best_val = [(k, v) for k, v in sorted(dist.items(), key=operator.itemgetter(1)) if k.direction != best_path[-1].direction]
         sec_best_path = self.find_graph_path(pred, sec_best_path, source_node)
         return best_path, min_val, sec_best_path, sec_best_val
-
-        # path = [k for k, v in dist.items() if v == min_val]  # find last win
-        # find all wins in the minimal energy path from source to last win
-        # while path[-1].seq != source_node.seq:
-        #     for k, v in pred.items():
-        #         if v is None:
-        #             continue
-        #         if k.seq == path[-1].seq:
-        #             path.append(v)
-        # path.pop(-1)    # get rid of source_node
-        # path = path[::-1]   # revert the path to begin->end
-        # return path
