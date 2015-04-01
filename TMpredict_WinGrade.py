@@ -3,6 +3,8 @@ from HphobicityScore import *
 
 
 def main():
+    import subprocess
+    import re
     global hydrophobicity_polyval
     # import topdb_functions
     hydrophobicity_polyval = MakeHydrophobicityGrade()
@@ -69,20 +71,82 @@ def main():
     # print 'prediction results:', topo_predict_score
 
     ### parsing and running rostlab_db entries:
-    param_list = [0, 20, 0.2, 3]
+    # param_list = [0, 20, 0.2, 3]
+    param_list = [0, 20, 0.2, 5]
     rostlab_db_dict = parse_rostlab_db()
+    # results = {'tm_num_correct': 0, 'tm_num_incorrect': 0, 'topo_correct': 0, 'topo_incorrect': 0}
+    Q_ok_results = 0
+    proteins = 0
+    num = 0
     for name, entry in rostlab_db_dict.items():
-        if name == 'p0a6m2':
-            print entry
-            temp = HphobicityScore(name, entry['seq'], 'data_sets/rostlab_db/psipred/'+name+'.ss2', hydrophobicity_polyval, param_list)
-            print temp.topo_best
-            topo_string = topo_string_rostlab_format(temp.topo_best, entry['seq'])
-            print topo_string
-            dist = topo_string_distance(topo_string, entry['topo_string'])
-            print dist
-            print entry['topo_string']
-            print dist['aln']
-            print topo_string
+        # if name != 'p11350':
+        #     continue
+        if float(entry['topo_string'].count('u') + entry['topo_string'].count('U'))/float(len(entry['topo_string'])) \
+                > 0.2:
+            continue
+        if not -1 < num < 100:
+            num += 1
+            continue
+        # print entry
+        temp = HphobicityScore(name, entry['seq'], 'data_sets/rostlab_db/psipred/'+name+'.ss2', hydrophobicity_polyval, param_list)
+
+        # print temp.topo_best
+        topo_string = topo_string_rostlab_format(temp.topo_best, entry['seq'])
+
+        ok_pred_tm = int(subprocess.Popen(['perl', './rostlab_evaluator.pl', entry['topo_string'], topo_string],
+                                      stdout=subprocess.PIPE).stdout.read().split()[-1])
+        pred_tm = len(temp.topo_best)
+        obs_tm = len(re.findall('[1u20LU]h', entry['topo_string']))
+        Q_ok_results += 1 if (ok_pred_tm/obs_tm == 1 and ok_pred_tm/pred_tm == 1) else 0
+        proteins += 1
+        print entry['topo_string']
+        print topo_string
+        dist = topo_string_distance(topo_string, entry['topo_string'])
+        # print dist
+        # print entry['topo_string']
+        # print dist['aln']
+        # print topo_string
+        # results['tm_num_correct'] += 1 if dist['tm_agree'] else 0
+        # results['tm_num_incorrect'] += 1 if not dist['tm_agree'] else 0
+        # results['topo_correct'] += 1 if dist['topo_correct'] else 0
+        # results['topo_incorrect'] += 1 if not dist['topo_correct'] else 0
+        # print results
+        num += 1
+        # temp.plot_win_grades()
+        results_writer(dist, entry, topo_string, temp, param_list, ok_pred_tm, pred_tm, obs_tm)
+    # print results
+    print Q_ok_results
+    print 'Q_ok is', 100 * float(Q_ok_results)/float(proteins)
+
+
+def results_writer(topo_score, entry_info, topo_string, hp_obj, param_list, ok_pred_tm, pred_tm, obs_tm):
+    import matplotlib.pyplot as plt
+    from time import strftime
+    f = open('data_sets/rostlab_db/prediction/' + entry_info['name'] + '.prd', 'wr+')
+    f.write('uniprot name\t%s\n' % entry_info['name'])
+    f.write('PDB name    \t%s %s\n' % (entry_info['pdb'], entry_info['chain']))
+    f.write('parameters: HP threshold %f MIN length %i psi helix %f psi res num %i\n' % (param_list[0], param_list[1],
+                                                                                         param_list[2], param_list[3]))
+    f.write('#TM observed %-3i\n#TM predicted %-3i\n' % (topo_score['tm_num_obs'], topo_score['tm_num_pre']))
+    f.write('#TM agrees\n' if topo_score['tm_agree'] else '#TM DISAGREE\n')
+    f.write('topo correct\n' if topo_score['topo_correct'] else 'topo INCORRECT\n')
+    f.write('topo best energy        %f\n' % hp_obj.topo_best_val)
+    f.write('topo second best energy %f\n' % hp_obj.topo_sec_best_val)
+    f.write('topo confidence %f\n' % (hp_obj.topo_best_val / hp_obj.topo_sec_best_val))
+    f.write('sequence %s\n' % entry_info['seq'])
+    f.write('obs topo %s\n' % entry_info['topo_string'])
+    f.write('aln topo %s\n' % topo_score['aln'])
+    f.write('pre topo %s\n' % topo_string)
+    f.write('\n\npredicted TM (Q) %i\n' % pred_tm)
+    f.write('observed TM (Q) %i\n' % obs_tm)
+    f.write('OK predicted TM %i\n' % ok_pred_tm)
+    f.write('Qok or not ' + str(True) if (ok_pred_tm/obs_tm == 1 and ok_pred_tm/pred_tm == 1) else str(False))
+    f.write('\n')
+    f.write('prduced ' + strftime("%Y-%m-%d %H:%M:%S") + '\n')
+    hp_obj.plot_win_grades()
+    plt.savefig('data_sets/rostlab_db/prediction/' + entry_info['name'] + '.png')
+    plt.close()
+    f.close()
 
 
 def topo_string_distance(tsp, tso):
@@ -104,16 +168,10 @@ def topo_string_distance(tsp, tso):
     j = len(tso)-1
     while tso[j].lower() == 'u': j -= 1
     score['c_term_obs'] = 'in' if tso[j] == '1' else 'out' if tso[j] != '0' else 'unknown'
-    ### determine if topologies agree, or unknown
-    score['topo_correct'] = True if score['n_term_obs'] == score['n_term_pre'] and \
-        score['c_term_obs'] == score['c_term_pre'] else False \
-        if (score['n_term_obs'] != 'unknown' and score['c_term_obs'] != 'unknown') else 'unknown'
-    ### if either terminus of the observed topo is unknown, correctness is determined by the other side and TM num
-    if (score['topo_correct'] == 'unknown' and score['tm_num_obs'] == score['tm_num_pre']) and \
-            (score['n_term_obs'] == score['n_term_pre'] or score['c_term_obs'] == score['c_term_pre']):
-        score['topo_correct'] = True
-    else:
-        score['topo_correct'] = False
+    if tso[0] == 'H' or tso[0] == 'h':
+        score['tm_num_obs'] += 1
+    if tsp[0] == 'H' or tso[0] == 'h':
+        score['tm_num_pre'] += 1
     ### compare topo-strings pos by pos
     for i in range(len(tsp)):
         if (tsp[i] == '1' or tsp[i] == '2' or tsp[i] == '0') and (tso[i] == 'H' or tso[i] == 'h'):
@@ -128,12 +186,23 @@ def topo_string_distance(tsp, tso):
         elif (tsp[i] == '0' or tsp[i] == '1' or tsp[i] == '2') and \
                 (tso[i] == '0' or tso[i] == '1' or tso[i] == '2' or tso[i] == 'u'):
             score['non_tm_overlapp'] += 1
-            score['aln'] += '|'
+            score['aln'] += '|' if tso[i] == tsp[i] else '\\'
         if i > 0:
             if (tsp[i] == 'H' or tsp[i] == 'h') and (tsp[i-1] == '0' or tsp[i-1] == '1' or tsp[i-1] == '2'):
                 score['tm_num_pre'] += 1
             if (tso[i] == 'H' or tso[i] == 'h') and (tso[i-1] == '0' or tso[i-1] == '1' or tso[i-1] == '2'):
                 score['tm_num_obs'] += 1
+    score['tm_agree'] = True if score['tm_num_pre'] == score['tm_num_obs'] else False
+    ### determine if topologies agree, or unknown
+    score['topo_correct'] = True if score['n_term_obs'] == score['n_term_pre'] and \
+        score['c_term_obs'] == score['c_term_pre'] else False \
+        if (score['n_term_obs'] != 'unknown' and score['c_term_obs'] != 'unknown') else 'unknown'
+    ### if either terminus of the observed topo is unknown, correctness is determined by the other side and TM num
+    if score['topo_correct'] == 'unknown' and score['tm_num_obs'] == score['tm_num_pre']:
+        if score['n_term_obs'] == score['n_term_pre'] or score['c_term_obs'] == score['c_term_pre']:
+            score['topo_correct'] = True
+        else:
+            score['topo_correct'] = False
     return score
 
 
@@ -259,7 +328,8 @@ def parse_rostlab_db():
             continue
         split = c.split()
         name = split[0].split('|')[0]
-        results[name] = {'name': name, 'seq': split[1].upper(), 'topo_string': split[2]}
+        results[name] = {'name': name, 'seq': split[1].upper(), 'topo_string': split[2],
+                         'pdb': split[0].split('|')[1].split(':')[0], 'chain': split[0].split('|')[1].split(':')[1][0]}
     f.close()
     return results
 

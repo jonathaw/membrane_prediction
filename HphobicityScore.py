@@ -156,7 +156,7 @@ class HphobicityScore():
         plt.xlabel('Sequence Position')
         plt.ylabel('Energy')
         plt.title('Win Grades Energy Plot for %s' % self.name)
-        plt.show()
+        # plt.show()
 
     def topo_determine(self):
         """

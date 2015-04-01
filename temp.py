@@ -1,1 +1,7 @@
-print [[0 for j in range(35)] for i in range(20)]
+i = 0
+while i < 100:
+    if not 10 < i < 20:
+        i += 1
+        continue
+    print i
+    i += 1
