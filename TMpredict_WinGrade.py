@@ -72,29 +72,69 @@ def main():
     param_list = [0, 20, 0.2, 3]
     rostlab_db_dict = parse_rostlab_db()
     for name, entry in rostlab_db_dict.items():
-        if name == 'p00423':
+        if name == 'p0a6m2':
             print entry
             temp = HphobicityScore(name, entry['seq'], 'data_sets/rostlab_db/psipred/'+name+'.ss2', hydrophobicity_polyval, param_list)
             print temp.topo_best
             topo_string = topo_string_rostlab_format(temp.topo_best, entry['seq'])
-            print topo_string_distance(topo_string, entry['topo_string'])
+            print topo_string
+            dist = topo_string_distance(topo_string, entry['topo_string'])
+            print dist
+            print entry['topo_string']
+            print dist['aln']
+            print topo_string
 
 
-def topo_string_distance(ts1, ts2):
+def topo_string_distance(tsp, tso):
     '''
-    :param ts1: a topo string
-    :param ts2: a topo string
+    :param tsp: the predicted topo string
+    :param tso: the observed topo string
     :return:number of disagreements (1/2/0 to h/H difference. disregarding U)
     '''
-    score = 0
-    assert len(ts1) == len(ts2), 'topo string length2 differ, ts1 %i, ts2 %i' % (len(ts1), len(ts2))
-    for i in range(len(ts1)):
-        if (ts1[i] == '1' or ts1[i] == '2' or ts1[i] == '0') and (ts2[i] == 'H' or ts2[i] == 'h'):
-            score += 1
-        if (ts2[i] == '1' or ts2[i] == '2' or ts2[i] == '0') and (ts1[i] == 'H' or ts1[i] == 'h'):
-            score += 1
+    score = {'tm_overlapp': 0, 'non_tm_overlapp': 0, 'pre_reminder': 0, 'obs_reminder': 0, 'tm_num_pre': 0,
+             'tm_num_obs': 0, 'aln': ''}
+    assert len(tsp) == len(tso), 'topo string length2 differ, ts1 %i, ts2 %i' % (len(tsp), len(tso))
+    ### determine predicted N' and C' topology
+    score['n_term_pre'] = 'in' if tsp[0] == '1' else 'out'
+    score['c_term_pre'] = 'in' if tsp[-1] == '1' else 'out'
+    ### determine observed N' and C' topology
+    j = 0
+    while tso[j].lower() == 'u': j += 1
+    score['n_term_obs'] = 'in' if tso[j] == '1' else 'out' if tso[j] != '0' else 'unknown'
+    j = len(tso)-1
+    while tso[j].lower() == 'u': j -= 1
+    score['c_term_obs'] = 'in' if tso[j] == '1' else 'out' if tso[j] != '0' else 'unknown'
+    ### determine if topologies agree, or unknown
+    score['topo_correct'] = True if score['n_term_obs'] == score['n_term_pre'] and \
+        score['c_term_obs'] == score['c_term_pre'] else False \
+        if (score['n_term_obs'] != 'unknown' and score['c_term_obs'] != 'unknown') else 'unknown'
+    ### if either terminus of the observed topo is unknown, correctness is determined by the other side and TM num
+    if (score['topo_correct'] == 'unknown' and score['tm_num_obs'] == score['tm_num_pre']) and \
+            (score['n_term_obs'] == score['n_term_pre'] or score['c_term_obs'] == score['c_term_pre']):
+        score['topo_correct'] = True
+    else:
+        score['topo_correct'] = False
+    ### compare topo-strings pos by pos
+    for i in range(len(tsp)):
+        if (tsp[i] == '1' or tsp[i] == '2' or tsp[i] == '0') and (tso[i] == 'H' or tso[i] == 'h'):
+            score['obs_reminder'] += 1
+            score['aln'] += '^'
+        elif (tso[i] == '1' or tso[i] == '2' or tso[i] == '0') and (tsp[i] == 'H' or tsp[i] == 'h'):
+            score['pre_reminder'] += 1
+            score['aln'] += '#'
+        elif (tsp[i] == 'h' or tsp[i] == 'H') and (tso[i] == 'h' or tso[i] == 'H'):
+            score['tm_overlapp'] += 1
+            score['aln'] += '|'
+        elif (tsp[i] == '0' or tsp[i] == '1' or tsp[i] == '2') and \
+                (tso[i] == '0' or tso[i] == '1' or tso[i] == '2' or tso[i] == 'u'):
+            score['non_tm_overlapp'] += 1
+            score['aln'] += '|'
+        if i > 0:
+            if (tsp[i] == 'H' or tsp[i] == 'h') and (tsp[i-1] == '0' or tsp[i-1] == '1' or tsp[i-1] == '2'):
+                score['tm_num_pre'] += 1
+            if (tso[i] == 'H' or tso[i] == 'h') and (tso[i-1] == '0' or tso[i-1] == '1' or tso[i-1] == '2'):
+                score['tm_num_obs'] += 1
     return score
-
 
 
 def topo_string_rostlab_format(topo, seq):
@@ -103,10 +143,11 @@ def topo_string_rostlab_format(topo, seq):
     :param seq: the sequence
     :return:a string describing the topology in rostlab's format where 1:inside, 2: outdise H: TM helix
     '''
+    global hydrophobicity_polyval
     topo_string = ''
-    end_of_last = 0
+    last_tm = WinGrade(0, 0, 'fwd', '', hydrophobicity_polyval)
     for tm in topo:
-        topo_string += '1' * (tm.begin-end_of_last) if tm.direction == 'fwd' else '2' * (tm.begin-end_of_last)
+        topo_string += '1' * (tm.begin-last_tm.end) if tm.direction == 'fwd' else '2' * (tm.begin-last_tm.end)
         topo_string += 'H' * (tm.end - tm.begin)
         last_tm = tm
     topo_string += '2' * (len(seq)-last_tm.end) if last_tm.direction == 'fwd' else '1' * (len(seq)-last_tm.end)
