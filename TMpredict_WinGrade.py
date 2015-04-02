@@ -394,8 +394,13 @@ def parse_rostlab_db():
             continue
         split = c.split()
         name = split[0].split('|')[0]
-        results[name] = {'name': name, 'seq': split[1].upper(), 'topo_string': split[2],
-                         'pdb': split[0].split('|')[1].split(':')[0], 'chain': split[0].split('|')[1].split(':')[1][0]}
+        tech = split[0].split('|')[1].split('_')[1]
+        if name not in results.keys():
+            results[name] = {'name': name, 'seq': split[1].upper(), 'topo_string': split[2],
+                             'pdb': split[0].split('|')[1].split(':')[0], 'chain': split[0].split('|')[1].split(':')[1][0],
+                             tech: split[2]}
+        else:
+            results[name][tech] = split[2]
     f.close()
     return results
 

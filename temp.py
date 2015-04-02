@@ -1,7 +1,7 @@
-i = 0
-while i < 100:
-    if not 10 < i < 20:
-        i += 1
-        continue
-    print i
-    i += 1
+from TMpredict_WinGrade import parse_rostlab_db
+ttt = parse_rostlab_db()
+# print ttt
+print len(ttt)
+for k, v in ttt.items():
+    if 'pdbtm' not in v.keys() or 'opm' not in v.keys():
+        print k
