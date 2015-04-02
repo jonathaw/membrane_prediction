@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+### taken from Rostlab's paper: http://ideone.com/fork/bJl72t
 use strict;
 use List::Util qw[max];
 

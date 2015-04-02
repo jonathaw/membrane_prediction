@@ -6,6 +6,13 @@ def main():
     import subprocess
     import re
     global hydrophobicity_polyval
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-hp_threshold', default=0.0, type=float)
+    parser.add_argument('-min_length', default=20, type=int)
+    parser.add_argument('-psi_helix', default=0.2, type=float)
+    parser.add_argument('-psi_res_num', default=3, type=int)
+    param_list = vars(parser.parse_args())
     # import topdb_functions
     hydrophobicity_polyval = MakeHydrophobicityGrade()
     # temp = HphobicityScore('te
@@ -72,36 +79,49 @@ def main():
 
     ### parsing and running rostlab_db entries:
     # param_list = [0, 20, 0.2, 3]
-    param_list = [0, 20, 0.2, 5]
+    # param_list = [0, 20, 0.2, 5]
     rostlab_db_dict = parse_rostlab_db()
     # results = {'tm_num_correct': 0, 'tm_num_incorrect': 0, 'topo_correct': 0, 'topo_incorrect': 0}
     Q_ok_results = 0
     proteins = 0
+    protein_names = []
     num = 0
+    num_topo_correct = 0
     for name, entry in rostlab_db_dict.items():
-        # if name != 'p11350':
+        # if name != 'p02722':
         #     continue
         if float(entry['topo_string'].count('u') + entry['topo_string'].count('U'))/float(len(entry['topo_string'])) \
                 > 0.2:
+            print 'skipping entry due to UUUUUUU'
             continue
-        if not -1 < num < 100:
+        if not -1 < num < 150:
             num += 1
             continue
-        # print entry
-        temp = HphobicityScore(name, entry['seq'], 'data_sets/rostlab_db/psipred/'+name+'.ss2', hydrophobicity_polyval, param_list)
-
+        print entry
+        try:
+            temp = HphobicityScore(name, entry['seq'], '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/psipred/'+name+'.ss2', hydrophobicity_polyval, param_list)
+        except:
+            continue
         # print temp.topo_best
         topo_string = topo_string_rostlab_format(temp.topo_best, entry['seq'])
 
-        ok_pred_tm = int(subprocess.Popen(['perl', './rostlab_evaluator.pl', entry['topo_string'], topo_string],
+        # ok_pred_tm = int(subprocess.Popen(['perl', './rostlab_evaluator.pl', entry['topo_string'], topo_string],
+        #                               stdout=subprocess.PIPE).stdout.read().split()[-1])
+        ok_pred_tm = int(subprocess.Popen(['perl', '/home/labs/fleishman/jonathaw/membrane_prediciton/rostlab_evaluator.pl', entry['topo_string'], topo_string],
                                       stdout=subprocess.PIPE).stdout.read().split()[-1])
         pred_tm = len(temp.topo_best)
         obs_tm = len(re.findall('[1u20LU]h', entry['topo_string']))
-        Q_ok_results += 1 if (ok_pred_tm/obs_tm == 1 and ok_pred_tm/pred_tm == 1) else 0
+        if obs_tm != 0 and pred_tm != 0:
+            Q_ok_results += 1 if (ok_pred_tm/obs_tm == 1 and ok_pred_tm/pred_tm == 1) else 0
+        elif obs_tm == pred_tm:
+            Q_ok_results += 1
         proteins += 1
-        print entry['topo_string']
-        print topo_string
+        protein_names.append(entry['name'])
+        # print entry['topo_string']
+        # print topo_string
         dist = topo_string_distance(topo_string, entry['topo_string'])
+        topo_correct = do_topos_agree_rostlab(pred_tm, obs_tm, entry['topo_string'], topo_string)
+        num_topo_correct += 1 if topo_correct else 0
         # print dist
         # print entry['topo_string']
         # print dist['aln']
@@ -113,20 +133,35 @@ def main():
         # print results
         num += 1
         # temp.plot_win_grades()
-        results_writer(dist, entry, topo_string, temp, param_list, ok_pred_tm, pred_tm, obs_tm)
+        results_writer(dist, entry, topo_string, temp, param_list, ok_pred_tm, pred_tm, obs_tm, topo_correct)
     # print results
-    print Q_ok_results
-    print 'Q_ok is', 100 * float(Q_ok_results)/float(proteins)
+    # print Q_ok_results
+    Q_ok = 100.0 * float(Q_ok_results)/float(proteins)
+    precent_topo_correct = float(num_topo_correct) * 100.0 / float(proteins)
+    # o = open('data_sets/rostlab_db/ROC/'+'_'.join(str(a) for a in param_list.values())+'.roc', 'wr+')
+    o = open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/ROC/'+'_'.join(str(a) for a in param_list.values())+'.roc', 'wr+')
+    o.write('hp_threshold %f\n' % param_list['hp_threshold'])
+    o.write('min_length %i\n' % param_list['min_length'])
+    o.write('psi_helix %f\n' % param_list['psi_helix'])
+    o.write('psi_res_nume %i\n' % param_list['psi_res_num'])
+    o.write('# proteins %i\n' % proteins)
+    o.write('proteins: '+' '.join(a for a in protein_names)+'\n')
+    o.write('Q_ok %f\n' % Q_ok)
+    o.write('# correct topo %i, precentage %f\n' % (num_topo_correct, precent_topo_correct))
+    o.close()
 
 
-def results_writer(topo_score, entry_info, topo_string, hp_obj, param_list, ok_pred_tm, pred_tm, obs_tm):
+def results_writer(topo_score, entry_info, topo_string, hp_obj, param_list, ok_pred_tm, pred_tm, obs_tm, topo_correct):
     import matplotlib.pyplot as plt
     from time import strftime
-    f = open('data_sets/rostlab_db/prediction/' + entry_info['name'] + '.prd', 'wr+')
+    # f = open('data_sets/rostlab_db/prediction/' + entry_info['name'] + '.prd', 'wr+')
+    f = open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/ROC/ROC_'+str(param_list['hp_threshold'])+'_'+str(param_list['min_length'])+'_'+str(param_list['psi_helix'])+'_'+str(param_list['psi_res_num'])+'/'+entry_info['name'] + '.prd', 'wr+')
     f.write('uniprot name\t%s\n' % entry_info['name'])
     f.write('PDB name    \t%s %s\n' % (entry_info['pdb'], entry_info['chain']))
-    f.write('parameters: HP threshold %f MIN length %i psi helix %f psi res num %i\n' % (param_list[0], param_list[1],
-                                                                                         param_list[2], param_list[3]))
+    f.write('hp_threshold %f\n' % param_list['hp_threshold'])
+    f.write('min_length %i\n' % param_list['min_length'])
+    f.write('psi_helix %f\n' % param_list['psi_helix'])
+    f.write('psi_res_nume %i\n' % param_list['psi_res_num'])
     f.write('#TM observed %-3i\n#TM predicted %-3i\n' % (topo_score['tm_num_obs'], topo_score['tm_num_pre']))
     f.write('#TM agrees\n' if topo_score['tm_agree'] else '#TM DISAGREE\n')
     f.write('topo correct\n' if topo_score['topo_correct'] else 'topo INCORRECT\n')
@@ -140,13 +175,43 @@ def results_writer(topo_score, entry_info, topo_string, hp_obj, param_list, ok_p
     f.write('\n\npredicted TM (Q) %i\n' % pred_tm)
     f.write('observed TM (Q) %i\n' % obs_tm)
     f.write('OK predicted TM %i\n' % ok_pred_tm)
-    f.write('Qok or not ' + str(True) if (ok_pred_tm/obs_tm == 1 and ok_pred_tm/pred_tm == 1) else str(False))
+    if obs_tm != 0 and pred_tm != 0:
+        res = ok_pred_tm/obs_tm == 1 and ok_pred_tm/pred_tm == 1
+        f.write('Qok or not %r\n' %res)
+    else:
+        f.write('Qok cannot be calculated with pred TM %i and obs TM %i\n' % (pred_tm, obs_tm))
+        if obs_tm == pred_tm:
+            f.write('Qok considered True, #TM equal\n')
+    f.write('Topo is %r\n' % topo_correct)
     f.write('\n')
-    f.write('prduced ' + strftime("%Y-%m-%d %H:%M:%S") + '\n')
-    hp_obj.plot_win_grades()
-    plt.savefig('data_sets/rostlab_db/prediction/' + entry_info['name'] + '.png')
+    f.write('produced ' + strftime("%Y-%m-%d %H:%M:%S") + '\n')
+    # hp_obj.plot_win_grades()
+    # plt.savefig('data_sets/rostlab_db/prediction/' + entry_info['name'] + '.png')
+    # plt.savefig('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/prediction/' + entry_info['name'] + '.png')
     plt.close()
     f.close()
+
+
+def do_topos_agree_rostlab(pred_tm, obs_tm, obs_ts, pred_ts):
+    j = 0
+    while obs_ts[j].lower() == 'u': j += 1
+    n_term_obs = 'in' if obs_ts[j] == '1' else 'out' if obs_ts[j] != '0' else 'unknown'
+    j = len(obs_ts)-1
+    while obs_ts[j].lower() == 'u': j -= 1
+    c_term_obs = 'in' if obs_ts[j] == '1' else 'out' if obs_ts[j] != '0' else 'unknown'
+    j = 0
+    while pred_ts[j].lower() == 'u': j += 1
+    n_term_pred = 'in' if pred_ts[j] == '1' else 'out' if (pred_ts[j] != '0' and pred_ts[j].lower() != 'u') else 'unknown'
+    j = len(pred_ts)-1
+    while pred_ts[j].lower() == 'u': j-=1
+    c_term_pred = 'in' if pred_ts[j] == '1' else 'out' if (pred_ts[j] != '0' and pred_ts[j].lower() != 'u') else 'unknown'
+    if pred_tm == obs_tm and n_term_obs == n_term_pred and c_term_obs == c_term_pred:
+        return True
+    if (n_term_pred == 'unknown' or c_term_pred == 'unknown' or n_term_obs == 'unknown' or c_term_obs == 'unknown'):
+        if pred_tm == obs_tm and ((n_term_pred != 'unknown' and n_term_pred == c_term_pred) or
+                                      (c_term_pred != 'unknown' and c_term_pred == c_term_obs)):
+            return True
+    return False
 
 
 def topo_string_distance(tsp, tso):
@@ -231,8 +296,8 @@ def MakeHydrophobicityGrade():
     # hydrophobicity_grade = open('Poly_Values.txt', 'r')
     # hydrophobicity_grade = open('poly_value_11.2.txt', 'r')
     # hydrophobicity_grade = open('poly_vals_23.2.txt', 'r')
-    # hydrophobicity_grade = open('/home/labs/fleishman/jonathaw/membrane_prediciton/poly_vals_25.2.txt', 'r')
-    hydrophobicity_grade = open('./poly_vals_25.2.txt', 'r')
+    hydrophobicity_grade = open('/home/labs/fleishman/jonathaw/membrane_prediciton/poly_vals_25.2.txt', 'r')
+    # hydrophobicity_grade = open('./poly_vals_25.2.txt', 'r')
     hydrophobicity_polyval = {}
     for line in hydrophobicity_grade:
         split = line.split()
@@ -320,7 +385,8 @@ def parse_v_db():
 
 
 def parse_rostlab_db():
-    f = open('./data_sets/rostlab_db/rostlab_db.txt', 'r')
+    # f = open('./data_sets/rostlab_db/rostlab_db.txt', 'r')
+    f = open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/rostlab_db.txt', 'r')
     cont_split = f.read().lower().split('>')
     results = {}
     for c in cont_split:

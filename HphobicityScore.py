@@ -8,11 +8,11 @@ class HphobicityScore():
         :return: a stack of WinGrade instances, and their utilities
         '''
         global HP_THRESHOLD, INC_MAX, MIN_LENGTH, PSI_HELIX, PSI_RES_NUM
-        HP_THRESHOLD = param_list[0]
+        HP_THRESHOLD = param_list['hp_threshold']
         INC_MAX = 8
-        MIN_LENGTH = param_list[1]
-        PSI_HELIX = param_list[2]
-        PSI_RES_NUM = param_list[3]
+        MIN_LENGTH = param_list['min_length']
+        PSI_HELIX = param_list['psi_helix']
+        PSI_RES_NUM = param_list['psi_res_num']
         self.name = name
         self.seq = seq
         self.ss2_file = ss2_file

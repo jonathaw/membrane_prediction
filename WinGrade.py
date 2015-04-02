@@ -20,8 +20,8 @@ class WinGrade():
         # self.grade_norm = self.grade / (self.end-self.begin-19)
 
     def __str__(self):
-        return '%-4i to %-4i in %3s => %10f %10f %-35s' % (self.begin, self.end, self.direction, self.grade,
-                                                           self.grade_norm, self.seq)
+        return '%-4i to %-4i in %3s => %10f %-35s' % (self.begin, self.end, self.direction, self.grade,
+                                                           self.seq)
 
     def __repr__(self):
         return '%-4i to %-4i in %3s => %10f %-35s' % (self.begin, self.end, self.direction, self.grade, self.seq)
