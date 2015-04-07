@@ -15,6 +15,8 @@ def main():
     param_list = vars(parser.parse_args())
     # import topdb_functions
     hydrophobicity_polyval = MakeHydrophobicityGrade()
+    ### best results from 6.4 ROC: for pdbtm: hp_threshold=-3.0, min_length=19(use 18), psi_helix=0.2, psi_res_num=2 > ROC_-3.0_18_0.2_2
+    ### best results from 6.4 ROC: for opm:   hp_threshold=-3.0, min_length=20(use 18), psi_helix=0.2, psi_res_num=1 > ROC_-3.0_18_0.2_1
     # temp = HphobicityScore('te
     # mp', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
     # temp = HphobicityScore('temp', 'YSYRFVWWAISTAAMLYILY')
@@ -82,11 +84,11 @@ def main():
     # param_list = [0, 20, 0.2, 5]
     rostlab_db_dict = parse_rostlab_db()
     # results = {'tm_num_correct': 0, 'tm_num_incorrect': 0, 'topo_correct': 0, 'topo_incorrect': 0}
-    Q_ok_results = 0
-    proteins = 0
+    Q_ok_results = {'opm': 0, 'pdbtm': 0}
+    proteins, num = 0, 0
     protein_names = []
-    num = 0
-    num_topo_correct = 0
+    Q_ok, percent_topo_correct = {}, {}
+    num_topo_correct = {'opm': 0, 'pdbtm': 0}
     for name, entry in rostlab_db_dict.items():
         # if name != 'p02722':
         #     continue
@@ -97,47 +99,46 @@ def main():
         if not -1 < num < 150:
             num += 1
             continue
-        print entry
+        # print entry
         try:
             temp = HphobicityScore(name, entry['seq'], '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/psipred/'+name+'.ss2', hydrophobicity_polyval, param_list)
         except:
             continue
-        # print temp.topo_best
         topo_string = topo_string_rostlab_format(temp.topo_best, entry['seq'])
-
+        entry_results = {}
         # ok_pred_tm = int(subprocess.Popen(['perl', './rostlab_evaluator.pl', entry['topo_string'], topo_string],
         #                               stdout=subprocess.PIPE).stdout.read().split()[-1])
-        ok_pred_tm = int(subprocess.Popen(['perl', '/home/labs/fleishman/jonathaw/membrane_prediciton/rostlab_evaluator.pl', entry['topo_string'], topo_string],
-                                      stdout=subprocess.PIPE).stdout.read().split()[-1])
+        # ok_pred_tm = int(subprocess.Popen(['perl', '/home/labs/fleishman/jonathaw/membrane_prediciton/rostlab_evaluator.pl', entry['topo_string'], topo_string],
+        #                               stdout=subprocess.PIPE).stdout.read().split()[-1])
         pred_tm = len(temp.topo_best)
-        obs_tm = len(re.findall('[1u20LU]h', entry['topo_string']))
-        if obs_tm != 0 and pred_tm != 0:
-            Q_ok_results += 1 if (ok_pred_tm/obs_tm == 1 and ok_pred_tm/pred_tm == 1) else 0
-        elif obs_tm == pred_tm:
-            Q_ok_results += 1
+        entry_results['pdbtm'] = result_comparer(entry['pdbtm'], topo_string, pred_tm)
+        entry_results['opm'] = result_comparer(entry['opm'], topo_string, pred_tm)
+        # obs_tm = len(re.findall('[1u20LU]h', entry['topo_string']))
+        # if obs_tm != 0 and pred_tm != 0:
+        #     Q_ok_results += 1 if (ok_pred_tm/obs_tm == 1 and ok_pred_tm/pred_tm == 1) else 0
+        # elif obs_tm == pred_tm:
+        #     Q_ok_results += 1
+
+        # dist = topo_string_distance(topo_string, entry['topo_string'])
+        # topo_correct = do_topos_agree_rostlab(pred_tm, obs_tm, entry['topo_string'], topo_string)
+        num_topo_correct['pdbtm'] += 1 if entry_results['pdbtm']['topo_correct'] else 0
+        num_topo_correct['opm'] += 1 if entry_results['opm']['topo_correct'] else 0
+        Q_ok_results['pdbtm'] += 1 if entry_results['pdbtm']['Qok'] else 0
+        Q_ok_results['opm'] += 1 if entry_results['opm']['Qok'] else 0
+        # temp.plot_win_grades()
         proteins += 1
         protein_names.append(entry['name'])
-        # print entry['topo_string']
-        # print topo_string
-        dist = topo_string_distance(topo_string, entry['topo_string'])
-        topo_correct = do_topos_agree_rostlab(pred_tm, obs_tm, entry['topo_string'], topo_string)
-        num_topo_correct += 1 if topo_correct else 0
-        # print dist
-        # print entry['topo_string']
-        # print dist['aln']
-        # print topo_string
-        # results['tm_num_correct'] += 1 if dist['tm_agree'] else 0
-        # results['tm_num_incorrect'] += 1 if not dist['tm_agree'] else 0
-        # results['topo_correct'] += 1 if dist['topo_correct'] else 0
-        # results['topo_incorrect'] += 1 if not dist['topo_correct'] else 0
-        # print results
+        # print 'entrry results', entry_results
+        # print 'entry', entry
+        # print 'topop string', topo_string
+        results_writer(entry_results, entry, topo_string, temp, param_list, pred_tm)
         num += 1
-        # temp.plot_win_grades()
-        results_writer(dist, entry, topo_string, temp, param_list, ok_pred_tm, pred_tm, obs_tm, topo_correct)
     # print results
     # print Q_ok_results
-    Q_ok = 100.0 * float(Q_ok_results)/float(proteins)
-    precent_topo_correct = float(num_topo_correct) * 100.0 / float(proteins)
+    Q_ok['pdbtm'] = 100.0 * float(Q_ok_results['pdbtm'])/float(proteins)
+    Q_ok['opm'] = 100.0 * float(Q_ok_results['opm'])/float(proteins)
+    percent_topo_correct['pdbtm'] = float(num_topo_correct['pdbtm']) * 100.0 / float(proteins)
+    percent_topo_correct['opm'] = float(num_topo_correct['opm']) * 100.0 / float(proteins)
     # o = open('data_sets/rostlab_db/ROC/'+'_'.join(str(a) for a in param_list.values())+'.roc', 'wr+')
     o = open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/ROC/'+'_'.join(str(a) for a in param_list.values())+'.roc', 'wr+')
     o.write('hp_threshold %f\n' % param_list['hp_threshold'])
@@ -145,13 +146,34 @@ def main():
     o.write('psi_helix %f\n' % param_list['psi_helix'])
     o.write('psi_res_nume %i\n' % param_list['psi_res_num'])
     o.write('# proteins %i\n' % proteins)
-    o.write('proteins: '+' '.join(a for a in protein_names)+'\n')
-    o.write('Q_ok %f\n' % Q_ok)
-    o.write('# correct topo %i, precentage %f\n' % (num_topo_correct, precent_topo_correct))
+    o.write('proteins: '+' '.join(a for a in protein_names)+'\n\n')
+    for typer in ['pdbtm', 'opm']:
+        o.write('Results for %s\n' % typer)
+        o.write('Q_ok %f\n' % Q_ok[typer])
+        o.write('# correct topo %i, precentage %f\n\n' % (num_topo_correct[typer], percent_topo_correct[typer]))
     o.close()
 
 
-def results_writer(topo_score, entry_info, topo_string, hp_obj, param_list, ok_pred_tm, pred_tm, obs_tm, topo_correct):
+def result_comparer(obs_ts, pred_ts, pred_tm):
+    import subprocess
+    import re
+    result = {}
+    ok_pred_tm = int(subprocess.Popen(['perl', '/home/labs/fleishman/jonathaw/membrane_prediciton/rostlab_evaluator.pl', obs_ts, pred_ts],
+                                      stdout=subprocess.PIPE).stdout.read().split()[-1])
+    obs_tm = len(re.findall('[1u20LU]h', obs_ts))
+    if pred_tm == ok_pred_tm and obs_tm == ok_pred_tm:
+        result['Qok'] = True
+    else:
+        result['Qok'] = False
+    result['tm_agree'] = True if obs_tm == pred_tm else False
+    result['topo_comp'] = topo_string_distance(pred_ts, obs_ts)
+    result['topo_correct'] = do_topos_agree_rostlab(pred_tm, obs_tm, obs_ts, pred_ts)
+    result['obs_tm'] = obs_tm
+    result['ok_pred_tm'] = ok_pred_tm
+    return result
+
+
+def results_writer(entry_results, entry_info, topo_string, hp_obj, param_list, pred_tm):
     import matplotlib.pyplot as plt
     from time import strftime
     # f = open('data_sets/rostlab_db/prediction/' + entry_info['name'] + '.prd', 'wr+')
@@ -162,28 +184,31 @@ def results_writer(topo_score, entry_info, topo_string, hp_obj, param_list, ok_p
     f.write('min_length %i\n' % param_list['min_length'])
     f.write('psi_helix %f\n' % param_list['psi_helix'])
     f.write('psi_res_nume %i\n' % param_list['psi_res_num'])
-    f.write('#TM observed %-3i\n#TM predicted %-3i\n' % (topo_score['tm_num_obs'], topo_score['tm_num_pre']))
-    f.write('#TM agrees\n' if topo_score['tm_agree'] else '#TM DISAGREE\n')
-    f.write('topo correct\n' if topo_score['topo_correct'] else 'topo INCORRECT\n')
-    f.write('topo best energy        %f\n' % hp_obj.topo_best_val)
-    f.write('topo second best energy %f\n' % hp_obj.topo_sec_best_val)
     f.write('topo confidence %f\n' % (hp_obj.topo_best_val / hp_obj.topo_sec_best_val))
-    f.write('sequence %s\n' % entry_info['seq'])
-    f.write('obs topo %s\n' % entry_info['topo_string'])
-    f.write('aln topo %s\n' % topo_score['aln'])
-    f.write('pre topo %s\n' % topo_string)
-    f.write('\n\npredicted TM (Q) %i\n' % pred_tm)
-    f.write('observed TM (Q) %i\n' % obs_tm)
-    f.write('OK predicted TM %i\n' % ok_pred_tm)
-    if obs_tm != 0 and pred_tm != 0:
-        res = ok_pred_tm/obs_tm == 1 and ok_pred_tm/pred_tm == 1
-        f.write('Qok or not %r\n' %res)
-    else:
-        f.write('Qok cannot be calculated with pred TM %i and obs TM %i\n' % (pred_tm, obs_tm))
-        if obs_tm == pred_tm:
-            f.write('Qok considered True, #TM equal\n')
-    f.write('Topo is %r\n' % topo_correct)
-    f.write('\n')
+    for typer in ['pdbtm', 'opm']:
+        f.write('Results for observed %s\n' % typer)
+        f.write('#TM observed %-3i\n#TM predicted %-3i\n' % (entry_results[typer]['obs_tm'], pred_tm))
+        f.write('#TM agrees\n' if entry_results[typer]['tm_agree'] else '#TM DISAGREE\n')
+        f.write('topo correct\n' if entry_results[typer]['topo_correct'] else 'topo INCORRECT\n')
+        f.write('topo best energy        %f\n' % hp_obj.topo_best_val)
+        f.write('topo second best energy %f\n' % hp_obj.topo_sec_best_val)
+        f.write('sequence %s\n' % entry_info['seq'])
+        f.write('obs topo %s\n' % entry_info[typer])
+        f.write('aln topo %s\n' % entry_results[typer]['topo_comp']['aln'])
+        f.write('pre topo %s\n' % topo_string)
+        f.write('\n\npredicted TM (Q) %i\n' % pred_tm)
+        f.write('observed TM (Q) %i\n' % entry_results[typer]['obs_tm'])
+        f.write('OK predicted TM %i\n' % entry_results[typer]['ok_pred_tm'])
+        if entry_results[typer]['obs_tm'] != 0 and pred_tm != 0:
+            res = entry_results[typer]['ok_pred_tm']/entry_results[typer]['obs_tm'] == 1 and \
+                  entry_results[typer]['ok_pred_tm']/pred_tm == 1
+            f.write('Qok or not %r\n' %res)
+        else:
+            f.write('Qok cannot be calculated with pred TM %i and obs TM %i\n' % (pred_tm, entry_results[typer]['obs_tm']))
+            if entry_results[typer]['obs_tm'] == pred_tm:
+                f.write('Qok considered True, #TM equal\n')
+        f.write('Topo is %r\n' % entry_results[typer]['topo_correct'])
+        f.write('\n')
     f.write('produced ' + strftime("%Y-%m-%d %H:%M:%S") + '\n')
     # hp_obj.plot_win_grades()
     # plt.savefig('data_sets/rostlab_db/prediction/' + entry_info['name'] + '.png')

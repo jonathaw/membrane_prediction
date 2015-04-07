@@ -2,237 +2,58 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6a73546c-b0e1-4c73-9c98-48c4af466cd3" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ROC_res_parser.py" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/1IWG_08:21.pml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/1IWG_09:47.pml" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/1brx_TM_temp.pse" afterPath="$PROJECT_DIR$/1BRX_TM_temp.pse" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/1e12_TM_temp.pse" afterPath="$PROJECT_DIR$/1E12_TM_temp.pse" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/p02945_TM_temp.pse" afterPath="$PROJECT_DIR$/P02945_TM_temp.pse" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/._.DS_Store" afterPath="$PROJECT_DIR$/._.DS_Store" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/._1brx_TM_plot.png" afterPath="$PROJECT_DIR$/examples/._1brx_TM_plot.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/._1c3w_TM_plot.png" afterPath="$PROJECT_DIR$/examples/._1c3w_TM_plot.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/._1yce_TM_plot.png" afterPath="$PROJECT_DIR$/examples/._1yce_TM_plot.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/._3g61_TM_plot.png" afterPath="$PROJECT_DIR$/examples/._3g61_TM_plot.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/._4j4q_TM_plot.png" afterPath="$PROJECT_DIR$/examples/._4j4q_TM_plot.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/._SW_database.csv" afterPath="$PROJECT_DIR$/._SW_database.csv" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/._database_new.csv" afterPath="$PROJECT_DIR$/._database_new.csv" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/1BRX_TM_temp.pse" afterPath="$PROJECT_DIR$/1BRX_TM_temp.pse" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/1E12_TM_temp.pse" afterPath="$PROJECT_DIR$/1E12_TM_temp.pse" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/1brx_TM.pse" afterPath="$PROJECT_DIR$/examples/1brx_TM.pse" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/1brx_TM_plot.png" afterPath="$PROJECT_DIR$/examples/1brx_TM_plot.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/1c3w_TM.png" afterPath="$PROJECT_DIR$/examples/1c3w_TM.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/1c3w_TM.pse" afterPath="$PROJECT_DIR$/examples/1c3w_TM.pse" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/1c3w_TM_plot.png" afterPath="$PROJECT_DIR$/examples/1c3w_TM_plot.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/1ehk_TM_temp.pse" afterPath="$PROJECT_DIR$/1ehk_TM_temp.pse" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/1iwg_TM_temp.pse" afterPath="$PROJECT_DIR$/1iwg_TM_temp.pse" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/1jb0_TM_temp.pse" afterPath="$PROJECT_DIR$/1jb0_TM_temp.pse" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/1yce_TM_plot.png" afterPath="$PROJECT_DIR$/examples/1yce_TM_plot.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/3g61_TM.png" afterPath="$PROJECT_DIR$/examples/3g61_TM.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/3g61_TM.pse" afterPath="$PROJECT_DIR$/examples/3g61_TM.pse" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/3g61_TM_plot.png" afterPath="$PROJECT_DIR$/examples/3g61_TM_plot.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/3g61_TM_temp.pse" afterPath="$PROJECT_DIR$/3g61_TM_temp.pse" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/4j4q_TM.png" afterPath="$PROJECT_DIR$/examples/4j4q_TM.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/4j4q_TM.pse" afterPath="$PROJECT_DIR$/examples/4j4q_TM.pse" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/4j4q_TM_plot.png" afterPath="$PROJECT_DIR$/examples/4j4q_TM_plot.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/4j4q_TM_temp.pse" afterPath="$PROJECT_DIR$/4j4q_TM_temp.pse" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/P02945_TM_temp.pse" afterPath="$PROJECT_DIR$/P02945_TM_temp.pse" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/p02699_TM_temp.pse" afterPath="$PROJECT_DIR$/p02699_TM_temp.pse" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/p02724_TM_temp.pse" afterPath="$PROJECT_DIR$/p02724_TM_temp.pse" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/p08194_TM_temp.pse" afterPath="$PROJECT_DIR$/p08194_TM_temp.pse" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/p16102_TM_temp.pse" afterPath="$PROJECT_DIR$/p16102_TM_temp.pse" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/p18401_TM_temp.pse" afterPath="$PROJECT_DIR$/p18401_TM_temp.pse" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/p31224_TM_temp.pse" afterPath="$PROJECT_DIR$/p31224_TM_temp.pse" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/p42196_TM_temp.pse" afterPath="$PROJECT_DIR$/p42196_TM_temp.pse" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/q56408_TM_temp.pse" afterPath="$PROJECT_DIR$/q56408_TM_temp.pse" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/q607g3_TM_temp.pse" afterPath="$PROJECT_DIR$/q607g3_TM_temp.pse" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/q8ysc4_TM_temp.pse" afterPath="$PROJECT_DIR$/q8ysc4_TM_temp.pse" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/q8zrp8_TM_temp.pse" afterPath="$PROJECT_DIR$/q8zrp8_TM_temp.pse" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/._Topo_DATA_ALL_new.xml" afterPath="$PROJECT_DIR$/._Topo_DATA_ALL_new.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/._p02699.pdb" afterPath="$PROJECT_DIR$/._p02699.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/._p02945.pdb" afterPath="$PROJECT_DIR$/._p02945.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/._p08194.pdb" afterPath="$PROJECT_DIR$/._p08194.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/._p16102.pdb" afterPath="$PROJECT_DIR$/._p16102.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/._p42196.pdb" afterPath="$PROJECT_DIR$/._p42196.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/._q8ysc4.pdb" afterPath="$PROJECT_DIR$/._q8ysc4.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/._q8zrp8.pdb" afterPath="$PROJECT_DIR$/._q8zrp8.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/._uniprot_sprot.xml" afterPath="$PROJECT_DIR$/._uniprot_sprot.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/._uniprot_sprot_1000.xml" afterPath="$PROJECT_DIR$/._uniprot_sprot_1000.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/.name" afterPath="$PROJECT_DIR$/.idea/.name" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/1BRX.pdb" afterPath="$PROJECT_DIR$/examples/1BRX.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/1brx.pdb" afterPath="$PROJECT_DIR$/1brx.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/1c3w.pdb" afterPath="$PROJECT_DIR$/1c3w.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/1c3w.pdb" afterPath="$PROJECT_DIR$/examples/1c3w.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/1e12.pdb" afterPath="$PROJECT_DIR$/1e12.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/1iwg.pdb" afterPath="$PROJECT_DIR$/1iwg.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/1jb0.pdb" afterPath="$PROJECT_DIR$/1jb0.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/1kpl.pdb" afterPath="$PROJECT_DIR$/1kpl.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/1s5l.pdb" afterPath="$PROJECT_DIR$/1s5l.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/1s5l.pdb" afterPath="$PROJECT_DIR$/examples/1s5l.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/1xio.pdb" afterPath="$PROJECT_DIR$/1xio.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/3g61.fasta" afterPath="$PROJECT_DIR$/3g61.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/3g61.horiz" afterPath="$PROJECT_DIR$/3g61.horiz" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/3g61.pdb" afterPath="$PROJECT_DIR$/3g61.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/3g61.pdb" afterPath="$PROJECT_DIR$/examples/3g61.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/3g61.ss2" afterPath="$PROJECT_DIR$/3g61.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/3g61.ss" afterPath="$PROJECT_DIR$/3g61.ss" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/4j4q.pdb" afterPath="$PROJECT_DIR$/4j4q.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/examples/4j4q.pdb" afterPath="$PROJECT_DIR$/examples/4j4q.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AbgT.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/AbgT.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AbgT.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/AbgT.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AbrB.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/AbrB.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AbrB.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/AbrB.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AcrB.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/AcrB.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AcrB.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/AcrB.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AcrD.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/AcrD.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AcrD.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/AcrD.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AcrF.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/AcrF.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AcrF.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/AcrF.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AefA.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/AefA.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AefA.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/AefA.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/Aer.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/Aer.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/Aer.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/Aer.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AfuB.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/AfuB.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AfuB.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/AfuB.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AgaC.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/AgaC.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AgaC.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/AgaC.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AgaD.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/AgaD.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AgaD.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/AgaD.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AgaW.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/AgaW.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AgaW.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/AgaW.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AlsC.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/AlsC.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AlsC.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/AlsC.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AmpE.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/AmpE.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AmpE.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/AmpE.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AmpG.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/AmpG.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AmpG.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/AmpG.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AmtB.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/AmtB.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AmtB.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/AmtB.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AnsP.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/AnsP.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AnsP.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/AnsP.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AppB.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/AppB.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AppB.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/AppB.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AppC.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/AppC.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AppC.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/AppC.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AqpZ.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/AqpZ.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AqpZ.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/AqpZ.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AraE.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/AraE.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AraE.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/AraE.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AraH.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/AraH.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AraH.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/AraH.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AraJ.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/AraJ.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AraJ.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/AraJ.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/ArcB.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/ArcB.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/ArcB.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/ArcB.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AroP.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/AroP.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AroP.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/AroP.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/ArsB.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/ArsB.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/ArsB.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/ArsB.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/ArtM.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/ArtM.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/ArtM.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/ArtM.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/ArtQ.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/ArtQ.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/ArtQ.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/ArtQ.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AscF.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/AscF.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AscF.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/AscF.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AtoE.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/AtoE.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AtoE.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/AtoE.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AtoS.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/AtoS.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AtoS.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/AtoS.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AtpB.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/AtpB.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AtpB.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/AtpB.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AtpE.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/AtpE.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AtpE.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/AtpE.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AtpI.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/AtpI.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/AtpI.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/AtpI.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/BacA.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/BacA.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/BacA.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/BacA.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/BaeS.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/BaeS.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/BaeS.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/BaeS.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/BarA.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/BarA.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/BarA.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/BarA.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/BasS.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/BasS.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/BasS.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/BasS.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/Bcr.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/Bcr.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/Bcr.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/Bcr.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/BetT.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/BetT.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/BetT.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/BetT.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/BglF.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/BglF.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/BglF.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/BglF.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/BrnQ.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/BrnQ.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/BrnQ.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/BrnQ.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/BtuC.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/BtuC.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/BtuC.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/BtuC.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/CadB.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/CadB.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/CadB.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/CadB.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/CaiT.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/CaiT.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/CaiT.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/CaiT.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/CcmB.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/CcmB.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/CcmB.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/CcmB.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/CcmC.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/CcmC.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/CcmC.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/CcmC.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/CcmF.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/CcmF.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/CcmF.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/CcmF.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/CcmH.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/CcmH.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/CcmH.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/CcmH.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/CdsA.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/CdsA.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/CdsA.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/CdsA.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/ChaA.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/ChaA.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/ChaA.ss2" afterPath="$PROJECT_DIR$/data_sets/VDB/ChaA.ss2" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HphobicityScore.py" afterPath="$PROJECT_DIR$/HphobicityScore.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Poly_Values.csv" afterPath="$PROJECT_DIR$/Poly_Values.csv" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Poly_Values.txt" afterPath="$PROJECT_DIR$/Poly_Values.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SW_database.csv" afterPath="$PROJECT_DIR$/SW_database.csv" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TMpredict.py" afterPath="$PROJECT_DIR$/TMpredict.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pred_obs_pymol.py" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/1BRX_TM_temp.pse" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/1E12_TM_temp.pse" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/1brx.pdb" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/1brx_TM_temp.pse" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/1c3w.pdb" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/1e12.pdb" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/1e12_TM_temp.pse" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/1ehk_TM_temp.pse" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/1iwg.pdb" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/1iwg_TM_temp.pse" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/1jb0.pdb" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/1jb0_TM_temp.pse" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/1kpl.pdb" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/1s5l.pdb" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/1xio.pdb" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/3g61.fasta" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/3g61.horiz" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/3g61.pdb" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/3g61.ss" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/3g61.ss2" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/3g61_TM_temp.pse" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/4j4q.pdb" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/4j4q_TM_temp.pse" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/P02945_TM_temp.pse" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/p02699.pdb" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/p02699_TM_temp.pse" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/p02724_TM_temp.pse" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/p02945.pdb" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/p02945_TM_temp.pse" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/p08194.pdb" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/p08194_TM_temp.pse" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/p16102.pdb" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/p16102_TM_temp.pse" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/p18401.pdb" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/p18401_TM_temp.pse" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/p31224.pdb" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/p31224_TM_temp.pse" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/p42196.pdb" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/p42196_TM_temp.pse" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/q56408.pdb" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/q56408_TM_temp.pse" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/q607g3.pdb" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/q607g3_TM_temp.pse" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/q8ysc4.pdb" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/q8ysc4_TM_temp.pse" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/q8zrp8.pdb" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/q8zrp8_TM_temp.pse" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ROC_res_parser.py" afterPath="$PROJECT_DIR$/ROC_res_parser.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TMpredict_WinGrade.py" afterPath="$PROJECT_DIR$/TMpredict_WinGrade.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Topo_DATA_ALL_new.xml" afterPath="$PROJECT_DIR$/Topo_DATA_ALL_new.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/VDB/V_Database.fasta" afterPath="$PROJECT_DIR$/data_sets/VDB/V_Database.fasta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/V_Database.txt" afterPath="$PROJECT_DIR$/data_sets/V_Database.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/V_Database_noNos.txt" afterPath="$PROJECT_DIR$/data_sets/V_Database_noNos.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WinGrade.py" afterPath="$PROJECT_DIR$/WinGrade.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database_new.csv" afterPath="$PROJECT_DIR$/database_new.csv" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database_new.txt" afterPath="$PROJECT_DIR$/database_new.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database_parser.py" afterPath="$PROJECT_DIR$/database_parser.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/encodings.xml" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/membrane_prediction/.idea/encodings.xml" afterPath="$PROJECT_DIR$/membrane_prediction/.idea/encodings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/first_50_VH_cutoff_1.txt" afterPath="$PROJECT_DIR$/first_50_VH_cutoff_1.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/membrane_prediciton.iml" afterPath="$PROJECT_DIR$/.idea/membrane_prediciton.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/membrane_prediction/.idea/membrane_prediction.iml" afterPath="$PROJECT_DIR$/membrane_prediction/.idea/membrane_prediction.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/membrane_prediction/.idea/misc.xml" afterPath="$PROJECT_DIR$/membrane_prediction/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/membrane_prediction/.idea/modules.xml" afterPath="$PROJECT_DIR$/membrane_prediction/.idea/modules.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/older_version.py" afterPath="$PROJECT_DIR$/older_version.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/other_functions.py" afterPath="$PROJECT_DIR$/other_functions.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/p02699.pdb" afterPath="$PROJECT_DIR$/p02699.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/p02945.pdb" afterPath="$PROJECT_DIR$/p02945.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/p08194.pdb" afterPath="$PROJECT_DIR$/p08194.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/p16102.pdb" afterPath="$PROJECT_DIR$/p16102.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/p18401.pdb" afterPath="$PROJECT_DIR$/p18401.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/p31224.pdb" afterPath="$PROJECT_DIR$/p31224.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/p42196.pdb" afterPath="$PROJECT_DIR$/p42196.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pdb_sequences.py" afterPath="$PROJECT_DIR$/pdb_sequences.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/poly_vals_23.2.txt" afterPath="$PROJECT_DIR$/poly_vals_23.2.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/poly_vals_25.2.txt" afterPath="$PROJECT_DIR$/poly_vals_25.2.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/poly_value_11.2.txt" afterPath="$PROJECT_DIR$/poly_value_11.2.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/psitest.out" afterPath="$PROJECT_DIR$/psitest.out" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/q56408.pdb" afterPath="$PROJECT_DIR$/q56408.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/q607g3.pdb" afterPath="$PROJECT_DIR$/q607g3.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/q8ysc4.pdb" afterPath="$PROJECT_DIR$/q8ysc4.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/q8zrp8.pdb" afterPath="$PROJECT_DIR$/q8zrp8.pdb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rostlab_db_to_fastas.py" afterPath="$PROJECT_DIR$/rostlab_db_to_fastas.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rostlab_evaluator.pl" afterPath="$PROJECT_DIR$/rostlab_evaluator.pl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/scopes/scope_settings.xml" afterPath="$PROJECT_DIR$/.idea/scopes/scope_settings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/membrane_prediction/.idea/scopes/scope_settings.xml" afterPath="$PROJECT_DIR$/membrane_prediction/.idea/scopes/scope_settings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/separate_dataset_to_fastas.py" afterPath="$PROJECT_DIR$/separate_dataset_to_fastas.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/temp.py" afterPath="$PROJECT_DIR$/temp.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test.pml" afterPath="$PROJECT_DIR$/test.pml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_sets/top_ap_TOPDB.txt" afterPath="$PROJECT_DIR$/data_sets/top_ap_TOPDB.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/topdb_functions.py" afterPath="$PROJECT_DIR$/topdb_functions.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/uniprot_parser.py" afterPath="$PROJECT_DIR$/uniprot_parser.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/membrane_prediction/.idea/vcs.xml" afterPath="$PROJECT_DIR$/membrane_prediction/.idea/vcs.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/win_grade.py" afterPath="$PROJECT_DIR$/win_grade.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/membrane_prediction/.idea/workspace.xml" afterPath="$PROJECT_DIR$/membrane_prediction/.idea/workspace.xml" />
     </list>
     <ignored path="membrane_prediciton.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -255,26 +76,38 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="TMpredict_WinGrade.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="TMpredict_WinGrade.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TMpredict_WinGrade.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.64285713" vertical-offset="3284" max-vertical-offset="4180">
-              <caret line="403" column="13" selection-start-line="403" selection-start-column="13" selection-end-line="403" selection-end-column="13" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4260">
+              <caret line="17" column="136" selection-start-line="17" selection-start-column="119" selection-end-line="17" selection-end-column="136" />
               <folding>
-                <element signature="e#71#8840#0" expanded="true" />
+                <element signature="e#9612#10359#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ROC_res_parser.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="pred_obs_pymol.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pred_obs_pymol.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1840">
+              <caret line="103" column="7" selection-start-line="103" selection-start-column="7" selection-end-line="103" selection-end-column="7" />
+              <folding>
+                <element signature="e#70#1419#0" expanded="true" />
+                <element signature="e#1450#1791#0" expanded="true" />
+                <element signature="e#2950#3682#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ROC_res_parser.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ROC_res_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="171" max-vertical-offset="1080">
-              <caret line="36" column="7" selection-start-line="36" selection-start-column="7" selection-end-line="36" selection-end-column="7" />
-              <folding>
-                <element signature="e#0#9#0" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="1.9318181" vertical-offset="120" max-vertical-offset="1600">
+              <caret line="76" column="0" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -282,7 +115,7 @@
       <file leaf-file-name="temp.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/temp.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="240">
+            <state vertical-scroll-proportion="0.0" vertical-offset="120" max-vertical-offset="240">
               <caret line="6" column="15" selection-start-line="6" selection-start-column="15" selection-end-line="6" selection-end-column="15" />
               <folding />
             </state>
@@ -292,7 +125,7 @@
       <file leaf-file-name="rostlab_evaluator.pl" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/rostlab_evaluator.pl">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4600">
+            <state vertical-scroll-proportion="0.0" vertical-offset="320" max-vertical-offset="4600">
               <caret line="16" column="16" selection-start-line="16" selection-start-column="16" selection-end-line="16" selection-end-column="16" />
               <folding />
             </state>
@@ -312,8 +145,8 @@
       <file leaf-file-name="HphobicityScore.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/HphobicityScore.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1820" max-vertical-offset="7340">
-              <caret line="91" column="0" selection-start-line="91" selection-start-column="0" selection-end-line="91" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="2640" max-vertical-offset="7340">
+              <caret line="132" column="30" selection-start-line="132" selection-start-column="30" selection-end-line="132" selection-end-column="30" />
               <folding />
             </state>
           </provider>
@@ -322,7 +155,7 @@
       <file leaf-file-name="WinGrade.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/WinGrade.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="440" max-vertical-offset="1160">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="520">
               <caret line="22" column="43" selection-start-line="22" selection-start-column="43" selection-end-line="22" selection-end-column="43" />
               <folding />
             </state>
@@ -365,17 +198,34 @@
         <option value="$PROJECT_DIR$/WinGrade.py" />
         <option value="$PROJECT_DIR$/HphobicityScore.py" />
         <option value="$PROJECT_DIR$/rostlab_evaluator.pl" />
-        <option value="$PROJECT_DIR$/ROC_res_parser.py" />
-        <option value="$PROJECT_DIR$/TMpredict_WinGrade.py" />
         <option value="$PROJECT_DIR$/temp.py" />
+        <option value="$PROJECT_DIR$/TMpredict_WinGrade.py" />
+        <option value="$PROJECT_DIR$/ROC_res_parser.py" />
+        <option value="$PROJECT_DIR$/pred_obs_pymol.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="32" />
+    <option name="x" value="29" />
     <option name="y" value="23" />
     <option name="width" value="1594" />
     <option name="height" value="1053" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>Buildout</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
@@ -406,17 +256,20 @@
   </component>
   <component name="PropertiesComponent">
     <property name="recentsLimit" value="5" />
-    <property name="options.lastSelected" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="options.lastSelected" value="com.jetbrains.python.configuration.PythonContentEntriesConfigurable" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
     <property name="FullScreen" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../scripts/jonathaw/job_makers" />
-    <property name="last.edited.regexp" value="u2hhhhhhhhhhhhhhhhhhhhhhhh11111111111111111111111hhhhhhhhhhhhhhhhhhhhhh2222222222222hhhhhhhhhhhhhhhhhhhhhhhhhh1111111111111hhhhhhhhhhhhhhhhhhhhhhhh2222222222222222222222222222222222hhhhhhhhhhhhhhhhhhh1111111111111111111111111" />
+    <property name="last.edited.regexp" value="1hhhHHH1" />
   </component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
-      <console-settings />
+      <console-settings module-name="membrane_prediciton" is-module-sdk="true">
+        <option name="myUseModuleSdk" value="true" />
+        <option name="myModuleName" value="membrane_prediciton" />
+      </console-settings>
     </option>
   </component>
   <component name="RecentsManager">
@@ -424,7 +277,7 @@
       <recent name="$PROJECT_DIR$/data_sets" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.TMpredict_WinGrade">
+  <component name="RunManager" selected="Python.pred_obs_pymol">
     <configuration default="false" name="TMpredict_WinGrade" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -438,24 +291,6 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="membrane_prediciton" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/TMpredict_WinGrade.py" />
-      <option name="PARAMETERS" value="" />
-      <RunnerSettings RunnerId="PythonRunner" />
-      <ConfigurationWrapper RunnerId="PythonRunner" />
-      <method />
-    </configuration>
-    <configuration default="false" name="topdb_functions" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="membrane_prediciton" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/topdb_functions.py" />
       <option name="PARAMETERS" value="" />
       <RunnerSettings RunnerId="PythonRunner" />
       <ConfigurationWrapper RunnerId="PythonRunner" />
@@ -510,6 +345,24 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="membrane_prediciton" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/temp.py" />
+      <option name="PARAMETERS" value="" />
+      <RunnerSettings RunnerId="PythonRunner" />
+      <ConfigurationWrapper RunnerId="PythonRunner" />
+      <method />
+    </configuration>
+    <configuration default="false" name="pred_obs_pymol" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="membrane_prediciton" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/pred_obs_pymol.py" />
       <option name="PARAMETERS" value="" />
       <RunnerSettings RunnerId="PythonRunner" />
       <ConfigurationWrapper RunnerId="PythonRunner" />
@@ -638,18 +491,18 @@
     </configuration>
     <list size="5">
       <item index="0" class="java.lang.String" itemvalue="Python.TMpredict_WinGrade" />
-      <item index="1" class="java.lang.String" itemvalue="Python.topdb_functions" />
-      <item index="2" class="java.lang.String" itemvalue="Python.rostlab_db_to_fastas" />
-      <item index="3" class="java.lang.String" itemvalue="Python.vispy_temp" />
-      <item index="4" class="java.lang.String" itemvalue="Python.temp" />
+      <item index="1" class="java.lang.String" itemvalue="Python.rostlab_db_to_fastas" />
+      <item index="2" class="java.lang.String" itemvalue="Python.vispy_temp" />
+      <item index="3" class="java.lang.String" itemvalue="Python.temp" />
+      <item index="4" class="java.lang.String" itemvalue="Python.pred_obs_pymol" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.TMpredict_WinGrade" />
-        <item index="1" class="java.lang.String" itemvalue="Python.temp" />
-        <item index="2" class="java.lang.String" itemvalue="Python.vispy_temp" />
-        <item index="3" class="java.lang.String" itemvalue="Python.rostlab_db_to_fastas" />
-        <item index="4" class="java.lang.String" itemvalue="Python.topdb_functions" />
+        <item index="0" class="java.lang.String" itemvalue="Python.pred_obs_pymol" />
+        <item index="1" class="java.lang.String" itemvalue="Python.TMpredict_WinGrade" />
+        <item index="2" class="java.lang.String" itemvalue="Python.temp" />
+        <item index="3" class="java.lang.String" itemvalue="Python.vispy_temp" />
+        <item index="4" class="java.lang.String" itemvalue="Python.rostlab_db_to_fastas" />
       </list>
     </recent_temporary>
   </component>
@@ -859,7 +712,11 @@
       <created>1427916647817</created>
       <updated>1427916647817</updated>
     </task>
-    <option name="localTasksCounter" value="50" />
+    <task id="LOCAL-00050" summary="moved to /Volumes/...&#10;now gets topo-string of both opm and pdbtm.&#10;next: make calculate dist for both strings.">
+      <created>1427986264742</created>
+      <updated>1427986264742</updated>
+    </task>
+    <option name="localTasksCounter" value="51" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -883,10 +740,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="32" y="23" width="1594" height="1053" extended-state="0" />
+    <frame x="29" y="23" width="1594" height="1053" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3299285" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -894,16 +751,16 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3299428" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39251336" sideWeight="0.5002633" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30167013" sideWeight="0.4997367" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20320855" sideWeight="0.4997367" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -921,7 +778,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="added pymol by exposed for coloring only residues that are supposed to be exposed. doesm't come out very well." />
     <MESSAGE value="tesed some samples" />
     <MESSAGE value="new polyval values" />
     <MESSAGE value="missing file" />
@@ -946,7 +802,8 @@
     <MESSAGE value="moving to rostlab DB. added a parser and topo string creator and comparer" />
     <MESSAGE value="topo-string comparer improved to determine topology correctness" />
     <MESSAGE value="now calculating Qok such that only a protein where all TMHs were predicted correctly (determined by the rostlab_evaluator.pl script) are counted. that's averaged over all mezsured proteins." />
-    <option name="LAST_COMMIT_MESSAGE" value="now calculating Qok such that only a protein where all TMHs were predicted correctly (determined by the rostlab_evaluator.pl script) are counted. that's averaged over all mezsured proteins." />
+    <MESSAGE value="moved to /Volumes/...&#10;now gets topo-string of both opm and pdbtm.&#10;next: make calculate dist for both strings." />
+    <option name="LAST_COMMIT_MESSAGE" value="moved to /Volumes/...&#10;now gets topo-string of both opm and pdbtm.&#10;next: make calculate dist for both strings." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -954,16 +811,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/TMpredict_WinGrade.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1180" max-vertical-offset="2800">
-          <caret line="59" column="92" selection-start-line="59" selection-start-column="92" selection-end-line="59" selection-end-column="92" />
-          <folding>
-            <element signature="e#71#8840#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/HphobicityScore.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="803" max-vertical-offset="2300">
@@ -1020,7 +867,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="1980" max-vertical-offset="2520">
           <caret line="99" column="7" selection-start-line="99" selection-start-column="7" selection-end-line="99" selection-end-column="7" />
           <folding>
-            <element signature="e#71#8840#0" expanded="true" />
+            <element signature="e#9612#10359#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1081,7 +928,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="260" max-vertical-offset="780">
           <caret line="13" column="24" selection-start-line="13" selection-start-column="24" selection-end-line="13" selection-end-column="24" />
           <folding>
-            <element signature="e#71#8840#0" expanded="true" />
+            <element signature="e#9612#10359#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1327,37 +1174,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/WinGrade.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="256" max-vertical-offset="880">
-          <caret line="22" column="43" selection-start-line="22" selection-start-column="43" selection-end-line="22" selection-end-column="43" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/HphobicityScore.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1260">
-          <caret line="91" column="0" selection-start-line="91" selection-start-column="0" selection-end-line="91" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/rostlab_evaluator.pl">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4600">
           <caret line="16" column="16" selection-start-line="16" selection-start-column="16" selection-end-line="16" selection-end-column="16" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ROC_res_parser.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="171" max-vertical-offset="1080">
-          <caret line="36" column="7" selection-start-line="36" selection-start-column="7" selection-end-line="36" selection-end-column="7" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1369,16 +1190,67 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/HphobicityScore.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="633" max-vertical-offset="1780">
+          <caret line="132" column="30" selection-start-line="132" selection-start-column="30" selection-end-line="132" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WinGrade.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="256" max-vertical-offset="880">
+          <caret line="22" column="43" selection-start-line="22" selection-start-column="43" selection-end-line="22" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/TMpredict_WinGrade.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.64285713" vertical-offset="3284" max-vertical-offset="4180">
-          <caret line="403" column="13" selection-start-line="403" selection-start-column="13" selection-end-line="403" selection-end-column="13" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4260">
+          <caret line="17" column="136" selection-start-line="17" selection-start-column="119" selection-end-line="17" selection-end-column="136" />
           <folding>
-            <element signature="e#71#8840#0" expanded="true" />
+            <element signature="e#9612#10359#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/pred_obs_pymol.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1840">
+          <caret line="103" column="7" selection-start-line="103" selection-start-column="7" selection-end-line="103" selection-end-column="7" />
+          <folding>
+            <element signature="e#70#1419#0" expanded="true" />
+            <element signature="e#1450#1791#0" expanded="true" />
+            <element signature="e#2950#3682#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ROC_res_parser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.9318181" vertical-offset="120" max-vertical-offset="1600">
+          <caret line="76" column="0" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ScopeChooserConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
   </component>
 </project>
 
