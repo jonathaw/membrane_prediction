@@ -2,57 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6a73546c-b0e1-4c73-9c98-48c4af466cd3" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pred_obs_pymol.py" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/1BRX_TM_temp.pse" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/1E12_TM_temp.pse" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/1brx.pdb" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/1brx_TM_temp.pse" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/1c3w.pdb" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/1e12.pdb" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/1e12_TM_temp.pse" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/1ehk_TM_temp.pse" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/1iwg.pdb" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/1iwg_TM_temp.pse" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/1jb0.pdb" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/1jb0_TM_temp.pse" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/1kpl.pdb" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/1s5l.pdb" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/1xio.pdb" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/3g61.fasta" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/3g61.horiz" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/3g61.pdb" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/3g61.ss" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/3g61.ss2" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/3g61_TM_temp.pse" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/4j4q.pdb" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/4j4q_TM_temp.pse" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/P02945_TM_temp.pse" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/p02699.pdb" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/p02699_TM_temp.pse" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/p02724_TM_temp.pse" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/p02945.pdb" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/p02945_TM_temp.pse" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/p08194.pdb" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/p08194_TM_temp.pse" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/p16102.pdb" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/p16102_TM_temp.pse" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/p18401.pdb" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/p18401_TM_temp.pse" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/p31224.pdb" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/p31224_TM_temp.pse" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/p42196.pdb" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/p42196_TM_temp.pse" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/q56408.pdb" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/q56408_TM_temp.pse" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/q607g3.pdb" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/q607g3_TM_temp.pse" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/q8ysc4.pdb" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/q8ysc4_TM_temp.pse" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/q8zrp8.pdb" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/q8zrp8_TM_temp.pse" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ROC_res_parser.py" afterPath="$PROJECT_DIR$/ROC_res_parser.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/result_slicer.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HphobicityScore.py" afterPath="$PROJECT_DIR$/HphobicityScore.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TMpredict_WinGrade.py" afterPath="$PROJECT_DIR$/TMpredict_WinGrade.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/membrane_prediciton.iml" afterPath="$PROJECT_DIR$/.idea/membrane_prediciton.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="membrane_prediciton.iws" />
@@ -79,11 +31,39 @@
       <file leaf-file-name="TMpredict_WinGrade.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TMpredict_WinGrade.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4260">
-              <caret line="17" column="136" selection-start-line="17" selection-start-column="119" selection-end-line="17" selection-end-column="136" />
+            <state vertical-scroll-proportion="-1.5384616" vertical-offset="0" max-vertical-offset="4220">
+              <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
               <folding>
-                <element signature="e#9612#10359#0" expanded="true" />
+                <element signature="e#71#949#0" expanded="true" />
+                <element signature="e#996#1703#0" expanded="true" />
+                <element signature="e#6575#10501#0" expanded="true" />
+                <element signature="e#11148#11252#0" expanded="true" />
+                <element signature="e#12389#15307#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="HphobicityScore.py" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/HphobicityScore.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.44071588" vertical-offset="2986" max-vertical-offset="4040">
+              <caret line="370" column="60" selection-start-line="370" selection-start-column="60" selection-end-line="370" selection-end-column="60" />
+              <folding>
+                <element signature="e#105#2047#0" expanded="true" />
+                <element signature="e#6672#8599#0" expanded="true" />
+                <element signature="e#11086#11530#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="WinGrade.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/WinGrade.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="440" max-vertical-offset="1160">
+              <caret line="22" column="43" selection-start-line="22" selection-start-column="43" selection-end-line="22" selection-end-column="43" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -91,23 +71,31 @@
       <file leaf-file-name="pred_obs_pymol.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pred_obs_pymol.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1840">
-              <caret line="103" column="7" selection-start-line="103" selection-start-column="7" selection-end-line="103" selection-end-column="7" />
-              <folding>
-                <element signature="e#70#1419#0" expanded="true" />
-                <element signature="e#1450#1791#0" expanded="true" />
-                <element signature="e#2950#3682#0" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1040">
+              <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="55" selection-end-column="89" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ROC_res_parser.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="ROC_res_parser.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ROC_res_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.9318181" vertical-offset="120" max-vertical-offset="1600">
-              <caret line="76" column="0" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1600">
+              <caret line="49" column="25" selection-start-line="49" selection-start-column="25" selection-end-line="49" selection-end-column="25" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="result_slicer.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/result_slicer.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1360">
+              <caret line="6" column="19" selection-start-line="6" selection-start-column="19" selection-end-line="6" selection-end-column="19" />
+              <folding>
+                <element signature="e#2564#4110#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -117,46 +105,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0" vertical-offset="120" max-vertical-offset="240">
               <caret line="6" column="15" selection-start-line="6" selection-start-column="15" selection-end-line="6" selection-end-column="15" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="rostlab_evaluator.pl" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/rostlab_evaluator.pl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="320" max-vertical-offset="4600">
-              <caret line="16" column="16" selection-start-line="16" selection-start-column="16" selection-end-line="16" selection-end-column="16" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="rostlab_db_to_fastas.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/rostlab_db_to_fastas.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="280">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="5" selection-end-column="37" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="HphobicityScore.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/HphobicityScore.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="2640" max-vertical-offset="7340">
-              <caret line="132" column="30" selection-start-line="132" selection-start-column="30" selection-end-line="132" selection-end-column="30" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="WinGrade.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/WinGrade.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="520">
-              <caret line="22" column="43" selection-start-line="22" selection-start-column="43" selection-end-line="22" selection-end-column="43" />
               <folding />
             </state>
           </provider>
@@ -196,19 +144,20 @@
         <option value="$PROJECT_DIR$/rostlab_db_to_fastas.py" />
         <option value="$PROJECT_DIR$/vispy_temp.py" />
         <option value="$PROJECT_DIR$/WinGrade.py" />
-        <option value="$PROJECT_DIR$/HphobicityScore.py" />
         <option value="$PROJECT_DIR$/rostlab_evaluator.pl" />
         <option value="$PROJECT_DIR$/temp.py" />
-        <option value="$PROJECT_DIR$/TMpredict_WinGrade.py" />
         <option value="$PROJECT_DIR$/ROC_res_parser.py" />
         <option value="$PROJECT_DIR$/pred_obs_pymol.py" />
+        <option value="$PROJECT_DIR$/result_slicer.py" />
+        <option value="$PROJECT_DIR$/TMpredict_WinGrade.py" />
+        <option value="$PROJECT_DIR$/HphobicityScore.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="29" />
+    <option name="x" value="773" />
     <option name="y" value="23" />
-    <option name="width" value="1594" />
+    <option name="width" value="1146" />
     <option name="height" value="1053" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
@@ -241,7 +190,7 @@
     <option name="STATE" value="0" />
   </component>
   <component name="ProjectView">
-    <navigator proportions="" version="1">
+    <navigator currentView="ProjectPane" proportions="" version="1">
       <flattenPackages />
       <showMembers />
       <showModules />
@@ -252,11 +201,33 @@
       <autoscrollFromSource />
       <sortByType />
     </navigator>
-    <panes />
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="membrane_prediciton" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="membrane_prediciton" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="membrane_prediciton" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="recentsLimit" value="5" />
-    <property name="options.lastSelected" value="com.jetbrains.python.configuration.PythonContentEntriesConfigurable" />
+    <property name="options.lastSelected" value="vcs.Git" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
@@ -716,7 +687,11 @@
       <created>1427986264742</created>
       <updated>1427986264742</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="improved ROC graph making in ROC_res_parser.&#10;added pred_obs_pymol to mark pred, obs, and overlap on pymol">
+      <created>1428390164782</created>
+      <updated>1428390164782</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -740,18 +715,18 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="29" y="23" width="1594" height="1053" extended-state="0" />
+    <frame x="773" y="23" width="1146" height="1053" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.15384616" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.15466666" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3299428" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39251336" sideWeight="0.5002633" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20320855" sideWeight="0.4997367" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20250522" sideWeight="0.4997367" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -778,7 +753,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="tesed some samples" />
     <MESSAGE value="new polyval values" />
     <MESSAGE value="missing file" />
     <MESSAGE value="major revision!!!! TMpredict is the new work horse&#10;" />
@@ -803,7 +777,8 @@
     <MESSAGE value="topo-string comparer improved to determine topology correctness" />
     <MESSAGE value="now calculating Qok such that only a protein where all TMHs were predicted correctly (determined by the rostlab_evaluator.pl script) are counted. that's averaged over all mezsured proteins." />
     <MESSAGE value="moved to /Volumes/...&#10;now gets topo-string of both opm and pdbtm.&#10;next: make calculate dist for both strings." />
-    <option name="LAST_COMMIT_MESSAGE" value="moved to /Volumes/...&#10;now gets topo-string of both opm and pdbtm.&#10;next: make calculate dist for both strings." />
+    <MESSAGE value="improved ROC graph making in ROC_res_parser.&#10;added pred_obs_pymol to mark pred, obs, and overlap on pymol" />
+    <option name="LAST_COMMIT_MESSAGE" value="improved ROC graph making in ROC_res_parser.&#10;added pred_obs_pymol to mark pred, obs, and overlap on pymol" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -811,14 +786,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/HphobicityScore.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="803" max-vertical-offset="2300">
-          <caret line="50" column="90" selection-start-line="50" selection-start-column="90" selection-end-line="50" selection-end-column="90" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/database_new.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="20" max-vertical-offset="2720">
@@ -867,7 +834,11 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="1980" max-vertical-offset="2520">
           <caret line="99" column="7" selection-start-line="99" selection-start-column="7" selection-end-line="99" selection-end-column="7" />
           <folding>
-            <element signature="e#9612#10359#0" expanded="true" />
+            <element signature="e#71#949#0" expanded="true" />
+            <element signature="e#996#1703#0" expanded="true" />
+            <element signature="e#6575#10501#0" expanded="true" />
+            <element signature="e#11148#11252#0" expanded="true" />
+            <element signature="e#12389#15307#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -883,7 +854,11 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="3040" max-vertical-offset="3880">
           <caret line="152" column="29" selection-start-line="152" selection-start-column="29" selection-end-line="152" selection-end-column="29" />
-          <folding />
+          <folding>
+            <element signature="e#105#2047#0" expanded="true" />
+            <element signature="e#6672#8599#0" expanded="true" />
+            <element signature="e#11086#11530#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -928,7 +903,11 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="260" max-vertical-offset="780">
           <caret line="13" column="24" selection-start-line="13" selection-start-column="24" selection-end-line="13" selection-end-column="24" />
           <folding>
-            <element signature="e#9612#10359#0" expanded="true" />
+            <element signature="e#71#949#0" expanded="true" />
+            <element signature="e#996#1703#0" expanded="true" />
+            <element signature="e#6575#10501#0" expanded="true" />
+            <element signature="e#11148#11252#0" expanded="true" />
+            <element signature="e#12389#15307#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -937,7 +916,11 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1" max-vertical-offset="780">
           <caret line="39" column="8" selection-start-line="39" selection-start-column="8" selection-end-line="39" selection-end-column="8" />
-          <folding />
+          <folding>
+            <element signature="e#105#2047#0" expanded="true" />
+            <element signature="e#6672#8599#0" expanded="true" />
+            <element signature="e#11086#11530#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1170,7 +1153,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="280">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="5" selection-end-column="37" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1178,7 +1160,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4600">
           <caret line="16" column="16" selection-start-line="16" selection-start-column="16" selection-end-line="16" selection-end-column="16" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1186,14 +1167,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="240">
           <caret line="6" column="15" selection-start-line="6" selection-start-column="15" selection-end-line="6" selection-end-column="15" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/HphobicityScore.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="633" max-vertical-offset="1780">
-          <caret line="132" column="30" selection-start-line="132" selection-start-column="30" selection-end-line="132" selection-end-column="30" />
           <folding />
         </state>
       </provider>
@@ -1206,33 +1179,55 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TMpredict_WinGrade.py">
+    <entry file="file://$PROJECT_DIR$/ROC_res_parser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4260">
-          <caret line="17" column="136" selection-start-line="17" selection-start-column="119" selection-end-line="17" selection-end-column="136" />
-          <folding>
-            <element signature="e#9612#10359#0" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1600">
+          <caret line="49" column="25" selection-start-line="49" selection-start-column="25" selection-end-line="49" selection-end-column="25" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pred_obs_pymol.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1840">
-          <caret line="103" column="7" selection-start-line="103" selection-start-column="7" selection-end-line="103" selection-end-column="7" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1040">
+          <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="55" selection-end-column="89" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/result_slicer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1360">
+          <caret line="6" column="19" selection-start-line="6" selection-start-column="19" selection-end-line="6" selection-end-column="19" />
           <folding>
-            <element signature="e#70#1419#0" expanded="true" />
-            <element signature="e#1450#1791#0" expanded="true" />
-            <element signature="e#2950#3682#0" expanded="true" />
+            <element signature="e#2564#4110#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ROC_res_parser.py">
+    <entry file="file://$PROJECT_DIR$/TMpredict_WinGrade.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.9318181" vertical-offset="120" max-vertical-offset="1600">
-          <caret line="76" column="0" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
-          <folding />
+        <state vertical-scroll-proportion="-1.5384616" vertical-offset="0" max-vertical-offset="4220">
+          <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+          <folding>
+            <element signature="e#71#949#0" expanded="true" />
+            <element signature="e#996#1703#0" expanded="true" />
+            <element signature="e#6575#10501#0" expanded="true" />
+            <element signature="e#11148#11252#0" expanded="true" />
+            <element signature="e#12389#15307#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/HphobicityScore.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.44071588" vertical-offset="2986" max-vertical-offset="4040">
+          <caret line="370" column="60" selection-start-line="370" selection-start-column="60" selection-end-line="370" selection-end-column="60" />
+          <folding>
+            <element signature="e#105#2047#0" expanded="true" />
+            <element signature="e#6672#8599#0" expanded="true" />
+            <element signature="e#11086#11530#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

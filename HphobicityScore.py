@@ -7,12 +7,13 @@ class HphobicityScore():
         :param hydro_polyval: polynom valued dictionary
         :return: a stack of WinGrade instances, and their utilities
         '''
-        global HP_THRESHOLD, INC_MAX, MIN_LENGTH, PSI_HELIX, PSI_RES_NUM
+        global HP_THRESHOLD, INC_MAX, MIN_LENGTH, PSI_HELIX, PSI_RES_NUM, known_tm_num
         HP_THRESHOLD = param_list['hp_threshold']
         INC_MAX = 8
         MIN_LENGTH = param_list['min_length']
         PSI_HELIX = param_list['psi_helix']
         PSI_RES_NUM = param_list['psi_res_num']
+        known_tm_num = param_list['known_tm_num']
         self.name = name
         self.seq = seq
         self.ss2_file = ss2_file
@@ -136,13 +137,19 @@ class HphobicityScore():
         plt.figure()
         for win_grade in self.WinGrades:
             plt.plot((win_grade.begin, win_grade.end), (win_grade.grade, win_grade.grade),
-                     'k--' if win_grade.direction == 'fwd' else 'grey')
+                     'k--' if win_grade.direction == 'fwd' else 'grey', )
+        print 'topo_best'
         for minima in self.topo_best:
+            print minima
             plt.plot((minima.begin, minima.end), (minima.grade, minima.grade),
-                     color='green' if minima.direction == 'fwd' else 'purple', lw=4)
+                     'b--' if minima.direction == 'fwd' else 'r--', lw=4)
+        print 'topo_sec_best'
         for minima in self.topo_sec_best:
-            if minima.grade > 0: continue
-            plt.plot((minima.begin, minima.end), (minima.grade, minima.grade), 'b--', lw=4)
+            print minima
+            # if minima.grade > 0: continue
+            # plt.plot((minima.begin, minima.end), (minima.grade, minima.grade), 'b--', lw=4)
+            plt.plot((minima.begin, minima.end), (minima.grade, minima.grade),
+                     'c--' if minima.direction == 'fwd' else 'm--', lw=4)
         # for minima in self.rev_minimas:
         #     if minima.grade > 0: continue
         #     plt.plot((minima.begin, minima.end), (minima.grade, minima.grade), 'r--')
@@ -152,11 +159,11 @@ class HphobicityScore():
         red_line = mlines.Line2D([], [], color='red', marker='', lw=2, label='Rev minima')
         green_line = mlines.Line2D([], [], color='green', marker='', lw=2, label='Fwd topo minima')
         purple_line = mlines.Line2D([], [], color='purple', marker='', lw=2, label='Rev topo minima')
-        plt.legend(handles=[black_line, grey_line, blue_line, red_line, green_line, purple_line], ncol=2)
+        # plt.legend(handles=[black_line, grey_line, blue_line, red_line, green_line, purple_line], ncol=2)
         plt.xlabel('Sequence Position')
         plt.ylabel('Energy')
         plt.title('Win Grades Energy Plot for %s' % self.name)
-        # plt.show()
+        plt.show()
 
     def topo_determine(self):
         """
@@ -318,7 +325,6 @@ class HphobicityScore():
         return chosen_set
 
     def find_graph_path(self, pred, path, source_node):
-        # path = [k for k, v in dist.items() if v == last_val]  # find last win
         # find all wins in the minimal energy path from source to last win
         while path[-1].seq != source_node.seq:
             for k, v in pred.items():
@@ -349,14 +355,44 @@ class HphobicityScore():
                     G.add_edge(win1, win2, weight=win2.grade)
         # use bellman-ford algorithm to find minimum paths to all nodes
         pred, dist = nx.bellman_ford(G, source_node)
-        min_val = min(dist.values())
-        best_path_val = [k for k, v in dist.items() if v == min_val]
-        best_path = self.find_graph_path(pred, best_path_val, source_node)
-        for k, v in sorted(dist.items(), key=operator.itemgetter(1)):
+        # force #TM in topology to be known_tm_num
+        sorted_dist = sorted(dist.items(), key=operator.itemgetter(1))
+        booli = True
+        while booli:
+            # min_val = min(dist.values())
+            # best_path_val = [k for k, v in dist.items() if v == min_val]
+            best_path_val = [sorted_dist[0][0]]
+            min_val = sorted_dist[0][1]
+            best_path = self.find_graph_path(pred, best_path_val, source_node)
+            if len(best_path) == known_tm_num or known_tm_num == -100:
+                booli = False
+            else:
+                print 'not long enough', len(best_path), known_tm_num
+                # dist = {k: v for k, v in dist.items() if v != min_val}
+                sorted_dist.pop()
+        if len(best_path) == 1 and known_tm_num != 1 and known_tm_num != -100:
+            print 'Could not find %i TMHs, outputing best option' % known_tm_num
+            sorted_dist = sorted(dist.items(), key=operator.itemgetter(1))
+            best_path_val = [sorted_dist[0][0]]
+            min_val = sorted_dist[0][1]
+            best_path = self.find_graph_path(pred, best_path_val, source_node)
+
+        # force secondary best topology to have known_tm_num
+        for k, v in sorted_dist:
             if k.direction != best_path[-1].direction:
                 sec_best_path = [k]
                 sec_best_val = v
-                break
+                if len(sec_best_path) == known_tm_num or known_tm_num == -100:
+                    break
+        if len(sec_best_path) == 1 and known_tm_num != 1 and known_tm_num != -100:
+            print 'Could not find %i TMHs for second best, outputing best option' % known_tm_num
+            for k, v in sorted(dist.items(), key=operator.itemgetter(1)):
+                if k.direction != best_path[-1].direction:
+                    sec_best_path = [k]
+                    sec_best_val = v
+                    break
+
         # sec_best_path, sec_best_val = [(k, v) for k, v in sorted(dist.items(), key=operator.itemgetter(1)) if k.direction != best_path[-1].direction]
         sec_best_path = self.find_graph_path(pred, sec_best_path, source_node)
+        print 'topo finished'
         return best_path, min_val, sec_best_path, sec_best_val
