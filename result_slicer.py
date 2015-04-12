@@ -7,9 +7,14 @@ import numpy as np
 def main(prd_path):
     import os
     import re
+    global have_conf
     table_data = rostlab_table_parser()
     prd_file_list = [x for x in os.listdir(prd_path) if re.match('.*\.prd', x)]
     prd_results_dict = {name.split('.')[0]: pred_reader(prd_path, name) for name in prd_file_list}
+    if all(a['conf'] == False for a in prd_results_dict.values()):
+        have_conf = False
+    else:
+        have_conf = True
     plot_euk_prok(table_data, prd_results_dict)
     plot_new_old(table_data, prd_results_dict)
     plot_tm_num(table_data, prd_results_dict)
@@ -17,8 +22,8 @@ def main(prd_path):
 
 
 def plot_new_old(table_data, prd_results_dict):
-    new = {'tot_conf': 0, 'Qok_conf': 0, 'tot_all': 0, 'Qok_all': 0}
-    old = {'tot_conf': 0, 'Qok_conf': 0, 'tot_all': 0, 'Qok_all': 0}
+    new = {'tot_conf': 0, 'Qok_conf': 0, 'tot_all': 0, 'Qok_all': 0, 'over10': 0}
+    old = {'tot_conf': 0, 'Qok_conf': 0, 'tot_all': 0, 'Qok_all': 0, 'over10': 0}
     known_uni = prd_results_dict.keys()
     for uni, table_entry in table_data.items():
         if uni not in known_uni:
@@ -27,18 +32,21 @@ def plot_new_old(table_data, prd_results_dict):
             if prd_results_dict[uni]['conf']:
                 new['tot_conf'] += 1
                 new['Qok_conf'] += 1 if prd_results_dict[uni]['Qok'] else 0
+            # new['over10'] += 1 if prd_results_dict[uni]['over10'] else 0
             new['tot_all'] += 1
             new['Qok_all'] += 1 if prd_results_dict[uni]['Qok'] else 0
         if table_entry['old_new'] == 'old':
             if prd_results_dict[uni]['conf']:
                 old['tot_conf'] += 1
                 old['Qok_conf'] += 1 if prd_results_dict[uni]['Qok'] else 0
+            # old['over10'] += 1 if prd_results_dict[uni]['over10'] else 0
             old['tot_all'] += 1
             old['Qok_all'] += 1 if prd_results_dict[uni]['Qok'] else 0
     all_results = {'Qok_conf': new['Qok_conf']+old['Qok_conf'], 'tot_conf': new['tot_conf']+old['tot_conf'],
             'Qok_all': new['Qok_all']+old['Qok_all'], 'tot_all': new['tot_all']+old['tot_all']}
-    conf = (100*all_results['Qok_conf']/all_results['tot_conf'], 100*new['Qok_conf']/new['tot_conf'], 
-            100*old['Qok_conf']/old['tot_conf'])
+    if have_conf:
+        conf = (100*all_results['Qok_conf']/all_results['tot_conf'], 100*new['Qok_conf']/new['tot_conf'],
+                100*old['Qok_conf']/old['tot_conf'])
     all_ = (100*all_results['Qok_all']/all_results['tot_all'], 100*new['Qok_all']/new['tot_all'],
             100*old['Qok_all']/old['tot_all'])
     N = 3
@@ -46,15 +54,23 @@ def plot_new_old(table_data, prd_results_dict):
     ind = np.arange(N)
 
     plt.subplot(221)
-    rects_conf = plt.bar(ind, conf, width, color='r')
+    if have_conf:
+        rects_conf = plt.bar(ind, conf, width, color='r')
     rects_all_ = plt.bar(ind+width, all_, width, color='b')
     plt.ylabel('Qok')
     plt.title('Qok New Vs. Old')
     plt.xticks(ind+width, ['Full', 'New', 'Old'])
-    plt.ylim((0, max(conf+all_)+5.))
-    autolabel(rects_conf)
+    if have_conf:
+        plt.ylim((0, max(conf+all_)+5.))
+    else:
+        plt.ylim((0, max(all_)+5.))
+    if have_conf:
+        autolabel(rects_conf)
     autolabel(rects_all_)
-    plt.legend((rects_conf[0], rects_all_[0]), ('Confident', 'All'))
+    if have_conf:
+        plt.legend((rects_conf[0], rects_all_[0]), ('Confident', 'All'))
+    else:
+        plt.legend([rects_all_[0]], ['All'])
 
 
 def plot_euk_prok(table_data, prd_results_dict):
@@ -76,22 +92,31 @@ def plot_euk_prok(table_data, prd_results_dict):
                 prok['Qok_conf'] += 1 if prd_results_dict[uni]['Qok'] else 0
             prok['tot_all'] += 1
             prok['Qok_all'] += 1 if prd_results_dict[uni]['Qok'] else 0
-    conf = (100*euk_['Qok_conf']/euk_['tot_conf'], 100*prok['Qok_conf']/prok['tot_conf'])
+    if have_conf:
+        conf = (100*euk_['Qok_conf']/euk_['tot_conf'], 100*prok['Qok_conf']/prok['tot_conf'])
     all_ = (100*euk_['Qok_all']/euk_['tot_all'], 100*prok['Qok_all']/prok['tot_all'])
     N = 2
     width = 0.35
     ind = np.arange(N)
 
     plt.subplot(222)
-    rects_conf = plt.bar(ind, conf, width, color='r')
+    if have_conf:
+        rects_conf = plt.bar(ind, conf, width, color='r')
     rects_all_ = plt.bar(ind+width, all_, width, color='b')
     plt.ylabel('Qok')
     plt.title('Qok Eukaryotes Vs. Prokaryotes')
     plt.xticks(ind+width, ['Eukaryotes', 'Prokaryotes'])
-    plt.ylim((0,max(conf+all_)+5.))
-    autolabel(rects_conf)
+    if have_conf:
+        plt.ylim((0, max(conf+all_)+5.))
+    else:
+        plt.ylim((0, max(all_)+5.))
+    if have_conf:
+        autolabel(rects_conf)
     autolabel(rects_all_)
-    plt.legend((rects_conf[0], rects_all_[0]), ('Confident', 'All'))
+    if have_conf:
+        plt.legend((rects_conf[0], rects_all_[0]), ('Confident', 'All'))
+    else:
+        plt.legend([rects_all_[0]], ['All'])
 
 
 def plot_tm_num(table_data, prd_results_dict):
@@ -120,8 +145,9 @@ def plot_tm_num(table_data, prd_results_dict):
                 tmh_5['Qok_conf'] += 1 if prd_results_dict[uni]['Qok'] else 0
             tmh_5['tot_all'] += 1
             tmh_5['Qok_all'] += 1 if prd_results_dict[uni]['Qok'] else 0
-    conf = (100*tmh_1['Qok_conf']/tmh_1['tot_conf'], 100*tmh_2_5['Qok_conf']/tmh_2_5['tot_conf'],
-            100*tmh_5['Qok_conf']/tmh_5['tot_conf'])
+    if have_conf:
+        conf = (100*tmh_1['Qok_conf']/tmh_1['tot_conf'], 100*tmh_2_5['Qok_conf']/tmh_2_5['tot_conf'],
+                100*tmh_5['Qok_conf']/tmh_5['tot_conf'])
     all_ = (100*tmh_1['Qok_all']/tmh_1['tot_all'], 100*tmh_2_5['Qok_all']/tmh_2_5['tot_all'],
             100*tmh_5['Qok_all']/tmh_5['tot_all'])
 
@@ -129,15 +155,23 @@ def plot_tm_num(table_data, prd_results_dict):
     width = 0.35
     ind = np.arange(N)
     plt.subplot(223)
-    rects_conf = plt.bar(ind, conf, width, color='r')
+    if have_conf:
+        rects_conf = plt.bar(ind, conf, width, color='r')
     rects_all_ = plt.bar(ind+width, all_, width, color='b')
     plt.ylabel('Qok')
     plt.title('Qok  #TMH')
     plt.xticks(ind+width, ['1', '2-5', '5'])
-    plt.ylim((0, max(conf+all_)+5.))
-    autolabel(rects_conf)
+    if have_conf:
+        plt.ylim((0, max(conf+all_)+5.))
+    else:
+        plt.ylim((0, max(all_)+5.))
+    if have_conf:
+        autolabel(rects_conf)
     autolabel(rects_all_)
-    plt.legend((rects_conf[0], rects_all_[0]), ('Confident', 'All'))
+    if have_conf:
+        plt.legend((rects_conf[0], rects_all_[0]), ('Confident', 'All'))
+    else:
+        plt.legend([rects_all_[0]], ['All'])
 
 
 def autolabel(rects):
@@ -177,6 +211,8 @@ def pred_reader(prd_path, file_name):
                 result['second_score'] = float(split[4])
             elif split[0] == 'Qok':
                 result['Qok_'+tech] = True if split[3] == 'True' else False
+            elif split[0] == 'overlap10':
+                result['over10'] = True if split[3] == 'True' else False
     result['Qok'] = result['Qok_pdbtm'] or result['Qok_opm']
     result['best_minus_second'] = result['best_score'] - result['second_score']
     result['conf'] = True if abs(result['best_minus_second']) >= 2.5 else False

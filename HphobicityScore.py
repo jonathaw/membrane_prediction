@@ -394,5 +394,5 @@ class HphobicityScore():
 
         # sec_best_path, sec_best_val = [(k, v) for k, v in sorted(dist.items(), key=operator.itemgetter(1)) if k.direction != best_path[-1].direction]
         sec_best_path = self.find_graph_path(pred, sec_best_path, source_node)
-        print 'topo finished'
+        # print 'topo finished'
         return best_path, min_val, sec_best_path, sec_best_val

@@ -9,26 +9,30 @@ def main():
     global hydrophobicity_polyval
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('-hp_threshold', default=0.0, type=float)
+    parser.add_argument('-hp_threshold', default=10.0, type=float)
     parser.add_argument('-min_length', default=18, type=int)
-    parser.add_argument('-psi_helix', default=0.2, type=float)
+    parser.add_argument('-psi_helix', default=0.01, type=float)
     parser.add_argument('-psi_res_num', default=2, type=int)
-    parser.add_argument('-mode', type=str)
+    parser.add_argument('-mode', type=str, default='ROC')
     parser.add_argument('-name', default=None, type=str)
     parser.add_argument('-known_tm_num', default=-100, type=int)
     parser.add_argument('-result_path', default=os.getcwd())
     args = vars(parser.parse_args())
+
     # import topdb_functions
     hydrophobicity_polyval = MakeHydrophobicityGrade()
     if args['mode'] == 'ROC':
         rostlab_ROC(args)
     elif args['mode'] == 'single':
+        args['name'] = args['name'].lower()
         process_single_protein(args['name'], args)
 
 
 def process_single_protein(name, args):
+    # path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/10overlap_uuu'
+    path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/12.4Temp'
     rostlab_db_dict = parse_rostlab_db()
-    entry = rostlab_db_dict[name]
+    entry = rostlab_db_dict[name.lower()]
     temp = HphobicityScore(name, entry['seq'],
                         '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/psipred/'+name+'.ss2',
                         hydrophobicity_polyval, args)
@@ -37,8 +41,10 @@ def process_single_protein(name, args):
     pred_tm = len(temp.topo_best)
     entry_results['pdbtm'] = result_comparer(entry['pdbtm'], topo_string, pred_tm)
     entry_results['opm'] = result_comparer(entry['opm'], topo_string, pred_tm)
-    results_writer(entry_results, entry, topo_string, temp, args, pred_tm, args['result_path'])
-    temp.plot_win_grades()
+    overlap10 = {'pdbtm': result_comparer_10overlap(entry['pdbtm'], topo_string),
+                 'opm': result_comparer_10overlap(entry['pdbtm'], topo_string)}
+    results_writer(entry_results, entry, topo_string, temp, args, pred_tm, path, overlap10)
+    # temp.plot_win_grades()
 
 
 def archive_main():
@@ -109,10 +115,10 @@ def archive_main():
 
 
 def rostlab_ROC(param_list):
-    # path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/ROC/ROC_'\
-    #        +str(param_list['hp_threshold'])+'_'+str(param_list['min_length'])+'_'+str(param_list['psi_helix'])\
-    #        +'_'+str(param_list['psi_res_num'])+'/'
-    path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/ROC'
+    path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/ROC/ROC_'\
+           +str(param_list['hp_threshold'])+'_'+str(param_list['min_length'])+'_'+str(param_list['psi_helix'])\
+           +'_'+str(param_list['psi_res_num'])+'/'
+    # path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/12.4Temp'
     rostlab_db_dict = parse_rostlab_db()
     Q_ok_results = {'opm': 0, 'pdbtm': 0}
     proteins, num, overlap10_ok = 0, 0, 0
@@ -159,9 +165,9 @@ def rostlab_ROC(param_list):
     percent_overlap10 = float(overlap10_ok)/float(proteins)
     # o = open('data_sets/rostlab_db/ROC/'+'_'.join(str(a) for a in param_list.values())+'.roc', 'wr+')
     ### for use when runing ROC
-    # o = open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/ROC/'+'_'.join(str(a) for a in param_list.values())+'.roc', 'wr+')
+    o = open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/ROC/'+'_'.join(str(a) for a in param_list.values())+'.roc', 'wr+')
     ### for use when NOT running ROC
-    o = open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/ROC/temp.roc', 'wr+')
+    # o = open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/12.4Temp/temp.roc', 'wr+')
     o.write('hp_threshold %f\n' % param_list['hp_threshold'])
     o.write('min_length %i\n' % param_list['min_length'])
     o.write('psi_helix %f\n' % param_list['psi_helix'])
@@ -193,7 +199,7 @@ def result_comparer_10overlap(obs_ts, pred_ts):
 
 
 def seg_in_unknown(seg, obs_ts):
-    return True if float(obs_ts[seg[0]:seg[1]+1].lower().count('h'))/float(seg[1]+1-seg[0]) > 0.8 else False
+    return True if float(obs_ts[seg[0]:seg[1]+1].lower().count('u'))/float(seg[1]+1-seg[0]) > 0.98 else False
 
 
 def segs_10overlap(seg1, seg2):
@@ -208,8 +214,9 @@ def result_comparer(obs_ts, pred_ts, pred_tm):
     import subprocess
     import re
     result = {}
-    ok_pred_tm = int(subprocess.Popen(['perl', '/home/labs/fleishman/jonathaw/membrane_prediciton/rostlab_evaluator.pl', obs_ts, pred_ts],
-                                      stdout=subprocess.PIPE).stdout.read().split()[-1])
+    uuu_pred_ts = uuuu_pred_ts(obs_ts, pred_ts)  # wherever obs_ts has a u, uuu_pred_ts will too
+    ok_pred_tm = int(subprocess.Popen(['perl', '/home/labs/fleishman/jonathaw/membrane_prediciton/rostlab_evaluator.pl',
+                                       obs_ts, uuu_pred_ts], stdout=subprocess.PIPE).stdout.read().split()[-1])
     obs_tm = len(re.findall('[1u20LU]h', obs_ts))
     if pred_tm == ok_pred_tm and obs_tm == ok_pred_tm:
         result['Qok'] = True
@@ -223,26 +230,40 @@ def result_comparer(obs_ts, pred_ts, pred_tm):
     return result
 
 
+def uuuu_pred_ts(obs_ts, pred_ts):
+    res = list(pred_ts)
+    for i, aa in enumerate(obs_ts):
+        if aa.lower() == 'u':
+            res[i] = 'u'
+    return ''.join(res)
+
+
 def results_writer(entry_results, entry_info, topo_string, hp_obj, param_list, pred_tm, path, overlap10):
     import matplotlib.pyplot as plt
     from time import strftime
     # print path, entry_info['name']
     # f = open('data_sets/rostlab_db/prediction/' + entry_info['name'] + '.prd', 'wr+')
-    f = open(path+'/'+entry_info['name'] + '.prd', 'wr+')
+    f = open(path+entry_info['name'] + '.prd', 'wr+')
     f.write('uniprot name\t%s\n' % entry_info['name'])
     f.write('PDB name    \t%s %s\n' % (entry_info['pdb'], entry_info['chain']))
-    f.write('hp_threshold %f\n' % param_list['hp_threshold'])
-    f.write('min_length %i\n' % param_list['min_length'])
-    f.write('psi_helix %f\n' % param_list['psi_helix'])
-    f.write('psi_res_nume %i\n' % param_list['psi_res_num'])
-    f.write('topo confidence %f\n' % (hp_obj.topo_best_val / hp_obj.topo_sec_best_val))
+    if param_list != None:
+        f.write('hp_threshold %f\n' % param_list['hp_threshold'])
+        f.write('min_length %i\n' % param_list['min_length'])
+        f.write('psi_helix %f\n' % param_list['psi_helix'])
+        f.write('psi_res_nume %i\n' % param_list['psi_res_num'])
+    if hp_obj != None:
+        f.write('topo confidence %f\n' % (hp_obj.topo_best_val / hp_obj.topo_sec_best_val))
     for typer in ['pdbtm', 'opm']:
         f.write('Results for observed %s\n' % typer)
         f.write('#TM observed %-3i\n#TM predicted %-3i\n' % (entry_results[typer]['obs_tm'], pred_tm))
         f.write('#TM agrees\n' if entry_results[typer]['tm_agree'] else '#TM DISAGREE\n')
         f.write('topo correct\n' if entry_results[typer]['topo_correct'] else 'topo INCORRECT\n')
-        f.write('topo best energy        %f\n' % hp_obj.topo_best_val)
-        f.write('topo second best energy %f\n' % hp_obj.topo_sec_best_val)
+        if hp_obj != None:
+            f.write('topo best energy        %f\n' % hp_obj.topo_best_val)
+            f.write('topo second best energy %f\n' % hp_obj.topo_sec_best_val)
+        else:
+            f.write('topo best energy        %f\n' % 0.)
+            f.write('topo second best energy %f\n' % 0.)
         f.write('sequence %s\n' % entry_info['seq'])
         f.write('obs topo %s\n' % entry_info[typer])
         f.write('aln topo %s\n' % entry_results[typer]['topo_comp']['aln'])
@@ -264,6 +285,8 @@ def results_writer(entry_results, entry_info, topo_string, hp_obj, param_list, p
         f.write('by overlap 10 standard for %s:\n' % typer)
         f.write('observed tm %i\tpredicted tm %i\n' % (overlap10[typer]['obs_tm'], overlap10[typer]['pred_tm']))
         f.write('prediction OK by 10overlap: %r\n' % overlap10[typer]['10overlap'])
+    over10_ok = any([overlap10['pdbtm']['10overlap'], overlap10['opm']['10overlap']])
+    f.write('overlap10 is OK %r\n' % over10_ok)
     f.write('produced ' + strftime("%Y-%m-%d %H:%M:%S") + '\n')
     # hp_obj.plot_win_grades()
     # plt.savefig('data_sets/rostlab_db/prediction/' + entry_info['name'] + '.png')
