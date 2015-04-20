@@ -7,13 +7,14 @@ class HphobicityScore():
         :param hydro_polyval: polynom valued dictionary
         :return: a stack of WinGrade instances, and their utilities
         '''
-        global HP_THRESHOLD, INC_MAX, MIN_LENGTH, PSI_HELIX, PSI_RES_NUM, known_tm_num
+        global HP_THRESHOLD, INC_MAX, MIN_LENGTH, PSI_HELIX, PSI_RES_NUM, known_tm_num, poly_param
         HP_THRESHOLD = param_list['hp_threshold']
         INC_MAX = 8
         MIN_LENGTH = param_list['min_length']
         PSI_HELIX = param_list['psi_helix']
         PSI_RES_NUM = param_list['psi_res_num']
         known_tm_num = param_list['known_tm_num']
+        poly_param = {k: v for k, v in param_list.items() if k in ['c0', 'c1', 'c2', 'c3']}
         self.name = name
         self.seq = seq
         self.ss2_file = ss2_file
@@ -75,12 +76,14 @@ class HphobicityScore():
         for i in range(pos1, pos2):
             for inc in range(min(INC_MAX, self.seq_length - MIN_LENGTH - i)):
                 is_not_helical = self.is_not_helical((i, i+MIN_LENGTH+inc), psi)
-                fwd_temp = WinGrade(i, i+MIN_LENGTH+inc, 'fwd', self.seq[i:i+MIN_LENGTH+inc], self.polyval)
-                rev_temp = WinGrade(i, i+MIN_LENGTH+inc, 'rev', self.seq[i:i+MIN_LENGTH+inc][::-1], self.polyval)
-                if (fwd_or_rev == 'both' or fwd_or_rev == 'fwd') and (not is_not_helical or fwd_temp.grade < PSI_HP_THRESHOLD):
-                    grades.append(WinGrade(i, i+MIN_LENGTH+inc, 'fwd', self.seq[i:i+MIN_LENGTH+inc], self.polyval))
-                if (fwd_or_rev == 'both' or fwd_or_rev == 'rev') and (not is_not_helical or rev_temp.grade < PSI_HP_THRESHOLD):
-                    grades.append(WinGrade(i, i+MIN_LENGTH+inc, 'rev', self.seq[i:i+MIN_LENGTH+inc][::-1], self.polyval))
+                fwd_temp = WinGrade(i, i+MIN_LENGTH+inc, 'fwd', self.seq[i:i+MIN_LENGTH+inc], self.polyval, poly_param)
+                rev_temp = WinGrade(i, i+MIN_LENGTH+inc, 'rev', self.seq[i:i+MIN_LENGTH+inc][::-1], self.polyval, poly_param)
+                if (fwd_or_rev == 'both' or fwd_or_rev == 'fwd') and \
+                        (not is_not_helical or fwd_temp.grade < PSI_HP_THRESHOLD) and fwd_temp.hp_moment <= 6:
+                    grades.append(fwd_temp)
+                if (fwd_or_rev == 'both' or fwd_or_rev == 'rev') and \
+                        (not is_not_helical or rev_temp.grade < PSI_HP_THRESHOLD) and rev_temp <= 6:
+                    grades.append(rev_temp)
         return grades    
 
     def print_HphobicityScore(self):
@@ -228,6 +231,19 @@ class HphobicityScore():
         """
         :return:reads the sequence's psipred results. returns them as a string
         """
+        ss2_file = open(self.ss2_file)
+        result = []
+        for line in ss2_file:
+            split = line.split()
+            if len(split) > 5:
+                result.append(float(split[4]))
+        ss2_file.close()
+        return result
+
+    def PsiReaderHelix_old(self):
+        """
+        :return:reads the sequence's psipred results. returns them as a string
+        """
         import re
         ss2_file = open(self.ss2_file)
         line_re = re.compile('^\s*([0-9]*)\s*([A-Z]*)\s*([A-Z]*)\s*(0\.[0-9]*)\s*(0\.[0-9]*)\s*(0\.[0-9]*)')
@@ -235,6 +251,7 @@ class HphobicityScore():
         for line in ss2_file:
             if line_re.search(line):
                 result.append(float(line_re.search(line).group(5)))
+        ss2_file.close()
         return result
 
     def make_topo_string(self):
@@ -339,14 +356,14 @@ class HphobicityScore():
     def topo_graph(self):
         """
         topology determination using graph theory. wins are nodes
-        :return:list of WinGrades describing best topologies
+        :return: list of WinGrades describing best topologies
         """
         import networkx as nx
         from WinGrade import WinGrade
         import operator
         win_list = [a for a in self.WinGrades if a.grade < HP_THRESHOLD]  # make copy of negative wingrades list
         G = nx.DiGraph()
-        source_node = WinGrade(0, 0, 'fwd', '', self.polyval)   # define source win
+        source_node = WinGrade(0, 0, 'fwd', '', self.polyval, poly_param)   # define source win
         [G.add_edge(source_node, a, weight=a.grade) for a in win_list]  # add all win to source edges
         for win1 in win_list:   # add all win to win edges where condition applies
             for win2 in win_list:
@@ -357,6 +374,7 @@ class HphobicityScore():
         pred, dist = nx.bellman_ford(G, source_node)
         # force #TM in topology to be known_tm_num
         sorted_dist = sorted(dist.items(), key=operator.itemgetter(1))
+        # print known_tm_num, sorted_dist
         booli = True
         while booli:
             # min_val = min(dist.values())
@@ -376,7 +394,6 @@ class HphobicityScore():
             best_path_val = [sorted_dist[0][0]]
             min_val = sorted_dist[0][1]
             best_path = self.find_graph_path(pred, best_path_val, source_node)
-
         # force secondary best topology to have known_tm_num
         for k, v in sorted_dist:
             if k.direction != best_path[-1].direction:

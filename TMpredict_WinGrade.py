@@ -3,22 +3,25 @@ from HphobicityScore import *
 
 
 def main():
-    import subprocess
-    import re
+    # import subprocess
+    # import re
     import os
-    global hydrophobicity_polyval
+    global hydrophobicity_polyval, args
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('-hp_threshold', default=10.0, type=float)
     parser.add_argument('-min_length', default=18, type=int)
-    parser.add_argument('-psi_helix', default=0.01, type=float)
-    parser.add_argument('-psi_res_num', default=2, type=int)
+    parser.add_argument('-psi_helix', default=0.001, type=float)
+    parser.add_argument('-psi_res_num', default=4, type=int)
     parser.add_argument('-mode', type=str, default='ROC')
     parser.add_argument('-name', default=None, type=str)
     parser.add_argument('-known_tm_num', default=-100, type=int)
+    parser.add_argument('-c0', default=0.27, type=float)
+    parser.add_argument('-c1', default=9.29, type=float)
+    parser.add_argument('-c2', default=-0.645, type=float)
+    parser.add_argument('-c3', default=0.00822, type=float)
     parser.add_argument('-result_path', default=os.getcwd())
     args = vars(parser.parse_args())
-
     # import topdb_functions
     hydrophobicity_polyval = MakeHydrophobicityGrade()
     if args['mode'] == 'ROC':
@@ -30,7 +33,7 @@ def main():
 
 def process_single_protein(name, args):
     # path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/10overlap_uuu'
-    path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/12.4Temp'
+    path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/production_19.4_again/'
     rostlab_db_dict = parse_rostlab_db()
     entry = rostlab_db_dict[name.lower()]
     temp = HphobicityScore(name, entry['seq'],
@@ -115,9 +118,15 @@ def archive_main():
 
 
 def rostlab_ROC(param_list):
+    import os
+    # path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/ROC/ROC_'\
+    #        +str(param_list['hp_threshold'])+'_'+str(param_list['min_length'])+'_'+str(param_list['psi_helix'])\
+    #        +'_'+str(param_list['psi_res_num'])+'/'
     path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/ROC/ROC_'\
-           +str(param_list['hp_threshold'])+'_'+str(param_list['min_length'])+'_'+str(param_list['psi_helix'])\
-           +'_'+str(param_list['psi_res_num'])+'/'
+           +str(param_list['c0'])+'_'+str(param_list['c1'])+'_'+str(param_list['c2'])\
+           +'_'+str(param_list['c3'])+'/'
+    if not os.path.exists(path):
+        os.makedirs(path)
     # path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/12.4Temp'
     rostlab_db_dict = parse_rostlab_db()
     Q_ok_results = {'opm': 0, 'pdbtm': 0}
@@ -125,8 +134,9 @@ def rostlab_ROC(param_list):
     protein_names = []
     Q_ok, percent_topo_correct, overlap10 = {}, {}, {}
     num_topo_correct = {'opm': 0, 'pdbtm': 0}
+    failed = []
     for name, entry in rostlab_db_dict.items():
-        # if name != 'c6e9r4':  # q99385
+        # if name != args['name'].lower():  # q99385
         #     continue
         # if float(entry['topo_string'].count('u') + entry['topo_string'].count('U'))/float(len(entry['topo_string'])) \
         #         > 0.2:
@@ -135,10 +145,11 @@ def rostlab_ROC(param_list):
         # if not -1 < num < 150:
         #     num += 1
         #     continue
-        # print entry
+        print entry
         try:
             temp = HphobicityScore(name, entry['seq'], '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/psipred/'+name+'.ss2', hydrophobicity_polyval, param_list)
         except:
+            failed.append(name)
             continue
         topo_string = topo_string_rostlab_format(temp.topo_best, entry['seq'])
         entry_results = {}
@@ -165,7 +176,11 @@ def rostlab_ROC(param_list):
     percent_overlap10 = float(overlap10_ok)/float(proteins)
     # o = open('data_sets/rostlab_db/ROC/'+'_'.join(str(a) for a in param_list.values())+'.roc', 'wr+')
     ### for use when runing ROC
-    o = open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/ROC/'+'_'.join(str(a) for a in param_list.values())+'.roc', 'wr+')
+    # o = open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/ROC/roc'+
+    #          str(param_list['hp_threshold'])+'_'+str(param_list['min_length'])+'_'+str(param_list['psi_helix'])
+    #          +'_'+str(param_list['psi_res_num'])+'.roc', 'wr+')
+    o = open(path+'ROC_results_'+str(param_list['c0'])+'_'+str(param_list['c1'])+'_'+str(param_list['c2'])+
+             '_'+str(param_list['c3']), 'wr+')
     ### for use when NOT running ROC
     # o = open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/12.4Temp/temp.roc', 'wr+')
     o.write('hp_threshold %f\n' % param_list['hp_threshold'])
@@ -178,7 +193,9 @@ def rostlab_ROC(param_list):
         o.write('Results for %s\n' % typer)
         o.write('Q_ok %f\n' % Q_ok[typer])
         o.write('# correct topo %i, precentage %f\n\n' % (num_topo_correct[typer], percent_topo_correct[typer]))
-    o.write('Overlap10 results: %f' % percent_overlap10)
+    o.write('failed %i proteins\n' % len(failed))
+    o.write('failed: '+' '.join(failed)+'\n')
+    o.write('Overlap10 results: %f\n' % percent_overlap10)
     o.close()
 
 
@@ -241,7 +258,6 @@ def uuuu_pred_ts(obs_ts, pred_ts):
 def results_writer(entry_results, entry_info, topo_string, hp_obj, param_list, pred_tm, path, overlap10):
     import matplotlib.pyplot as plt
     from time import strftime
-    # print path, entry_info['name']
     # f = open('data_sets/rostlab_db/prediction/' + entry_info['name'] + '.prd', 'wr+')
     f = open(path+entry_info['name'] + '.prd', 'wr+')
     f.write('uniprot name\t%s\n' % entry_info['name'])
@@ -382,7 +398,8 @@ def topo_string_rostlab_format(topo, seq):
     '''
     global hydrophobicity_polyval
     topo_string = ''
-    last_tm = WinGrade(0, 0, 'fwd', '', hydrophobicity_polyval)
+    last_tm = WinGrade(0, 0, 'fwd', '', hydrophobicity_polyval,
+                       {k: v for k, v in args.items() if k in ['c0', 'c1', 'c2', 'c3']})
     for tm in topo:
         topo_string += '1' * (tm.begin-last_tm.end) if tm.direction == 'fwd' else '2' * (tm.begin-last_tm.end)
         topo_string += 'H' * (tm.end - tm.begin)
