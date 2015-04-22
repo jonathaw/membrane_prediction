@@ -16,11 +16,12 @@ def main():
     parser.add_argument('-mode', type=str, default='ROC')
     parser.add_argument('-name', default=None, type=str)
     parser.add_argument('-known_tm_num', default=-100, type=int)
-    parser.add_argument('-c0', default=0.27, type=float)
-    parser.add_argument('-c1', default=9.29, type=float)
-    parser.add_argument('-c2', default=-0.645, type=float)
-    parser.add_argument('-c3', default=0.00822, type=float)
+    parser.add_argument('-c0', default=4., type=float)
+    parser.add_argument('-c1', default=6., type=float)
+    parser.add_argument('-c2', default=0.6, type=float)
+    parser.add_argument('-c3', default=-0.04, type=float)
     parser.add_argument('-result_path', default=os.getcwd())
+    parser.add_argument('-seq', default='', type=str)
     args = vars(parser.parse_args())
     # import topdb_functions
     hydrophobicity_polyval = MakeHydrophobicityGrade()
@@ -28,12 +29,16 @@ def main():
         rostlab_ROC(args)
     elif args['mode'] == 'single':
         args['name'] = args['name'].lower()
-        process_single_protein(args['name'], args)
+        process_single_protein(args['name'])
+    elif args['mode'] == 'dG':
+        single_win_dG()
+    elif args['mode'] == 'topo_VH':
+        topo_VH()
 
 
-def process_single_protein(name, args):
+def process_single_protein(name):
     # path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/10overlap_uuu'
-    path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/production_19.4_again/'
+    path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/best_ROC_without_polynom/'
     rostlab_db_dict = parse_rostlab_db()
     entry = rostlab_db_dict[name.lower()]
     temp = HphobicityScore(name, entry['seq'],
@@ -199,6 +204,63 @@ def rostlab_ROC(param_list):
     o.close()
 
 
+def topo_VH():
+    from time import strftime
+    vh_db = topo_VH_parser(args['name'])
+    phobius = phobius_VH_parser(args['name'])
+    ss2_path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/VH_psipred/'+args['name']+'.ss2'
+    hp_obj = HphobicityScore(vh_db['name'], vh_db['seq'], ss2_path, hydrophobicity_polyval, args)
+    topo_string = topo_string_rostlab_format(hp_obj.topo_best, vh_db['seq'])
+    pred_best_c_term = hp_obj.best_c_term
+    pred_sec_best_c_term = hp_obj.sec_best_c_term
+    with open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/topo_VH/'+args['name']+'.prd',
+              'wr+') as o:
+        o.writelines('name %s\n' % args['name'])
+
+        o.writelines('obs_c_term %s\n' % vh_db['c_term_VH'])
+        o.writelines('phobius_c_term %s\n' % phobius['phobius_c_term'])
+        o.writelines('best_c_term %s\n' % pred_best_c_term)
+        o.writelines('best_val %f\n' % hp_obj.topo_best_val)
+        o.writelines('sec_best_c_term %s\n' % pred_sec_best_c_term)
+        o.writelines('sec_best_val %f\n' % hp_obj.topo_sec_best_val)
+        o.writelines('best_sec_best_delta %f\n' % (hp_obj.topo_best_val-hp_obj.topo_sec_best_val))
+
+        o.writelines('seq %s\n' % vh_db['seq'])
+        o.writelines('pre %s\n' % topo_string)
+        o.writelines('pred_correct %r\n' % (pred_best_c_term == vh_db['c_term_VH']))
+        o.writelines('phobius_correct %r\n' % (phobius['phobius_c_term'] == vh_db['c_term_VH']))
+        o.writelines('pred_phobius_agree %r\n' % (phobius['phobius_c_term'] == pred_best_c_term))
+        o.write('produced ' + strftime("%Y-%m-%d %H:%M:%S") + '\n')
+
+
+def phobius_VH_parser(name):
+    """
+    :param name: von-heijne database entry name
+    :return: phobius results for the entry.
+    """
+    with open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/VH_Phobiuse_Topo.txt', 'r') as f:
+        cont = f.read().split('\n')
+    for line in cont:
+        split = line.split()
+        if len(split) < 4: continue
+        if split[0].lower() == name.lower():
+            return {'name': split[0].lower(), 'phobius_c_term': 'in' if split[3][-1] == 'i' else 'out'}
+
+
+def topo_VH_parser(name):
+    """
+    :param name: von-heijne database entry name
+    :return: dict of VH results for the name
+    """
+    with open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/VH_Data_Base_All_Sequences_No_SP.txt', 'r') as f:
+        cont = f.read().split('\n')
+    for line in cont:
+        split = line.split()
+        if len(split) < 5: continue
+        if split[0].lower() == name.lower():
+            return {'seq': split[4], 'c_term_VH': split[1], 'name': split[0].lower()}
+
+
 def result_comparer_10overlap(obs_ts, pred_ts):
     import re
     result = {'10overlap': True}
@@ -267,7 +329,7 @@ def results_writer(entry_results, entry_info, topo_string, hp_obj, param_list, p
         f.write('min_length %i\n' % param_list['min_length'])
         f.write('psi_helix %f\n' % param_list['psi_helix'])
         f.write('psi_res_nume %i\n' % param_list['psi_res_num'])
-    if hp_obj != None:
+    if hp_obj != None and hp_obj.topo_sec_best_val != 0:
         f.write('topo confidence %f\n' % (hp_obj.topo_best_val / hp_obj.topo_sec_best_val))
     for typer in ['pdbtm', 'opm']:
         f.write('Results for observed %s\n' % typer)
@@ -543,6 +605,12 @@ def ROC():
                 f.writelines('predicted best grade\t%s' % temp.topo_best_val+'\n')
                 f.writelines('predicted sec best c_term\t%s' % temp.sec_best_c_term+'\n')
                 f.writelines('predicted sec best grade\t%s' % temp.topo_sec_best_val+'\n')
+
+
+def single_win_dG():
+    temp = WinGrade(0, len(args['seq']), 'fwd', args['seq'], hydrophobicity_polyval,
+                    {'c0': 0, 'c1': 0, 'c2': 0, 'c3': 0})
+    print temp.grade
 
 
 if __name__ == '__main__':

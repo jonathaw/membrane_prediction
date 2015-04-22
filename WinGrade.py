@@ -20,7 +20,7 @@ class WinGrade():
         self.length_element = self.length_polynom()
         self.hp_moment = hp_moment(seq, polyval, poly_param)
         self.hp_sum = self.grade_segment(polyval)
-        self.grade = self.hp_sum  # + self.hp_moment + self.length_element #self.grade_segment(polyval)
+        self.grade = self.hp_sum + self.hp_moment + self.length_element
 
         self.direction = direction
         self.span = range(self.begin, self.end+1)

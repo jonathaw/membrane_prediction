@@ -38,7 +38,10 @@ class HphobicityScore():
         # self.topo = self.topo_brute()
         self.topo_best, self.topo_best_val, self.topo_sec_best, self.topo_sec_best_val = self.topo_graph
         self.best_c_term = 'out' if self.topo_best[-1].direction == 'fwd' else 'in'
-        self.sec_best_c_term = 'out' if self.topo_sec_best[-1].direction == 'fwd' else 'in'
+        try:
+            self.sec_best_c_term = 'out' if self.topo_sec_best[-1].direction == 'fwd' else 'in'
+        except:
+            self.sec_best_c_term = None
 
     def __str__(self):
         """
@@ -394,6 +397,12 @@ class HphobicityScore():
             best_path_val = [sorted_dist[0][0]]
             min_val = sorted_dist[0][1]
             best_path = self.find_graph_path(pred, best_path_val, source_node)
+
+        # if no best path is found, the minimal energy win grade is chosen as a single window
+        if best_path == []:
+            best_path_val = min([v for k, v in dist.items() if k.seq != ''])
+            best_path = [k for k, v in dist.items() if v == best_path_val]
+
         # force secondary best topology to have known_tm_num
         for k, v in sorted_dist:
             if k.direction != best_path[-1].direction:
