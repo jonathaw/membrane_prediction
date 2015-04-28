@@ -16,10 +16,10 @@ def main():
     parser.add_argument('-mode', type=str, default='ROC')
     parser.add_argument('-name', default=None, type=str)
     parser.add_argument('-known_tm_num', default=-100, type=int)
-    parser.add_argument('-c0', default=4., type=float)
-    parser.add_argument('-c1', default=6., type=float)
-    parser.add_argument('-c2', default=0.6, type=float)
-    parser.add_argument('-c3', default=-0.04, type=float)
+    parser.add_argument('-c0', default=3., type=float)
+    parser.add_argument('-c1', default=6.8, type=float)
+    parser.add_argument('-c2', default=0.7, type=float)
+    parser.add_argument('-c3', default=-0.03, type=float)
     parser.add_argument('-result_path', default=os.getcwd())
     parser.add_argument('-seq', default='', type=str)
     args = vars(parser.parse_args())
@@ -37,14 +37,30 @@ def main():
 
 
 def process_single_protein(name):
+    import re
+    end_of_SP = 0
     # path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/10overlap_uuu'
-    path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/best_ROC_without_polynom/'
+    path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/production_28.4/'
+    topc = spc_parser('/home/labs/fleishman/jonathaw/membrane_prediction_DBs/spoctopus_SPDB/rost_db/'+name+'.spc')
     rostlab_db_dict = parse_rostlab_db()
     entry = rostlab_db_dict[name.lower()]
-    temp = HphobicityScore(name, entry['seq'],
+    if topc['spoctopus'].count('S') != 0:
+        end_of_SP = [a for a in re.finditer('S*', topc['spoctopus']) if a != ''][0].end()
+        entry['seq_no_SP'] = entry['seq'][end_of_SP:]
+        temp = HphobicityScore(name, entry['seq_no_SP'],
                         '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/psipred/'+name+'.ss2',
                         hydrophobicity_polyval, args)
-    topo_string = topo_string_rostlab_format(temp.topo_best, entry['seq'])
+        topo_string = 'u'*end_of_SP + topo_string_rostlab_format(temp.topo_best, entry['seq_no_SP'])
+    else:
+        temp = HphobicityScore(name, entry['seq'],
+                        '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/psipred/'+name+'.ss2',
+                        hydrophobicity_polyval, args)
+        topo_string = topo_string_rostlab_format(temp.topo_best, entry['seq'])
+    print entry['seq']
+    print entry['seq_no_SP']
+    print topc['seq']
+    print 'aaa', topo_string
+    print 'bbb', entry['pdbtm']
     entry_results = {}
     pred_tm = len(temp.topo_best)
     entry_results['pdbtm'] = result_comparer(entry['pdbtm'], topo_string, pred_tm)
@@ -213,7 +229,7 @@ def topo_VH():
     topo_string = topo_string_rostlab_format(hp_obj.topo_best, vh_db['seq'])
     pred_best_c_term = hp_obj.best_c_term
     pred_sec_best_c_term = hp_obj.sec_best_c_term
-    with open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/topo_VH/'+args['name']+'.prd',
+    with open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/VH_topo_after_ROC/'+args['name']+'.prd',
               'wr+') as o:
         o.writelines('name %s\n' % args['name'])
 
@@ -221,8 +237,10 @@ def topo_VH():
         o.writelines('phobius_c_term %s\n' % phobius['phobius_c_term'])
         o.writelines('best_c_term %s\n' % pred_best_c_term)
         o.writelines('best_val %f\n' % hp_obj.topo_best_val)
+        o.writelines('best_tm_num %i\n' % len(hp_obj.topo_best))
         o.writelines('sec_best_c_term %s\n' % pred_sec_best_c_term)
         o.writelines('sec_best_val %f\n' % hp_obj.topo_sec_best_val)
+        o.writelines('sec_best_tm_num %i\n' % len(hp_obj.topo_sec_best))
         o.writelines('best_sec_best_delta %f\n' % (hp_obj.topo_best_val-hp_obj.topo_sec_best_val))
 
         o.writelines('seq %s\n' % vh_db['seq'])
@@ -611,6 +629,34 @@ def single_win_dG():
     temp = WinGrade(0, len(args['seq']), 'fwd', args['seq'], hydrophobicity_polyval,
                     {'c0': 0, 'c1': 0, 'c2': 0, 'c3': 0})
     print temp.grade
+
+
+def topcons_parser(file_name):
+    result = {}
+    with open(file_name, 'r') as f:
+        cont = f.read().split('\n')
+    for i, line in enumerate(cont):
+        split = line.split()
+        if split == [] or split[0][0] == '#' or len(split) < 2: continue
+        if split[1] == 'name:': result['name'] = split[2]
+        elif split[0] == 'TOPCONS': result['topcons'] = cont[i+1]
+        elif split[0] == 'OCTOPUS': result['octopus'] = cont[i+1]
+        elif split[0] == 'Philius': result['philius'] = cont[i+1]
+        elif split[0] == 'PolyPhobius': result['polyphobius'] = cont[i+1]
+        elif split[0] == 'SCAMPI': result['scampi'] = cont[i+1]
+        elif split[0] == 'SPOCTOPUS': result['spoctopus'] = cont[i+1]
+    return result
+
+
+def spc_parser(file_name):
+    result = {}
+    with open(file_name, 'r') as f:
+        cont = f.read().split('\n')
+    for line in cont:
+        split = line.split()
+        if split == []: continue
+        result[split[0]] = split[1]
+    return result
 
 
 if __name__ == '__main__':

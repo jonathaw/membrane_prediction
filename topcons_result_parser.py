@@ -8,23 +8,26 @@ def main():
     import os
     import re
     from TMpredict_WinGrade import result_comparer, results_writer, parse_rostlab_db, result_comparer_10overlap
-    topcons_path = '/home/labs/fleishman/jonathaw/membrane_topcons/all_results/'
+    topcons_path = '/home/labs/fleishman/jonathaw/membrane_topcons/topo_VH_topcons/all_results/'
     rostlab_db_dict = parse_rostlab_db()
     file_list = [x for x in os.listdir(topcons_path)
                  if re.match('.*\.txt', x)]
     for file_i in file_list:
         entry = topcons_parser(topcons_path, file_i)
         topo_string = entry['rost_format_scampi']
-        pred_tm = len(re.findall('[1u20LU]h', entry['rost_format_scampi']))
-
-        rost_results = rostlab_db_dict[entry['name'].lower()]
-
-        entry_results = {}
-        entry_results['pdbtm'] = result_comparer(rost_results['pdbtm'], topo_string, pred_tm)
-        entry_results['opm'] = result_comparer(rost_results['opm'], topo_string, pred_tm)
-        overlap10 = {'pdbtm': result_comparer_10overlap(rost_results['pdbtm'], topo_string),
-                     'opm': result_comparer_10overlap(rost_results['pdbtm'], topo_string)}
-        results_writer(entry_results, rost_results, topo_string, None, None, pred_tm, topcons_path, overlap10)
+        with open(topcons_path+entry['name'].lower()+'.prd', 'wr+') as o:
+            o.writelines('name %s\n' % entry['name'].lower())
+            o.writelines('top %s\n' % topo_string)
+        # pred_tm = len(re.findall('[1u20LU]h', entry['rost_format_scampi']))
+        #
+        # rost_results = rostlab_db_dict[entry['name'].lower()]
+        #
+        # entry_results = {}
+        # entry_results['pdbtm'] = result_comparer(rost_results['pdbtm'], topo_string, pred_tm)
+        # entry_results['opm'] = result_comparer(rost_results['opm'], topo_string, pred_tm)
+        # overlap10 = {'pdbtm': result_comparer_10overlap(rost_results['pdbtm'], topo_string),
+        #              'opm': result_comparer_10overlap(rost_results['pdbtm'], topo_string)}
+        # results_writer(entry_results, rost_results, topo_string, None, None, pred_tm, topcons_path, overlap10)
 
 
 def topcons2rostlab_ts_format(ts):
