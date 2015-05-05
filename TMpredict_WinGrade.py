@@ -6,7 +6,7 @@ def main():
     # import subprocess
     # import re
     import os
-    global hydrophobicity_polyval, args
+    global hydrophobicity_polyval, args, param_list
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('-hp_threshold', default=10.0, type=float)
@@ -29,46 +29,93 @@ def main():
         rostlab_ROC(args)
     elif args['mode'] == 'single':
         args['name'] = args['name'].lower()
-        process_single_protein(args['name'])
+        process_single_protein(args['name'], args['result_path'])
     elif args['mode'] == 'dG':
         single_win_dG()
     elif args['mode'] == 'topo_VH':
         topo_VH()
+    elif args['mode'] == 'ROC_by_single':
+        ROC_rostlav_single_by_single()
 
 
-def process_single_protein(name):
+def process_single_protein(name, path):
     import re
-    end_of_SP = 0
     # path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/10overlap_uuu'
-    path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/production_28.4/'
-    topc = spc_parser('/home/labs/fleishman/jonathaw/membrane_prediction_DBs/spoctopus_SPDB/rost_db/'+name+'.spc')
+    # path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/production_28.4/'
+    topc = spc_parser('/home/labs/fleishman/jonathaw/membrane_prediction_DBs/spoctopus_SPDB/'+name+'.spc')
     rostlab_db_dict = parse_rostlab_db()
     entry = rostlab_db_dict[name.lower()]
     if topc['spoctopus'].count('S') != 0:
-        end_of_SP = [a for a in re.finditer('S*', topc['spoctopus']) if a != ''][0].end()
+        end_of_SP = [a for a in re.finditer('S*', topc['philius']) if a != ''][0].end()
         entry['seq_no_SP'] = entry['seq'][end_of_SP:]
         temp = HphobicityScore(name, entry['seq_no_SP'],
                         '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/psipred/'+name+'.ss2',
                         hydrophobicity_polyval, args)
         topo_string = 'u'*end_of_SP + topo_string_rostlab_format(temp.topo_best, entry['seq_no_SP'])
+        sec_topo_string = 'u'*end_of_SP + topo_string_rostlab_format(temp.topo_sec_best, entry['seq_no_SP'])
     else:
         temp = HphobicityScore(name, entry['seq'],
                         '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/psipred/'+name+'.ss2',
                         hydrophobicity_polyval, args)
         topo_string = topo_string_rostlab_format(temp.topo_best, entry['seq'])
-    print entry['seq']
-    print entry['seq_no_SP']
-    print topc['seq']
-    print 'aaa', topo_string
-    print 'bbb', entry['pdbtm']
-    entry_results = {}
-    pred_tm = len(temp.topo_best)
-    entry_results['pdbtm'] = result_comparer(entry['pdbtm'], topo_string, pred_tm)
-    entry_results['opm'] = result_comparer(entry['opm'], topo_string, pred_tm)
-    overlap10 = {'pdbtm': result_comparer_10overlap(entry['pdbtm'], topo_string),
-                 'opm': result_comparer_10overlap(entry['pdbtm'], topo_string)}
-    results_writer(entry_results, entry, topo_string, temp, args, pred_tm, path, overlap10)
+        sec_topo_string = topo_string_rostlab_format(temp.topo_sec_best, entry['seq'])
+    print temp.topo_best
+    print temp.topo_sec_best
+    print topo_string
+    # temp = HphobicityScore(name, entry['seq'],
+    #                     '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/psipred/'+name+'.ss2',
+    #                     hydrophobicity_polyval, args)
+    # topo_string = topo_string_rostlab_format(temp.topo_best, entry['seq'])
+    results_writer_skim(path, name, topo_string, sec_topo_string, temp.topo_best_val, temp.topo_sec_best_val, entry['seq'])
+    # print entry['seq']
+    # print entry['seq_no_SP']
+    # print topc['seq']
+    # print 'aaa', topo_string
+    # print 'bbb', entry['pdbtm']
+    # entry_results = {}
+    # pred_tm = len(temp.topo_best)
+    # entry_results['pdbtm'] = result_comparer(entry['pdbtm'], topo_string, pred_tm)
+    # entry_results['opm'] = result_comparer(entry['opm'], topo_string, pred_tm)
+    # overlap10 = {'pdbtm': result_comparer_10overlap(entry['pdbtm'], topo_string),
+    #              'opm': result_comparer_10overlap(entry['pdbtm'], topo_string)}
+    # print overlap10
+    # results_writer(entry_results, entry, topo_string, temp, args, pred_tm, path, overlap10)
     # temp.plot_win_grades()
+
+
+def ROC_rostlav_single_by_single():
+    import os
+    failed = []
+    # path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/ROC_narrow/ROC_'\
+    #        +str(args['c0'])+'_'+str(args['c1'])+'_'+str(args['c2'])\
+    #        +'_'+str(args['c3'])+'/'
+    path = os.getcwd()+'/ROC_'+str(args['c0'])+'_'+str(args['c1'])+'_'+str(args['c2'])+'_'+str(args['c3'])+'/'
+    if not os.path.exists(path):
+        os.makedirs(path)
+    rostlab_db_dict = parse_rostlab_db()
+    for name, entry in rostlab_db_dict.items():
+        try:
+            process_single_protein(name, path)
+        except:
+            failed.append(name)
+            continue
+    with open(path+'/'+'roc') as o:
+        o.writelines('num_failed %i\n' % len(failed))
+        o.writelines('failed_list %r\n' % failed)
+
+
+def results_writer_skim(path, name, pred_ts, sec_pred_ts, best_val, sec_best_val, seq):
+    print path+name+'.prd'
+    with open(path+'/'+name+'.prd', 'wr+') as o:
+        o.writelines('name %s\n' % name)
+        o.writelines('pred_ts %s\n' % pred_ts)
+        o.writelines('pred_sec_ts %s\n' % sec_pred_ts)
+        o.writelines('seq %s\n' % seq)
+        o.writelines('best_val %f\n' % best_val)
+        o.writelines('sec_best_val %f\n' % sec_best_val)
+        for k, v in args.items():
+            o.writelines('%s %f\n' % (k, v))
+
 
 
 def archive_main():

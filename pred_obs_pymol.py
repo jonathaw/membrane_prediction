@@ -112,5 +112,5 @@ if __name__ == '__main__':
     #                     'u111111111111111111111111111111111hhhhhhhhhhhhhhhhhh222222222222hhhhhhhhhhhhhhhhhhhhhh111111hhhhhhhhhhhhhhhhhhhh2222222222hhhhhhhhhhhhhhhhhhhhhh111111111111111hhhhhhhhhhhhhhhhh2222222222222222222222222hhhhhhhhhhhhhhhhhh1111111111111111111111111111111hhhhhhhhhhhhhhhhhhh222222222222222222222hhhhhhhhhhhhhhhhhh1111111111hhhhhhhhhhhhhhhhhhhhhh2222222222222222hhhhhhhhhhhhhhhhh111hhhhhhhhhhhhhhhhhh22222222222222222',
     #                     'MDATTPLLTVANSHPARNPKHTAWRAAVYDLQYILKASPLNFLLVFVPLGLIWGHFQLSHTLTFLFNFLAIIPLAAILANATEELADKAGNTIGGLLNATFGNAVELIVSIIALKKGQVRIVQASMLGSLLSNLLLVLGLCFIFGGYNRVQQTFNQTAAQTMSSLLAIACASLLIPAAFRATLPHGKEDHFIDGKILELSRGTSIVILIVYVLFLYFQLGSHHALFEQQEEETDEVMSTISRNPHHSLSVKSSLVILLGTTVIISFCADFLVGTIDNVVESTGLSKTFIGLIVIPIVGNAAEHVTSVLVAMKDKMDLALGVAIGSSLQVALFVTPFMVLVGWMIDVPMTLNFSTFETATLFIAVFLSNYLILDGESNWLEGVMSLAMYILIAMAFFYYPDEKTLDSIGNSL')
     # entry = TMpredict_reader('/home/labs/fleishman/jonathaw/membrane_prediction_DBs/ROC_6.4.2015/ROC_-3.0_18_0.2_2/p00423.prd')
-    entry = TMpredict_reader(args['path']+'/'+args['name'])
+    entry = TMpredict_reader(args['path']+'/'+args['name']+'.prd')
     pymol_mark_segments(entry['pdb'], entry['chain'], entry['pred_ts'], entry[args['tech']], entry['seq'], args['tech'])

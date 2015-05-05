@@ -14,7 +14,6 @@ class WinGrade():
         self.end = end
         self.seq = seq
         self.length = end-begin
-        # self.poly_param = {'c0': 0.27, 'c1': 9.29, 'c2': -0.645, 'c3': 0.00822}
 
         self.poly_param = poly_param
         self.length_element = self.length_polynom()
@@ -58,6 +57,7 @@ class WinGrade():
         :return: length polynomial as in hp_moment article
         """
         poly_param = self.poly_param
+        #print 'length', poly_param
         l = self.length
         return poly_param['c1'] + poly_param['c2']*l + poly_param['c3']*l**2
 
@@ -76,6 +76,7 @@ def hp_moment(seq, polyval, poly_param):
     doi:10.1038/nature06387
     """
     import numpy as np
+    #print 'hp_moment', poly_param
     deg100_in_rad = (100.*2.*np.pi) / 360.
     # membrane_position = np.linspace(-15, 15, endpoint=True, num=len(seq))
     sin_elem = 0.

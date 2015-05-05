@@ -36,7 +36,7 @@ def topcons2rostlab_ts_format(ts):
     :return: a rostlab format topo string
     """
     ts_list = list(ts)
-    topcons2rostlab_dict = {'i': '1', 'o': '2', 'M': 'h', 'm': 'h'}
+    topcons2rostlab_dict = {'i': '1', 'o': '2', 'M': 'h', 'm': 'h', 'S': 's'}
     for i, val in enumerate(ts_list):
         ts_list[i] = topcons2rostlab_dict[val]
     return ''.join(ts_list)
