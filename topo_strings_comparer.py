@@ -21,6 +21,7 @@ def prd_directory(dir_path):
     from TMpredict_WinGrade import parse_rostlab_db
     from topcons_result_parser import topcons2rostlab_ts_format
     import matplotlib.pyplot as plt
+    import matplotlib
     import numpy as np
     M = 10
     file_list = [x for x in os.listdir(dir_path) if re.match('.*\.prd', x)]
@@ -87,7 +88,8 @@ def prd_directory(dir_path):
         data = {}
         for predictor, results_d in results.items():
             data[predictor] = {k: 100*float(v)/float(totals[k]) for k, v in results_d.items()}
-
+        font = {'family': 'normal', 'size': 22}
+        matplotlib.rc('font', **font)
         print data
         print 'range', np.arange(0, 1./3., 1./(7.*3.)), len(np.arange(0, 1./3., 1./(7.*3.)))
         ind = np.arange(3)
@@ -99,12 +101,22 @@ def prd_directory(dir_path):
         for predictor, details, inc, col in zip(data.keys(), data.values(), incs, colors):
             print predictor, details, inc
             plots[predictor] = plt.bar(ind + inc, details.values(), width, color=col)
+        plt.ylim((0, 105))
+        plt.xlim((-0.15, 3.7))
+        plt.xticks(np.arange(3)+0.15, ['1', '2-5', '5<'])
+        plt.xlabel('Number of TMH')
+        plt.ylabel('Overlap 10 Accuracy (%)')
+        plt.title('TMH prediction comparison')
+        names = [k for k in plots.keys()]
+        names[0] = 'TopoGraph'
+        plt.legend(plots.values(), names, 'upper right')
         plt.show()
 
 
 def devide_with_zero(num1, num2):
     if num2 == 0: return 0
     else: return float(num1)/float(num2)
+
 
 def tm_num2range(num):
     if num == 1:
@@ -120,12 +132,14 @@ def comparer(obse, pred, M):
     assert len(obse) == len(pred), 'observed and predicted strings lengths do not match'
     # print obse
     # print pred
-    allowed = ['1', '2', 'h']
+    allowed = ['1', '2', 'h', 'l']
     obse_cln, pred_cln = '', ''
     for i, c in enumerate(obse):
         obse_cln += c if (pred[i].lower() in allowed and c.lower() in allowed) else 'u'
     for i, c in enumerate(pred):
         pred_cln += c if (obse[i].lower() in allowed and c.lower() in allowed) else 'u'
+    obse_cln = obse_cln.replace('l', 'h')
+    obse_cln = obse_cln.replace('L', 'h')
     # print obse_cln
     # print pred_cln
     result = {}

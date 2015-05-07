@@ -21,6 +21,7 @@ class HphobicityScore():
         self.seq_length = len(seq)
         self.psipred = self.PsiReaderHelix()
         self.polyval = hydro_polyval
+        self.with_msa = param_list['with_msa']
         # self.topo = self.topo_greedy_chooser()
         # self.n_term_orient = self.topo[0].direction
         self.WinGrades = self.win_grade_generator(0, self.seq_length, 'both')
@@ -73,14 +74,24 @@ class HphobicityScore():
         :return:grades all segments of self.seq, and aggregates them as WinGrades
         '''
         from WinGrade import WinGrade
+        if self.with_msa:
+            from MSA_for_TMpredict import TMpredict_MSA
+            msa_obj = TMpredict_MSA(self.name, self.polyval, poly_param)
         PSI_HP_THRESHOLD = -8.
         psi = self.psipred
         grades = []
         for i in range(pos1, pos2):
             for inc in range(min(INC_MAX, self.seq_length - MIN_LENGTH - i)):
+                print i, inc
                 is_not_helical = self.is_not_helical((i, i+MIN_LENGTH+inc), psi)
-                fwd_temp = WinGrade(i, i+MIN_LENGTH+inc, 'fwd', self.seq[i:i+MIN_LENGTH+inc], self.polyval, poly_param)
-                rev_temp = WinGrade(i, i+MIN_LENGTH+inc, 'rev', self.seq[i:i+MIN_LENGTH+inc][::-1], self.polyval, poly_param)
+                if self.with_msa:
+                    fwd_temp = msa_obj.retrieve_seqs(i, i+MIN_LENGTH+inc, 'fwd')
+                    rev_temp = msa_obj.retrieve_seqs(i, i+MIN_LENGTH+inc, 'rev')
+                else:
+                    fwd_temp = WinGrade(i, i+MIN_LENGTH+inc, 'fwd', self.seq[i:i+MIN_LENGTH+inc], self.polyval,
+                                        poly_param)
+                    rev_temp = WinGrade(i, i+MIN_LENGTH+inc, 'rev', self.seq[i:i+MIN_LENGTH+inc][::-1], self.polyval,
+                                        poly_param)
                 if (fwd_or_rev == 'both' or fwd_or_rev == 'fwd') and \
                         (not is_not_helical or fwd_temp.grade < PSI_HP_THRESHOLD) and fwd_temp.hp_moment <= 6:
                     grades.append(fwd_temp)
@@ -436,12 +447,18 @@ class HphobicityScore():
         win_list = [a for a in self.WinGrades if a.grade < HP_THRESHOLD]  # make copy of negative wingrades list
         G = nx.DiGraph()
         source_node = WinGrade(0, 0, 'fwd', '', self.polyval, poly_param)   # define source win
-        [G.add_edge(source_node, a, weight=a.grade) for a in win_list]  # add all win to source edges
+        if self.with_msa:
+            [G.add_edge(source_node, a, weight=a.msa_grade) for a in win_list]  # add all win to source edges with msa
+        else:
+            [G.add_edge(source_node, a, weight=a.grade) for a in win_list]  # add all win to source edges
         for win1 in win_list:   # add all win to win edges where condition applies
             for win2 in win_list:
                 # condition: non-overlapping, 2 is after 1, opposite directions
                 if not win1.grade_grade_colliding(win2) and win2.begin > win1.end and win1.direction != win2.direction:
-                    G.add_edge(win1, win2, weight=win2.grade)
+                    if not self.with_msa:
+                        G.add_edge(win1, win2, weight=win2.grade)
+                    elif self.with_msa:
+                        G.add_edge(win1, win2, weight=win2.msa_grade)
         # use bellman-ford algorithm to find minimum paths to all nodes
         # print win_list
         pred, dist = nx.bellman_ford(G, source_node)
@@ -451,7 +468,7 @@ class HphobicityScore():
         min_val = sorted_dist[0][1]
         if best_path_val == [source_node]:
             print 'topology not found'
-            return best_path_val, min_val, best_path_val , min_val
+            return best_path_val, min_val, best_path_val, min_val
         best_path = self.find_graph_path(pred, best_path_val, source_node)
         copy_sorted_dist = sorted_dist[:]
         # print 'pred', pred
@@ -466,7 +483,7 @@ class HphobicityScore():
             min_val = copy_sorted_dist[0][1]
             best_path = self.find_graph_path(pred, best_path_val, source_node)
         # if no best path is found, the minimal energy win grade is chosen as a single window
-        if len(best_path) < known_tm_num and known_tm_num != -100:
+        if len(best_path) < known_tm_num != -100:
             best_path_val = [sorted_dist[0][0]]
             min_val = sorted_dist[0][1]
             best_path = self.find_graph_path(pred, best_path_val, source_node)

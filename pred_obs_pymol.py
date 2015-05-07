@@ -82,27 +82,19 @@ def TMpredict_reader(file_name):
     :return: dict with files details
     '''
     result = {}
+    print file_name
     with open(file_name, 'r') as f:
         cont = f.read().split('\n')
     for item in cont:
         split = item.split()
         if len(split) > 1:
-            if split[0] == 'PDB':
-                result['pdb'] = split[2]
-                result['chain'] = split[3]
-            elif split[0] == 'Results':
-                tech = split[3]
-            elif split[0] == 'sequence':
-                result['seq'] = split[1]
-            elif split[0] == 'obs':
-                result[tech] = split[2]
-            elif split[0] == 'pre':
-                result['pred_ts'] = split[2]
+            result[split[0]] = split[1]
     return result
 
 if __name__ == '__main__':
     import argparse
     import os
+    from TMpredict_WinGrade import parse_rostlab_db
     parser = argparse.ArgumentParser()
     parser.add_argument('-name', type=str)
     parser.add_argument('-path', default=os.getcwd(), type=str)
@@ -113,4 +105,8 @@ if __name__ == '__main__':
     #                     'MDATTPLLTVANSHPARNPKHTAWRAAVYDLQYILKASPLNFLLVFVPLGLIWGHFQLSHTLTFLFNFLAIIPLAAILANATEELADKAGNTIGGLLNATFGNAVELIVSIIALKKGQVRIVQASMLGSLLSNLLLVLGLCFIFGGYNRVQQTFNQTAAQTMSSLLAIACASLLIPAAFRATLPHGKEDHFIDGKILELSRGTSIVILIVYVLFLYFQLGSHHALFEQQEEETDEVMSTISRNPHHSLSVKSSLVILLGTTVIISFCADFLVGTIDNVVESTGLSKTFIGLIVIPIVGNAAEHVTSVLVAMKDKMDLALGVAIGSSLQVALFVTPFMVLVGWMIDVPMTLNFSTFETATLFIAVFLSNYLILDGESNWLEGVMSLAMYILIAMAFFYYPDEKTLDSIGNSL')
     # entry = TMpredict_reader('/home/labs/fleishman/jonathaw/membrane_prediction_DBs/ROC_6.4.2015/ROC_-3.0_18_0.2_2/p00423.prd')
     entry = TMpredict_reader(args['path']+'/'+args['name']+'.prd')
-    pymol_mark_segments(entry['pdb'], entry['chain'], entry['pred_ts'], entry[args['tech']], entry['seq'], args['tech'])
+    # print entry
+    rostlab_data = parse_rostlab_db()[args['name']]
+    # print 'aaa', rostlab_data
+    pymol_mark_segments(rostlab_data['pdb'], rostlab_data['chain'], entry['pred_ts'], rostlab_data[args['tech']],
+                        rostlab_data['seq'], args['tech'])

@@ -16,13 +16,15 @@ def main():
     parser.add_argument('-mode', type=str, default='ROC')
     parser.add_argument('-name', default=None, type=str)
     parser.add_argument('-known_tm_num', default=-100, type=int)
-    parser.add_argument('-c0', default=3., type=float)
-    parser.add_argument('-c1', default=6.8, type=float)
-    parser.add_argument('-c2', default=0.7, type=float)
-    parser.add_argument('-c3', default=-0.03, type=float)
+    parser.add_argument('-c0', default=1.3, type=float)
+    parser.add_argument('-c1', default=8.5, type=float)
+    parser.add_argument('-c2', default=-0.38, type=float)
+    parser.add_argument('-c3', default=-0.0038, type=float)
     parser.add_argument('-result_path', default=os.getcwd())
     parser.add_argument('-seq', default='', type=str)
+    parser.add_argument('-with_msa', default=False)
     args = vars(parser.parse_args())
+
     # import topdb_functions
     hydrophobicity_polyval = MakeHydrophobicityGrade()
     if args['mode'] == 'ROC':
@@ -114,7 +116,7 @@ def results_writer_skim(path, name, pred_ts, sec_pred_ts, best_val, sec_best_val
         o.writelines('best_val %f\n' % best_val)
         o.writelines('sec_best_val %f\n' % sec_best_val)
         for k, v in args.items():
-            o.writelines('%s %f\n' % (k, v))
+            o.writelines('%s %r\n' % (k, v))
 
 
 

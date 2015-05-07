@@ -1,3 +1,4 @@
+# coding=utf-8
 """
 a script to summerize topo prediction results over the Von-Heijne and phobius data.
 """
@@ -8,6 +9,7 @@ def main():
     import re
     import matplotlib.pyplot as plt
     import numpy as np
+    import matplotlib
     from sasa_survey import boxplot_with_scatter
     energy_gap = -1.5
     prd_list = [x for x in os.listdir(os.getcwd()) if re.match('.*\.prd', x)]
@@ -54,22 +56,26 @@ def main():
     print 'result phobius correct', results['phobius_correct']
     print 'result scampi correct', results['scampi_correct']
     plt.subplot(111)
+    font = {'family': 'normal', 'size': 22}
+    matplotlib.rc('font', **font)
     the_range = [(a, a+1) for a in np.arange(-6, 0, 1)]
     correct_bins = [float(len(b)) for b in break2bins(pred_correct, the_range)]
     incorrect_bins = [float(len(b)) for b in break2bins(pred_incorrect, the_range)]
     correct_prec = [100*float(correct_bins[i])/float(incorrect_bins[i]+correct_bins[i]) for i in range(len(correct_bins))]
     Ns = [correct_bins[i]+incorrect_bins[i] for i in range(len(correct_bins))]
-    bars = plt.bar([a for a in np.arange(len(correct_prec))], correct_prec)
+    bars = plt.bar([a for a in np.arange(len(correct_prec))], correct_prec, color='grey')
     # plt.xlabel(ranges2labels(the_range))
-    plt.xlabel('dG ranges')
-    plt.xticks([a+0.5 for a in np.arange(len(the_range))], ranges2labels(the_range), rotation='vertical')
-    plt.ylabel('C terminus correct prediction percent')
+    plt.xlabel(r'$\Delta\Delta$G ranges (absolute value)')
+    plt.xticks([a+0.5 for a in np.arange(len(the_range))], ranges2labels(the_range), rotation=45)  #'vertical')
+    plt.ylabel('C\' terminus correct prediction (%)')
     plt.ylim((0, 101))
     for i, rect in enumerate(bars):
         height = rect.get_height()
         print height, Ns[i], correct_bins[i], incorrect_bins[i]
         plt.text(rect.get_x() + rect.get_width() / 2., 1.005 * height, '%d' % int(Ns[i]),
                  ha='center', va='bottom')
+    plt.title('C\' terminus prediction')
+
     # plt.subplot(122)
     # positions = np.arange(2)
     # plt.bar(positions, results)
@@ -77,7 +83,7 @@ def main():
 
 
 def ranges2labels(ranges):
-    return [str(r[0])+' , '+str(r[1]) for r in ranges]
+    return [str(abs(r[0]))+r' - '+str(abs(r[1])) for r in ranges]
 
 
 def break2bins(data, ranges):

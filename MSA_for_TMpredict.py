@@ -26,30 +26,69 @@ class single_fasta():
 
 
 def target_has_gaps_in_query_stretch(query, target, start_wg, end_wg):
+    '''
+
+    '''
     query_gaps_in_stretch = [i for i in query.gaps if start_wg <= i <= end_wg]
     target_gaps_in_stretch = [i for i in target.gaps if start_wg <= i <= end_wg]
-    return True if query_gaps_in_stretch == target_gaps_in_stretch else False
-
+    xs = target.seq[start_wg:end_wg].count('X') == 0
+    return True if query_gaps_in_stretch == target_gaps_in_stretch and xs else False
 
 
 class TMpredict_MSA():
-    def __init__(self, name):
-        path_msa = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/MSA_fastas/'
-        msa_file_name = name+'_MSA_fastas_muscle.fa'
+    '''
+    A class for handling MSA input in fasta format. reads in the sequences as single_fasta objects
+    '''
+    def __init__(self, name, polyval, poly_param):
+        path_msa = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/rost_msa_prep/msa_ready/'
+        msa_file_name = name+'_ready.fa'
+        self.polyval = polyval
+        self.poly_param = poly_param
         self.stack = read_fasta_msa(path_msa+msa_file_name)
         self.query = [a for a in self.stack if a.name == name][0]
         # print '\n\nquery:', self.query
         # print self.query.nogap2withgap(9)
         # print self.query.withgap2nogap(4)
-        self.retrieve_seqs(0, 74)
+        # print self.retrieve_seqs(0, 18, 'fwd')
 
-    def retrieve_seqs(self, start, end):
+    def retrieve_seqs(self, start, end, direction):
+        from WinGrade import WinGrade
         start_wg = self.query.nogap2withgap(start)
         end_wg = self.query.nogap2withgap(end)
+        if direction == 'fwd':
+            best_win = WinGrade(start, end, direction, gap_remover(self.query.seq[start_wg:end_wg]), self.polyval,
+                                self. poly_param)
+        if direction == 'rev':
+            best_win = WinGrade(start, end, direction, gap_remover(self.query.seq[start_wg:end_wg])[::-1],
+                                self.polyval, self. poly_param)
+        query_grade = best_win.grade
+        name = 'query'
         for target in self.stack:
-            print 'q seq', self.query.seq[start_wg:end_wg]
-            print 't seq', target.seq[start_wg:end_wg]
-            print target_has_gaps_in_query_stretch(self.query, target, start_wg, end_wg)
+            # print 'q seq', self.query.seq[start_wg:end_wg]
+            # print 't seq', target.seq[start_wg:end_wg]
+            if target_has_gaps_in_query_stretch(self.query, target, start_wg, end_wg):
+                # print 'processing', target.seq[start_wg:end_wg]
+                if direction == 'fwd':
+                    temp_win_grade = WinGrade(start, end, direction, gap_remover(target.seq[start_wg:end_wg]),
+                                              self.polyval, self.poly_param)
+                elif direction == 'rev':
+                    temp_win_grade = WinGrade(start, end, direction, gap_remover(target.seq[start_wg:end_wg])[::-1],
+                                              self.polyval, self.poly_param)
+                # if target.name == self.query.name:
+                    # print 'found the query!!!', temp_win_grade
+                if temp_win_grade.grade < best_win.grade and abs(temp_win_grade.grade-query_grade) < 7:
+                    best_win = temp_win_grade
+                    name = target.name
+        if direction == 'fwd':
+            return WinGrade(start, end, direction, gap_remover(self.query.seq[start_wg:end_wg]), self.polyval,
+                            self.poly_param, name, gap_remover(best_win.seq))
+        elif direction == 'rev':
+            return WinGrade(start, end, direction, gap_remover(self.query.seq[start_wg:end_wg])[::-1], self.polyval,
+                            self.poly_param, name, gap_remover(best_win.seq)[::-1])
+
+
+def gap_remover(seq):
+    return ''.join([aa for aa in seq if aa != '-'])
 
 
 def read_fasta_msa(file_name):
@@ -65,5 +104,7 @@ def read_fasta_msa(file_name):
 
 if __name__ == '__main__':
     import sys
+    from TMpredict_WinGrade import MakeHydrophobicityGrade
+
     # read_fasta_msa(sys.argv[1])
-    TMpredict_MSA(sys.argv[1])
+    TMpredict_MSA(sys.argv[1], MakeHydrophobicityGrade(), {'c0': 3., 'c1': 6.8, 'c2': 0.7, 'c3': -0.03})
