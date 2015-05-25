@@ -13,6 +13,7 @@ def main():
     from sasa_survey import boxplot_with_scatter
     energy_gap = -1.5
     prd_list = [x for x in os.listdir(os.getcwd()) if re.match('.*\.prd', x)]
+    print '# prd files to read', len(prd_list)
     results = {'entries': 0, 'pred_correct': 0, 'phobius_correct': 0, 'pred_correct_gap': 0, 'pred_incorrect_gap': 0,
                'scampi_correct': 0}
     pred_correct, pred_incorrect = [], []
@@ -59,8 +60,14 @@ def main():
     font = {'family': 'normal', 'size': 22}
     matplotlib.rc('font', **font)
     the_range = [(a, a+1) for a in np.arange(-6, 0, 1)]
+    the_range.insert(0, (-100, -6))
+    print 'the ranges', the_range
+    print 'pred correct', len(pred_correct)
+    print 'pred incorrect', len(pred_incorrect)
     correct_bins = [float(len(b)) for b in break2bins(pred_correct, the_range)]
+    print 'correct bins', correct_bins
     incorrect_bins = [float(len(b)) for b in break2bins(pred_incorrect, the_range)]
+    print 'incorrect bins', incorrect_bins
     correct_prec = [100*float(correct_bins[i])/float(incorrect_bins[i]+correct_bins[i]) for i in range(len(correct_bins))]
     Ns = [correct_bins[i]+incorrect_bins[i] for i in range(len(correct_bins))]
     bars = plt.bar([a for a in np.arange(len(correct_prec))], correct_prec, color='grey')
@@ -75,7 +82,8 @@ def main():
         plt.text(rect.get_x() + rect.get_width() / 2., 1.005 * height, '%d' % int(Ns[i]),
                  ha='center', va='bottom')
     plt.title('C\' terminus prediction')
-
+    print 'aaa', len([a for a in pred_correct if a <= -6])
+    print 'bbb', len([a for a in pred_incorrect if a <= -6])
     # plt.subplot(122)
     # positions = np.arange(2)
     # plt.bar(positions, results)

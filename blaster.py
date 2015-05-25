@@ -4,6 +4,10 @@ A script to make blast files (make_blast), make MSA db files (multiple fastas) a
 
 
 def ncbiXML_parser(file_name):
+    """
+    :param file_name: a blast .xml file name with path
+    :return: a dictionary of dictionaries. target-name:{hit_id: name, hit_seq: seq (no gaps)}
+    """
     import re
     with open(file_name, 'r') as f:
         cont = f.read().split('<Hit>')
@@ -24,6 +28,10 @@ def ncbiXML_parser(file_name):
 
 
 def blast2fasta():
+    '''
+    :return: takes one blast .xml result from rost_msa_prep/blast and makes a multiple fasta file of the same sequences
+    in the same folder
+    '''
     from TMpredict_WinGrade import parse_rostlab_db
     name = args['name']
     path_bl = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/rost_msa_prep/blast/'
@@ -47,6 +55,10 @@ def blast2fasta():
 
 
 def make_blasts_local():
+    '''
+    not working very well
+    :return: run blastp locally
+    '''
     import os
     import sys
     from Bio.Blast.Applications import NcbiblastpCommandline
@@ -62,6 +74,10 @@ def make_blasts_local():
 
 
 def make_blast_remote():
+    '''
+    not working very well
+    :return: run blastp remotely
+    '''
     from Bio.Blast import NCBIWWW
     # from Bio import SeqIO
     # from Bio import Seq
@@ -77,17 +93,27 @@ def make_blast_remote():
 
 
 def fasta_parser():
-    with open(args['path_fasta']+args['name']+'.fasta', 'r') as f:
+    '''
+    :return: {name: name, seq: seq} dictionary of fastas
+    '''
+    with open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/fastas/'
+                      +args['name']+'.fasta', 'r') as f:
         cont = f.read().split('\n')
     return {'name': cont[0][1:], 'seq': cont[1]}
 
 
 def msa_cleaner():
+    '''
+    :return:goes over a MSA, and prints a "clean" multiple fasta file. clean means all targets have very little gaps in
+    segments where the query has a "block" (long segment with no gaps). used to reduce sie of MSA for TMpredict. insures
+    targets are from same family (more or less) of the query.
+    '''
     from MSA_for_TMpredict import read_fasta_msa
     name = args['name']
     msa = read_fasta_msa('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/rost_msa_prep/msa_unclean/'
                          +args['name']+'_blast_cluster_msa.fa')
-    query = [a for a in msa if a.name == args['name']][0]
+
+    query = [a for a in msa if a.name.lower() == args['name'].lower()][0]
     query_blocks = find_seq_blocks(query.seq)
     passed_cond = []
     for target in msa:
@@ -105,6 +131,11 @@ def msa_cleaner():
 
 
 def blocks_overlap(query_blocks, target_seq):
+    '''
+    :param query_blocks: list of tuples describing blocks in the query sequence (stretches with no gaps)
+    :param target_seq: sequence of blast target to be tested
+    :return: True if all blocks in the query correspond to less than 10% gaps in the target sequence
+    '''
     for bl in query_blocks:
         M = (bl[1]-bl[0]) / 10 + 1
         if not len([a for a in target_seq[bl[0]:bl[1]] if a == '-']) <= M:
@@ -112,11 +143,27 @@ def blocks_overlap(query_blocks, target_seq):
     return True
 
 
-
 def find_seq_blocks(seq):
+    '''
+    :param seq: a sequence
+    :return: list of tuples describing blocks, such that they are longer than 14, and have no gaps
+    '''
     import re
     gaps = re.compile('[ACDEFGHIKLMNPQRSTVWY]+')
     return [(a.start(), a.end()-1) for a in gaps.finditer(seq) if a.end()-a.start() > 14]
+
+
+def add_query2clusters():
+    """
+    :return: goes over a cluster result file and adds the query fasta if it is missing
+    """
+    path_cluster = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/rost_msa_prep/cluster/'
+    query = fasta_parser()
+    with open(path_cluster+args['name']+'_blast_cluster.fa', 'r') as f:
+        cont = f.read().split('\n')
+    if '>'+args['name'] not in cont:
+        with open(path_cluster+args['name']+'_blast_cluster.fa', 'a') as o:
+            o.write('>%s\n%s\n' % (query['name'], query['seq']))
 
 
 if __name__ == '__main__':
@@ -124,7 +171,7 @@ if __name__ == '__main__':
     global args
     parser = argparse.ArgumentParser()
     parser.add_argument('-name', type=str)
-    parser.add_argument('-mode', default='blast_remote', type=str)
+    parser.add_argument('-mode', type=str)
     args = vars(parser.parse_args())
     args['name'] = args['name'].lower().split('/')[-1].split('_')[0]
     if args['mode'] == 'blast_remote':
@@ -135,5 +182,5 @@ if __name__ == '__main__':
         blast2fasta()
     elif args['mode'] == 'clean_msa':
         msa_cleaner()
-    # elif args['mode'] == 'msa':
-    #     make_MSA()
+    elif args['mode'] == 'add_query':
+        add_query2clusters()

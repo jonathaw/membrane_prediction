@@ -7,14 +7,15 @@ class HphobicityScore():
         :param hydro_polyval: polynom valued dictionary
         :return: a stack of WinGrade instances, and their utilities
         '''
-        global HP_THRESHOLD, INC_MAX, MIN_LENGTH, PSI_HELIX, PSI_RES_NUM, known_tm_num, poly_param
+        global HP_THRESHOLD, INC_MAX, MIN_LENGTH, PSI_HELIX, PSI_RES_NUM, known_tm_num, poly_param, output_path
         HP_THRESHOLD = param_list['hp_threshold']
-        INC_MAX = 8
+        INC_MAX = 12  # 8
         MIN_LENGTH = param_list['min_length']
         PSI_HELIX = param_list['psi_helix']
         PSI_RES_NUM = param_list['psi_res_num']
         known_tm_num = param_list['known_tm_num']
         poly_param = {k: v for k, v in param_list.items() if k in ['c0', 'c1', 'c2', 'c3']}
+        output_path = param_list['result_path']
         self.name = name
         self.seq = seq
         self.ss2_file = ss2_file
@@ -82,7 +83,7 @@ class HphobicityScore():
         grades = []
         for i in range(pos1, pos2):
             for inc in range(min(INC_MAX, self.seq_length - MIN_LENGTH - i)):
-                print i, inc
+                # print i, inc
                 is_not_helical = self.is_not_helical((i, i+MIN_LENGTH+inc), psi)
                 if self.with_msa:
                     fwd_temp = msa_obj.retrieve_seqs(i, i+MIN_LENGTH+inc, 'fwd')
@@ -180,7 +181,9 @@ class HphobicityScore():
         plt.xlabel('Sequence Position')
         plt.ylabel('Energy')
         plt.title('Win Grades Energy Plot for %s' % self.name)
-        plt.show()
+        # plt.show()
+        print 'saving fig to', output_path + self.name + '.pdf'
+        plt.savefig(output_path + '/' + self.name + '.pdf')
 
     def topo_determine(self):
         """
@@ -487,7 +490,6 @@ class HphobicityScore():
             best_path_val = [sorted_dist[0][0]]
             min_val = sorted_dist[0][1]
             best_path = self.find_graph_path(pred, best_path_val, source_node)
-
         # force secondary best topo to have known_tm_num if known, and opposite topology
         sec_best_path_val = [sorted_dist[0][0]]
         sec_min_val = sorted_dist[0][1]
@@ -499,6 +501,11 @@ class HphobicityScore():
             sec_best_path_val = [copy_sorted_dist[0][0]]
             sec_min_val = copy_sorted_dist[0][1]
             sec_best_path = self.find_graph_path(pred, sec_best_path_val, source_node)
+            # a condition to solve cases where the sec gets to an empty solution
+            if sec_best_path == []:
+                sec_best_path_val = [sorted_dist[0][0]]
+                sec_best_path = self.find_graph_path(pred, sec_best_path_val, source_node)
+                break
         # if no best path is found, the minimal energy win grade is chosen as a single window
         if len(sec_best_path) < known_tm_num and known_tm_num != -100:
             sec_best_path_val = [sorted_dist[0][0]]

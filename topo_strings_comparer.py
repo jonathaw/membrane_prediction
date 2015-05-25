@@ -1,4 +1,14 @@
+"""
+A script to analyse TopoGraph prediciton runs. useful both for ROC and single folders
+"""
+
+
 def compare_ROC(path):
+    '''
+    :param path: a path to a directory to analyse
+    :return: runs over all ROC_ folders in path and analyses their predcitions if they have > 180 results (.prd files).
+    prints the name of the folder with the best results
+    '''
     import re
     roc_dirs = [x for x in os.listdir(path) if re.match('ROC_.*', x)]
     best_grade = 0
@@ -17,6 +27,10 @@ def compare_ROC(path):
 
 
 def prd_directory(dir_path):
+    """
+    :param dir_path: path to directory to analyse
+    :return: if in ROC mode returns prediction results. if in single mode, shows a graph of the results
+    """
     import re, os
     from TMpredict_WinGrade import parse_rostlab_db
     from topcons_result_parser import topcons2rostlab_ts_format
@@ -27,7 +41,6 @@ def prd_directory(dir_path):
     file_list = [x for x in os.listdir(dir_path) if re.match('.*\.prd', x)]
     if len(file_list) < 180: return {'tm_1': 0, 'tm_2_5': 0, 'tm_5': 0}, {'tm_1': 0, 'tm_2_5': 0, 'tm_5': 0}
     rostlab_db_dict = parse_rostlab_db()
-
     predictors = ['polyphobius', 'topcons', 'spoctopus', 'philius', 'octopus', 'scampi', 'pred_ts']
     results = {a: {'tm_1': 0, 'tm_2_5': 0, 'tm_5': 0} for a in predictors}
     totals = {'tm_1': 0, 'tm_2_5': 0, 'tm_5': 0}
@@ -46,29 +59,27 @@ def prd_directory(dir_path):
             comp_pdbtm = comparer(obse['pdbtm'], predictors[predictor], M)
             comp_opm = comparer(obse['opm'], predictors[predictor], M)
 
-
             if predictor == 'pred_ts' and not comp_pdbtm['overlapM_ok']:
                 # print 'AAAAAAAHHHHHHH !!!!!! :('
                 # print 'obse_tm_num', comp_pdbtm['obse_tm_num']
                 # print 'pred_tm_num', comp_pdbtm['pred_tm_num']
                 # print 'ok', comp_pdbtm['overlapM_ok_helices']
                 if comp_pdbtm['obse_tm_num'] > comp_pdbtm['pred_tm_num']:
-                    # print 'MISS'
+                    print 'MISS', pred['name'], comp_pdbtm['obse_tm_num']
                     errors['miss'] += 1
                 elif comp_pdbtm['obse_tm_num'] < comp_pdbtm['pred_tm_num']:
-                    # print 'OVER'
+                    print 'OVER', pred['name'], comp_pdbtm['obse_tm_num']
                     errors['over'] += 1
                 else:
                     errors['exact'] += 1
                 errors['total'] += 1
 
-
-            if comp_pdbtm['obse_tm_num'] == 0 or comp_opm['obse_tm_num'] == 0: break
+            if comp_pdbtm['obse_tm_num'] == 0 or comp_opm['obse_tm_num'] == 0: continue
             if comp_pdbtm['obse_tm_num'] != comp_opm['obse_tm_num']:
                 if comp_pdbtm['overlapM_ok']:
                     results[predictor][tm_num2range(comp_pdbtm['obse_tm_num'])] += 1
                     if first_passage: totals[tm_num2range(comp_pdbtm['obse_tm_num'])] += 1
-                if comp_opm['overlapM_ok']:
+                elif comp_opm['overlapM_ok']:
                     results[predictor][tm_num2range(comp_opm['obse_tm_num'])] += 1
                     if first_passage: totals[tm_num2range(comp_opm['obse_tm_num'])] += 1
             else:
@@ -88,6 +99,7 @@ def prd_directory(dir_path):
         data = {}
         for predictor, results_d in results.items():
             data[predictor] = {k: 100*float(v)/float(totals[k]) for k, v in results_d.items()}
+        print 'pps', results['polyphobius']
         font = {'family': 'normal', 'size': 22}
         matplotlib.rc('font', **font)
         print data
@@ -128,6 +140,12 @@ def tm_num2range(num):
 
 
 def comparer(obse, pred, M):
+    """
+    :param obse: observed topo string
+    :param pred: predicted topo string
+    :param M: overlap M.
+    :return: dictionary with observe/predicted #TM, and if it passes overlap M.
+    """
     import re
     assert len(obse) == len(pred), 'observed and predicted strings lengths do not match'
     # print obse
@@ -173,6 +191,10 @@ def overlappM(pred_h, obse_set, M=10):
 
 
 def spc_parser(name):
+    """
+    :param name: protein name
+    :return: dictionary with data from topcons regarding name
+    """
     with open('/home/labs/fleishman/jonathaw/membrane_prediction_DBs/spoctopus_SPDB/'+name+'.spc', 'r') as f:
         cont = f.read().split('\n')
     result = {}
@@ -189,8 +211,9 @@ def prd_parser(file_path, file_name):
     result = {}
     for line in cont:
         split = line.split()
-        if split == [] or len(split) < 2: continue
+        if split == [] or len(split) < 2 or split[1] == 'None': continue
         result[split[0]] = split[1]
+    result['name'] = result['name'].translate(None, "'")
     return result
 
 if __name__ == '__main__':

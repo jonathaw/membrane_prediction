@@ -47,6 +47,7 @@ def process_single_protein(name, path):
     topc = spc_parser('/home/labs/fleishman/jonathaw/membrane_prediction_DBs/spoctopus_SPDB/'+name+'.spc')
     rostlab_db_dict = parse_rostlab_db()
     entry = rostlab_db_dict[name.lower()]
+    print entry
     if topc['spoctopus'].count('S') != 0:
         end_of_SP = [a for a in re.finditer('S*', topc['philius']) if a != ''][0].end()
         entry['seq_no_SP'] = entry['seq'][end_of_SP:]
@@ -101,7 +102,7 @@ def ROC_rostlav_single_by_single():
         except:
             failed.append(name)
             continue
-    with open(path+'/'+'roc') as o:
+    with open(path+'.roc') as o:
         o.writelines('num_failed %i\n' % len(failed))
         o.writelines('failed_list %r\n' % failed)
 
@@ -117,7 +118,6 @@ def results_writer_skim(path, name, pred_ts, sec_pred_ts, best_val, sec_best_val
         o.writelines('sec_best_val %f\n' % sec_best_val)
         for k, v in args.items():
             o.writelines('%s %r\n' % (k, v))
-
 
 
 def archive_main():
@@ -278,7 +278,7 @@ def topo_VH():
     topo_string = topo_string_rostlab_format(hp_obj.topo_best, vh_db['seq'])
     pred_best_c_term = hp_obj.best_c_term
     pred_sec_best_c_term = hp_obj.sec_best_c_term
-    with open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/VH_topo_after_ROC/'+args['name']+'.prd',
+    with open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/22May_VH/'+args['name']+'.prd',
               'wr+') as o:
         o.writelines('name %s\n' % args['name'])
 
@@ -545,7 +545,9 @@ def MakeHydrophobicityGrade():
     # hydrophobicity_grade = open('Poly_Values.txt', 'r')
     # hydrophobicity_grade = open('poly_value_11.2.txt', 'r')
     # hydrophobicity_grade = open('poly_vals_23.2.txt', 'r')
-    hydrophobicity_grade = open('/home/labs/fleishman/jonathaw/membrane_prediciton/poly_vals_25.2.txt', 'r')
+    # hydrophobicity_grade = open('/home/labs/fleishman/jonathaw/membrane_prediciton/poly_vals_25.2.txt', 'r')
+    hydrophobicity_grade = open('/home/labs/fleishman/jonathaw/membrane_prediciton/polyval_21_5_15.txt', 'r')
+    # hydrophobicity_grade = open('/Volumes/jonathaw-1/membrane_prediciton/poly_vals_25.2.txt', 'r')
     # hydrophobicity_grade = open('./poly_vals_25.2.txt', 'r')
     hydrophobicity_polyval = {}
     for line in hydrophobicity_grade:

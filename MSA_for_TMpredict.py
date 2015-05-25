@@ -1,5 +1,13 @@
 class single_fasta():
+    """
+    a class for describing an AA sequence
+    """
     def __init__(self, name, seq):
+        """
+        :param name: sequence name
+        :param seq: sequence
+        :return: a class instance
+        """
         self.name = name
         self.seq = seq
         self.gaps = [i for i, aa in enumerate(seq) if aa == '-']
@@ -11,6 +19,10 @@ class single_fasta():
         return 'name: %s\nseq: %s\n' % (self.name, self.seq)
 
     def nogap2withgap(self, pos):
+        """
+        :param pos: a position coordinate in the original, no gaps, sequence
+        :return: the position corresponding to the same pos in the seq with gaps
+        """
         gaps = 0
         for i, aa in enumerate(self.seq):
             gaps += 1 if aa == '-' else 0
@@ -18,6 +30,10 @@ class single_fasta():
                 return i
 
     def withgap2nogap(self, pos):
+        """
+        :param pos: a position coordinate in the aligned seq with gaps
+        :return: the position corresponding to the same pos in the seq without gaps
+        """
         gaps = 0
         for i, aa in enumerate(self.seq):
             gaps += 1 if aa == '-' else 0
@@ -26,9 +42,13 @@ class single_fasta():
 
 
 def target_has_gaps_in_query_stretch(query, target, start_wg, end_wg):
-    '''
-
-    '''
+    """
+    :param query: query sequence
+    :param target: target sequence
+    :param start_wg: start position for segemnt, with gaps
+    :param end_wg: end position for segemnt, with gaps
+    :return: True if gaps pattern in target matches that of the query in the given segment, else False
+    """
     query_gaps_in_stretch = [i for i in query.gaps if start_wg <= i <= end_wg]
     target_gaps_in_stretch = [i for i in target.gaps if start_wg <= i <= end_wg]
     xs = target.seq[start_wg:end_wg].count('X') == 0
@@ -46,10 +66,6 @@ class TMpredict_MSA():
         self.poly_param = poly_param
         self.stack = read_fasta_msa(path_msa+msa_file_name)
         self.query = [a for a in self.stack if a.name == name][0]
-        # print '\n\nquery:', self.query
-        # print self.query.nogap2withgap(9)
-        # print self.query.withgap2nogap(4)
-        # print self.retrieve_seqs(0, 18, 'fwd')
 
     def retrieve_seqs(self, start, end, direction):
         from WinGrade import WinGrade
