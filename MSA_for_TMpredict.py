@@ -46,7 +46,7 @@ def target_has_gaps_in_query_stretch(query, target, start_wg, end_wg):
     :param query: query sequence
     :param target: target sequence
     :param start_wg: start position for segemnt, with gaps
-    :param end_wg: end position for segemnt, with gaps
+    :param end_wg: end position for segment, with gaps
     :return: True if gaps pattern in target matches that of the query in the given segment, else False
     """
     query_gaps_in_stretch = [i for i in query.gaps if start_wg <= i <= end_wg]
@@ -60,8 +60,10 @@ class TMpredict_MSA():
     A class for handling MSA input in fasta format. reads in the sequences as single_fasta objects
     '''
     def __init__(self, name, polyval, poly_param):
-        path_msa = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/rost_msa_prep/msa_ready/'
-        msa_file_name = name+'_ready.fa'
+        # path_msa = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/rost_msa_prep/msa_ready/'
+        # msa_file_name = name+'_ready.fa'
+        path_msa = '/home/labs/fleishman/jonathaw/membrane_prediction_DBs/blasts_adi/'
+        msa_file_name = name+'.fasta_msa.aln'
         self.polyval = polyval
         self.poly_param = poly_param
         self.stack = read_fasta_msa(path_msa+msa_file_name)
