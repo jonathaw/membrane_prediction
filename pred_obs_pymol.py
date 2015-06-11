@@ -5,7 +5,7 @@ def pymol_mark_segments(name, chain, pred_ts, obs_ts, seq, tech):
     and ranges of segments to be colored
     :return: initiates a pymol session where the specified segments are colored
     """
-    import subprocess
+    # import subprocess
     file_name = name+'_'+tech+'.pml'
     obs_hp_seqs = ts2hp_seq(seq, obs_ts)
     pred_hp_seqs = ts2hp_seq(seq, pred_ts)

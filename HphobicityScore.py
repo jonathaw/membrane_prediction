@@ -9,7 +9,7 @@ class HphobicityScore():
         '''
         global HP_THRESHOLD, INC_MAX, MIN_LENGTH, PSI_HELIX, PSI_RES_NUM, known_tm_num, poly_param, output_path
         HP_THRESHOLD = param_list['hp_threshold']
-        INC_MAX = 12  # 8
+        INC_MAX = 7  # 8
         MIN_LENGTH = param_list['min_length']
         PSI_HELIX = param_list['psi_helix']
         PSI_RES_NUM = param_list['psi_res_num']
@@ -75,12 +75,20 @@ class HphobicityScore():
         :return:grades all segments of self.seq, and aggregates them as WinGrades
         '''
         from WinGrade import WinGrade
+        import sys
         if self.with_msa:
             from MSA_for_TMpredict import TMpredict_MSA
             msa_obj = TMpredict_MSA(self.name, self.polyval, poly_param)
         PSI_HP_THRESHOLD = -8.
         psi = self.psipred
         grades = []
+
+        # setup toolbar
+        bar_width = len(range(pos1, pos2))
+        sys.stdout.write("[%s]" % (" " * bar_width))
+        sys.stdout.flush()
+        sys.stdout.write("\b" * (bar_width+1)) # return to start of line, after '['
+
         for i in range(pos1, pos2):
             for inc in range(min(INC_MAX, self.seq_length - MIN_LENGTH - i)):
                 # print i, inc
@@ -99,6 +107,10 @@ class HphobicityScore():
                 if (fwd_or_rev == 'both' or fwd_or_rev == 'rev') and \
                         (not is_not_helical or rev_temp.grade < PSI_HP_THRESHOLD) and rev_temp <= 6:
                     grades.append(rev_temp)
+            # writes to the progress bar
+            sys.stdout.write("-")
+            sys.stdout.flush()
+        sys.stdout.write("\n")
         return grades    
 
     def print_HphobicityScore(self):
@@ -464,7 +476,9 @@ class HphobicityScore():
                         G.add_edge(win1, win2, weight=win2.msa_grade)
         # use bellman-ford algorithm to find minimum paths to all nodes
         # print win_list
+        print "About to Bellman-Ford"
         pred, dist = nx.bellman_ford(G, source_node)
+        print "Finished Bellman-Fording"
         # force #TM in topology to be known_tm_num
         sorted_dist = sorted(dist.items(), key=operator.itemgetter(1))
         best_path_val = [sorted_dist[0][0]]

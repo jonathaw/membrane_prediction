@@ -39,7 +39,7 @@ def prd_directory(dir_path):
     import numpy as np
     M = 10
     file_list = [x for x in os.listdir(dir_path) if re.match('.*\.prd', x)]
-    if len(file_list) < 180: return {'tm_1': 0, 'tm_2_5': 0, 'tm_5': 0}, {'tm_1': 0, 'tm_2_5': 0, 'tm_5': 0}
+    if len(file_list) < 100: return {'tm_1': 0, 'tm_2_5': 0, 'tm_5': 0}, {'tm_1': 0, 'tm_2_5': 0, 'tm_5': 0}
     rostlab_db_dict = parse_rostlab_db()
     predictors = ['polyphobius', 'topcons', 'spoctopus', 'philius', 'octopus', 'scampi', 'pred_ts']
     results = {a: {'tm_1': 0, 'tm_2_5': 0, 'tm_5': 0} for a in predictors}
@@ -216,6 +216,34 @@ def prd_parser(file_path, file_name):
     result['name'] = result['name'].translate(None, "'")
     return result
 
+
+def compare_just_one():
+    """
+    mode: one
+    path: path to .prd
+    name: protein id
+    :return: compares a single prediction to it's database input.
+    """
+    from TMpredict_WinGrade import parse_rostlab_db
+    from topcons_result_parser import topcons2rostlab_ts_format
+    M = 10
+    rostlab_db_dict = parse_rostlab_db()
+    pred = prd_parser(args['path'], args['name'])
+    obse = rostlab_db_dict[pred['name']]
+    topc = spc_parser(pred['name'])
+    predictors = {k: topcons2rostlab_ts_format(v) for k, v in topc.items() if k not in ['name', 'seq']}
+    predictors_results = {k: None for k in topc.keys() if k not in ['name', 'seq']}
+    for predictor in predictors:
+        comp_pdbtm = comparer(obse['pdbtm'], predictors[predictor], M)
+        comp_opm = comparer(obse['opm'], predictors[predictor], M)
+        predictors_results[predictor] = comp_pdbtm['overlapM_ok'] or comp_opm['overlapM_ok']
+    comp_pdbtm = comparer(obse['pdbtm'], pred['pred_ts'], M)
+    comp_opm = comparer(obse['opm'], pred['pred_ts'], M)
+    if comp_opm['overlapM_ok'] and comp_pdbtm['overlapM_ok']: print 'TopoGraph is correct by both'
+    elif comp_opm['overlapM_ok']: print 'TopoGraph is correct ONLY by OPM'
+    elif comp_pdbtm['overlapM_ok']: print 'TopoGraph is correct ONLY by PDBTM'
+    print predictors_results
+
 if __name__ == '__main__':
     import argparse
     import os
@@ -223,8 +251,11 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-mode', default='single', type=str)
     parser.add_argument('-path', default=os.getcwd(), type=str)
+    parser.add_argument('-name', type=str)
     args = vars(parser.parse_args())
     if args['mode'] == 'single':
         prd_directory(args['path'])
     elif args['mode'] == 'ROC':
         compare_ROC(args['path'])
+    elif args['mode'] == 'one':
+        compare_just_one()

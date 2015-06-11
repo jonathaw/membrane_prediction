@@ -9,17 +9,17 @@ def main():
     global hydrophobicity_polyval, args, param_list
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('-hp_threshold', default=10.0, type=float)
-    parser.add_argument('-min_length', default=18, type=int)
-    parser.add_argument('-psi_helix', default=0.001, type=float)
-    parser.add_argument('-psi_res_num', default=4, type=int)
+    parser.add_argument('-hp_threshold', default=0.0, type=float)#10
+    parser.add_argument('-min_length', default=19, type=int)#18
+    parser.add_argument('-psi_helix', default=0.2, type=float)#0.001
+    parser.add_argument('-psi_res_num', default=3, type=int)#4
     parser.add_argument('-mode', type=str, default='ROC')
     parser.add_argument('-name', default=None, type=str)
     parser.add_argument('-known_tm_num', default=-100, type=int)
-    parser.add_argument('-c0', default=0., type=float)
-    parser.add_argument('-c1', default=8., type=float)
-    parser.add_argument('-c2', default=-0.1, type=float)
-    parser.add_argument('-c3', default=-0.007, type=float)
+    parser.add_argument('-c0', default=0.27, type=float)#0.5
+    parser.add_argument('-c1', default=9.29, type=float)#9.0
+    parser.add_argument('-c2', default=-0.645, type=float)#-0.2
+    parser.add_argument('-c3', default=0.00822, type=float)#-0.006
     parser.add_argument('-result_path', default=os.getcwd())
     parser.add_argument('-seq', default='', type=str)
     parser.add_argument('-with_msa', default=False)
@@ -278,7 +278,7 @@ def topo_VH():
     topo_string = topo_string_rostlab_format(hp_obj.topo_best, vh_db['seq'])
     pred_best_c_term = hp_obj.best_c_term
     pred_sec_best_c_term = hp_obj.sec_best_c_term
-    with open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/22May_VH/'+args['name']+'.prd',
+    with open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/8June_VH_test/'+args['name']+'.prd',
               'wr+') as o:
         o.writelines('name %s\n' % args['name'])
 
