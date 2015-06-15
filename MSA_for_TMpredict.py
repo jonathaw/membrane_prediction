@@ -2,6 +2,7 @@ class single_fasta():
     """
     a class for describing an AA sequence
     """
+
     def __init__(self, name, seq):
         """
         :param name: sequence name
@@ -26,7 +27,7 @@ class single_fasta():
         gaps = 0
         for i, aa in enumerate(self.seq):
             gaps += 1 if aa == '-' else 0
-            if i-gaps == pos-1:
+            if i - gaps == pos - 1:
                 return i
 
     def withgap2nogap(self, pos):
@@ -38,7 +39,7 @@ class single_fasta():
         for i, aa in enumerate(self.seq):
             gaps += 1 if aa == '-' else 0
             if i == pos:
-                return i-gaps
+                return i - gaps
 
 
 def target_has_gaps_in_query_stretch(query, target, start_wg, end_wg):
@@ -59,26 +60,28 @@ class TMpredict_MSA():
     '''
     A class for handling MSA input in fasta format. reads in the sequences as single_fasta objects
     '''
+
     def __init__(self, name, polyval, poly_param):
         # path_msa = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/rost_msa_prep/msa_ready/'
         # msa_file_name = name+'_ready.fa'
         path_msa = '/home/labs/fleishman/jonathaw/membrane_prediction_DBs/blasts_adi/'
-        msa_file_name = name+'.fasta_msa.aln'
+        msa_file_name = name + '.fasta_msa.aln'
         self.polyval = polyval
         self.poly_param = poly_param
-        self.stack = read_fasta_msa(path_msa+msa_file_name)
+        self.stack = read_fasta_msa(path_msa + msa_file_name)
         self.query = [a for a in self.stack if a.name == name][0]
 
-    def retrieve_seqs(self, start, end, direction):
+    def retrieve_seqs_old(self, start, end, direction):
         from WinGrade import WinGrade
+
         start_wg = self.query.nogap2withgap(start)
         end_wg = self.query.nogap2withgap(end)
         if direction == 'fwd':
             best_win = WinGrade(start, end, direction, gap_remover(self.query.seq[start_wg:end_wg]), self.polyval,
-                                self. poly_param)
+                                self.poly_param)
         if direction == 'rev':
             best_win = WinGrade(start, end, direction, gap_remover(self.query.seq[start_wg:end_wg])[::-1],
-                                self.polyval, self. poly_param)
+                                self.polyval, self.poly_param)
         query_grade = best_win.grade
         name = 'query'
         for target in self.stack:
@@ -92,9 +95,9 @@ class TMpredict_MSA():
                 elif direction == 'rev':
                     temp_win_grade = WinGrade(start, end, direction, gap_remover(target.seq[start_wg:end_wg])[::-1],
                                               self.polyval, self.poly_param)
-                # if target.name == self.query.name:
+                    # if target.name == self.query.name:
                     # print 'found the query!!!', temp_win_grade
-                if temp_win_grade.grade < best_win.grade and abs(temp_win_grade.grade-query_grade) < 7:
+                if temp_win_grade.grade < best_win.grade and abs(temp_win_grade.grade - query_grade) < 7:
                     best_win = temp_win_grade
                     name = target.name
         if direction == 'fwd':
@@ -103,6 +106,43 @@ class TMpredict_MSA():
         elif direction == 'rev':
             return WinGrade(start, end, direction, gap_remover(self.query.seq[start_wg:end_wg])[::-1], self.polyval,
                             self.poly_param, name, gap_remover(best_win.seq)[::-1])
+
+    def retrieve_seqs(self, start, end, direction):
+        from WinGrade import WinGrade
+
+        start_wg = self.query.nogap2withgap(start)
+        end_wg = self.query.nogap2withgap(end)
+
+        grade_stack = {}
+        for target in self.stack:
+            if target_has_gaps_in_query_stretch(self.query, target, start_wg, end_wg):
+                if direction == 'fwd':
+                    temp_win_grade = WinGrade(start, end, direction, gap_remover(target.seq[start_wg:end_wg]),
+                                              self.polyval, self.poly_param)
+                elif direction == 'rev':
+                    temp_win_grade = WinGrade(start, end, direction, gap_remover(target.seq[start_wg:end_wg])[::-1],
+                                              self.polyval, self.poly_param)
+
+                grade_stack[temp_win_grade.grade] = {'win': temp_win_grade, 'name': target.name}
+
+        med_grade = median_low(grade_stack.keys())
+        med_win = grade_stack[med_grade]['win']
+        med_name = grade_stack[med_grade]['name']
+        if direction == 'fwd':
+            return WinGrade(start, end, direction, gap_remover(self.query.seq[start_wg:end_wg]), self.polyval,
+                            self.poly_param, med_name, gap_remover(med_win.seq))
+        elif direction == 'rev':
+            return WinGrade(start, end, direction, gap_remover(self.query.seq[start_wg:end_wg])[::-1], self.polyval,
+                            self.poly_param, med_name, gap_remover(med_win.seq)[::-1])
+
+
+def median_low(list_):
+    if len(list_) % 2 != 0:
+        from numpy import median
+        return float(median(list_))
+    else:
+        list_.sort()
+        return list_[int(len(list_)/2 - 0.5)]
 
 
 def gap_remover(seq):

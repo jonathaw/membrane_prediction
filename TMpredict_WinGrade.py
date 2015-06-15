@@ -108,7 +108,7 @@ def ROC_rostlav_single_by_single():
 
 
 def results_writer_skim(path, name, pred_ts, sec_pred_ts, best_val, sec_best_val, seq):
-    print path+name+'.prd'
+    print 'writing.prd to', path+'/'+name+'.prd'
     with open(path+'/'+name+'.prd', 'wr+') as o:
         o.writelines('name %s\n' % name)
         o.writelines('pred_ts %s\n' % pred_ts)
@@ -278,7 +278,7 @@ def topo_VH():
     topo_string = topo_string_rostlab_format(hp_obj.topo_best, vh_db['seq'])
     pred_best_c_term = hp_obj.best_c_term
     pred_sec_best_c_term = hp_obj.sec_best_c_term
-    with open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/8June_VH_test/'+args['name']+'.prd',
+    with open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/14June_run/VH_run/'+args['name']+'.prd',
               'wr+') as o:
         o.writelines('name %s\n' % args['name'])
 

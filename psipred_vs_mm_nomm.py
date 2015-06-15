@@ -8,7 +8,7 @@ def main():
     from TMpredict_WinGrade import parse_rostlab_db
     import matplotlib.pyplot as plt
     import numpy as np
-    IS_BETA_CUTOFF = 0.6
+    IS_BETA_CUTOFF = 0.3
     BETA_NUM_CUTOFF = 5
     missed_h = 0
     rostlab_dict = parse_rostlab_db()
@@ -37,24 +37,33 @@ def check_beta_average():
     from TMpredict_WinGrade import parse_rostlab_db
     import matplotlib.pyplot as plt
     import numpy as np
+    global IS_BETA_CUTOFF, IS_COIL_CUTOFF, IS_HELIX_CUTOFF
     IS_BETA_CUTOFF = 0.3
     IS_COIL_CUTOFF = 0.48
-    avgs = []
+    IS_HELIX_CUTOFF = 0.3
+
     tm_missed_h = 0
     non_ym_missed_h = 0
     how_many_non_tms = 0
+    tot_passed_of_tmh = 0
+    tot_NOT_passed_of_tmh = 0
+    tot_passed_of_NON_tmh = 0
+    tot_NOT_passed_of_NON_tmh = 0
     rostlab_dict = parse_rostlab_db()
     for k, v in rostlab_dict.items():
         psipred = parse_psipred(k)
         tms = ts2hp_seq(v['seq'], v['pdbtm'])
         for tm in tms:
             # avg = sum([psipred[a]['e'] for a in range(tm[0], tm[1]+1)]) / len(range(tm[0], tm[1]+1))
-            avg = psipred_avg(range(tm[0], tm[1]+1), psipred, 'e')
-            avg_c = psipred_avg(range(tm[0], tm[1]+1), psipred, 'c')
+            # avg = psipred_avg(range(tm[0], tm[1]+1), psipred, 'e')
+            # avg_c = psipred_avg(range(tm[0], tm[1]+1), psipred, 'c')
+            # avg_h = psipred_avg(range(tm[0], tm[1]+1), psipred, 'h')
             # med = psipred_median(range(tm[0], tm[1]+1), psipred)
-            avgs.append(avg)
-        if avg >= IS_BETA_CUTOFF or avg_c >= IS_COIL_CUTOFF:
-            tm_missed_h += 1
+            # avgs.append(avg)
+        # if avg >= IS_BETA_CUTOFF or avg_c >= IS_COIL_CUTOFF or avg_h <= IS_HELIX_CUTOFF:
+        #     print avg,avg_c,avg_h
+            if not pass_thresholds(psipred, tm[0], tm[1]):
+                tm_missed_h += 1
 
         ## check how many non_tms will be canceled thanks to threshold
         non_tms = ts2non_tms(v['seq'], v['pdbtm'])
@@ -62,29 +71,68 @@ def check_beta_average():
             rng = range(non_tm[0], non_tm[1]+1)
             for i in rng:
                 if i+20 in rng:
-                    avg = psipred_avg(range(i, i+20), psipred, 'e')
-                    avg_c = psipred_avg(range(i, i+20), psipred, 'c')
+                    # avg = psipred_avg(range(i, i+20), psipred, 'e')
+                    # avg_c = psipred_avg(range(i, i+20), psipred, 'c')
+                    # avg_h = psipred_avg(range(i, i+20), psipred, 'h')
                     # med = psipred_median(range(i, i+20), psipred)
                     how_many_non_tms += 1
-                    if avg >= IS_BETA_CUTOFF or avg_c >= IS_COIL_CUTOFF:
+                    # if (avg >= IS_BETA_CUTOFF or avg_c >= IS_COIL_CUTOFF or avg_h >= IS_HELIX_CUTOFF):
+                    if not pass_thresholds(psipred, i, i+20):
                         non_ym_missed_h += 1
-        # break
 
+        for i in range(len(v['seq'])-20):
+            if do_range_overlap_ranges(range(i+1, i+21), tms):
+                if pass_thresholds(psipred, i+1, i+21):
+                    tot_passed_of_tmh += 1
+                else:
+                    tot_NOT_passed_of_tmh += 1
+            else:
+                if pass_thresholds(psipred, i+1, i+21):
+                    tot_passed_of_NON_tmh += 1
+                else:
+                    tot_NOT_passed_of_NON_tmh += 1
+        # break
 
     print 'TM totalt misses (helices)', tm_missed_h
     print 'NON TM total misses (helices)', non_ym_missed_h
     print "overall %i non tms examined" % how_many_non_tms
-    plt.hist(avgs)
+    print "\nTotal helices passed and are TMHs %i, Total helices not pass and are TMHs %i" % (tot_passed_of_tmh, tot_NOT_passed_of_tmh)
+    print "Total helices passed and are not TMHs %i, Total helices not pass and not TMHs %i" % (tot_passed_of_NON_tmh, tot_NOT_passed_of_NON_tmh)
+    # plt.hist(avgs)
     # plt.show()
 
 
+def do_ranges_overlap(rng1, rng2):
+    for i in rng1:
+        if i in rng2:
+            return True
+    else:
+        return False
+
+
+def do_range_overlap_ranges(rng, rngs):
+    for rng2 in rngs:
+        if do_ranges_overlap(rng, rng2):
+            return True
+    return False
+
+
+def pass_thresholds(psi, start, end):
+    beta = psipred_avg(range(start+1, end), psi, 'e')
+    coil = psipred_avg(range(start+1, end), psi, 'c')
+    hlix = psipred_avg(range(start+1, end), psi, 'h')
+    return hlix >= IS_HELIX_CUTOFF and beta <= IS_BETA_CUTOFF and coil <= IS_COIL_CUTOFF
+
+
+
 def psipred_avg(rng, psipred, t):
-    return sum([psipred[a][t] for a in rng]) / len(rng)
+    from numpy import mean
+    return mean([psipred[a][t] for a in rng])
 
 
 def psipred_median(rng, psipred, t):
-    import numpy
-    return numpy.median([psipred[a][t] for a in rng])
+    from numpy import median
+    return median([psipred[a][t] for a in rng])
 
 
 def ts2non_tms(seq, ts):

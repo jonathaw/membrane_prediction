@@ -74,7 +74,7 @@ def main():
     print 'result gap incorrect', results['pred_incorrect_gap']
     print 'result phobius correct', results['phobius_correct']
     print 'result scampi correct', results['scampi_correct']
-    plt.subplot(111)
+    plt.subplot(311)
     font = {'family': 'normal', 'size': 22}
     matplotlib.rc('font', **font)
     the_range = [(a, a+1) for a in np.arange(-6, 0, 1)]
@@ -108,7 +108,7 @@ def main():
     # plt.bar(positions, results)
 
     # boxplot_with_scatter([pred_correct, pred_incorrect], ['correct', 'incorrect'], 121)
-    #plt.subplot(212)
+    plt.subplot(312)
     predictors_all = predicotrs_correct.copy()
     predictors_all['topograph'] = results['pred_correct']
     predictors_perc = {k : 100*v/results['entries'] for k, v in predictors_all.items()}

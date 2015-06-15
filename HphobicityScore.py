@@ -20,7 +20,8 @@ class HphobicityScore():
         self.seq = seq
         self.ss2_file = ss2_file
         self.seq_length = len(seq)
-        self.psipred = self.PsiReaderHelix()
+        # self.psipred = self.PsiReaderHelix()
+        self.psipred = self.parse_psipred()
         self.polyval = hydro_polyval
         self.with_msa = param_list['with_msa']
         # self.topo = self.topo_greedy_chooser()
@@ -79,6 +80,41 @@ class HphobicityScore():
         if self.with_msa:
             from MSA_for_TMpredict import TMpredict_MSA
             msa_obj = TMpredict_MSA(self.name, self.polyval, poly_param)
+        psi = self.psipred
+        grades = []
+
+        # setup toolbar
+        bar_width = len(range(pos1, pos2))
+        sys.stdout.write("[%s]" % (" " * bar_width))
+        sys.stdout.flush()
+        sys.stdout.write("\b" * (bar_width+1))  # return to start of line, after '['
+
+        for i in range(pos1, pos2):
+            for inc in range(min(INC_MAX, self.seq_length - MIN_LENGTH - i)):
+                if not self.is_not_helical((i, i+MIN_LENGTH+inc), psi):
+                    if self.with_msa:
+                        grades.append(msa_obj.retrieve_seqs(i, i+MIN_LENGTH+inc, 'fwd'))
+                        grades.append(msa_obj.retrieve_seqs(i, i+MIN_LENGTH+inc, 'rev'))
+                    else:
+                        grades.append(WinGrade(i, i+MIN_LENGTH+inc, 'fwd', self.seq[i:i+MIN_LENGTH+inc], self.polyval,
+                                            poly_param))
+                        grades.append(WinGrade(i, i+MIN_LENGTH+inc, 'rev', self.seq[i:i+MIN_LENGTH+inc][::-1], self.polyval,
+                                            poly_param))
+            # writes to the progress bar
+            sys.stdout.write("-")
+            sys.stdout.flush()
+        sys.stdout.write("\n")
+        return grades
+
+    def win_grade_generator_old(self, pos1, pos2, fwd_or_rev):
+        '''
+        :return:grades all segments of self.seq, and aggregates them as WinGrades
+        '''
+        from WinGrade import WinGrade
+        import sys
+        if self.with_msa:
+            from MSA_for_TMpredict import TMpredict_MSA
+            msa_obj = TMpredict_MSA(self.name, self.polyval, poly_param)
         PSI_HP_THRESHOLD = -8.
         psi = self.psipred
         grades = []
@@ -87,7 +123,7 @@ class HphobicityScore():
         bar_width = len(range(pos1, pos2))
         sys.stdout.write("[%s]" % (" " * bar_width))
         sys.stdout.flush()
-        sys.stdout.write("\b" * (bar_width+1)) # return to start of line, after '['
+        sys.stdout.write("\b" * (bar_width+1))  # return to start of line, after '['
 
         for i in range(pos1, pos2):
             for inc in range(min(INC_MAX, self.seq_length - MIN_LENGTH - i)):
@@ -244,7 +280,7 @@ class HphobicityScore():
             return fwd_start if fwd_score < rev_score and len(fwd_start) >= len(rev_start)\
                 else rev_start
 
-    def is_not_helical(self, pos, psi):
+    def is_not_helical_old(self, pos, psi):
         """
         :param pos:start and end positions of the corresponding window
         :param psi: a list of alpha-helical propensity grades for the entire sequence
@@ -255,6 +291,18 @@ class HphobicityScore():
             if psi[i] <= PSI_HELIX:
                 non_helical += 1
         return False if non_helical < PSI_RES_NUM else True
+
+    def is_not_helical(self, pos, psi):
+        """
+        :param pos:start and end positions of the corresponding window
+        :param psi: a dict of c/e/h propensities
+        :return:True if the average e or c propensities are above certain theresjolds determined in
+        psipred_vs_mm_nomm.py
+        """
+        import numpy as np
+        return True if (np.mean([psi[a]['e'] for a in range(pos[0], pos[1])]) >= 0.3 or
+                        np.mean([psi[a]['c'] for a in range(pos[0], pos[1])]) >= 0.48 or
+                        np.mean([psi[a]['h'] for a in range(pos[0], pos[1])]) <= 0.3) else False
 
     def PsiReaderHelix(self):
         """
@@ -268,6 +316,16 @@ class HphobicityScore():
                 result.append(float(split[4]))
         ss2_file.close()
         return result
+
+    def parse_psipred(self):
+        results = {}
+        with open(self.ss2_file, 'r') as f:
+            cont = f.read().split('\n')
+        for line in cont:
+            split = line.split()
+            if len(split) != 6: continue
+            results[int(split[0])-1] = {'aa': split[1], 'c': float(split[3]), 'h': float(split[4]), 'e': float(split[5])}
+        return results
 
     def PsiReaderHelix_old(self):
         """

@@ -39,7 +39,7 @@ def prd_directory(dir_path):
     import numpy as np
     M = 10
     file_list = [x for x in os.listdir(dir_path) if re.match('.*\.prd', x)]
-    if len(file_list) < 100: return {'tm_1': 0, 'tm_2_5': 0, 'tm_5': 0}, {'tm_1': 0, 'tm_2_5': 0, 'tm_5': 0}
+    if len(file_list) < 50: return {'tm_1': 0, 'tm_2_5': 0, 'tm_5': 0}, {'tm_1': 0, 'tm_2_5': 0, 'tm_5': 0}
     rostlab_db_dict = parse_rostlab_db()
     predictors = ['polyphobius', 'topcons', 'spoctopus', 'philius', 'octopus', 'scampi', 'pred_ts']
     results = {a: {'tm_1': 0, 'tm_2_5': 0, 'tm_5': 0} for a in predictors}
