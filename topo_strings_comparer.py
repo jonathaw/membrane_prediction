@@ -18,7 +18,7 @@ def compare_ROC(path):
         # print results
         # print sum(totals.values())
         # print sum(results.values())
-        if sum(totals.values()) >= 180 and sum(results.values()) > best_grade:
+        if sum(totals.values()) >= 170 and sum(results.values()) > best_grade:
             print 'inside', totals, results, dir
             best_grade = sum(results.values())
             best_name = dir
@@ -39,7 +39,7 @@ def prd_directory(dir_path):
     import numpy as np
     M = 10
     file_list = [x for x in os.listdir(dir_path) if re.match('.*\.prd', x)]
-    if len(file_list) < 50: return {'tm_1': 0, 'tm_2_5': 0, 'tm_5': 0}, {'tm_1': 0, 'tm_2_5': 0, 'tm_5': 0}
+    if len(file_list) < args['num_prd']: return {'tm_1': 0, 'tm_2_5': 0, 'tm_5': 0}, {'tm_1': 0, 'tm_2_5': 0, 'tm_5': 0}
     rostlab_db_dict = parse_rostlab_db()
     predictors = ['polyphobius', 'topcons', 'spoctopus', 'philius', 'octopus', 'scampi', 'pred_ts']
     results = {a: {'tm_1': 0, 'tm_2_5': 0, 'tm_5': 0} for a in predictors}
@@ -65,10 +65,10 @@ def prd_directory(dir_path):
                 # print 'pred_tm_num', comp_pdbtm['pred_tm_num']
                 # print 'ok', comp_pdbtm['overlapM_ok_helices']
                 if comp_pdbtm['obse_tm_num'] > comp_pdbtm['pred_tm_num']:
-                    print 'MISS', pred['name'], comp_pdbtm['obse_tm_num']
+                    # print 'MISS', pred['name'], comp_pdbtm['obse_tm_num']
                     errors['miss'] += 1
                 elif comp_pdbtm['obse_tm_num'] < comp_pdbtm['pred_tm_num']:
-                    print 'OVER', pred['name'], comp_pdbtm['obse_tm_num']
+                    # print 'OVER', pred['name'], comp_pdbtm['obse_tm_num']
                     errors['over'] += 1
                 else:
                     errors['exact'] += 1
@@ -252,7 +252,9 @@ if __name__ == '__main__':
     parser.add_argument('-mode', default='single', type=str)
     parser.add_argument('-path', default=os.getcwd(), type=str)
     parser.add_argument('-name', type=str)
+    parser.add_argument('-num_prd', default=180, type=int)
     args = vars(parser.parse_args())
+
     if args['mode'] == 'single':
         prd_directory(args['path'])
     elif args['mode'] == 'ROC':

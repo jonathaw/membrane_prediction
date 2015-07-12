@@ -92,6 +92,8 @@ def hp_moment(seq, polyval, poly_param):
     sin_elem = 0.
     cos_elem = 0.
     for i, aa in enumerate(seq):
+        if aa not in polyval.keys():
+            continue
         if aa == 'G' or aa == 'P' or np.polyval(polyval[aa], 0) < 0.:
             continue
         sin_elem += np.polyval(polyval[aa], 0) * np.sin(deg100_in_rad*i)

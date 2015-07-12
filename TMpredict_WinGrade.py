@@ -16,10 +16,10 @@ def main():
     parser.add_argument('-mode', type=str, default='ROC')
     parser.add_argument('-name', default=None, type=str)
     parser.add_argument('-known_tm_num', default=-100, type=int)
-    parser.add_argument('-c0', default=0.27, type=float)#0.5
-    parser.add_argument('-c1', default=9.29, type=float)#9.0
-    parser.add_argument('-c2', default=-0.645, type=float)#-0.2
-    parser.add_argument('-c3', default=0.00822, type=float)#-0.006
+    parser.add_argument('-c0', default=0.0, type=float)#0.5
+    parser.add_argument('-c1', default=9.29, type=float)#9.0 9.29
+    parser.add_argument('-c2', default=-0.645, type=float)#-0.2 -0.645
+    parser.add_argument('-c3', default=-0.00822, type=float)#-0.006 0.00822
     parser.add_argument('-result_path', default=os.getcwd())
     parser.add_argument('-seq', default='', type=str)
     parser.add_argument('-with_msa', default=False)

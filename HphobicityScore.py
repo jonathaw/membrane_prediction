@@ -533,7 +533,7 @@ class HphobicityScore():
                     elif self.with_msa:
                         G.add_edge(win1, win2, weight=win2.msa_grade)
         # use bellman-ford algorithm to find minimum paths to all nodes
-        # print win_list
+        print win_list
         print "About to Bellman-Ford"
         pred, dist = nx.bellman_ford(G, source_node)
         print "Finished Bellman-Fording"
