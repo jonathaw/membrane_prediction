@@ -10,7 +10,9 @@ def compare_ROC(path):
     prints the name of the folder with the best results
     '''
     import re
-    roc_dirs = [x for x in os.listdir(path) if re.match('ROC_.*', x)]
+    # roc_dirs = [x for x in os.listdir(path) if re.match('ROC_.*', x)]
+    roc_dirs = [x for x in os.listdir(path) if re.match('hp_.*', x)]
+    print "will check these dirs:", roc_dirs
     best_grade = 0
     for dir in roc_dirs:
         results, totals = prd_directory(dir)
@@ -65,10 +67,10 @@ def prd_directory(dir_path):
                 # print 'pred_tm_num', comp_pdbtm['pred_tm_num']
                 # print 'ok', comp_pdbtm['overlapM_ok_helices']
                 if comp_pdbtm['obse_tm_num'] > comp_pdbtm['pred_tm_num']:
-                    # print 'MISS', pred['name'], comp_pdbtm['obse_tm_num']
+                    print 'MISS', pred['name'], comp_pdbtm['obse_tm_num']
                     errors['miss'] += 1
                 elif comp_pdbtm['obse_tm_num'] < comp_pdbtm['pred_tm_num']:
-                    # print 'OVER', pred['name'], comp_pdbtm['obse_tm_num']
+                    print 'OVER', pred['name'], comp_pdbtm['obse_tm_num']
                     errors['over'] += 1
                 else:
                     errors['exact'] += 1
@@ -100,8 +102,8 @@ def prd_directory(dir_path):
         for predictor, results_d in results.items():
             data[predictor] = {k: 100*float(v)/float(totals[k]) for k, v in results_d.items()}
         print 'pps', results['polyphobius']
-        font = {'family': 'normal', 'size': 22}
-        matplotlib.rc('font', **font)
+        # font = {'family': 'normal', 'size': 22}
+        # matplotlib.rc('font', **font)
         print data
         print 'range', np.arange(0, 1./3., 1./(7.*3.)), len(np.arange(0, 1./3., 1./(7.*3.)))
         ind = np.arange(3)
@@ -121,7 +123,7 @@ def prd_directory(dir_path):
         plt.title('TMH prediction comparison')
         names = [k for k in plots.keys()]
         names[0] = 'TopoGraph'
-        plt.legend(plots.values(), names, 'upper right')
+        plt.legend(plots.values(), names, loc='upper right')
         plt.show()
 
 

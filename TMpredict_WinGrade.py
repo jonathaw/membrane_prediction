@@ -23,6 +23,7 @@ def main():
     parser.add_argument('-result_path', default=os.getcwd())
     parser.add_argument('-seq', default='', type=str)
     parser.add_argument('-with_msa', default=False)
+    parser.add_argument('-msa_percentile', default=50, type=int)
     args = vars(parser.parse_args())
 
     # import topdb_functions

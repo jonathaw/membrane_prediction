@@ -59,7 +59,8 @@ class WinGrade():
         membrane_position = np.linspace(-15, 15, endpoint=True, num=self.length)
         grade = 0
         for i, aa in enumerate(self.seq):
-            grade += np.polyval(polyval[aa], membrane_position[i])
+            if aa in polyval.keys():
+                grade += np.polyval(polyval[aa], membrane_position[i])
         return grade    #+self.hp_moment(polyval)+self.length_polynom()
 
     def length_polynom(self):

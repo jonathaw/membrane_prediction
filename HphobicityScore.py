@@ -16,6 +16,7 @@ class HphobicityScore():
         known_tm_num = param_list['known_tm_num']
         poly_param = {k: v for k, v in param_list.items() if k in ['c0', 'c1', 'c2', 'c3']}
         output_path = param_list['result_path']
+        self.percentile = param_list['msa_percentile']
         self.name = name
         self.seq = seq
         self.ss2_file = ss2_file
@@ -79,7 +80,7 @@ class HphobicityScore():
         import sys
         if self.with_msa:
             from MSA_for_TMpredict import TMpredict_MSA
-            msa_obj = TMpredict_MSA(self.name, self.polyval, poly_param)
+            msa_obj = TMpredict_MSA(self.name, self.polyval, poly_param, self.percentile)
         psi = self.psipred
         grades = []
 

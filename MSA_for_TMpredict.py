@@ -61,7 +61,7 @@ class TMpredict_MSA():
     A class for handling MSA input in fasta format. reads in the sequences as single_fasta objects
     '''
 
-    def __init__(self, name, polyval, poly_param):
+    def __init__(self, name, polyval, poly_param, PERCENTILE):
         # path_msa = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/rost_msa_prep/msa_ready/'
         # msa_file_name = name+'_ready.fa'
         path_msa = '/home/labs/fleishman/jonathaw/membrane_prediction_DBs/blasts_adi/'
@@ -70,6 +70,7 @@ class TMpredict_MSA():
         self.poly_param = poly_param
         self.stack = read_fasta_msa(path_msa + msa_file_name)
         self.query = [a for a in self.stack if a.name == name][0]
+        self.percentile = PERCENTILE
 
     def retrieve_seqs_old(self, start, end, direction):
         from WinGrade import WinGrade
@@ -125,7 +126,8 @@ class TMpredict_MSA():
 
                 grade_stack[temp_win_grade.grade] = {'win': temp_win_grade, 'name': target.name}
 
-        med_grade = median_low(grade_stack.keys())
+        # med_grade = median_low(grade_stack.keys())
+        med_grade = precentile_for_wins(grade_stack.keys(), self.percentile)
         med_win = grade_stack[med_grade]['win']
         med_name = grade_stack[med_grade]['name']
         if direction == 'fwd':
@@ -143,6 +145,12 @@ def median_low(list_):
     else:
         list_.sort()
         return list_[int(len(list_)/2 - 0.5)]
+
+
+def precentile_for_wins(list_, PERCENTILE):
+    import numpy as np
+    a = np.array(list_)
+    return np.percentile(a, PERCENTILE, interpolation='lower')
 
 
 def gap_remover(seq):
