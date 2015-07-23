@@ -13,13 +13,15 @@ def main():
     parser.add_argument('-min_length', default=19, type=int)#18
     parser.add_argument('-psi_helix', default=0.2, type=float)#0.001
     parser.add_argument('-psi_res_num', default=3, type=int)#4
-    parser.add_argument('-mode', type=str, default='ROC')
+    parser.add_argument('-mode', type=str, default='single')
     parser.add_argument('-name', default=None, type=str)
     parser.add_argument('-known_tm_num', default=-100, type=int)
     parser.add_argument('-c0', default=0.0, type=float)#0.5
-    parser.add_argument('-c1', default=9.29, type=float)#9.0 9.29
-    parser.add_argument('-c2', default=-0.645, type=float)#-0.2 -0.645
-    parser.add_argument('-c3', default=-0.00822, type=float)#-0.006 0.00822
+    parser.add_argument('-c1', default=0, type=float)#9.0 9.29
+    parser.add_argument('-c2', default=0, type=float)#-0.2 -0.645
+    parser.add_argument('-c3', default=0, type=float)#-0.006 0.00822
+    parser.add_argument('-w', default=0.004, type=float)
+    parser.add_argument('-z_0', default=43, type=float)
     parser.add_argument('-result_path', default=os.getcwd())
     parser.add_argument('-seq', default='', type=str)
     parser.add_argument('-with_msa', default=False)
@@ -50,13 +52,20 @@ def process_single_protein(name, path):
     entry = rostlab_db_dict[name.lower()]
     print entry
     if topc['spoctopus'].count('S') != 0:
-        end_of_SP = [a for a in re.finditer('S*', topc['philius']) if a != ''][0].end()
-        entry['seq_no_SP'] = entry['seq'][end_of_SP:]
+        print 'spoctopus', topc['spoctopus']
+        end_of_SP = [a for a in re.finditer('S*', topc['philius']) if a != ''][0].end() - 1
+        if end_of_SP == -1:
+            end_of_SP = 0
+        print 'end of SP', end_of_SP
+        entry['seq_no_SP'] = 'u'*end_of_SP + entry['seq'][end_of_SP:]
+        print 'no SP', entry['seq_no_SP']
         temp = HphobicityScore(name, entry['seq_no_SP'],
                         '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/psipred/'+name+'.ss2',
                         hydrophobicity_polyval, args)
-        topo_string = 'u'*end_of_SP + topo_string_rostlab_format(temp.topo_best, entry['seq_no_SP'])
-        sec_topo_string = 'u'*end_of_SP + topo_string_rostlab_format(temp.topo_sec_best, entry['seq_no_SP'])
+        # topo_string = 'u'*end_of_SP + topo_string_rostlab_format(temp.topo_best, entry['seq_no_SP'])
+        # sec_topo_string = 'u'*end_of_SP + topo_string_rostlab_format(temp.topo_sec_best, entry['seq_no_SP'])
+        topo_string = topo_string_rostlab_format(temp.topo_best, entry['seq_no_SP'])
+        sec_topo_string = topo_string_rostlab_format(temp.topo_sec_best, entry['seq_no_SP'])
     else:
         temp = HphobicityScore(name, entry['seq'],
                         '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/psipred/'+name+'.ss2',
@@ -279,7 +288,7 @@ def topo_VH():
     topo_string = topo_string_rostlab_format(hp_obj.topo_best, vh_db['seq'])
     pred_best_c_term = hp_obj.best_c_term
     pred_sec_best_c_term = hp_obj.sec_best_c_term
-    with open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/14June_run/VH_run/'+args['name']+'.prd',
+    with open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/21July_VH_charges/'+args['name']+'.prd',
               'wr+') as o:
         o.writelines('name %s\n' % args['name'])
 
@@ -529,7 +538,7 @@ def topo_string_rostlab_format(topo, seq):
     global hydrophobicity_polyval
     topo_string = ''
     last_tm = WinGrade(0, 0, 'fwd', '', hydrophobicity_polyval,
-                       {k: v for k, v in args.items() if k in ['c0', 'c1', 'c2', 'c3']})
+                       {k: v for k, v in args.items() if k in ['c0', 'c1', 'c2', 'c3', 'w', 'z_0']})
     for tm in topo:
         topo_string += '1' * (tm.begin-last_tm.end) if tm.direction == 'fwd' else '2' * (tm.begin-last_tm.end)
         topo_string += 'H' * (tm.end - tm.begin)

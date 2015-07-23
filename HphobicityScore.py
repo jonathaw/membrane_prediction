@@ -9,12 +9,13 @@ class HphobicityScore():
         '''
         global HP_THRESHOLD, INC_MAX, MIN_LENGTH, PSI_HELIX, PSI_RES_NUM, known_tm_num, poly_param, output_path
         HP_THRESHOLD = param_list['hp_threshold']
-        INC_MAX = 7  # 8
+        INC_MAX = 11  # 8
         MIN_LENGTH = param_list['min_length']
         PSI_HELIX = param_list['psi_helix']
         PSI_RES_NUM = param_list['psi_res_num']
         known_tm_num = param_list['known_tm_num']
-        poly_param = {k: v for k, v in param_list.items() if k in ['c0', 'c1', 'c2', 'c3']}
+        poly_param = {k: v for k, v in param_list.items() if k in ['c0', 'c1', 'c2', 'c3', 'z_0', 'w']}
+        print 'poly', poly_param
         output_path = param_list['result_path']
         self.percentile = param_list['msa_percentile']
         self.name = name
@@ -27,7 +28,8 @@ class HphobicityScore():
         self.with_msa = param_list['with_msa']
         # self.topo = self.topo_greedy_chooser()
         # self.n_term_orient = self.topo[0].direction
-        self.WinGrades = self.win_grade_generator(0, self.seq_length, 'both')
+        self.after_SP = 0 if self.seq[0] != 'u' else max([i for i, aa in enumerate(self.seq) if aa == 'u']) + 1
+        self.WinGrades = self.win_grade_generator(self.after_SP, self.seq_length, 'both')
         # self.topo_string = self.make_topo_string()
         # print 'before sort', self.WinGrades
         # self.sorted_grade = self.sort_WinGrades()
@@ -83,24 +85,27 @@ class HphobicityScore():
             msa_obj = TMpredict_MSA(self.name, self.polyval, poly_param, self.percentile)
         psi = self.psipred
         grades = []
-
+        # print "psi", psi
         # setup toolbar
         bar_width = len(range(pos1, pos2))
         sys.stdout.write("[%s]" % (" " * bar_width))
         sys.stdout.flush()
         sys.stdout.write("\b" * (bar_width+1))  # return to start of line, after '['
-
-        for i in range(pos1, pos2):
+        for i in range(pos1, pos2+1):
             for inc in range(min(INC_MAX, self.seq_length - MIN_LENGTH - i)):
                 if not self.is_not_helical((i, i+MIN_LENGTH+inc), psi):
                     if self.with_msa:
                         grades.append(msa_obj.retrieve_seqs(i, i+MIN_LENGTH+inc, 'fwd'))
                         grades.append(msa_obj.retrieve_seqs(i, i+MIN_LENGTH+inc, 'rev'))
                     else:
-                        grades.append(WinGrade(i, i+MIN_LENGTH+inc, 'fwd', self.seq[i:i+MIN_LENGTH+inc], self.polyval,
-                                            poly_param))
-                        grades.append(WinGrade(i, i+MIN_LENGTH+inc, 'rev', self.seq[i:i+MIN_LENGTH+inc][::-1], self.polyval,
-                                            poly_param))
+                        try:
+                            # print 'creating win %s' % self.seq[i:i+MIN_LENGTH+inc]
+                            grades.append(WinGrade(i, i+MIN_LENGTH+inc, 'fwd', self.seq[i:i+MIN_LENGTH+inc], self.polyval,
+                                                poly_param))
+                            grades.append(WinGrade(i, i+MIN_LENGTH+inc, 'rev', self.seq[i:i+MIN_LENGTH+inc][::-1], self.polyval,
+                                                poly_param))
+                        except:
+                            continue
             # writes to the progress bar
             sys.stdout.write("-")
             sys.stdout.flush()
@@ -297,10 +302,11 @@ class HphobicityScore():
         """
         :param pos:start and end positions of the corresponding window
         :param psi: a dict of c/e/h propensities
-        :return:True if the average e or c propensities are above certain theresjolds determined in
+        :return:True if the average e or c propensities are above certain thresholds determined in
         psipred_vs_mm_nomm.py
         """
         import numpy as np
+        assert all([psi[i]['aa'] == self.seq[i] for i in range(pos[0], pos[1])])
         return True if (np.mean([psi[a]['e'] for a in range(pos[0], pos[1])]) >= 0.3 or
                         np.mean([psi[a]['c'] for a in range(pos[0], pos[1])]) >= 0.48 or
                         np.mean([psi[a]['h'] for a in range(pos[0], pos[1])]) <= 0.3) else False
@@ -518,6 +524,7 @@ class HphobicityScore():
         import networkx as nx
         from WinGrade import WinGrade
         import operator
+        # print self.WinGrades
         win_list = [a for a in self.WinGrades if a.grade < HP_THRESHOLD]  # make copy of negative wingrades list
         G = nx.DiGraph()
         source_node = WinGrade(0, 0, 'fwd', '', self.polyval, poly_param)   # define source win
@@ -534,7 +541,7 @@ class HphobicityScore():
                     elif self.with_msa:
                         G.add_edge(win1, win2, weight=win2.msa_grade)
         # use bellman-ford algorithm to find minimum paths to all nodes
-        print win_list
+        # print win_list
         print "About to Bellman-Ford"
         pred, dist = nx.bellman_ford(G, source_node)
         print "Finished Bellman-Fording"

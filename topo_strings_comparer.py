@@ -11,7 +11,7 @@ def compare_ROC(path):
     '''
     import re
     # roc_dirs = [x for x in os.listdir(path) if re.match('ROC_.*', x)]
-    roc_dirs = [x for x in os.listdir(path) if re.match('hp_.*', x)]
+    roc_dirs = [x for x in os.listdir(path) if re.match('mem_.*', x)]
     print "will check these dirs:", roc_dirs
     best_grade = 0
     for dir in roc_dirs:
