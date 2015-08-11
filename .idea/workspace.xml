@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6a73546c-b0e1-4c73-9c98-48c4af466cd3" name="Default" comment="changed to new length model, after ben-tal.">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/TMConstraint.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/prediction_analyser.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/BlastMSA.py" afterPath="$PROJECT_DIR$/BlastMSA.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HphobicityScore.py" afterPath="$PROJECT_DIR$/HphobicityScore.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MSA_for_TMpredict.py" afterPath="$PROJECT_DIR$/MSA_for_TMpredict.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TMpredict_WinGrade.py" afterPath="$PROJECT_DIR$/TMpredict_WinGrade.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WinGrade.py" afterPath="$PROJECT_DIR$/WinGrade.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/topo_strings_comparer.py" afterPath="$PROJECT_DIR$/topo_strings_comparer.py" />
+    <list default="true" id="6a73546c-b0e1-4c73-9c98-48c4af466cd3" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TMConstraint.py" afterPath="$PROJECT_DIR$/TMConstraint.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="membrane_prediciton.iws" />
@@ -33,10 +26,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="TMpredict_WinGrade.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="TMpredict_WinGrade.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TMpredict_WinGrade.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.11025358" vertical-offset="840" max-vertical-offset="3600">
+            <state vertical-scroll-proportion="0.0" vertical-offset="840" max-vertical-offset="3600">
               <caret line="48" column="102" selection-start-line="48" selection-start-column="102" selection-end-line="48" selection-end-column="102" />
               <folding>
                 <element signature="e#71#1818#0" expanded="true" />
@@ -82,15 +75,15 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TMConstraint.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="TMConstraint.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/TMConstraint.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="440">
-              <caret line="16" column="16" selection-start-line="16" selection-start-column="16" selection-end-line="16" selection-end-column="16" />
+            <state vertical-scroll-proportion="1.0204313" vertical-offset="1" max-vertical-offset="1520">
+              <caret line="54" column="79" selection-start-line="54" selection-start-column="79" selection-end-line="54" selection-end-column="79" />
               <folding>
                 <element signature="e#26#97#1" expanded="true" />
-                <element signature="e#175#278#0" expanded="true" />
-                <element signature="e#306#429#0" expanded="true" />
+                <element signature="e#210#389#0" expanded="true" />
+                <element signature="e#795#1562#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -99,10 +92,11 @@
       <file leaf-file-name="topo_strings_comparer.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/topo_strings_comparer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1033" max-vertical-offset="3920">
-              <caret line="74" column="46" selection-start-line="74" selection-start-column="46" selection-end-line="74" selection-end-column="46" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="3873" max-vertical-offset="4780">
+              <caret line="246" column="4" selection-start-line="246" selection-start-column="4" selection-end-line="247" selection-end-column="45" />
               <folding>
                 <element signature="e#123#1015#0" expanded="true" />
+                <element signature="e#1907#6994#0" expanded="true" />
                 <element signature="e#12274#12626#0" expanded="true" />
               </folding>
             </state>
@@ -205,10 +199,10 @@
         <option value="$PROJECT_DIR$/WinGrade.py" />
         <option value="$PROJECT_DIR$/HphobicityScore.py" />
         <option value="$PROJECT_DIR$/BlastMSA.py" />
-        <option value="$PROJECT_DIR$/TMConstraint.py" />
         <option value="$PROJECT_DIR$/TMpredict_WinGrade.py" />
         <option value="$PROJECT_DIR$/MSA_for_TMpredict.py" />
         <option value="$PROJECT_DIR$/topo_strings_comparer.py" />
+        <option value="$PROJECT_DIR$/TMConstraint.py" />
       </list>
     </option>
   </component>
@@ -817,7 +811,11 @@
       <created>1437660396883</created>
       <updated>1437660396883</updated>
     </task>
-    <option name="localTasksCounter" value="67" />
+    <task id="LOCAL-00067" summary="introducing constraints TMConstraint.py">
+      <created>1439294460531</created>
+      <updated>1439294460531</updated>
+    </task>
+    <option name="localTasksCounter" value="68" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -844,6 +842,7 @@
     <frame x="0" y="23" width="1920" height="1053" extended-state="6" />
     <editor active="true" />
     <layout>
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -858,7 +857,6 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
@@ -879,7 +877,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="Adding the VDB dataset" />
     <MESSAGE value="decided to make new topology greedy alfgorithm" />
     <MESSAGE value="new topo predictor with graph theory implementation" />
     <MESSAGE value="documented graph theory base topology predictor" />
@@ -904,7 +901,8 @@
     <MESSAGE value="commit...." />
     <MESSAGE value="introduced a percentile function for MSA. and the ability to input a precentile from the command line. -msa_percentile.&#10;potentially fixed error where a non AA single letter is trying to be graded in WinGrade.grade_segment()" />
     <MESSAGE value="changed to new length model, after ben-tal." />
-    <option name="LAST_COMMIT_MESSAGE" value="changed to new length model, after ben-tal." />
+    <MESSAGE value="introducing constraints TMConstraint.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="introducing constraints TMConstraint.py" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1247,6 +1245,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.7963801" vertical-offset="596" max-vertical-offset="1600">
           <caret line="262" column="8" selection-start-line="262" selection-start-column="8" selection-end-line="262" selection-end-column="8" />
+          <folding>
+            <element signature="e#7060#7214#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1273,18 +1274,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TMConstraint.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="440">
-          <caret line="16" column="16" selection-start-line="16" selection-start-column="16" selection-end-line="16" selection-end-column="16" />
-          <folding>
-            <element signature="e#26#97#1" expanded="true" />
-            <element signature="e#175#278#0" expanded="true" />
-            <element signature="e#306#429#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/WinGrade.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1720">
@@ -1305,6 +1294,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/TMpredict_WinGrade.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="840" max-vertical-offset="3600">
+          <caret line="48" column="102" selection-start-line="48" selection-start-column="102" selection-end-line="48" selection-end-column="102" />
+          <folding>
+            <element signature="e#71#1818#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/MSA_for_TMpredict.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1073" max-vertical-offset="2560">
@@ -1318,21 +1317,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/topo_strings_comparer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1033" max-vertical-offset="3920">
-          <caret line="74" column="46" selection-start-line="74" selection-start-column="46" selection-end-line="74" selection-end-column="46" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="2713" max-vertical-offset="4780">
+          <caret line="246" column="4" selection-start-line="246" selection-start-column="4" selection-end-line="247" selection-end-column="45" />
           <folding>
             <element signature="e#123#1015#0" expanded="true" />
+            <element signature="e#1907#6994#0" expanded="true" />
             <element signature="e#12274#12626#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TMpredict_WinGrade.py">
+    <entry file="file://$PROJECT_DIR$/TMConstraint.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.11025358" vertical-offset="840" max-vertical-offset="3600">
-          <caret line="48" column="102" selection-start-line="48" selection-start-column="102" selection-end-line="48" selection-end-column="102" />
+        <state vertical-scroll-proportion="1.0204313" vertical-offset="1" max-vertical-offset="1520">
+          <caret line="54" column="79" selection-start-line="54" selection-start-column="79" selection-end-line="54" selection-end-column="79" />
           <folding>
-            <element signature="e#71#1818#0" expanded="true" />
+            <element signature="e#26#97#1" expanded="true" />
+            <element signature="e#210#389#0" expanded="true" />
+            <element signature="e#795#1562#0" expanded="true" />
           </folding>
         </state>
       </provider>
