@@ -49,6 +49,14 @@ def target_has_gaps_in_query_stretch(query, target, start_wg, end_wg):
     :param start_wg: start position for segemnt, with gaps
     :param end_wg: end position for segment, with gaps
     :return: True if gaps pattern in target matches that of the query in the given segment, else False
+    >>> q = single_fasta('query', 'ABC--DE-G')
+    >>> t = single_fasta('targe', 'AB--FDEG-')
+    >>> target_has_gaps_in_query_stretch(q, t, 0, 8)
+    False
+    >>> q = single_fasta('query', 'ABC--DE-FG')
+    >>> t = single_fasta('targe', 'DFG--YU-LK')
+    >>> target_has_gaps_in_query_stretch(q, t, 0, 8)
+    True
     """
     query_gaps_in_stretch = [i for i in query.gaps if start_wg <= i <= end_wg]
     target_gaps_in_stretch = [i for i in target.gaps if start_wg <= i <= end_wg]
@@ -60,12 +68,12 @@ class TMpredict_MSA():
     '''
     A class for handling MSA input in fasta format. reads in the sequences as single_fasta objects
     '''
-
     def __init__(self, name, polyval, poly_param, PERCENTILE):
         # path_msa = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/rost_msa_prep/msa_ready/'
         # msa_file_name = name+'_ready.fa'
-        path_msa = '/home/labs/fleishman/jonathaw/membrane_prediction_DBs/blasts_adi/'
-        msa_file_name = name + '.fasta_msa.aln'
+        #path_msa = '/home/labs/fleishman/jonathaw/membrane_prediction_DBs/blasts_adi/'
+        path_msa = '/home/labs/fleishman/jonathaw/membrane_prediction_DBs/BLASTs_9Aug/'
+        msa_file_name = name + '.msa'
         self.polyval = polyval
         self.poly_param = poly_param
         self.stack = read_fasta_msa(path_msa + msa_file_name)
@@ -98,7 +106,7 @@ class TMpredict_MSA():
                                               self.polyval, self.poly_param)
                     # if target.name == self.query.name:
                     # print 'found the query!!!', temp_win_grade
-                if temp_win_grade.grade < best_win.grade and abs(temp_win_grade.grade - query_grade) < 7:
+                if temp_win_grade.grade < best_win.grade and abs(temp_win_grade.grade - query_grade) < 0:
                     best_win = temp_win_grade
                     name = target.name
         if direction == 'fwd':
@@ -114,6 +122,13 @@ class TMpredict_MSA():
         start_wg = self.query.nogap2withgap(start)
         end_wg = self.query.nogap2withgap(end)
 
+        if direction == 'fwd':
+            query_grade = WinGrade(start, end, direction, gap_remover(self.query.seq[start_wg:end_wg]), self.polyval,
+                                self.poly_param).grade
+        elif direction == 'rev':
+            query_grade = WinGrade(start, end, direction, gap_remover(self.query.seq[start_wg:end_wg])[::-1],
+                                self.polyval, self.poly_param).grade
+
         grade_stack = {}
         for target in self.stack:
             if target_has_gaps_in_query_stretch(self.query, target, start_wg, end_wg):
@@ -124,7 +139,8 @@ class TMpredict_MSA():
                     temp_win_grade = WinGrade(start, end, direction, gap_remover(target.seq[start_wg:end_wg])[::-1],
                                               self.polyval, self.poly_param)
 
-                grade_stack[temp_win_grade.grade] = {'win': temp_win_grade, 'name': target.name}
+                if abs(temp_win_grade.grade-query_grade) < 5:
+                    grade_stack[temp_win_grade.grade] = {'win': temp_win_grade, 'name': target.name}
 
         # med_grade = median_low(grade_stack.keys())
         med_grade = precentile_for_wins(grade_stack.keys(), self.percentile)

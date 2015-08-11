@@ -9,7 +9,7 @@ class HphobicityScore():
         '''
         global HP_THRESHOLD, INC_MAX, MIN_LENGTH, PSI_HELIX, PSI_RES_NUM, known_tm_num, poly_param, output_path
         HP_THRESHOLD = param_list['hp_threshold']
-        INC_MAX = 11  # 8
+        INC_MAX = 10  # 8
         MIN_LENGTH = param_list['min_length']
         PSI_HELIX = param_list['psi_helix']
         PSI_RES_NUM = param_list['psi_res_num']
@@ -78,7 +78,7 @@ class HphobicityScore():
         '''
         :return:grades all segments of self.seq, and aggregates them as WinGrades
         '''
-        from WinGrade import WinGrade
+        from WinGrade import WinGrade, count_charges
         import sys
         if self.with_msa:
             from MSA_for_TMpredict import TMpredict_MSA
@@ -93,19 +93,17 @@ class HphobicityScore():
         sys.stdout.write("\b" * (bar_width+1))  # return to start of line, after '['
         for i in range(pos1, pos2+1):
             for inc in range(min(INC_MAX, self.seq_length - MIN_LENGTH - i)):
-                if not self.is_not_helical((i, i+MIN_LENGTH+inc), psi):
+                if not self.is_not_helical((i, i+MIN_LENGTH+inc), psi) and \
+                                count_charges(self.seq[i:i+MIN_LENGTH+inc]) < 3:
                     if self.with_msa:
                         grades.append(msa_obj.retrieve_seqs(i, i+MIN_LENGTH+inc, 'fwd'))
                         grades.append(msa_obj.retrieve_seqs(i, i+MIN_LENGTH+inc, 'rev'))
                     else:
-                        try:
-                            # print 'creating win %s' % self.seq[i:i+MIN_LENGTH+inc]
-                            grades.append(WinGrade(i, i+MIN_LENGTH+inc, 'fwd', self.seq[i:i+MIN_LENGTH+inc], self.polyval,
-                                                poly_param))
-                            grades.append(WinGrade(i, i+MIN_LENGTH+inc, 'rev', self.seq[i:i+MIN_LENGTH+inc][::-1], self.polyval,
-                                                poly_param))
-                        except:
-                            continue
+                        # print 'creating win %s' % self.seq[i:i+MIN_LENGTH+inc]
+                        grades.append(WinGrade(i, i+MIN_LENGTH+inc, 'fwd', self.seq[i:i+MIN_LENGTH+inc], self.polyval,
+                                            poly_param))
+                        grades.append(WinGrade(i, i+MIN_LENGTH+inc, 'rev', self.seq[i:i+MIN_LENGTH+inc][::-1], self.polyval,
+                                            poly_param))
             # writes to the progress bar
             sys.stdout.write("-")
             sys.stdout.flush()
@@ -525,7 +523,7 @@ class HphobicityScore():
         from WinGrade import WinGrade
         import operator
         # print self.WinGrades
-        win_list = [a for a in self.WinGrades if a.grade < HP_THRESHOLD]  # make copy of negative wingrades list
+        win_list = [a for a in self.WinGrades if a.grade < HP_THRESHOLD and a.charges < 3]  # make copy of negative wingrades list
         G = nx.DiGraph()
         source_node = WinGrade(0, 0, 'fwd', '', self.polyval, poly_param)   # define source win
         if self.with_msa:
@@ -535,7 +533,8 @@ class HphobicityScore():
         for win1 in win_list:   # add all win to win edges where condition applies
             for win2 in win_list:
                 # condition: non-overlapping, 2 is after 1, opposite directions
-                if not win1.grade_grade_colliding(win2) and win2.begin > win1.end and win1.direction != win2.direction:
+                if not win1.grade_grade_colliding(win2) and win2.begin > win1.end and win1.direction != win2.direction \
+                        and win2.begin-win1.end >= 2:
                     if not self.with_msa:
                         G.add_edge(win1, win2, weight=win2.grade)
                     elif self.with_msa:

@@ -8,7 +8,6 @@ from string import maketrans   # Required to call maketrans function.
 # 4. Pairwise alignement -  for this option provide the 5th argument to the function and as full path
 
 class Blast:
-
     def __init__(self, infile_name, infile_path,  evalue, min_id, pairwise_file = 'No_file'):
         self.infile_name = infile_name
         self.infile_path = infile_path

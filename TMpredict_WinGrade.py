@@ -9,7 +9,7 @@ def main():
     global hydrophobicity_polyval, args, param_list
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('-hp_threshold', default=0.0, type=float)#10
+    parser.add_argument('-hp_threshold', default=5.0, type=float)#10
     parser.add_argument('-min_length', default=19, type=int)#18
     parser.add_argument('-psi_helix', default=0.2, type=float)#0.001
     parser.add_argument('-psi_res_num', default=3, type=int)#4
@@ -20,12 +20,12 @@ def main():
     parser.add_argument('-c1', default=0, type=float)#9.0 9.29
     parser.add_argument('-c2', default=0, type=float)#-0.2 -0.645
     parser.add_argument('-c3', default=0, type=float)#-0.006 0.00822
-    parser.add_argument('-w', default=0.004, type=float)
-    parser.add_argument('-z_0', default=43, type=float)
+    parser.add_argument('-w', default=0.082, type=float) # 0.082 0.004
+    parser.add_argument('-z_0', default=35, type=float) #  35 43
     parser.add_argument('-result_path', default=os.getcwd())
     parser.add_argument('-seq', default='', type=str)
     parser.add_argument('-with_msa', default=False)
-    parser.add_argument('-msa_percentile', default=50, type=int)
+    parser.add_argument('-msa_percentile', default=20, type=int)
     args = vars(parser.parse_args())
 
     # import topdb_functions
@@ -53,7 +53,7 @@ def process_single_protein(name, path):
     print entry
     if topc['spoctopus'].count('S') != 0:
         print 'spoctopus', topc['spoctopus']
-        end_of_SP = [a for a in re.finditer('S*', topc['philius']) if a != ''][0].end() - 1
+        end_of_SP = [a for a in re.finditer('S*', topc['spoctopus']) if a != ''][0].end() - 1
         if end_of_SP == -1:
             end_of_SP = 0
         print 'end of SP', end_of_SP
@@ -281,6 +281,7 @@ def rostlab_ROC(param_list):
 
 def topo_VH():
     from time import strftime
+    import os
     vh_db = topo_VH_parser(args['name'])
     phobius = phobius_VH_parser(args['name'])
     ss2_path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/VH_psipred/'+args['name']+'.ss2'
@@ -288,7 +289,10 @@ def topo_VH():
     topo_string = topo_string_rostlab_format(hp_obj.topo_best, vh_db['seq'])
     pred_best_c_term = hp_obj.best_c_term
     pred_sec_best_c_term = hp_obj.sec_best_c_term
-    with open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/21July_VH_charges/'+args['name']+'.prd',
+    # with open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/21July_VH_charges/'+args['name']+'.prd',
+    #           'wr+') as o:
+    print "I am printing here", os.getcwd()+'/'+args['name']+'.prd'
+    with open(os.getcwd()+'/'+args['name']+'.prd',
               'wr+') as o:
         o.writelines('name %s\n' % args['name'])
 

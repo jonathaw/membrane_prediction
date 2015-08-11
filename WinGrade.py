@@ -20,7 +20,7 @@ class WinGrade():
         # self.hp_moment = hp_moment(seq, polyval, poly_param)
         # self.hp_sum = self.grade_segment(polyval)
           # self.hp_sum + self.hp_moment + self.length_element
-        self.charges = self.count_charges()
+        self.charges = count_charges(self.seq)
         # if self.charges >= 2:
         #     print 'found %i charges' % self.charges
             # raise Exception()
@@ -83,15 +83,16 @@ class WinGrade():
     def set_grade(self, val):
         self.grade = self.grade + val
 
-    def count_charges(self):
-        import numpy as np
-        membrane_position = np.linspace(-20, 20, endpoint=True, num=self.length)
-        charges = 0
-        for i, aa in enumerate(self.seq):
-            if -12.5 <= membrane_position[i] <= 12.5:
-                if aa in ['E', 'D', 'K', 'R', 'N', 'Q', 'H']:
-                    charges += 1
-        return charges
+
+def count_charges(seq):
+    import numpy as np
+    membrane_position = np.linspace(-20, 20, endpoint=True, num=len(seq))
+    charges = 0
+    for i, aa in enumerate(seq):
+        if -12.5 <= membrane_position[i] <= 12.5:
+            if aa in ['E', 'D', 'K', 'R', 'N', 'Q', 'H']:
+                charges += 1
+    return charges
 
 
 def membrane_deformation(l, w, z_0):
@@ -101,6 +102,8 @@ def membrane_deformation(l, w, z_0):
     :param z_0: neutral membrane width
      taken from Ben-Tal - Kessel http://bental.tau.ac.il/MCPep/overview.html
     :return:membrane deformation penalty, dGdef
+    >>> membrane_deformation(40, 0.001, 20)
+    1.6
     '''
     return w * ((1.5*l - z_0) ** 2)
 
