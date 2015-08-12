@@ -26,6 +26,8 @@ def main():
     parser.add_argument('-seq', default='', type=str)
     parser.add_argument('-with_msa', default=False)
     parser.add_argument('-msa_percentile', default=20, type=int)
+    parser.add_argument('-with_cst', default=False)
+    parser.add_argument('-cst_path', default=os.getcwd()+'/')
     args = vars(parser.parse_args())
 
     # import topdb_functions
@@ -45,11 +47,16 @@ def main():
 
 def process_single_protein(name, path):
     import re
+    import TMConstraint
     # path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/10overlap_uuu'
     # path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/production_28.4/'
     topc = spc_parser('/home/labs/fleishman/jonathaw/membrane_prediction_DBs/spoctopus_SPDB/'+name+'.spc')
     rostlab_db_dict = parse_rostlab_db()
     entry = rostlab_db_dict[name.lower()]
+    if args['with_cst']:
+        entry_cst = TMConstraint.parse_cst(name, args['cst_path'])
+    else:
+        entry_cst = TMConstraint.TMConstraint(args['name'])
     print entry
     if topc['spoctopus'].count('S') != 0:
         print 'spoctopus', topc['spoctopus']
@@ -61,7 +68,7 @@ def process_single_protein(name, path):
         print 'no SP', entry['seq_no_SP']
         temp = HphobicityScore(name, entry['seq_no_SP'],
                         '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/psipred/'+name+'.ss2',
-                        hydrophobicity_polyval, args)
+                        hydrophobicity_polyval, args, entry_cst)
         # topo_string = 'u'*end_of_SP + topo_string_rostlab_format(temp.topo_best, entry['seq_no_SP'])
         # sec_topo_string = 'u'*end_of_SP + topo_string_rostlab_format(temp.topo_sec_best, entry['seq_no_SP'])
         topo_string = topo_string_rostlab_format(temp.topo_best, entry['seq_no_SP'])
@@ -69,7 +76,7 @@ def process_single_protein(name, path):
     else:
         temp = HphobicityScore(name, entry['seq'],
                         '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/psipred/'+name+'.ss2',
-                        hydrophobicity_polyval, args)
+                        hydrophobicity_polyval, args, entry_cst)
         topo_string = topo_string_rostlab_format(temp.topo_best, entry['seq'])
         sec_topo_string = topo_string_rostlab_format(temp.topo_sec_best, entry['seq'])
     print temp.topo_best
@@ -692,7 +699,7 @@ def ROC():
 
 def single_win_dG():
     temp = WinGrade(0, len(args['seq']), 'fwd', args['seq'], hydrophobicity_polyval,
-                    {'c0': 0, 'c1': 0, 'c2': 0, 'c3': 0})
+        {'w': args['w'], 'z_0': args['z_0']})
     print temp.grade
 
 

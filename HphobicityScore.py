@@ -1,5 +1,5 @@
 class HphobicityScore():
-    def __init__(self, name, seq, ss2_file, hydro_polyval, param_list):
+    def __init__(self, name, seq, ss2_file, hydro_polyval, param_list, csts):
         '''
         :param name: protein's name
         :param uniprot: the entrie's uniprot code
@@ -17,6 +17,7 @@ class HphobicityScore():
         poly_param = {k: v for k, v in param_list.items() if k in ['c0', 'c1', 'c2', 'c3', 'z_0', 'w']}
         print 'poly', poly_param
         output_path = param_list['result_path']
+        self.csts = csts
         self.percentile = param_list['msa_percentile']
         self.name = name
         self.seq = seq
@@ -444,77 +445,8 @@ class HphobicityScore():
         path.pop(-1)    # get rid of source_node
         return path[::-1]   # revert the path to begin->end
 
-    @property
-    def topo_graph_draft(self):
-        """
-        topology determination using graph theory. wins are nodes
-        :return: list of WinGrades describing best topologies
-        """
-        import networkx as nx
-        from WinGrade import WinGrade
-        import operator
-        win_list = [a for a in self.WinGrades if a.grade < HP_THRESHOLD]  # make copy of negative wingrades list
-        G = nx.DiGraph()
-        source_node = WinGrade(0, 0, 'fwd', '', self.polyval, poly_param)   # define source win
-        [G.add_edge(source_node, a, weight=a.grade) for a in win_list]  # add all win to source edges
-        for win1 in win_list:   # add all win to win edges where condition applies
-            for win2 in win_list:
-                # condition: non-overlapping, 2 is after 1, opposite directions
-                if not win1.grade_grade_colliding(win2) and win2.begin > win1.end and win1.direction != win2.direction:
-                    G.add_edge(win1, win2, weight=win2.grade)
-        # use bellman-ford algorithm to find minimum paths to all nodes
-        # print win_list
-        pred, dist = nx.bellman_ford(G, source_node)
-        # force #TM in topology to be known_tm_num
-        sorted_dist = sorted(dist.items(), key=operator.itemgetter(1))
-        # print known_tm_num, sorted_dist
-        booli = True
-        while booli:
-            # min_val = min(dist.values())
-            # best_path_val = [k for k, v in dist.items() if v == min_val]
-            best_path_val = [sorted_dist[0][0]]
-            min_val = sorted_dist[0][1]
-            best_path = self.find_graph_path(pred, best_path_val, source_node)
-            if len(best_path) == known_tm_num or known_tm_num == -100:
-                booli = False
-            else:
-                print 'not long enough', len(best_path), known_tm_num
-                # dist = {k: v for k, v in dist.items() if v != min_val}
-                sorted_dist.pop()
-        if len(best_path) == 1 and known_tm_num != 1 and known_tm_num != -100:
-            print 'Could not find %i TMHs, outputing best option' % known_tm_num
-            sorted_dist = sorted(dist.items(), key=operator.itemgetter(1))
-            best_path_val = [sorted_dist[0][0]]
-            min_val = sorted_dist[0][1]
-            best_path = self.find_graph_path(pred, best_path_val, source_node)
-
-        # if no best path is found, the minimal energy win grade is chosen as a single window
-        if best_path == []:
-            best_path_val = min([v for k, v in dist.items() if k.seq != ''])
-            best_path = [k for k, v in dist.items() if v == best_path_val]
-
-        # force secondary best topology to have known_tm_num
-        for k, v in sorted_dist:
-            if k.direction != best_path[-1].direction:
-                sec_best_path = [k]
-                sec_best_val = v
-                if len(sec_best_path) == known_tm_num or known_tm_num == -100:
-                    break
-        if len(sec_best_path) == 1 and known_tm_num != 1 and known_tm_num != -100:
-            print 'Could not find %i TMHs for second best, outputing best option' % known_tm_num
-            for k, v in sorted(dist.items(), key=operator.itemgetter(1)):
-                if k.direction != best_path[-1].direction:
-                    sec_best_path = [k]
-                    sec_best_val = v
-                    break
-
-        # sec_best_path, sec_best_val = [(k, v) for k, v in sorted(dist.items(), key=operator.itemgetter(1)) if k.direction != best_path[-1].direction]
-        sec_best_path = self.find_graph_path(pred, sec_best_path, source_node)
-        # print 'topo finished'
-        return best_path, min_val, sec_best_path, sec_best_val
-
-    @property
-    def topo_graph(self):
+    # @property
+    def topo_graph_old(self):
         """
         topology determination using graph theory. wins are nodes
         :return: list of WinGrades describing best topologies
@@ -592,3 +524,66 @@ class HphobicityScore():
             sec_best_path = self.find_graph_path(pred, sec_best_path_val, source_node)
 
         return best_path, min_val, sec_best_path, sec_min_val
+
+
+    @property
+    def topo_graph(self):
+        """
+        topology determination using graph theory. wins are nodes
+        :return: list of WinGrades describing best topologies
+        """
+        import networkx as nx
+        from WinGrade import WinGrade
+        import operator
+        # print self.WinGrades
+        for win1 in self.WinGrades:
+            if win1.begin == 30:
+                print 'in WinGrades FOUND AT 30!!!!', win1
+        win_list = [a for a in self.WinGrades if a.grade < HP_THRESHOLD and a.charges < 3]  # make copy of negative wingrades list
+        G = nx.DiGraph()
+        for win1 in win_list:
+            if win1.begin == 30:
+                print 'in win_list FOUND AT 30!!!!', win1
+        source_node = WinGrade(0, 0, 'fwd', '', self.polyval, poly_param)   # define source win
+        if self.with_msa:
+            [G.add_edge(source_node, a, weight=a.msa_grade) for a in win_list]  # add all win to source edges with msa
+        else:
+            [G.add_edge(source_node, a, weight=a.grade) for a in win_list]  # add all win to source edges
+        for win1 in win_list:   # add all win to win edges where condition applies
+            for win2 in win_list:
+                # condition: non-overlapping, 2 is after 1, opposite directions
+                if not win1.grade_grade_colliding(win2) and win2.begin > win1.end and win1.direction != win2.direction \
+                        and win2.begin-win1.end >= 2:
+                    if not self.with_msa:
+                        G.add_edge(win1, win2, weight=win2.grade)
+                    elif self.with_msa:
+                        G.add_edge(win1, win2, weight=win2.msa_grade)
+        # use bellman-ford algorithm to find minimum paths to all nodes
+        # print win_list
+        print "About to Bellman-Ford"
+        pred, dist = nx.bellman_ford(G, source_node)
+        print "Finished Bellman-Fording"
+        # force #TM in topology to be known_tm_num
+        sorted_dist = sorted(dist.items(), key=operator.itemgetter(1))
+        best_path_last = [sorted_dist[0][0]]
+        min_val = sorted_dist[0][1]
+
+        if best_path_last == [source_node]:
+            print 'topology not found'
+            return best_path_last, min_val, best_path_last, min_val
+
+        temp_dir = 'A'
+
+        for last_win, val in sorted_dist:
+            print self.find_graph_path(pred, [last_win], source_node)
+            temp_path = self.find_graph_path(pred, [last_win], source_node)
+            if temp_dir != 'A' and self.csts.test_manager(temp_path) and temp_path[-1].direction != temp_dir:
+                sec_best_path = temp_path
+                sec_best_score = val
+                break
+            elif self.csts.test_manager(temp_path) and temp_path[-1].direction != temp_dir:
+                print 'I PASSED !!!!'
+                best_path = temp_path
+                best_score = val
+                temp_dir = temp_path[-1].direction
+        return best_path, best_score, sec_best_path, sec_best_score

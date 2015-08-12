@@ -18,8 +18,88 @@ class TMConstraint():
             msg += 'tm_pos %i %i\n' % (t[0], t[1])
         msg += 'tm_pos_fidelity %r\n' % self.tm_pos_fidelity
         msg += 'c_term %r\n' % self.c_term
-        msg += 'n_term %r' % self.n_term
+        msg += 'n_term %r\n' % self.n_term
         return msg
+
+    def test_tm_num(self, win_list):
+        """
+        :param win_list: a list of predicted windows
+        :return: True if tm nums agree
+        """
+        return len(win_list) == self.tm_num
+
+    def test_c_term(self, win_list):
+        '''
+        :param win_list: a list of predicted windows
+        :return: True if c terminus agrees with constraints
+        '''
+        return (win_list[-1].direction == 'fwd' and self.c_term == 'out') or \
+               (win_list[-1].direction == 'rev' and self.c_term == 'in')
+
+    def test_n_term(self, win_list):
+        """
+        :param win_list: a list of predicted windows
+        :return: True if c terminus agrees with constraints
+        """
+        return (win_list[0].direction == 'fwd' and self.n_term == 'in') or \
+               (win_list[0].direction == 'rev' and self.n_term == 'out')
+
+    def test_tm_pos(self, win_list):
+        """
+        :param win_list: a list of predicted windows
+        :return: True iff all positions in cst have a win in win_list closer by both ends than fidelity
+        """
+        for cst_pos in self.tm_pos:
+            if not win_list_near_pos_by_fidel(cst_pos, win_list, self.tm_pos_fidelity):
+                return False
+        return True
+
+    def test_manager(self, win_list):
+        """
+        :param win_list: a list of predicted windows
+        :return: True iff win_list passes all non None constraints
+        """
+        if self.tm_num is not None:
+            if not self.test_tm_num(win_list):
+                print 'failed tm_num'
+                return False
+        if self.c_term is not None:
+            if not self.test_c_term(win_list):
+                print 'failed c_term'
+                return False
+        if self.n_term is not None:
+            if not self.test_n_term(win_list):
+                print 'failed n_term'
+                return False
+        if self.tm_pos is not None:
+            if not self.test_tm_pos(win_list):
+                print 'failed tm_pos'
+                return False
+        return True
+
+
+def win_list_near_pos_by_fidel(pos, win_list, fidel):
+    """
+    :param pos: a cst position
+    :param win_list: a list of predicted windows
+    :param fidel: fidelity
+    :return: True if any win in win_list agrees with win_near_pos_by_fidel
+    """
+    for win in win_list:
+        if win_near_pos_by_fidel(pos, win, fidel):
+            return True
+        else:
+            return False
+
+
+def win_near_pos_by_fidel(pos, win, fidel):
+    """
+    :param pos: a cst position
+    :param win: a WinGrade
+    :param fidel: fidelity
+    :return: True if both WinGrade ends within pos+fidel
+    """
+    return pos[0]-fidel <= win.begin and pos[1]+fidel >= win.end
 
 
 def parse_cst(name, in_path):
@@ -33,8 +113,13 @@ def parse_cst(name, in_path):
     result = {'tm_pos': []}
     for ln in cont:
         sp = ln.split()
+        if len(sp) <= 0:
+            continue
         if sp[0] == 'tm_pos':
-            result['tm_pos'].append((int(sp[1]), int(sp[2])))
+            if sp[1] != 'None':
+                result['tm_pos'].append((int(sp[1]), int(sp[2])))
+            else:
+                result['tm_pos'] = None
             continue
         try:
             result[sp[0]] = int(sp[1])
@@ -73,8 +158,8 @@ if __name__ == '__main__':
     parser.add_argument('-path', default=os.getcwd())
     args = vars(parser.parse_args())
     if args['mode'] == 'pred2cst':
-        prd = prd_parser(args['path'], args['name'] + '.prd')
-        print pred2cst(args['name'], args['path'], prd['pred_ts'])
+        prd = prd_parser(args['path'], args['name'].lower() + '.prd')
+        print pred2cst(args['name'].lower(), args['path'], prd['pred_ts'])
     elif args['mode'] == 'cst2TMC':
-        tmc = parse_cst(args['name'], args['path'])
+        tmc = parse_cst(args['name'].lower(), args['path'])
         print tmc

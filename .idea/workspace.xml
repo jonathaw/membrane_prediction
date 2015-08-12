@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6a73546c-b0e1-4c73-9c98-48c4af466cd3" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HphobicityScore.py" afterPath="$PROJECT_DIR$/HphobicityScore.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TMConstraint.py" afterPath="$PROJECT_DIR$/TMConstraint.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TMpredict_WinGrade.py" afterPath="$PROJECT_DIR$/TMpredict_WinGrade.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="membrane_prediciton.iws" />
@@ -29,24 +31,25 @@
       <file leaf-file-name="TMpredict_WinGrade.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TMpredict_WinGrade.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="840" max-vertical-offset="3600">
-              <caret line="48" column="102" selection-start-line="48" selection-start-column="102" selection-end-line="48" selection-end-column="102" />
+            <state vertical-scroll-proportion="-7.6923075" vertical-offset="0" max-vertical-offset="3800">
+              <caret line="11" column="50" selection-start-line="11" selection-start-column="50" selection-end-line="11" selection-end-column="50" />
               <folding>
-                <element signature="e#71#1818#0" expanded="true" />
+                <element signature="e#1979#5197#0" expanded="true" />
+                <element signature="e#36298#36445#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="HphobicityScore.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="HphobicityScore.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/HphobicityScore.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="2893" max-vertical-offset="4660">
-              <caret line="516" column="25" selection-start-line="516" selection-start-column="25" selection-end-line="516" selection-end-column="25" />
+            <state vertical-scroll-proportion="0.3605292" vertical-offset="3613" max-vertical-offset="4520">
+              <caret line="565" column="50" selection-start-line="565" selection-start-column="50" selection-end-line="565" selection-end-column="50" />
               <folding>
-                <element signature="e#105#2608#0" expanded="true" />
-                <element signature="e#4059#5820#0" expanded="true" />
-                <element signature="e#24560#28867#0" expanded="true" />
+                <element signature="e#111#2639#0" expanded="true" />
+                <element signature="e#4090#5851#0" expanded="true" />
+                <element signature="e#20458#20854#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -75,15 +78,22 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TMConstraint.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="TMConstraint.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TMConstraint.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.0204313" vertical-offset="1" max-vertical-offset="1520">
-              <caret line="54" column="79" selection-start-line="54" selection-start-column="79" selection-end-line="54" selection-end-column="79" />
+            <state vertical-scroll-proportion="-98.46154" vertical-offset="0" max-vertical-offset="2760">
+              <caret line="160" column="58" selection-start-line="160" selection-start-column="58" selection-end-line="160" selection-end-column="58" />
               <folding>
                 <element signature="e#26#97#1" expanded="true" />
                 <element signature="e#210#389#0" expanded="true" />
-                <element signature="e#795#1562#0" expanded="true" />
+                <element signature="e#423#760#0" expanded="true" />
+                <element signature="e#807#958#0" expanded="true" />
+                <element signature="e#1005#1285#0" expanded="true" />
+                <element signature="e#1332#1610#0" expanded="true" />
+                <element signature="e#1657#2002#0" expanded="true" />
+                <element signature="e#3249#3467#0" expanded="true" />
+                <element signature="e#3504#4411#0" expanded="true" />
+                <element signature="e#4448#4972#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -116,9 +126,12 @@
       <file leaf-file-name="WinGrade.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/WinGrade.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1080">
-              <caret line="102" column="76" selection-start-line="102" selection-start-column="33" selection-end-line="102" selection-end-column="76" />
-              <folding />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1720">
+              <caret line="86" column="0" selection-start-line="86" selection-start-column="0" selection-end-line="86" selection-end-column="0" />
+              <folding>
+                <element signature="e#208#1706#0" expanded="true" />
+                <element signature="e#3997#4324#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -197,12 +210,12 @@
         <option value="$PROJECT_DIR$/polyval_21_5_15.txt" />
         <option value="$PROJECT_DIR$/prediction_analyser.py" />
         <option value="$PROJECT_DIR$/WinGrade.py" />
-        <option value="$PROJECT_DIR$/HphobicityScore.py" />
         <option value="$PROJECT_DIR$/BlastMSA.py" />
-        <option value="$PROJECT_DIR$/TMpredict_WinGrade.py" />
         <option value="$PROJECT_DIR$/MSA_for_TMpredict.py" />
         <option value="$PROJECT_DIR$/topo_strings_comparer.py" />
         <option value="$PROJECT_DIR$/TMConstraint.py" />
+        <option value="$PROJECT_DIR$/TMpredict_WinGrade.py" />
+        <option value="$PROJECT_DIR$/HphobicityScore.py" />
       </list>
     </option>
   </component>
@@ -815,7 +828,11 @@
       <created>1439294460531</created>
       <updated>1439294460531</updated>
     </task>
-    <option name="localTasksCounter" value="68" />
+    <task id="LOCAL-00068" summary="implemented funcs to write and read .cst">
+      <created>1439297311524</created>
+      <updated>1439297311524</updated>
+    </task>
+    <option name="localTasksCounter" value="69" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -877,7 +894,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="decided to make new topology greedy alfgorithm" />
     <MESSAGE value="new topo predictor with graph theory implementation" />
     <MESSAGE value="documented graph theory base topology predictor" />
     <MESSAGE value="von heijne DB loop" />
@@ -902,11 +918,19 @@
     <MESSAGE value="introduced a percentile function for MSA. and the ability to input a precentile from the command line. -msa_percentile.&#10;potentially fixed error where a non AA single letter is trying to be graded in WinGrade.grade_segment()" />
     <MESSAGE value="changed to new length model, after ben-tal." />
     <MESSAGE value="introducing constraints TMConstraint.py" />
-    <option name="LAST_COMMIT_MESSAGE" value="introducing constraints TMConstraint.py" />
+    <MESSAGE value="implemented funcs to write and read .cst" />
+    <option name="LAST_COMMIT_MESSAGE" value="implemented funcs to write and read .cst" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="3" />
+      <breakpoints>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/TMConstraint.py</url>
+          <line>6</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="4" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
@@ -1246,7 +1270,7 @@
         <state vertical-scroll-proportion="0.7963801" vertical-offset="596" max-vertical-offset="1600">
           <caret line="262" column="8" selection-start-line="262" selection-start-column="8" selection-end-line="262" selection-end-column="8" />
           <folding>
-            <element signature="e#7060#7214#0" expanded="true" />
+            <element signature="e#7060#7214#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1274,36 +1298,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/WinGrade.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1720">
-          <caret line="102" column="76" selection-start-line="102" selection-start-column="33" selection-end-line="102" selection-end-column="76" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/HphobicityScore.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2893" max-vertical-offset="4660">
-          <caret line="516" column="25" selection-start-line="516" selection-start-column="25" selection-end-line="516" selection-end-column="25" />
-          <folding>
-            <element signature="e#105#2608#0" expanded="true" />
-            <element signature="e#4059#5820#0" expanded="true" />
-            <element signature="e#24560#28867#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TMpredict_WinGrade.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="840" max-vertical-offset="3600">
-          <caret line="48" column="102" selection-start-line="48" selection-start-column="102" selection-end-line="48" selection-end-column="102" />
-          <folding>
-            <element signature="e#71#1818#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/MSA_for_TMpredict.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1073" max-vertical-offset="2560">
@@ -1327,14 +1321,55 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/WinGrade.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="812" max-vertical-offset="1880">
+          <caret line="86" column="0" selection-start-line="86" selection-start-column="0" selection-end-line="86" selection-end-column="0" />
+          <folding>
+            <element signature="e#208#1706#0" expanded="true" />
+            <element signature="e#3997#4324#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/TMConstraint.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.0204313" vertical-offset="1" max-vertical-offset="1520">
-          <caret line="54" column="79" selection-start-line="54" selection-start-column="79" selection-end-line="54" selection-end-column="79" />
+        <state vertical-scroll-proportion="-98.46154" vertical-offset="0" max-vertical-offset="2760">
+          <caret line="160" column="58" selection-start-line="160" selection-start-column="58" selection-end-line="160" selection-end-column="58" />
           <folding>
             <element signature="e#26#97#1" expanded="true" />
             <element signature="e#210#389#0" expanded="true" />
-            <element signature="e#795#1562#0" expanded="true" />
+            <element signature="e#423#760#0" expanded="true" />
+            <element signature="e#807#958#0" expanded="true" />
+            <element signature="e#1005#1285#0" expanded="true" />
+            <element signature="e#1332#1610#0" expanded="true" />
+            <element signature="e#1657#2002#0" expanded="true" />
+            <element signature="e#3249#3467#0" expanded="true" />
+            <element signature="e#3504#4411#0" expanded="true" />
+            <element signature="e#4448#4972#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TMpredict_WinGrade.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-7.6923075" vertical-offset="0" max-vertical-offset="3800">
+          <caret line="11" column="50" selection-start-line="11" selection-start-column="50" selection-end-line="11" selection-end-column="50" />
+          <folding>
+            <element signature="e#1979#5197#0" expanded="true" />
+            <element signature="e#36298#36445#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/HphobicityScore.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3605292" vertical-offset="3613" max-vertical-offset="4520">
+          <caret line="565" column="50" selection-start-line="565" selection-start-column="50" selection-end-line="565" selection-end-column="50" />
+          <folding>
+            <element signature="e#111#2639#0" expanded="true" />
+            <element signature="e#4090#5851#0" expanded="true" />
+            <element signature="e#20458#20854#0" expanded="true" />
           </folding>
         </state>
       </provider>
