@@ -2,7 +2,7 @@ class WinGrade():
     '''
     A class to parameterise a window in hydrophobicity manners.
     '''
-    def __init__(self, begin, end, direction, seq, polyval, poly_param, msa_name=None, msa_seq=None):
+    def __init__(self, begin, end, direction, seq, polyval=None, poly_param=None, msa_name=None, msa_seq=None):
         """
         :param begin: seq position (from 0) where the window begins
         :param end: seq position (from 0) where the window ends
@@ -14,7 +14,13 @@ class WinGrade():
         self.end = end
         self.seq = seq
         self.length = len(seq)
-        self.poly_param = poly_param
+        if poly_param is not None:
+            self.poly_param = poly_param
+        else:
+            self.poly_param = {'w': 0, 'z_0': 0}
+        if polyval is None:
+            from TMpredict_WinGrade import MakeHydrophobicityGrade
+            polyval = MakeHydrophobicityGrade()
         # self.length_element = self.length_polynom()
         self.length_element = membrane_deformation(self.length, poly_param['w'], poly_param['z_0'])
         # self.hp_moment = hp_moment(seq, polyval, poly_param)
@@ -35,6 +41,9 @@ class WinGrade():
             self.msa_seq = msa_seq
             self.msa_grade = grade_segment(msa_seq, polyval) + length_polynom(msa_seq, poly_param) #  + hp_moment(msa_seq, polyval, poly_param) \
                              #  + length_polynom(msa_seq, poly_param)
+        if self.seq == 'SOURCE' or self.seq == 'SINK' or self.seq == 'SOURCEPATH':
+            self.grade = 0.0
+
 
     # def __str__(self):
     #     return '%-4i to %-4i in %3s => %10f %-35s' % (self.begin, self.end, self.direction, self.grade,
@@ -82,6 +91,25 @@ class WinGrade():
 
     def set_grade(self, val):
         self.grade = self.grade + val
+
+    def same_as_other(self, other):
+        return self.__dict__ == other.__dict__
+
+
+class WinGradePath():
+    def __init__(self, win_list):
+        print 'WGP recived', win_list
+        self.path = win_list[:]
+        self.total_grade = sum([a.grade for a in win_list])
+
+    def __repr__(self):
+        return str(self.path) + ' ' + str(self.total_grade)
+
+    def first(self):
+        return self.path[0]
+
+    def last(self):
+        return self.path[-1]
 
 
 def count_charges(seq):

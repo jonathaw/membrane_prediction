@@ -445,6 +445,33 @@ class HphobicityScore():
         path.pop(-1)    # get rid of source_node
         return path[::-1]   # revert the path to begin->end
 
+    def find_path_frompaths(self, pred, last_path, source_node_path):
+        comp_path = [last_path]
+        # print 'in find fro path'
+        # print 'pred', pred
+        # print 'last_path', last_path
+        # print 'source node path', source_node_path
+        # print 'last_path.first().seq', last_path.first().seq
+        # print 'source_node_path.first().seq', source_node_path.first().seq
+        # print 'comp_path[-1].first().seq', comp_path[-1].first().seq
+        # print 'source_node_path.first().seq', source_node_path.first().seq
+        while comp_path[-1].first().seq != source_node_path.first().seq:
+            for k, v in pred.items():
+                if v is None:
+                    continue
+                if k.first().seq == comp_path[-1].first().seq:
+                    # print 'app', v
+                    comp_path.append(v)
+            # print 'noow its', comp_path, len(comp_path)
+        # print comp_path[::-1], type(comp_path)
+        print 'AAAA'
+        print 'BBB', comp_path
+        # comp_path.pop(-1)
+        comp_path.remove(source_node_path)
+        return [item for sublist in comp_path[::-1] for item in sublist.path][1:]
+
+
+
     # @property
     def topo_graph_old(self):
         """
@@ -533,22 +560,24 @@ class HphobicityScore():
         :return: list of WinGrades describing best topologies
         """
         import networkx as nx
-        from WinGrade import WinGrade
+        from WinGrade import WinGrade, WinGradePath
         import operator
         # print self.WinGrades
-        for win1 in self.WinGrades:
-            if win1.begin == 30:
-                print 'in WinGrades FOUND AT 30!!!!', win1
+
         win_list = [a for a in self.WinGrades if a.grade < HP_THRESHOLD and a.charges < 3]  # make copy of negative wingrades list
         G = nx.DiGraph()
-        for win1 in win_list:
-            if win1.begin == 30:
-                print 'in win_list FOUND AT 30!!!!', win1
-        source_node = WinGrade(0, 0, 'fwd', '', self.polyval, poly_param)   # define source win
+        print win_list
+        source_node = WinGrade(0, 0, 'fwd', 'SOURCE', self.polyval, poly_param)   # define source win
+        sink_node = WinGrade(0, 0, 'fwd', 'SINK', self.polyval, poly_param)   # define sink win
+        print 'SOURCE NODE', source_node
+        for a in win_list:
+            print a
+            G.add_edge(source_node, a, weight=a.grade)
         if self.with_msa:
             [G.add_edge(source_node, a, weight=a.msa_grade) for a in win_list]  # add all win to source edges with msa
         else:
             [G.add_edge(source_node, a, weight=a.grade) for a in win_list]  # add all win to source edges
+        [G.add_edge(a, sink_node, weight=0) for a in win_list]
         for win1 in win_list:   # add all win to win edges where condition applies
             for win2 in win_list:
                 # condition: non-overlapping, 2 is after 1, opposite directions
@@ -558,10 +587,38 @@ class HphobicityScore():
                         G.add_edge(win1, win2, weight=win2.grade)
                     elif self.with_msa:
                         G.add_edge(win1, win2, weight=win2.msa_grade)
+
+        unsat_csts = self.csts.unsat_cst(win_list)
+        print 'UNSAT CSTS', unsat_csts
+        path_segs = [[source_node]] + unsat_csts + [[sink_node]]
+        best_paths = []
+        for seg in range(len(path_segs)-1):
+            print 'at seg', seg
+            for first in path_segs[seg]:
+                for second in path_segs[seg+1]:
+                    print "looking at segment", first, second
+                    best_paths.append(self.shortest_path(G, first, second))
+        print 'best paths', best_paths
+
+        G_segs = nx.DiGraph()
+        # connect a "source node list" to all first nodes
+        source_path = WinGradePath([WinGrade(0, 0, 'fwd', 'SOURCEPATH', self.polyval, poly_param)])
+        print 'source_path type', type(source_path)
+        [G_segs.add_edge(source_path, a, weight=a.total_grade) for a in best_paths]
+        for path1 in best_paths:
+            print 'path1', path1
+            for path2 in best_paths:
+                print 'path1', path1
+                print 'path2', path2
+                if path1.last().same_as_other(path2.first()):
+                    print 'connecting'
+                    G_segs.add_edge(path1, path2, weight=path2.total_grade-path1.first().grade)
+        print "MADE THE SECOND GRAPH", G_segs
+        print 'source_path type', type(source_path)
         # use bellman-ford algorithm to find minimum paths to all nodes
         # print win_list
         print "About to Bellman-Ford"
-        pred, dist = nx.bellman_ford(G, source_node)
+        pred, dist = nx.bellman_ford(G_segs, source_path)
         print "Finished Bellman-Fording"
         # force #TM in topology to be known_tm_num
         sorted_dist = sorted(dist.items(), key=operator.itemgetter(1))
@@ -574,16 +631,49 @@ class HphobicityScore():
 
         temp_dir = 'A'
 
-        for last_win, val in sorted_dist:
-            print self.find_graph_path(pred, [last_win], source_node)
-            temp_path = self.find_graph_path(pred, [last_win], source_node)
+        print 'SORTED DIST', sorted_dist
+
+        for last_path, val in sorted_dist:
+            if last_path is None:
+                continue
+            print 'last_path', last_path, val
+            # print self.find_graph_path(pred, [last_win], source_node)
+            temp_path = self.find_path_frompaths(pred, last_path, source_path)
+            if temp_path == []:
+                continue
+            print 'ABBA', temp_path
+            continue
+            import sys
+            sys.exit()
             if temp_dir != 'A' and self.csts.test_manager(temp_path) and temp_path[-1].direction != temp_dir:
                 sec_best_path = temp_path
                 sec_best_score = val
                 break
             elif self.csts.test_manager(temp_path) and temp_path[-1].direction != temp_dir:
-                print 'I PASSED !!!!'
+                # print 'I PASSED !!!!'
                 best_path = temp_path
                 best_score = val
                 temp_dir = temp_path[-1].direction
         return best_path, best_score, sec_best_path, sec_best_score
+
+    def shortest_path(self, g, source, sink):
+        import networkx as nx
+        from numpy import inf as inf
+        from WinGrade import WinGradePath
+        all_paths = nx.all_shortest_paths(g, source, sink, 'grade')
+        best_path, best_path_grade = ([], inf)
+        for path in all_paths:
+            # print 'path', len(path), sum([a.grade for a in path])
+            path_grade = sum([a.grade for a in path])
+            if path_grade < best_path_grade:
+                print 'paht better energy', path
+                if self.csts.test_manager_segment(path, (source.begin, sink.end), True):
+                    best_path_grade = path_grade
+                    best_path = path[:]
+        print 'returning', best_path
+        if best_path == []:
+            print 'NOTHING PASSED CONSTRAINTS', source, sink
+        # if best_path[-1].seq == 'SINK':
+        #     print 'last is SINK'
+        #     best_path.pop(-1)
+        return WinGradePath(best_path)

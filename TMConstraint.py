@@ -15,7 +15,7 @@ class TMConstraint():
         msg += 'name %s\n' % self.name
         msg += 'tm_num %r\n' % self.tm_num
         for t in self.tm_pos:
-            msg += 'tm_pos %i %i\n' % (t[0], t[1])
+            msg += 'tm_pos %i %i %s\n' % (t[0], t[1], t[2])
         msg += 'tm_pos_fidelity %r\n' % self.tm_pos_fidelity
         msg += 'c_term %r\n' % self.c_term
         msg += 'n_term %r\n' % self.n_term
@@ -54,28 +54,93 @@ class TMConstraint():
                 return False
         return True
 
-    def test_manager(self, win_list):
+    def test_manager(self, win_list, verbose=False):
         """
         :param win_list: a list of predicted windows
         :return: True iff win_list passes all non None constraints
         """
         if self.tm_num is not None:
             if not self.test_tm_num(win_list):
-                print 'failed tm_num'
+                if verbose:
+                    print 'failed tm_num'
                 return False
         if self.c_term is not None:
             if not self.test_c_term(win_list):
-                print 'failed c_term'
+                if verbose:
+                    print 'failed c_term'
                 return False
         if self.n_term is not None:
             if not self.test_n_term(win_list):
-                print 'failed n_term'
+                if verbose:
+                    print 'failed n_term'
                 return False
         if self.tm_pos is not None:
             if not self.test_tm_pos(win_list):
-                print 'failed tm_pos'
+                if verbose:
+                    print 'failed tm_pos'
                 return False
         return True
+
+    def test_manager_segment(self, win_list, segment, verbose=False):
+        """
+        :param win_list: a list of win grades
+        :param segment: a segment on the sequence to be tested for non-satisfied constraints
+        :param verbose: wheher to print or not
+        :return: True iff all poses that are within segment are satisfied by win_list
+        """
+        if self.tm_pos is None:
+            return True
+        for pos in self.tm_pos:
+            print 'checking pos', pos
+            print 'with win_list', win_list
+            if pos[0] >= segment[0] and pos[1] <= segment[1]:
+                print 'is within segment', segment
+                if not win_list_near_pos_by_fidel(pos, win_list, self.tm_pos_fidelity):
+                    if verbose:
+                        print 'failed at pos', pos
+                    return False
+        return True
+
+    def unsat_cst(self, win_list):
+        """
+        :param win_list: a list of win grades
+        :return: a list of WinGrades that are the most negative and satisfy tm_poses that cannot be satisfied by a
+                    negative win in win_list
+        """
+        if self.tm_pos is None:
+            return []
+        unsat = self.tm_pos[:]
+        for win in win_list:
+            if win.grade < 0:
+                for pos in unsat:
+                    if win_near_pos_by_fidel(pos, win, self.tm_pos_fidelity):
+                        unsat.remove(pos)
+        print "unsat_cst found ", unsat
+        sat_wins = []
+        for pos in unsat:
+            sat_wins.append(self.satisfying_win(pos, win_list))
+        return sat_wins
+
+    def satisfying_win(self, pos, win_list):
+        """
+        :param pos: constraint pos
+        :param win_list: a list of WinGrades
+        :return: the most negative fwd and rev windows that satisfy pos
+        """
+        best_win_fwd, best_win_rev = win_list[0], win_list[0]
+        for win in win_list:
+            if win_near_pos_by_fidel(pos, win, self.tm_pos_fidelity) and win.direction == 'fwd' and \
+                            win.grade < best_win_fwd.grade:
+                best_win_fwd = win
+            elif win_near_pos_by_fidel(pos, win, self.tm_pos_fidelity) and win.direction == 'rev' and \
+                            win.grade < best_win_rev.grade:
+                best_win_rev = win
+        if pos[2] == 'fwd':
+            return [best_win_fwd]
+        elif pos[2] == 'rev':
+            return [best_win_rev]
+        else:
+            return [best_win_fwd, best_win_rev]
 
 
 def win_list_near_pos_by_fidel(pos, win_list, fidel):
@@ -86,10 +151,10 @@ def win_list_near_pos_by_fidel(pos, win_list, fidel):
     :return: True if any win in win_list agrees with win_near_pos_by_fidel
     """
     for win in win_list:
-        if win_near_pos_by_fidel(pos, win, fidel):
-            return True
-        else:
-            return False
+        if win.direction == pos[2] or pos[2] is None:
+            if win_near_pos_by_fidel(pos, win, fidel):
+                return True
+    return False
 
 
 def win_near_pos_by_fidel(pos, win, fidel):
@@ -117,7 +182,7 @@ def parse_cst(name, in_path):
             continue
         if sp[0] == 'tm_pos':
             if sp[1] != 'None':
-                result['tm_pos'].append((int(sp[1]), int(sp[2])))
+                result['tm_pos'].append((int(sp[1]), int(sp[2]), sp[3] if sp[3] != 'None' else None))
             else:
                 result['tm_pos'] = None
             continue
@@ -141,7 +206,7 @@ def pred2cst(name, path, ts):
     """
     import re
     hhh = re.compile('[hH]*')
-    tms = [(a.start(), a.end()) for a in hhh.finditer(ts) if a.end()-a.start() > 1 ]
+    tms = [(a.start(), a.end(), None) for a in hhh.finditer(ts) if a.end()-a.start() > 1 ]
     msg = str(TMConstraint(name, tm_pos=tms, tm_pos_fidelity=5))
     with open(path + '/' + name + '.cst', 'wr+') as fout:
         fout.write(msg)
