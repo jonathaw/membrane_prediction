@@ -6,12 +6,13 @@ def pymol_mark_segments(name, chain, pred_ts, obs_ts, seq, tech):
     :return: initiates a pymol session where the specified segments are colored
     """
     # import subprocess
-    file_name = name+'_'+tech+'.pml'
+    file_name = args['name'].lower()+'_'+tech+'.pml'
     obs_hp_seqs = ts2hp_seq(seq, obs_ts)
     pred_hp_seqs = ts2hp_seq(seq, pred_ts)
     overlap_hp_seqs = two_ts2hp_seq(seq, pred_ts, obs_ts)
     with open(file_name, 'wr+')as f:
         f.writelines('load ' + name.lower() + '.pdb,' + name + '\n')
+        f.writelines('load ' + args['name'].lower() + '.pdb,' + name + '\n')
         f.writelines('import findseq\n')
         # f.writelines('remove %s and not chain %s' % (name, chain))
         f.writelines('cmd.show("cartoon", "all")\n')
@@ -95,6 +96,7 @@ if __name__ == '__main__':
     import argparse
     import os
     from TMpredict_WinGrade import parse_rostlab_db
+    global args
     parser = argparse.ArgumentParser()
     parser.add_argument('-name', type=str)
     parser.add_argument('-path', default=os.getcwd(), type=str)

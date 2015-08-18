@@ -1,3 +1,4 @@
+# coding=utf-8
 from WinGrade import *
 from HphobicityScore import *
 
@@ -54,7 +55,7 @@ def process_single_protein(name, path):
     rostlab_db_dict = parse_rostlab_db()
     entry = rostlab_db_dict[name.lower()]
     if args['with_cst']:
-        entry_cst = TMConstraint.parse_cst(name, args['cst_path'])
+        entry_cst = TMConstraint.parse_cst(name.lower(), args['cst_path'])
     else:
         entry_cst = TMConstraint.TMConstraint(args['name'])
     print entry
@@ -87,6 +88,7 @@ def process_single_protein(name, path):
     #                     hydrophobicity_polyval, args)
     # topo_string = topo_string_rostlab_format(temp.topo_best, entry['seq'])
     results_writer_skim(path, name, topo_string, sec_topo_string, temp.topo_best_val, temp.topo_sec_best_val, entry['seq'])
+    print 'Assaf, yoo my Boo!!! (ಠ‿ಠ)'
     # print entry['seq']
     # print entry['seq_no_SP']
     # print topc['seq']
@@ -128,11 +130,15 @@ def results_writer_skim(path, name, pred_ts, sec_pred_ts, best_val, sec_best_val
     print 'writing.prd to', path+'/'+name+'.prd'
     with open(path+'/'+name+'.prd', 'wr+') as o:
         o.writelines('name %s\n' % name)
-        o.writelines('pred_ts %s\n' % pred_ts)
-        o.writelines('pred_sec_ts %s\n' % sec_pred_ts)
-        o.writelines('seq %s\n' % seq)
-        o.writelines('best_val %f\n' % best_val)
-        o.writelines('sec_best_val %f\n' % sec_best_val)
+        try:
+            o.writelines('pred_ts %s\n' % pred_ts)
+            o.writelines('pred_sec_ts %s\n' % sec_pred_ts)
+            o.writelines('seq %s\n' % seq)
+            o.writelines('best_val %f\n' % best_val)
+            o.writelines('sec_best_val %f\n' % sec_best_val)
+        except:
+            o.writelines('FAILED failed Failed !!!! :(\n')
+            o.writelines('seq %s\n' % seq)
         for k, v in args.items():
             o.writelines('%s %r\n' % (k, v))
 

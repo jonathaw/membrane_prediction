@@ -44,7 +44,10 @@ class HphobicityScore():
         # self.minimas_norm = self.local_minima_finder_norm()
         # self.topo = self.topo_brute()
         self.topo_best, self.topo_best_val, self.topo_sec_best, self.topo_sec_best_val = self.topo_graph
-        self.best_c_term = 'out' if self.topo_best[-1].direction == 'fwd' else 'in'
+        try:
+            self.best_c_term = 'out' if self.topo_best[-1].direction == 'fwd' else 'in'
+        except:
+            self.best_c_term = None
         try:
             self.sec_best_c_term = 'out' if self.topo_sec_best[-1].direction == 'fwd' else 'in'
         except:
@@ -108,7 +111,7 @@ class HphobicityScore():
             # writes to the progress bar
             sys.stdout.write("-")
             sys.stdout.flush()
-        sys.stdout.write("\n")
+        sys.stdout.write("]\n")
         return grades
 
     def win_grade_generator_old(self, pos1, pos2, fwd_or_rev):
@@ -436,6 +439,7 @@ class HphobicityScore():
 
     def find_graph_path(self, pred, path, source_node):
         # find all wins in the minimal energy path from source to last win
+        # print 'source_node', source_node
         while path[-1].seq != source_node.seq:
             for k, v in pred.items():
                 if v is None:
@@ -470,7 +474,105 @@ class HphobicityScore():
         comp_path.remove(source_node_path)
         return [item for sublist in comp_path[::-1] for item in sublist.path][1:]
 
+    @property
+    def topo_graph(self):
+        """
+        :return: a topology
+        """
+        import networkx as nx
+        from WinGrade import WinGrade
+        import operator
+        # print self.WinGrades
+        win_list = [a for a in self.WinGrades if a.grade < HP_THRESHOLD and a.charges < 3]  # make copy of negative wingrades list
+        print 'constructing graph'
+        G = nx.DiGraph()
+        source_node = WinGrade(0, 0, 'fwd', '', self.polyval, poly_param)   # define source win
+        if self.with_msa:
+            [G.add_edge(source_node, a, weight=a.msa_grade) for a in win_list]  # add all win to source edges with msa
+        else:
+            [G.add_edge(source_node, a, weight=a.grade) for a in win_list]  # add all win to source edges
+        for win1 in win_list:   # add all win to win edges where condition applies
+            cst_after = self.cst_after(win1)
+            for win2 in win_list:
+                #
+                if cst_after is None or win2.begin < cst_after[1]:
+                    # condition: non-overlapping, 2 is after 1, opposite directions
+                    if not win1.grade_grade_colliding(win2) and win2.begin > win1.end and win1.direction != win2.direction \
+                            and win2.begin-win1.end >= 2:
 
+                        if not self.with_msa:
+                            G.add_edge(win1, win2, weight=win2.grade)
+                        elif self.with_msa:
+                            G.add_edge(win1, win2, weight=win2.msa_grade)
+        print "About to Bellman-Ford"
+        pred, dist = nx.bellman_ford(G, source_node)
+        print "Finished Bellman-Fording"
+        sorted_dist = sorted(dist.items(), key=operator.itemgetter(1))
+        temp_direction = 'A'
+        best_path, sec_best_path = [], []
+        best_score, sec_best_score = None, None
+        for last_path, total_grade in sorted_dist:
+            temp_path = self.find_graph_path(pred, [last_path], source_node)
+            if temp_path == []:
+                continue
+            if temp_direction != 'A' and self.csts.test_manager(temp_path) \
+                    and temp_path[-1].direction is not temp_direction:
+                # print 'looking at sec', temp_path[-1].direction, temp_direction
+                sec_best_path = temp_path[:]
+                if sec_best_path[0].seq == 'SOURCE':
+                    sec_best_path.pop(0)
+                sec_best_score = sum([a.grade for a in sec_best_path])
+                break
+            elif self.csts.test_manager(temp_path) and temp_path[-1].direction != temp_direction:
+                # print 'looking at BEST', temp_path
+                best_path = temp_path[:]
+                best_score = sum([a.grade for a in best_path])
+                temp_direction = best_path[-1].direction
+                # print 'now temp_direction is:', temp_direction
+        # print 'found best'
+        # print best_path[-1].direction
+        # print best_score
+        # print 'found sec best',
+        # print sec_best_path[-1].direction
+        # print sec_best_score
+        return best_path, best_score, sec_best_path, sec_best_score
+
+    def cst_between(self, win1, win2):
+        """
+        :param win1: a WinGrade
+        :type win1: WinGrade
+        :param win2: a WinGrade
+        :type win2: WinGrade
+        :return:
+        """
+        print 'cst between', self.csts.tm_pos
+        print win1
+        print win2
+        if self.csts.tm_pos is None:
+            print 'None so False'
+            return False
+        for cst in self.csts.tm_pos:
+            if cst[0]-self.csts.tm_pos_fidelity > win1.begin:
+                if cst[1]+self.csts.tm_pos_fidelity < win2.begin:
+                    print 'found', cst, ' so True'
+                    return True
+            else:
+                print 'found', cst, ' so False'
+                return False
+        print 'non csts found'
+        return False
+
+    def cst_after(self, win):
+        """
+        :param win: a WinGrade instance
+        :return: a (beginning, end, direction) tuple from tm_pos that is after win
+        """
+        if self.csts.tm_pos is None:
+            return None
+        for cst in sorted(self.csts.tm_pos):
+            if cst[0]-self.csts.tm_pos_fidelity > win.begin:
+                return cst
+        return None
 
     # @property
     def topo_graph_old(self):
@@ -552,9 +654,8 @@ class HphobicityScore():
 
         return best_path, min_val, sec_best_path, sec_min_val
 
-
     @property
-    def topo_graph(self):
+    def topo_graph_rel_old(self):
         """
         topology determination using graph theory. wins are nodes
         :return: list of WinGrades describing best topologies
@@ -656,6 +757,124 @@ class HphobicityScore():
                 temp_dir = temp_path[-1].direction
         return best_path, best_score, sec_best_path, sec_best_score
 
+    @property
+    def topo_graph_12_8(self):
+        """
+        topology determination using graph theory. wins are nodes
+        :return: list of WinGrades describing best topologies
+        """
+        import networkx as nx
+        from WinGrade import WinGrade, WinGradePath
+        import operator
+        # print self.WinGrades
+
+        win_list = [a for a in self.WinGrades if a.grade < HP_THRESHOLD and a.charges < 3]  # make copy of negative wingrades list
+        G = nx.DiGraph()
+        print win_list
+        source_node = WinGrade(0, 0, 'fwd', 'SOURCE', self.polyval, poly_param)   # define source win
+        sink_node = WinGrade(0, 0, 'fwd', 'SINK', self.polyval, poly_param)   # define sink win
+        print 'SOURCE NODE', source_node
+        for a in win_list:
+            print a
+            G.add_edge(source_node, a, weight=a.grade)
+        if self.with_msa:
+            [G.add_edge(source_node, a, weight=a.msa_grade) for a in win_list]  # add all win to source edges with msa
+        else:
+            [G.add_edge(source_node, a, weight=a.grade) for a in win_list]  # add all win to source edges
+        [G.add_edge(a, sink_node, weight=0) for a in win_list]
+        for win1 in win_list:   # add all win to win edges where condition applies
+            for win2 in win_list:
+                # condition: non-overlapping, 2 is after 1, opposite directions
+                if not win1.grade_grade_colliding(win2) and win2.begin > win1.end and win1.direction != win2.direction \
+                        and win2.begin-win1.end >= 2:
+                    if not self.with_msa:
+                        G.add_edge(win1, win2, weight=win2.grade)
+                    elif self.with_msa:
+                        G.add_edge(win1, win2, weight=win2.msa_grade)
+
+        unsat_csts = self.csts.unsat_cst(win_list)
+        print 'UNSAT CSTS', unsat_csts
+
+        import sys
+        # sys.exit()
+
+        # use bellman-ford algorithm to find minimum paths to all nodes
+        # print win_list
+        print "About to Bellman-Ford"
+        pred, dist = nx.bellman_ford(G, source_node)
+        print "Finished Bellman-Fording"
+        # force #TM in topology to be known_tm_num
+        sorted_dist = sorted(dist.items(), key=operator.itemgetter(1))
+
+
+        path_segs = [[source_node]] + unsat_csts + [[sink_node]]
+        print 'path_segs', path_segs
+        best_paths = []
+        for seg in range(len(path_segs)-1):
+            print 'at seg', seg
+            for first in path_segs[seg]:
+                for second in path_segs[seg+1]:
+                    print "looking at segment", first, second
+                    best_paths.append(self.path_source_sink(pred, sorted_dist, first, second))
+                    # best_paths.append(self.shortest_path(G, first, second))
+
+        sys.exit()
+        '''
+        THE IDEA IS THIS: do Bellman-Ford once. go through all segments (source->cst->cst->...->sink),
+        use path_source_sink to find the minimal path between them. join these paths to a secondary graph and BF again.
+        go over these results, and look for ones that pass csts.
+        I got to creating path_source_sink, have an infinite loop in find_graph_path. fix this.
+
+        THIS CONCEPT IS WRONG BECAUSE BF WILL NEVE ATTACHTO TTHE TARGET, THE SINK OF THE CONSTRAINT
+
+        I have to force find_graph_path to add the sink if necessary (the cst win)
+        '''
+        best_path_last = [sorted_dist[0][0]]
+        min_val = sorted_dist[0][1]
+
+        if best_path_last == [source_node]:
+            print 'topology not found'
+            return best_path_last, min_val, best_path_last, min_val
+
+        temp_dir = 'A'
+
+        print 'SORTED DIST', sorted_dist
+
+        for last_path, val in sorted_dist:
+            if last_path is None:
+                continue
+            print 'last_path', last_path, val
+            # print self.find_graph_path(pred, [last_win], source_node)
+            temp_path = self.find_path_frompaths(pred, last_path, source_path)
+            if temp_path == []:
+                continue
+            print 'ABBA', temp_path
+            continue
+            import sys
+            sys.exit()
+            if temp_dir != 'A' and self.csts.test_manager(temp_path) and temp_path[-1].direction != temp_dir:
+                sec_best_path = temp_path
+                sec_best_score = val
+                break
+            elif self.csts.test_manager(temp_path) and temp_path[-1].direction != temp_dir:
+                # print 'I PASSED !!!!'
+                best_path = temp_path
+                best_score = val
+                temp_dir = temp_path[-1].direction
+        return best_path, best_score, sec_best_path, sec_best_score
+
+    def path_source_sink(self, pred, sorted_dist, source, sink):
+        """
+        :param pred: pred dict from bellman ford
+        :param sorted_dist: sorted dist dict from bellman ford
+        :param source: a source
+        :param sink: a sink
+        :return: the most negative path between source and sink
+        """
+        for win, val in sorted_dist:
+            if win.same_as_other(sink):
+                return self.find_graph_path(pred, [win], source)
+
     def shortest_path(self, g, source, sink):
         import networkx as nx
         from numpy import inf as inf
@@ -677,3 +896,195 @@ class HphobicityScore():
         #     print 'last is SINK'
         #     best_path.pop(-1)
         return WinGradePath(best_path)
+
+    def shortest_path_old(self, g, source, sink):
+        import networkx as nx
+        from numpy import inf as inf
+        from WinGrade import WinGradePath
+        all_paths = nx.all_shortest_paths(g, source, sink, 'grade')
+        best_path, best_path_grade = ([], inf)
+        for path in all_paths:
+            # print 'path', len(path), sum([a.grade for a in path])
+            path_grade = sum([a.grade for a in path])
+            if path_grade < best_path_grade:
+                print 'paht better energy', path
+                if self.csts.test_manager_segment(path, (source.begin, sink.end), True):
+                    best_path_grade = path_grade
+                    best_path = path[:]
+        print 'returning', best_path
+        if best_path == []:
+            print 'NOTHING PASSED CONSTRAINTS', source, sink
+        # if best_path[-1].seq == 'SINK':
+        #     print 'last is SINK'
+        #     best_path.pop(-1)
+        return WinGradePath(best_path)
+
+    # @property
+    def topo_graph_by_segs(self):
+        """
+        :return: best and second best paths and their scores
+        segments the sequence into [source - cst_1 - cst_2 - ... - cst_i - sink] such that every cst_i is a constraint
+        of the sequence. will create a graph from all WinGrades within every segment, and use all available paths for
+        that segment to create a subsequent graph of paths. Bellman-Ford is used agin to find the minimum of the
+        resulting graph
+        """
+        import networkx as nx
+        from WinGrade import WinGrade, WinGradePath
+        from WinGrade import flatten_path_list
+        import operator
+        # print self.WinGrades
+
+        win_list = [a for a in self.WinGrades if a.grade < HP_THRESHOLD and a.charges < 3]  # make copy of negative wingrades list
+        # G = nx.DiGraph()
+        # print win_list
+        # source_node = WinGrade(0, 0, 'fwd', 'SOURCE', self.polyval, poly_param)   # define source win
+        # sink_node = WinGrade(0, 0, 'fwd', 'SINK', self.polyval, poly_param)   # define sink win
+        # print 'SOURCE NODE', source_node
+        # [G.add_edge(source_node, a, weight=a.grade) for a in win_list]
+        # if self.with_msa:
+        #     [G.add_edge(source_node, a, weight=a.msa_grade) for a in win_list]  # add all win to source edges with msa
+        # else:
+        #     [G.add_edge(source_node, a, weight=a.grade) for a in win_list]  # add all win to source edges
+        # [G.add_edge(a, sink_node, weight=0) for a in win_list]
+        # for win1 in win_list:   # add all win to win edges where condition applies
+        #     for win2 in win_list:
+        #         # condition: non-overlapping, 2 is after 1, opposite directions
+        #         if not win1.grade_grade_colliding(win2) and win2.begin > win1.end and win1.direction != win2.direction \
+        #                 and win2.begin-win1.end >= 2:
+        #             if not self.with_msa:
+        #                 G.add_edge(win1, win2, weight=win2.grade)
+        #             elif self.with_msa:
+        #                 G.add_edge(win1, win2, weight=win2.msa_grade)
+        # unsat_csts = self.csts.unsat_cst(win_list)
+        # print 'UNSAT CSTS', unsat_csts
+
+        print 'CSTS', self.csts.tm_pos
+
+        source_cst = (-2, -1, None)
+        sink_cst = (self.seq_length+1, self.seq_length+2, None)
+        if self.csts.tm_pos is not None:
+            path_segs = [source_cst] + self.csts.tm_pos + [sink_cst]
+        else:
+            path_segs = [source_cst, sink_cst]
+        print 'path_segs', path_segs
+        best_paths = []
+        for seg in range(len(path_segs)-1):
+            print 'at seg', seg, path_segs[seg], path_segs[seg+1]
+            best_paths.extend(self.paths_source2sink(path_segs[seg], path_segs[seg+1], win_list))
+
+        # print 'best_paths', best_paths
+        print 'Creating graph of Paths TATATATA@@@@@'
+        print 'there are %i potential nodes' % len(best_paths)
+
+        source_path_node = WinGradePath([WinGrade(0, 0, 'fwd', 'SOURCE', self.polyval, poly_param)])
+        G = nx.DiGraph()
+        [G.add_edge(source_path_node, a, weight=a.total_grade) for a in best_paths]
+        for path1 in best_paths:
+            for path2 in best_paths:
+                if path1.overlap_me_first(path2):
+                    G.add_edge(path1, path2, weight=path2.total_grade-path1.first().grade)
+
+        print 'MADE THE MOTHA_FUCKING GRAPH', G
+
+        pred, dist = nx.bellman_ford(G, source_path_node)
+        sorted_dist = sorted(dist.items(), key=operator.itemgetter(1))
+        print 'finished BF, and sorted dist is:'
+        temp_direction = 'A'
+        best_path, sec_best_path = [], []
+        best_score, sec_best_score = None, None
+
+        for last_path, total_grade in sorted_dist:
+            temp_path_list = self.path_list_from_pred(pred, last_path, source_path_node)
+            temp_path_list_flat = flatten_path_list(temp_path_list[:])
+            # print 'temp_path_list', temp_path_list_flat
+            if temp_direction != 'A' and self.csts.test_manager(temp_path_list_flat) \
+                    and temp_path_list_flat[-1].direction is not temp_direction:
+                print 'looking at sec', temp_path_list_flat[-1].direction, temp_direction
+                sec_best_path = temp_path_list_flat[:]
+                if sec_best_path[0].seq == 'SOURCE':
+                    sec_best_path.pop(0)
+                sec_best_score = sum([a.grade for a in sec_best_path])
+                break
+            elif self.csts.test_manager(temp_path_list_flat) and temp_path_list_flat[-1].direction != temp_direction:
+                print 'looking at BEST'
+                best_path = temp_path_list_flat[:]
+                if best_path[0].seq == 'SOURCE':
+                    best_path.pop(0)
+                best_score = sum([a.grade for a in best_path])
+                temp_direction = best_path[-1].direction
+                print 'now temp_direction is:', temp_direction
+        print 'found best'
+        print best_path[-1].direction
+        print best_score
+        print 'fiound sec best',
+        print sec_best_path[-1].direction
+        print sec_best_score
+        return best_path, best_score, sec_best_path, sec_best_score
+
+    def path_list_from_pred(self, pred, last_path, source):
+        """
+        :param pred: Bellman-Ford pred dictionary (win: predecessor)
+        :param last_path: last win in Bellman-Ford result
+        :param source: the source node, where to stop
+        :return: the path, made of WinGRadePaths, that ends at last_path
+        """
+        # find all wins in the minimal energy path from source to last win
+        # print 'source_node', source_node
+        path = [last_path]
+        while not path[-1].same_as_other(source):
+            for k, v in pred.items():
+                if v is None:
+                    continue
+                if k.same_as_other(path[-1]):
+                    path.append(v)
+        path.pop(-1)    # get rid of source_node
+        return path[::-1]   # revert the path to begin->end
+
+    def paths_source2sink(self, source, sink, wins):
+        """
+        :param source: a source segment (start, end, direction) contstraint (or actual source/sink)
+        :param sink: a source segment (start, end, direction) contstraint (or actual source/sink)
+        :param wins: the availabel list of WinGrades
+        :return: a list of all Bellman-Ford minimal paths between all possible WinGrades in source and sink
+
+        MAYBE: make return only best 100, so that the graphs are much smaller...
+
+        """
+        from WinGrade import WinGrade, WinGradePath
+        from TMConstraint import all_satisfying_wins
+        import networkx as nx
+        seg = (source[0]-self.csts.tm_pos_fidelity, sink[1]+self.csts.tm_pos_fidelity) #  the segment for the graph
+        seg_wins = [a for a in wins if a.within_segment(seg)]
+        G = nx.DiGraph()
+        source_node = WinGrade(0, 0, 'fwd', 'SOURCE', self.polyval, poly_param)   # define source win
+
+        if self.with_msa:
+            [G.add_edge(source_node, a, weight=a.msa_grade) for a in seg_wins]
+        else:
+            [G.add_edge(source_node, a, weight=a.grade) for a in seg_wins]
+        for win1 in seg_wins:
+            for win2 in seg_wins:
+                if not win1.grade_grade_colliding(win2) and \
+                                win2.begin > win1.end \
+                        and win1.direction != win2.direction \
+                        and win2.begin-win1.end >= 2:
+                    if not self.with_msa:
+                        G.add_edge(win1, win2, weight=win2.grade)
+                    elif self.with_msa:
+                        G.add_edge(win1, win2, weight=win2.msa_grade)
+        if source == (-2, -1, None):
+            sources = [source_node]
+        else:
+            sources = all_satisfying_wins(source, wins, self.csts.tm_pos_fidelity)
+        all_paths = []
+        for src in sources:
+            pred, dist = nx.bellman_ford(G, src)
+            for k, v in pred.items():
+                if k.within_segment((sink[0], sink[1]), self.csts.tm_pos_fidelity) or \
+                                sink == (self.seq_length+1, self.seq_length+2, None):
+                    temp_path = self.find_graph_path(pred, [k], src)
+                    if source == (-2, -1, None) or \
+                            temp_path[0].within_segment((source[0], source[1], None), self.csts.tm_pos_fidelity):
+                        all_paths.append(WinGradePath(temp_path))
+
+        return all_paths

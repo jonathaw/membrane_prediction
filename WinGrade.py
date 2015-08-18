@@ -95,21 +95,41 @@ class WinGrade():
     def same_as_other(self, other):
         return self.__dict__ == other.__dict__
 
+    def within_segment(self, segment, flaps=0):
+        return self.begin >= segment[0]-flaps and self.end <= segment[1]+flaps
+
 
 class WinGradePath():
     def __init__(self, win_list):
-        print 'WGP recived', win_list
+        # print 'WGP recived', win_list
         self.path = win_list[:]
         self.total_grade = sum([a.grade for a in win_list])
 
     def __repr__(self):
-        return str(self.path) + ' ' + str(self.total_grade)
+        return str(self.path) + ' }=> ' + str(self.total_grade)
+
+    def same_as_other(self, other):
+        return self.__dict__ == other.__dict__
 
     def first(self):
         return self.path[0]
 
     def last(self):
         return self.path[-1]
+
+    def overlap_me_first(self, other):
+        """
+        :param other: another path
+        :return: True iff the last win of self is the same as the first of other
+        """
+        return self.last().same_as_other(other.first())
+
+    def overlap_me_last(self, other):
+        """
+        :param other: another path
+        :return: True iff the first win of self is the same as the last of other
+        """
+        return self.first().same_as_other(other.last())
 
 
 def count_charges(seq):
@@ -176,3 +196,12 @@ def length_polynom(seq, poly_param):
     #print 'length', poly_param
     l = len(seq)
     return poly_param['c1'] + poly_param['c2']*l + poly_param['c3']*(l**2)
+
+
+def flatten_path_list(path_list):
+    result = []
+    for lst in path_list:
+        for win in lst.path:
+            if win not in result:
+                result.append(win)
+    return result

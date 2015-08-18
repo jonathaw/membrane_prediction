@@ -2,21 +2,33 @@ class TMConstraint():
     """
     a class to describe constraints on a protein's topology
     """
-    def __init__(self, name, tm_num=None, tm_pos=None, tm_pos_fidelity=None, c_term=None, n_term=None):
+    def __init__(self, name, tm_num=None, tm_pos=None, tm_pos_fidelity=0, c_term=None, n_term=None, non_tm_pos=None):
         self.name = name
         self.tm_num = tm_num
-        self.tm_pos = tm_pos
+        if tm_pos is None:
+            self.tm_pos = None
+        else:
+            self.tm_pos = sorted(tm_pos)
         self.c_term = c_term
         self.n_term = n_term
         self.tm_pos_fidelity = tm_pos_fidelity
+        self.non_tm_pos = non_tm_pos
 
     def __repr__(self):
         msg = ''
         msg += 'name %s\n' % self.name
         msg += 'tm_num %r\n' % self.tm_num
-        for t in self.tm_pos:
-            msg += 'tm_pos %i %i %s\n' % (t[0], t[1], t[2])
+        if self.tm_pos is not None:
+            for t in self.tm_pos:
+                msg += 'tm_pos %i %i %s\n' % (t[0], t[1], t[2])
+        else:
+            msg += 'tm_pos None\n'
         msg += 'tm_pos_fidelity %r\n' % self.tm_pos_fidelity
+        if self.non_tm_pos is not None:
+            for t in self.non_tm_pos:
+                msg += 'non_tm_pos %i %i %s\n' % (t[0], t[1], t[2])
+        else:
+            msg += 'non_tm_pos None\n'
         msg += 'c_term %r\n' % self.c_term
         msg += 'n_term %r\n' % self.n_term
         return msg
@@ -44,13 +56,25 @@ class TMConstraint():
         return (win_list[0].direction == 'fwd' and self.n_term == 'in') or \
                (win_list[0].direction == 'rev' and self.n_term == 'out')
 
-    def test_tm_pos(self, win_list):
+    def test_tm_pos(self, win_list, verbose=False):
         """
         :param win_list: a list of predicted windows
         :return: True iff all positions in cst have a win in win_list closer by both ends than fidelity
         """
         for cst_pos in self.tm_pos:
             if not win_list_near_pos_by_fidel(cst_pos, win_list, self.tm_pos_fidelity):
+                if verbose:
+                    print 'tm_pos fail at', cst_pos
+                return False
+        return True
+
+    def test_non_tm_pos(self, win_list):
+        """
+        :param win_list:
+        :return:
+        """
+        for win in win_list:
+            if not win_not_in_segments(win, self.non_tm_pos):
                 return False
         return True
 
@@ -75,9 +99,14 @@ class TMConstraint():
                     print 'failed n_term'
                 return False
         if self.tm_pos is not None:
-            if not self.test_tm_pos(win_list):
+            if not self.test_tm_pos(win_list, verbose):
                 if verbose:
                     print 'failed tm_pos'
+                return False
+        if self.non_tm_pos is not None:
+            if not self.test_non_tm_pos(win_list):
+                if verbose:
+                    print 'failed non_tm_pos'
                 return False
         return True
 
@@ -141,6 +170,39 @@ class TMConstraint():
             return [best_win_rev]
         else:
             return [best_win_fwd, best_win_rev]
+
+    def pos_cst_segment(self, pos):
+        """
+        :param pos: a pos from tm_pos
+        :return: semgent beginning and end (-/+ fidelity)
+        """
+        return (pos[0]-self.tm_pos_fidelity, pos[1]+self.tm_pos_fidelity)
+
+
+def win_not_in_segments(win, segments):
+    """
+    :param win: a WinGrade instance
+    :param segments: a list of segments to test
+    :return: True iff the win does not overlap with ANY of the segments
+    """
+    for seg in segments:
+        if (seg[0] <= win.start <= seg[1]) or (seg[0] <= win.end <= seg[1]):
+            return False
+    return True
+
+
+def all_satisfying_wins(pos, win_list, fidelity):
+    """
+    :param pos: constraint pos
+    :param win_list: a list of WinGrades
+    :return: all wins in win_list that satisfy pos
+    """
+    result = []
+    for win in win_list:
+        if win.direction == pos[2] or pos[2] is None:
+            if win_near_pos_by_fidel(pos, win, fidelity):
+                result.append(win)
+    return result
 
 
 def win_list_near_pos_by_fidel(pos, win_list, fidel):
