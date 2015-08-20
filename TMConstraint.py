@@ -41,7 +41,7 @@ class TMConstraint():
         :param win_list: a list of predicted windows
         :return: True if tm nums agree
         """
-        return len(win_list) == self.tm_num
+        return len([a for a in win_list if a.seq != '']) == self.tm_num
 
     def test_c_term(self, win_list):
         '''

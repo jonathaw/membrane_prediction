@@ -575,7 +575,11 @@ def MakeHydrophobicityGrade():
     # hydrophobicity_grade = open('poly_value_11.2.txt', 'r')
     # hydrophobicity_grade = open('poly_vals_23.2.txt', 'r')
     # hydrophobicity_grade = open('/home/labs/fleishman/jonathaw/membrane_prediciton/poly_vals_25.2.txt', 'r')
-    hydrophobicity_grade = open('/home/labs/fleishman/jonathaw/membrane_prediciton/polyval_21_5_15.txt', 'r')
+    try:
+        hydrophobicity_grade = open('/home/labs/fleishman/jonathaw/membrane_prediciton/polyval_21_5_15.txt', 'r')
+    # else:
+    except:
+        hydrophobicity_grade = open('/Volumes/labs/fleishman/jonathaw/membrane_prediciton/polyval_21_5_15.txt', 'r')
     # hydrophobicity_grade = open('/Volumes/jonathaw-1/membrane_prediciton/poly_vals_25.2.txt', 'r')
     # hydrophobicity_grade = open('./poly_vals_25.2.txt', 'r')
     hydrophobicity_polyval = {}

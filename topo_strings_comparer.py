@@ -278,7 +278,8 @@ def comparer(obse, pred, M, spoc):
 def overlappM(pred_h, obse_set, M=10):
     for obse_h in obse_set:
         result = len([a for a in range(pred_h[0], pred_h[1]) if a in range(obse_h[0], obse_h[1])])
-        if result >= M: return True
+        if result >= M:
+            return True
     return False
 
 

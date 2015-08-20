@@ -481,7 +481,7 @@ class HphobicityScore():
         :return: a topology
         """
         import networkx as nx
-        from WinGrade import WinGrade
+        from WinGrade import WinGrade, WinGradePath
         import operator
         # print self.WinGrades
         if self.csts.mode != 'only':
@@ -505,8 +505,7 @@ class HphobicityScore():
         for win1 in win_list:   # add all win to win edges where condition applies
             cst_after = self.cst_after(win1)
             for win2 in win_list:
-                #
-                if cst_after is None or win2.begin < cst_after[1]:
+                if cst_after is None or win2.begin < cst_after[1]: #  make sure no edges skip a cst
                     # condition: non-overlapping, 2 is after 1, opposite directions
                     if not win1.grade_grade_colliding(win2) and win2.begin > win1.end and win1.direction != win2.direction \
                             and win2.begin-win1.end >= 2:
@@ -514,40 +513,84 @@ class HphobicityScore():
                             G.add_edge(win1, win2, weight=win2.grade)
                         elif self.with_msa:
                             G.add_edge(win1, win2, weight=win2.msa_grade)
-        print "About to Bellman-Ford"
-        pred, dist = nx.bellman_ford(G, source_node)
-        print "Finished Bellman-Fording"
-        sorted_dist = sorted(dist.items(), key=operator.itemgetter(1))
-        for k, v in sorted_dist:
-            print k, v
-        temp_direction = 'A'
-        best_path, sec_best_path = [], []
-        best_score, sec_best_score = None, None
-        for last_path, total_grade in sorted_dist:
-            temp_path = self.find_graph_path(pred, [last_path], source_node)
-            if temp_path == [] or temp_path == [source_node]:
-                continue
-            print 'tp', temp_path, total_grade
-            if temp_direction != 'A' and self.csts.test_manager(temp_path) \
-                    and temp_path[-1].direction is not temp_direction:
-                # print 'looking at sec', temp_path[-1].direction, temp_direction
-                sec_best_path = temp_path[:]
-                if sec_best_path[0].seq == 'SOURCE':
-                    sec_best_path.pop(0)
-                sec_best_score = sum([a.grade for a in sec_best_path])
-                break
-            elif self.csts.test_manager(temp_path) and temp_path[-1].direction != temp_direction:
-                # print 'looking at BEST', temp_path
-                best_path = temp_path[:]
-                best_score = sum([a.grade for a in best_path])
-                temp_direction = best_path[-1].direction
-                # print 'now temp_direction is:', temp_direction
-        # print 'found best'
-        print best_path
-        print best_score
-        # print 'found sec best',
-        # print sec_best_path[-1].direction
-        # print sec_best_score
+        if self.csts.tm_num is None:
+            print "About to Bellman-Ford"
+            pred, dist = nx.bellman_ford(G, source_node)
+            print "Finished Bellman-Fording"
+            sorted_dist = sorted(dist.items(), key=operator.itemgetter(1))
+            for k, v in sorted_dist:
+                print k, v
+            temp_direction = 'A'
+            best_path, sec_best_path = [], []
+            best_score, sec_best_score = None, None
+            for last_path, total_grade in sorted_dist:
+                temp_path = self.find_graph_path(pred, [last_path], source_node)
+                if temp_path == [] or temp_path == [source_node]:
+                    continue
+                print 'tp', temp_path, total_grade
+                if temp_direction != 'A' and self.csts.test_manager(temp_path) \
+                        and temp_path[-1].direction is not temp_direction:
+                    # print 'looking at sec', temp_path[-1].direction, temp_direction
+                    sec_best_path = temp_path[:]
+                    if sec_best_path[0].seq == 'SOURCE':
+                        sec_best_path.pop(0)
+                    sec_best_score = sum([a.grade for a in sec_best_path])
+                    break
+                elif self.csts.test_manager(temp_path) and temp_path[-1].direction != temp_direction:
+                    # print 'looking at BEST', temp_path
+                    best_path = temp_path[:]
+                    best_score = sum([a.grade for a in best_path])
+                    temp_direction = best_path[-1].direction
+                    # print 'now temp_direction is:', temp_direction
+            # print 'found best'
+            print best_path
+            print best_score
+            # print 'found sec best',
+            # print sec_best_path[-1].direction
+            # print sec_best_score
+        else:
+            """
+            a method to find minimal path with only tm_num nodes. a BFS algorithm that stops every path building once
+            it gets to tm_num nodes. only saves the best solutions for c_term fwd & rev, and only if they pass all
+            constraints
+            """
+            from collections import deque
+            from copy import deepcopy
+            import timeit
+            tic = timeit.default_timer()
+            print 'looking for %i wins' % self.csts.tm_num
+            best_fwd = WinGradePath([])
+            best_rev = WinGradePath([])
+            Q = deque([WinGradePath([source_node])])
+            while Q:  # continue as long as there si something in Q
+                path = Q.popleft()  # get the FIFO out
+                # print len(Q), path.win_num, self.csts.tm_num, path
+                if path.win_num == self.csts.tm_num:  # the path has enough nodes
+                    if self.csts.test_manager(path.path, True):
+                        if path.c_term == 'fwd' and path.total_grade < best_fwd.total_grade:
+                            best_fwd = deepcopy(path)
+                            print 'found besf fwd', best_fwd
+                        elif path.c_term == 'rev' and path.total_grade < best_rev.total_grade:
+                            best_rev = deepcopy(path)
+                            print 'found besf rev', best_rev
+                    continue
+                for neighbor in G.successors_iter(path.last()):  # go over all successors of last win of path
+                    temp_path = deepcopy(path)
+                    temp_path.add_win(neighbor)
+                    Q.append(temp_path)
+            print 'best_fwd', best_fwd
+            print 'best_rev', best_rev
+            if best_fwd.total_grade < best_rev.total_grade:
+                best_path = best_fwd.path
+                best_score = best_fwd.total_grade
+                sec_best_path = best_rev.path
+                sec_best_score = best_rev.total_grade
+            else:
+                best_path = best_rev.path
+                best_score = best_rev.total_grade
+                sec_best_path = best_fwd.path
+                sec_best_score = best_fwd.total_grade
+            print 'elapsed time for BFS', timeit.default_timer() - tic
         return best_path, best_score, sec_best_path, sec_best_score
 
     def cst_between(self, win1, win2):

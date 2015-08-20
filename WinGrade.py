@@ -23,7 +23,7 @@ class WinGrade():
             from TMpredict_WinGrade import MakeHydrophobicityGrade
             polyval = MakeHydrophobicityGrade()
         # self.length_element = self.length_polynom()
-        self.length_element = membrane_deformation(self.length, poly_param['w'], poly_param['z_0'])
+        self.length_element = membrane_deformation(self.length, self.poly_param['w'], self.poly_param['z_0'])
         # self.hp_moment = hp_moment(seq, polyval, poly_param)
         # self.hp_sum = self.grade_segment(polyval)
           # self.hp_sum + self.hp_moment + self.length_element
@@ -44,11 +44,6 @@ class WinGrade():
                              #  + length_polynom(msa_seq, poly_param)
         if self.seq == 'SOURCE' or self.seq == 'SINK' or self.seq == 'SOURCEPATH':
             self.grade = 0.0
-
-
-    # def __str__(self):
-    #     return '%-4i to %-4i in %3s => %10f %-35s' % (self.begin, self.end, self.direction, self.grade,
-    #                                                   self.seq)
 
     def __repr__(self):
         if self.msa_name == None:
@@ -104,16 +99,45 @@ class WinGrade():
             if self.within_segment(seg, flaps):
                 return True
         return False
-
-
+# a=WinGradePath([WinGrade(1,2,'',''), WinGrade(3,4,'',''), WinGrade(100,110,'',''), WinGrade(50,60,'','')])
+# a.add_win(WinGrade(30, 40,'fwd', 'AAAAAAAAAAAAAAAA'))
 class WinGradePath():
     def __init__(self, win_list):
-        # print 'WGP recived', win_list
-        self.path = win_list[:]
-        self.total_grade = sum([a.grade for a in win_list])
+        import operator
+        self.path = sorted(win_list, key=operator.attrgetter('begin'))
+        self.total_grade = self.grade_path()
+        self.win_num = self.path_length()
+        if win_list != []:
+            self.c_term = win_list[-1].direction
+        else:
+            self.c_term = None
 
     def __repr__(self):
-        return str(self.path) + ' }=> ' + str(self.total_grade)
+        msg = '{ ['
+        for i, win in enumerate(self.path):
+            if win.seq == '':
+                continue
+            msg += str(win)
+            if i < len(self.path)-1:
+                msg += '\t'
+            else:
+                msg += ']'
+        msg += ' }~> total_grade %10f win_num %2i c_term %s' % (self.total_grade, self.win_num, self.c_term)
+        return msg
+
+    def add_win(self, win):
+        import operator
+        wins = self.path[:] + [win]
+        self.path = sorted(wins, key=operator.attrgetter('begin'))
+        self.total_grade = self.grade_path()
+        self.win_num = self.path_length()
+        self.c_term = self.path[-1].direction
+
+    def grade_path(self):
+        return sum(a.grade for a in self.path if a.seq != '')
+
+    def path_length(self):
+        return len([a for a in self.path if a.seq != ''])
 
     def same_as_other(self, other):
         return self.__dict__ == other.__dict__
