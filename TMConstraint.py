@@ -1,8 +1,9 @@
+#!/usr/bin/env python
 class TMConstraint():
     """
     a class to describe constraints on a protein's topology
     """
-    def __init__(self, name, tm_num=None, tm_pos=None, tm_pos_fidelity=0, c_term=None, n_term=None, non_tm_pos=None):
+    def __init__(self, name, mode=None, tm_num=None, tm_pos=None, tm_pos_fidelity=0, c_term=None, n_term=None, non_tm_pos=None):
         self.name = name
         self.tm_num = tm_num
         if tm_pos is None:
@@ -13,6 +14,7 @@ class TMConstraint():
         self.n_term = n_term
         self.tm_pos_fidelity = tm_pos_fidelity
         self.non_tm_pos = non_tm_pos
+        self.mode = mode
 
     def __repr__(self):
         msg = ''
@@ -31,6 +33,7 @@ class TMConstraint():
             msg += 'non_tm_pos None\n'
         msg += 'c_term %r\n' % self.c_term
         msg += 'n_term %r\n' % self.n_term
+        msg += 'mode %s\n' % self.mode
         return msg
 
     def test_tm_num(self, win_list):
@@ -255,11 +258,11 @@ def parse_cst(name, in_path):
                 result[sp[0]] = None
             else:
                 result[sp[0]] = sp[1]
-    return TMConstraint(result['name'], result['tm_num'], result['tm_pos'], result['tm_pos_fidelity'], result['c_term'],
+    return TMConstraint(result['name'], result['mode'], result['tm_num'], result['tm_pos'], result['tm_pos_fidelity'], result['c_term'],
                         result['n_term'])
 
 
-def pred2cst(name, path, ts):
+def pred2cst(name, path, ts, cst_mode, tm_pos_fidelity):
     """
     :param name: protein name
     :param path: path for writing .cst
@@ -268,11 +271,31 @@ def pred2cst(name, path, ts):
     """
     import re
     hhh = re.compile('[hH]*')
-    tms = [(a.start(), a.end(), None) for a in hhh.finditer(ts) if a.end()-a.start() > 1 ]
-    msg = str(TMConstraint(name, tm_pos=tms, tm_pos_fidelity=5))
-    with open(path + '/' + name + '.cst', 'wr+') as fout:
+    tms = [(a.start(), a.end(), None) for a in hhh.finditer(ts) if a.end()-a.start() > 1]
+    msg = str(TMConstraint(name, tm_pos=tms, tm_pos_fidelity=tm_pos_fidelity, mode=cst_mode))
+    with open(path + name + '.cst', 'wr+') as fout:
         fout.write(msg)
-    return TMConstraint(name, tm_pos=tms, tm_pos_fidelity=5)
+    return TMConstraint(name, tm_pos=tms, tm_pos_fidelity=tm_pos_fidelity, mode=cst_mode)
+
+
+def rost2cst(args):
+    import re
+    from topo_strings_comparer import parse_rostlab_db, spc_parser
+    topc = spc_parser(args['name'].lower())
+    signle_peptide = topc['spoctopus'].count('S') + topc['spoctopus'].count('s')
+    rostdb = parse_rostlab_db()[args['name'].lower()]
+    pdbtm = rostdb['pdbtm']
+    pdbtm_cln = 's'*signle_peptide + pdbtm[signle_peptide:]
+    opm = rostdb['opm']
+    opm_cln = 's'*signle_peptide + opm[signle_peptide:]
+    hhh = re.compile('[hH]*')
+    pdbtm_num = len([(a.start(), a.end(), None) for a in hhh.finditer(pdbtm_cln) if a.end()-a.start() > 1])
+    opm_num =len([(a.start(), a.end(), None) for a in hhh.finditer(opm_cln) if a.end()-a.start() > 1])
+    tmc = TMConstraint(args['name'].lower(), tm_num=max(pdbtm_num, opm_num))
+    with open(args['path']+args['name'].lower()+'.cst', 'wr+') as fout:
+        fout.write(str(tmc))
+    return tmc
+
 
 
 if __name__ == '__main__':
@@ -282,11 +305,16 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-name', type=str)
     parser.add_argument('-mode', default='pred2cst', type=str)
-    parser.add_argument('-path', default=os.getcwd())
+    parser.add_argument('-path', default=os.getcwd()+'/')
+    parser.add_argument('-cst_mode', default=None)
+    parser.add_argument('-tm_pos_fidelity', type=int, default=5)
     args = vars(parser.parse_args())
     if args['mode'] == 'pred2cst':
         prd = prd_parser(args['path'], args['name'].lower() + '.prd')
-        print pred2cst(args['name'].lower(), args['path'], prd['pred_ts'])
+        print pred2cst(args['name'].lower(), args['path'], prd['pred_ts'], args['cst_mode'], args['tm_pos_fidelity'])
     elif args['mode'] == 'cst2TMC':
         tmc = parse_cst(args['name'].lower(), args['path'])
         print tmc
+    elif args['mode'] == 'rost2cst':
+        rost2cst(args)
+        print rost2cst(args)

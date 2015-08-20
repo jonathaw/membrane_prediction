@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# coding=utf-8
 """
 A script to analyse TopoGraph prediciton runs. useful both for ROC and single folders
 """
@@ -101,6 +103,7 @@ def prd_directory(dir_path):
                 else:
                     errors['exact'] += 1
                 errors['total'] += 1
+                print pred['name']
                 print 'pred_ts', predictors['pred_ts']
                 print 'AA seq ', pred['seq']
                 print 'pdbtm  ', obse['pdbtm']
@@ -348,7 +351,7 @@ if __name__ == '__main__':
     parser.add_argument('-mode', default='single', type=str)
     parser.add_argument('-path', default=os.getcwd(), type=str)
     parser.add_argument('-name', type=str)
-    parser.add_argument('-num_prd', default=180, type=int)
+    parser.add_argument('-num_prd', default=170, type=int)
     args = vars(parser.parse_args())
 
     if args['mode'] == 'single':

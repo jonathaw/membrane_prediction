@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 class HphobicityScore():
     def __init__(self, name, seq, ss2_file, hydro_polyval, param_list, csts):
         '''
@@ -483,14 +484,24 @@ class HphobicityScore():
         from WinGrade import WinGrade
         import operator
         # print self.WinGrades
-        win_list = [a for a in self.WinGrades if a.grade < HP_THRESHOLD and a.charges < 3]  # make copy of negative wingrades list
+        if self.csts.mode != 'only':
+            win_list = [a for a in self.WinGrades if a.grade < HP_THRESHOLD and a.charges < 3]  # make copy of negative wingrades list
+        else:
+            win_list = [a for a in self.WinGrades if a.grade < HP_THRESHOLD and a.charges < 3
+                        and a.within_segments(self.csts.tm_pos, self.csts.tm_pos_fidelity)]
         print 'constructing graph'
         G = nx.DiGraph()
         source_node = WinGrade(0, 0, 'fwd', '', self.polyval, poly_param)   # define source win
         if self.with_msa:
-            [G.add_edge(source_node, a, weight=a.msa_grade) for a in win_list]  # add all win to source edges with msa
+            if self.csts.tm_pos is None:
+                [G.add_edge(source_node, a, weight=a.msa_grade) for a in win_list]  # add all win to source edges with msa
+            else:
+                [G.add_edge(source_node, a, weight=a.msa_grade) for a in win_list if a.end <= self.csts.tm_pos[0][1]]  # add all win to source edges with msa
         else:
-            [G.add_edge(source_node, a, weight=a.grade) for a in win_list]  # add all win to source edges
+            if self.csts.tm_pos is None:
+                [G.add_edge(source_node, a, weight=a.grade) for a in win_list]  # add all win to source edges
+            else:
+                [G.add_edge(source_node, a, weight=a.grade) for a in win_list if a.end <= self.csts.tm_pos[0][1]]  # add all win to source edges
         for win1 in win_list:   # add all win to win edges where condition applies
             cst_after = self.cst_after(win1)
             for win2 in win_list:
@@ -499,7 +510,6 @@ class HphobicityScore():
                     # condition: non-overlapping, 2 is after 1, opposite directions
                     if not win1.grade_grade_colliding(win2) and win2.begin > win1.end and win1.direction != win2.direction \
                             and win2.begin-win1.end >= 2:
-
                         if not self.with_msa:
                             G.add_edge(win1, win2, weight=win2.grade)
                         elif self.with_msa:
@@ -508,13 +518,16 @@ class HphobicityScore():
         pred, dist = nx.bellman_ford(G, source_node)
         print "Finished Bellman-Fording"
         sorted_dist = sorted(dist.items(), key=operator.itemgetter(1))
+        for k, v in sorted_dist:
+            print k, v
         temp_direction = 'A'
         best_path, sec_best_path = [], []
         best_score, sec_best_score = None, None
         for last_path, total_grade in sorted_dist:
             temp_path = self.find_graph_path(pred, [last_path], source_node)
-            if temp_path == []:
+            if temp_path == [] or temp_path == [source_node]:
                 continue
+            print 'tp', temp_path, total_grade
             if temp_direction != 'A' and self.csts.test_manager(temp_path) \
                     and temp_path[-1].direction is not temp_direction:
                 # print 'looking at sec', temp_path[-1].direction, temp_direction
@@ -530,8 +543,8 @@ class HphobicityScore():
                 temp_direction = best_path[-1].direction
                 # print 'now temp_direction is:', temp_direction
         # print 'found best'
-        # print best_path[-1].direction
-        # print best_score
+        print best_path
+        print best_score
         # print 'found sec best',
         # print sec_best_path[-1].direction
         # print sec_best_score

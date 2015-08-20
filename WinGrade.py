@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 class WinGrade():
     '''
     A class to parameterise a window in hydrophobicity manners.
@@ -97,6 +98,12 @@ class WinGrade():
 
     def within_segment(self, segment, flaps=0):
         return self.begin >= segment[0]-flaps and self.end <= segment[1]+flaps
+
+    def within_segments(self, segments, flaps=0):
+        for seg in segments:
+            if self.within_segment(seg, flaps):
+                return True
+        return False
 
 
 class WinGradePath():

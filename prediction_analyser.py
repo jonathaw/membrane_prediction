@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 '''
 scripts to analyse and compare prediction results with the databases
 '''

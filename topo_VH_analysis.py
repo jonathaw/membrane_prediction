@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # coding=utf-8
 """
 a script to summerize topo prediction results over the Von-Heijne and phobius data.

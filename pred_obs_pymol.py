@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 def pymol_mark_segments(name, chain, pred_ts, obs_ts, seq, tech):
     """
     :param name: name of PDB file

@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 a script to create empty (all None) .cst files for names with no .prd file
 """

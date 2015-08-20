@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # coding=utf-8
 from WinGrade import *
 from HphobicityScore import *
@@ -10,7 +11,7 @@ def main():
     global hydrophobicity_polyval, args, param_list
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('-hp_threshold', default=5.0, type=float)#10
+    parser.add_argument('-hp_threshold', default=6.0, type=float, help='set the hp threshold for constructing the graph')#10
     parser.add_argument('-min_length', default=19, type=int)#18
     parser.add_argument('-psi_helix', default=0.2, type=float)#0.001
     parser.add_argument('-psi_res_num', default=3, type=int)#4
@@ -28,7 +29,7 @@ def main():
     parser.add_argument('-with_msa', default=False)
     parser.add_argument('-msa_percentile', default=20, type=int)
     parser.add_argument('-with_cst', default=False)
-    parser.add_argument('-cst_path', default=os.getcwd()+'/')
+    parser.add_argument('-cst_path', default=os.getcwd())#+'/')
     args = vars(parser.parse_args())
 
     # import topdb_functions
@@ -87,8 +88,8 @@ def process_single_protein(name, path):
     #                     '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/psipred/'+name+'.ss2',
     #                     hydrophobicity_polyval, args)
     # topo_string = topo_string_rostlab_format(temp.topo_best, entry['seq'])
-    results_writer_skim(path, name, topo_string, sec_topo_string, temp.topo_best_val, temp.topo_sec_best_val, entry['seq'])
-    print 'Assaf, yoo my Boo!!! (ಠ‿ಠ)'
+    results_writer_skim(path, name, topo_string, sec_topo_string, temp.topo_best_val, temp.topo_sec_best_val, entry['seq'], entry_cst)
+    # print 'Assaf, yoo my Boo!!! (ಠ‿ಠ)'
     # print entry['seq']
     # print entry['seq_no_SP']
     # print topc['seq']
@@ -126,7 +127,7 @@ def ROC_rostlav_single_by_single():
         o.writelines('failed_list %r\n' % failed)
 
 
-def results_writer_skim(path, name, pred_ts, sec_pred_ts, best_val, sec_best_val, seq):
+def results_writer_skim(path, name, pred_ts, sec_pred_ts, best_val, sec_best_val, seq, tmc):
     print 'writing.prd to', path+'/'+name+'.prd'
     with open(path+'/'+name+'.prd', 'wr+') as o:
         o.writelines('name %s\n' % name)
@@ -141,6 +142,7 @@ def results_writer_skim(path, name, pred_ts, sec_pred_ts, best_val, sec_best_val
             o.writelines('seq %s\n' % seq)
         for k, v in args.items():
             o.writelines('%s %r\n' % (k, v))
+        o.writelines(str(tmc))
 
 
 def archive_main():
