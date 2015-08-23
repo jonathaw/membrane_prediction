@@ -24,10 +24,11 @@ def main():
             res = win_overlappM(p_win, obse_list)
             if res:
                 result.append((p_win[1]-p_win[0]+1, res[1]-res[0]+1))
-    plt.scatter([a[0] for a in result], [a[1] for a in result])
-    plt.xlim([0, 40])
-    plt.ylim([0, 40])
+    # plt.scatter([a[0] for a in result], [a[1] for a in result])
+    # plt.xlim([0, 40])
+    # plt.ylim([0, 40])
     # plt.hist([[a[0] for a in result], [a[1] for a in result]])
+    plt.boxplot([a[0]-a[1] for a in result])
     plt.show()
 
 

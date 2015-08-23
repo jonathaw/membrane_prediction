@@ -2,12 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6a73546c-b0e1-4c73-9c98-48c4af466cd3" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/win_len_scatter.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HphobicityScore.py" afterPath="$PROJECT_DIR$/HphobicityScore.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TMConstraint.py" afterPath="$PROJECT_DIR$/TMConstraint.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TMpredict_WinGrade.py" afterPath="$PROJECT_DIR$/TMpredict_WinGrade.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WinGrade.py" afterPath="$PROJECT_DIR$/WinGrade.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/topo_strings_comparer.py" afterPath="$PROJECT_DIR$/topo_strings_comparer.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/win_len_scatter.py" afterPath="$PROJECT_DIR$/win_len_scatter.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="membrane_prediciton.iws" />
@@ -20,7 +16,7 @@
   </component>
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CreatePatchCommitExecutor">
-    <option name="PATCH_PATH" value="" />
+    <option name="PATCH_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="DaemonCodeAnalyzer">
     <disable_hints />
@@ -41,46 +37,87 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="make_empty_csts.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/make_empty_csts.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="720">
-              <caret line="0" column="21" selection-start-line="0" selection-start-column="21" selection-end-line="0" selection-end-column="21" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="HphobicityScore.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="HphobicityScore.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/HphobicityScore.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="2.262916" vertical-offset="2709" max-vertical-offset="15860">
-              <caret line="592" column="39" selection-start-line="592" selection-start-column="39" selection-end-line="592" selection-end-column="39" />
+            <state vertical-scroll-proportion="-1.3454546" vertical-offset="6246" max-vertical-offset="23460">
+              <caret line="316" column="0" selection-start-line="316" selection-start-column="0" selection-end-line="316" selection-end-column="0" />
               <folding>
                 <element signature="e#133#2730#0" expanded="true" />
-                <element signature="e#28612#29341#0" expanded="true" />
-                <element signature="e#29381#29733#0" expanded="true" />
-                <element signature="e#29789#34096#0" expanded="true" />
-                <element signature="e#34154#38840#0" expanded="true" />
-                <element signature="e#38895#43531#0" expanded="true" />
-                <element signature="e#43606#43999#0" expanded="true" />
-                <element signature="e#44055#44969#0" expanded="true" />
-                <element signature="e#45029#45943#0" expanded="true" />
-                <element signature="e#46003#51198#0" expanded="true" />
-                <element signature="e#51268#52019#0" expanded="true" />
-                <element signature="e#52082#54501#0" expanded="true" />
+                <element signature="e#2763#2941#0" expanded="true" />
+                <element signature="e#4181#5943#0" expanded="true" />
+                <element signature="e#6016#8016#0" expanded="true" />
+                <element signature="e#8067#8249#0" expanded="true" />
+                <element signature="e#8289#8577#0" expanded="true" />
+                <element signature="e#8633#9426#0" expanded="true" />
+                <element signature="e#9471#9683#0" expanded="true" />
+                <element signature="e#9733#10003#0" expanded="true" />
+                <element signature="e#10044#12097#0" expanded="true" />
+                <element signature="e#12137#13266#0" expanded="true" />
+                <element signature="e#13314#14534#0" expanded="true" />
+                <element signature="e#14588#15032#0" expanded="true" />
+                <element signature="e#15082#15728#0" expanded="true" />
+                <element signature="e#15769#16110#0" expanded="true" />
+                <element signature="e#16149#16490#0" expanded="true" />
+                <element signature="e#16534#16996#0" expanded="true" />
+                <element signature="e#17038#18012#0" expanded="true" />
+                <element signature="e#18060#19356#0" expanded="true" />
+                <element signature="e#19401#19793#0" expanded="true" />
+                <element signature="e#19829#20485#0" expanded="true" />
+                <element signature="e#20551#20990#0" expanded="true" />
+                <element signature="e#21070#22159#0" expanded="true" />
+                <element signature="e#22209#29819#0" expanded="true" />
+                <element signature="e#29868#30597#0" expanded="true" />
+                <element signature="e#30637#30989#0" expanded="true" />
+                <element signature="e#31045#35352#0" expanded="true" />
+                <element signature="e#35410#40096#0" expanded="true" />
+                <element signature="e#40151#44787#0" expanded="true" />
+                <element signature="e#44862#45255#0" expanded="true" />
+                <element signature="e#45311#46225#0" expanded="true" />
+                <element signature="e#46285#47199#0" expanded="true" />
+                <element signature="e#47259#52454#0" expanded="true" />
+                <element signature="e#52524#53275#0" expanded="true" />
+                <element signature="e#53338#55757#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="WinGrade.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="WinGrade.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/WinGrade.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="528" max-vertical-offset="1680">
-              <caret line="105" column="23" selection-start-line="105" selection-start-column="23" selection-end-line="105" selection-end-column="23" />
+            <state vertical-scroll-proportion="0.8284734" vertical-offset="4697" max-vertical-offset="5360">
+              <caret line="259" column="15" selection-start-line="259" selection-start-column="15" selection-end-line="259" selection-end-column="15" />
               <folding>
+                <element signature="e#44#119#1" expanded="true" />
+                <element signature="e#240#2105#0" expanded="true" />
                 <element signature="e#2139#2572#0" expanded="true" />
+                <element signature="e#2626#2694#0" expanded="true" />
+                <element signature="e#2750#2872#0" expanded="true" />
+                <element signature="e#2912#2971#0" expanded="true" />
+                <element signature="e#3019#3358#0" expanded="true" />
+                <element signature="e#3398#3648#0" expanded="true" />
+                <element signature="e#3694#3757#0" expanded="true" />
+                <element signature="e#3797#3826#0" expanded="true" />
+                <element signature="e#3872#3910#0" expanded="true" />
+                <element signature="e#3968#4038#0" expanded="true" />
+                <element signature="e#4098#4215#0" expanded="true" />
+                <element signature="e#4445#4739#0" expanded="true" />
+                <element signature="e#4773#5149#0" expanded="true" />
+                <element signature="e#5187#5438#0" expanded="true" />
+                <element signature="e#5474#5527#0" expanded="true" />
+                <element signature="e#5564#5613#0" expanded="true" />
+                <element signature="e#5659#5697#0" expanded="true" />
+                <element signature="e#5728#5747#0" expanded="true" />
+                <element signature="e#5777#5797#0" expanded="true" />
+                <element signature="e#5846#6033#0" expanded="true" />
+                <element signature="e#6081#6268#0" expanded="true" />
+                <element signature="e#6299#6596#0" expanded="true" />
+                <element signature="e#6640#6967#0" expanded="true" />
+                <element signature="e#7015#7889#0" expanded="true" />
+                <element signature="e#7929#8148#0" expanded="true" />
+                <element signature="e#8192#8417#0" expanded="true" />
+                <element signature="e#8458#8611#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -89,11 +126,19 @@
       <file leaf-file-name="win_len_scatter.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/win_len_scatter.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="960">
-              <caret line="28" column="9" selection-start-line="28" selection-start-column="9" selection-end-line="28" selection-end-column="9" />
-              <folding>
-                <element signature="e#1389#1578#0" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="0.0" vertical-offset="600" max-vertical-offset="980">
+              <caret line="30" column="20" selection-start-line="30" selection-start-column="20" selection-end-line="30" selection-end-column="20" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sasa_survey.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sasa_survey.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="680" max-vertical-offset="3680">
+              <caret line="34" column="0" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -101,12 +146,9 @@
       <file leaf-file-name="TMConstraint.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TMConstraint.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="80" max-vertical-offset="2520">
-              <caret line="43" column="55" selection-start-line="43" selection-start-column="55" selection-end-line="43" selection-end-column="55" />
-              <folding>
-                <element signature="e#2969#4055#0" expanded="true" />
-                <element signature="e#9921#10778#0" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="0.0" vertical-offset="4200" max-vertical-offset="6500">
+              <caret line="210" column="53" selection-start-line="210" selection-start-column="53" selection-end-line="210" selection-end-column="53" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -124,12 +166,9 @@
       <file leaf-file-name="topo_strings_comparer.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/topo_strings_comparer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="742" max-vertical-offset="2160">
+            <state vertical-scroll-proportion="0.0" vertical-offset="5640" max-vertical-offset="7380">
               <caret line="282" column="16" selection-start-line="277" selection-start-column="0" selection-end-line="282" selection-end-column="16" />
-              <folding>
-                <element signature="e#9752#11648#0" expanded="true" />
-                <element signature="e#11694#11881#0" expanded="true" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -213,9 +252,9 @@
         <option value="$PROJECT_DIR$/TMpredict_WinGrade.py" />
         <option value="$PROJECT_DIR$/topo_strings_comparer.py" />
         <option value="$PROJECT_DIR$/TMConstraint.py" />
-        <option value="$PROJECT_DIR$/WinGrade.py" />
-        <option value="$PROJECT_DIR$/HphobicityScore.py" />
         <option value="$PROJECT_DIR$/win_len_scatter.py" />
+        <option value="$PROJECT_DIR$/HphobicityScore.py" />
+        <option value="$PROJECT_DIR$/WinGrade.py" />
       </list>
     </option>
   </component>
@@ -266,7 +305,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -287,6 +325,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -312,49 +351,7 @@
       <recent name="$PROJECT_DIR$/data_sets" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Doctest hp_moment">
-    <configuration default="false" name="Doctest comparer" type="tests" factoryName="Doctests" temporary="true" nameIsGenerated="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="membrane_prediciton" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/topo_strings_comparer.py" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="comparer" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_FUNCTION" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <RunnerSettings RunnerId="PythonRunner" />
-      <ConfigurationWrapper RunnerId="PythonRunner" />
-      <method />
-    </configuration>
-    <configuration default="false" name="Doctest membrane_deformation" type="tests" factoryName="Doctests" temporary="true" nameIsGenerated="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="membrane_prediciton" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/WinGrade.py" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="membrane_deformation" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_FUNCTION" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <RunnerSettings RunnerId="PythonRunner" />
-      <ConfigurationWrapper RunnerId="PythonRunner" />
-      <method />
-    </configuration>
+  <component name="RunManager" selected="Python tests.Doctest sequential_coiled">
     <configuration default="false" name="Doctest target_has_gaps_in_query_stretch" type="tests" factoryName="Doctests" temporary="true" nameIsGenerated="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -410,6 +407,48 @@
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/WinGrade.py" />
       <option name="CLASS_NAME" value="" />
       <option name="METHOD_NAME" value="hp_moment" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_FUNCTION" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <RunnerSettings RunnerId="PythonRunner" />
+      <ConfigurationWrapper RunnerId="PythonRunner" />
+      <method />
+    </configuration>
+    <configuration default="false" name="Doctest HphobicityScore.sequential_coiled" type="tests" factoryName="Doctests" temporary="true" nameIsGenerated="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="membrane_prediciton" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/HphobicityScore.py" />
+      <option name="CLASS_NAME" value="HphobicityScore" />
+      <option name="METHOD_NAME" value="sequential_coiled" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_METHOD" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <RunnerSettings RunnerId="PythonRunner" />
+      <ConfigurationWrapper RunnerId="PythonRunner" />
+      <method />
+    </configuration>
+    <configuration default="false" name="Doctest sequential_coiled" type="tests" factoryName="Doctests" temporary="true" nameIsGenerated="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="membrane_prediciton" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/WinGrade.py" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="sequential_coiled" />
       <option name="FOLDER_NAME" value="" />
       <option name="TEST_TYPE" value="TEST_FUNCTION" />
       <option name="PATTERN" value="" />
@@ -540,19 +579,19 @@
       <method />
     </configuration>
     <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="Python tests.Doctest comparer" />
-      <item index="1" class="java.lang.String" itemvalue="Python tests.Doctest membrane_deformation" />
-      <item index="2" class="java.lang.String" itemvalue="Python tests.Doctest target_has_gaps_in_query_stretch" />
-      <item index="3" class="java.lang.String" itemvalue="Python tests.Doctest TMConstraint.test_manager_segment" />
-      <item index="4" class="java.lang.String" itemvalue="Python tests.Doctest hp_moment" />
+      <item index="0" class="java.lang.String" itemvalue="Python tests.Doctest target_has_gaps_in_query_stretch" />
+      <item index="1" class="java.lang.String" itemvalue="Python tests.Doctest TMConstraint.test_manager_segment" />
+      <item index="2" class="java.lang.String" itemvalue="Python tests.Doctest hp_moment" />
+      <item index="3" class="java.lang.String" itemvalue="Python tests.Doctest HphobicityScore.sequential_coiled" />
+      <item index="4" class="java.lang.String" itemvalue="Python tests.Doctest sequential_coiled" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python tests.Doctest hp_moment" />
-        <item index="1" class="java.lang.String" itemvalue="Python tests.Doctest TMConstraint.test_manager_segment" />
-        <item index="2" class="java.lang.String" itemvalue="Python tests.Doctest target_has_gaps_in_query_stretch" />
-        <item index="3" class="java.lang.String" itemvalue="Python tests.Doctest membrane_deformation" />
-        <item index="4" class="java.lang.String" itemvalue="Python tests.Doctest comparer" />
+        <item index="0" class="java.lang.String" itemvalue="Python tests.Doctest sequential_coiled" />
+        <item index="1" class="java.lang.String" itemvalue="Python tests.Doctest HphobicityScore.sequential_coiled" />
+        <item index="2" class="java.lang.String" itemvalue="Python tests.Doctest hp_moment" />
+        <item index="3" class="java.lang.String" itemvalue="Python tests.Doctest TMConstraint.test_manager_segment" />
+        <item index="4" class="java.lang.String" itemvalue="Python tests.Doctest target_has_gaps_in_query_stretch" />
       </list>
     </recent_temporary>
   </component>
@@ -854,7 +893,11 @@
       <created>1440056520908</created>
       <updated>1440056520908</updated>
     </task>
-    <option name="localTasksCounter" value="73" />
+    <task id="LOCAL-00073" summary="a working version of the BFS of the graph for n nodes. will now try to use assaf's idea">
+      <created>1440080290909</created>
+      <updated>1440080290909</updated>
+    </task>
+    <option name="localTasksCounter" value="74" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -889,16 +932,16 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3299428" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39251336" sideWeight="0.5002633" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27453026" sideWeight="0.4997367" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2737968" sideWeight="0.4997367" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -916,8 +959,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="moving to rostlab DB. added a parser and topo string creator and comparer" />
-    <MESSAGE value="topo-string comparer improved to determine topology correctness" />
     <MESSAGE value="now calculating Qok such that only a protein where all TMHs were predicted correctly (determined by the rostlab_evaluator.pl script) are counted. that's averaged over all mezsured proteins." />
     <MESSAGE value="moved to /Volumes/...&#10;now gets topo-string of both opm and pdbtm.&#10;next: make calculate dist for both strings." />
     <MESSAGE value="improved ROC graph making in ROC_res_parser.&#10;added pred_obs_pymol to mark pred, obs, and overlap on pymol" />
@@ -941,7 +982,9 @@
     <MESSAGE value="last commit before swithcing to double Bellman-Ford" />
     <MESSAGE value="implemented the graph pruning that allows constraints." />
     <MESSAGE value="before implementing BFS for #TM&#10;" />
-    <option name="LAST_COMMIT_MESSAGE" value="before implementing BFS for #TM&#10;" />
+    <MESSAGE value="a working version of the BFS of the graph for n nodes. will now try to use assaf's idea" />
+    <MESSAGE value="BFS now only runs 25aa FWD wins. will now try enumerating the nodes" />
+    <option name="LAST_COMMIT_MESSAGE" value="BFS now only runs 25aa FWD wins. will now try enumerating the nodes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1201,13 +1244,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sasa_survey.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2960" max-vertical-offset="3680">
-          <caret line="148" column="29" selection-start-line="148" selection-start-column="29" selection-end-line="148" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///usr/local/lib/python2.7/site-packages/numpy/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4100">
@@ -1290,7 +1326,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="720">
           <caret line="0" column="21" selection-start-line="0" selection-start-column="21" selection-end-line="0" selection-end-column="21" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1310,14 +1345,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/topo_VH_analysis.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3200">
-          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/TMpredict_WinGrade.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="3460" max-vertical-offset="4680">
@@ -1330,61 +1357,120 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="742" max-vertical-offset="2160">
           <caret line="282" column="16" selection-start-line="277" selection-start-column="0" selection-end-line="282" selection-end-column="16" />
-          <folding>
-            <element signature="e#9752#11648#0" expanded="true" />
-            <element signature="e#11694#11881#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/TMConstraint.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="80" max-vertical-offset="2520">
-          <caret line="43" column="55" selection-start-line="43" selection-start-column="55" selection-end-line="43" selection-end-column="55" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="858" max-vertical-offset="2340">
+          <caret line="210" column="53" selection-start-line="210" selection-start-column="53" selection-end-line="210" selection-end-column="53" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/win_len_scatter.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="980">
+          <caret line="30" column="20" selection-start-line="30" selection-start-column="20" selection-end-line="30" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sasa_survey.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2560">
+          <caret line="34" column="0" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/topo_VH_analysis.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3200">
+          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/HphobicityScore.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.3454546" vertical-offset="6246" max-vertical-offset="23460">
+          <caret line="316" column="0" selection-start-line="316" selection-start-column="0" selection-end-line="316" selection-end-column="0" />
           <folding>
-            <element signature="e#2969#4055#0" expanded="true" />
-            <element signature="e#9921#10778#0" expanded="true" />
+            <element signature="e#133#2730#0" expanded="true" />
+            <element signature="e#2763#2941#0" expanded="true" />
+            <element signature="e#4181#5943#0" expanded="true" />
+            <element signature="e#6016#8016#0" expanded="true" />
+            <element signature="e#8067#8249#0" expanded="true" />
+            <element signature="e#8289#8577#0" expanded="true" />
+            <element signature="e#8633#9426#0" expanded="true" />
+            <element signature="e#9471#9683#0" expanded="true" />
+            <element signature="e#9733#10003#0" expanded="true" />
+            <element signature="e#10044#12097#0" expanded="true" />
+            <element signature="e#12137#13266#0" expanded="true" />
+            <element signature="e#13314#14534#0" expanded="true" />
+            <element signature="e#14588#15032#0" expanded="true" />
+            <element signature="e#15082#15728#0" expanded="true" />
+            <element signature="e#15769#16110#0" expanded="true" />
+            <element signature="e#16149#16490#0" expanded="true" />
+            <element signature="e#16534#16996#0" expanded="true" />
+            <element signature="e#17038#18012#0" expanded="true" />
+            <element signature="e#18060#19356#0" expanded="true" />
+            <element signature="e#19401#19793#0" expanded="true" />
+            <element signature="e#19829#20485#0" expanded="true" />
+            <element signature="e#20551#20990#0" expanded="true" />
+            <element signature="e#21070#22159#0" expanded="true" />
+            <element signature="e#22209#29819#0" expanded="true" />
+            <element signature="e#29868#30597#0" expanded="true" />
+            <element signature="e#30637#30989#0" expanded="true" />
+            <element signature="e#31045#35352#0" expanded="true" />
+            <element signature="e#35410#40096#0" expanded="true" />
+            <element signature="e#40151#44787#0" expanded="true" />
+            <element signature="e#44862#45255#0" expanded="true" />
+            <element signature="e#45311#46225#0" expanded="true" />
+            <element signature="e#46285#47199#0" expanded="true" />
+            <element signature="e#47259#52454#0" expanded="true" />
+            <element signature="e#52524#53275#0" expanded="true" />
+            <element signature="e#53338#55757#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/WinGrade.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="528" max-vertical-offset="1680">
-          <caret line="105" column="23" selection-start-line="105" selection-start-column="23" selection-end-line="105" selection-end-column="23" />
+        <state vertical-scroll-proportion="0.8284734" vertical-offset="4697" max-vertical-offset="5360">
+          <caret line="259" column="15" selection-start-line="259" selection-start-column="15" selection-end-line="259" selection-end-column="15" />
           <folding>
+            <element signature="e#44#119#1" expanded="true" />
+            <element signature="e#240#2105#0" expanded="true" />
             <element signature="e#2139#2572#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/win_len_scatter.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="960">
-          <caret line="28" column="9" selection-start-line="28" selection-start-column="9" selection-end-line="28" selection-end-column="9" />
-          <folding>
-            <element signature="e#1389#1578#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/HphobicityScore.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="2.262916" vertical-offset="2709" max-vertical-offset="15860">
-          <caret line="592" column="39" selection-start-line="592" selection-start-column="39" selection-end-line="592" selection-end-column="39" />
-          <folding>
-            <element signature="e#133#2730#0" expanded="true" />
-            <element signature="e#28612#29341#0" expanded="true" />
-            <element signature="e#29381#29733#0" expanded="true" />
-            <element signature="e#29789#34096#0" expanded="true" />
-            <element signature="e#34154#38840#0" expanded="true" />
-            <element signature="e#38895#43531#0" expanded="true" />
-            <element signature="e#43606#43999#0" expanded="true" />
-            <element signature="e#44055#44969#0" expanded="true" />
-            <element signature="e#45029#45943#0" expanded="true" />
-            <element signature="e#46003#51198#0" expanded="true" />
-            <element signature="e#51268#52019#0" expanded="true" />
-            <element signature="e#52082#54501#0" expanded="true" />
+            <element signature="e#2626#2694#0" expanded="true" />
+            <element signature="e#2750#2872#0" expanded="true" />
+            <element signature="e#2912#2971#0" expanded="true" />
+            <element signature="e#3019#3358#0" expanded="true" />
+            <element signature="e#3398#3648#0" expanded="true" />
+            <element signature="e#3694#3757#0" expanded="true" />
+            <element signature="e#3797#3826#0" expanded="true" />
+            <element signature="e#3872#3910#0" expanded="true" />
+            <element signature="e#3968#4038#0" expanded="true" />
+            <element signature="e#4098#4215#0" expanded="true" />
+            <element signature="e#4445#4739#0" expanded="true" />
+            <element signature="e#4773#5149#0" expanded="true" />
+            <element signature="e#5187#5438#0" expanded="true" />
+            <element signature="e#5474#5527#0" expanded="true" />
+            <element signature="e#5564#5613#0" expanded="true" />
+            <element signature="e#5659#5697#0" expanded="true" />
+            <element signature="e#5728#5747#0" expanded="true" />
+            <element signature="e#5777#5797#0" expanded="true" />
+            <element signature="e#5846#6033#0" expanded="true" />
+            <element signature="e#6081#6268#0" expanded="true" />
+            <element signature="e#6299#6596#0" expanded="true" />
+            <element signature="e#6640#6967#0" expanded="true" />
+            <element signature="e#7015#7889#0" expanded="true" />
+            <element signature="e#7929#8148#0" expanded="true" />
+            <element signature="e#8192#8417#0" expanded="true" />
+            <element signature="e#8458#8611#0" expanded="true" />
           </folding>
         </state>
       </provider>
