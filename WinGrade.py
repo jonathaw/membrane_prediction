@@ -3,7 +3,8 @@ class WinGrade():
     '''
     A class to parameterise a window in hydrophobicity manners.
     '''
-    def __init__(self, begin, end, direction, seq, polyval=None, poly_param=None, msa_name=None, msa_seq=None):
+    def __init__(self, begin, end, direction, seq, polyval=None, poly_param=None, msa_name=None, msa_seq=None,
+                 grade=None, length_element=None, charges=None):
         """
         :param begin: seq position (from 0) where the window begins
         :param end: seq position (from 0) where the window ends
@@ -23,16 +24,24 @@ class WinGrade():
             from TMpredict_WinGrade import MakeHydrophobicityGrade
             polyval = MakeHydrophobicityGrade()
         # self.length_element = self.length_polynom()
-        self.length_element = membrane_deformation(self.length, self.poly_param['w'], self.poly_param['z_0'])
+        if length_element is None:
+            self.length_element = membrane_deformation(self.length, self.poly_param['w'], self.poly_param['z_0'])
+        else:
+            self.length_element = length_element
         # self.hp_moment = hp_moment(seq, polyval, poly_param)
         # self.hp_sum = self.grade_segment(polyval)
           # self.hp_sum + self.hp_moment + self.length_element
-        self.charges = count_charges(self.seq)
+        if charges is None:
+            self.charges = count_charges(self.seq)
+        else:
+            self.charges = charges
         # if self.charges >= 2:
         #     print 'found %i charges' % self.charges
             # raise Exception()
-
-        self.grade = self.grade_segment(polyval) + self.length_element
+        if grade is None:
+            self.grade = self.grade_segment(polyval) + self.length_element
+        else:
+            self.grade = grade + self.length_element
         self.direction = direction
         self.span = range(self.begin, self.end+1)
         # self.grade_norm = self.grade / (self.end-self.begin-19)
@@ -89,6 +98,16 @@ class WinGrade():
         self.grade = self.grade + val
 
     def same_as_other(self, other):
+        """
+        :param other:
+        :return:
+        >>> w1 = WinGrade(0, 10, 'fwd', 'A', grade=1, length_element=1, charges=1)
+        >>> w2 = WinGrade(20, 30, 'rev', 'B', grade=2, length_element=2, charges=2)
+        >>> w1.same_as_other(w1)
+        True
+        >>> w1.same_as_other(w2)
+        False
+        """
         return self.__dict__ == other.__dict__
 
     def within_segment(self, segment, flaps=0):
@@ -119,7 +138,7 @@ class WinGradePath():
                 continue
             msg += str(win)
             if i < len(self.path)-1:
-                msg += '\t'
+                msg += ' : '
             else:
                 msg += ']'
         msg += ' }~> total_grade %10f win_num %2i c_term %s' % (self.total_grade, self.win_num, self.c_term)
@@ -140,7 +159,23 @@ class WinGradePath():
         return len([a for a in self.path if a.seq != ''])
 
     def same_as_other(self, other):
-        return self.__dict__ == other.__dict__
+        for k1, v1 in self.__dict__.items():
+            for k2, v2 in other.__dict__.items():
+                if k1 == k2:
+                    if k1 == 'path':
+                        for w1 in v1:
+                            booli = False
+                            for w2 in v2:
+                                if w1.same_as_other(w2):
+                                    booli = True
+                                    break
+                            if not booli:
+                                return False
+
+                    else:
+                        if v1 != v2:
+                            return False
+        return True
 
     def first(self):
         return self.path[0]
@@ -236,3 +271,45 @@ def flatten_path_list(path_list):
             if win not in result:
                 result.append(win)
     return result
+
+
+def sequential_coiled(pos, psi):
+    """
+    :param pos: tuple of start and end of win
+    :param psi: dictionary with psipred resutls
+    :return: True iff a stretch of 3 residues at either end of the win is coiled > 0.5
+    >>> pos = (0, 10)
+    >>> psi = {0: {'e': 0.6}, 1: {'e': 0.6}, 2: {'e': 0.6}, 3: {'e': 0.6}, 4: {'e': 0.6}, 5: {'e': 0.6}, 6: {'e': 0.6}, 7: {'e': 0.6}, 8: {'e': 0.6}, 9: {'e': 0.6}, 10: {'e': 0.6}}
+    >>> sequential_coiled(pos, psi)
+    True
+    >>> psi = {0: {'e': 0.4}, 1: {'e': 0.4}, 2: {'e': 0.4}, 3: {'e': 0.6}, 4: {'e': 0.6}, 5: {'e': 0.6}, 6: {'e': 0.6}, 7: {'e': 0.6}, 8: {'e': 0.4}, 9: {'e': 0.4}, 10: {'e': 0.4}}
+    >>> sequential_coiled(pos, psi)
+    False
+    >>> psi = {0: {'e': 0.4}, 1: {'e': 0.4}, 2: {'e': 0.4}, 3: {'e': 0.9}, 4: {'e': 0.9}, 5: {'e': 0.9}, 6: {'e': 0.9}, 7: {'e': 0.9}, 8: {'e': 0.4}, 9: {'e': 0.4}, 10: {'e': 0.4}}
+    >>> sequential_coiled(pos, psi)
+    False
+    """
+    return all(psi[i]['c'] > 0.4 for i in range(pos[0], pos[0]+3)) or\
+           all(psi[i]['c'] > 0.4 for i in range(pos[1]-3, pos[1]))
+
+
+def parse_WGP(text):
+    """
+    :param text:
+    :return:
+    >>> test = "{ [0   to 10   in fwd => 1 A            1 1 : 20   to 30   in rev =>  2 B              2 2 : 30  to 40  in fwd => 3 C             3 3] }~> total_grade 6 win_num  3 c_term fwd"
+    >>> w1 = WinGrade(0, 10, 'fwd', 'A', grade=1, length_element=1, charges=1)
+    >>> w2 = WinGrade(20, 30, 'rev', 'B', grade=2, length_element=2, charges=2)
+    >>> w3 = WinGrade(30, 40, 'fwd', 'C', grade=3, length_element=3, charges=3)
+    >>> parse_WGP(test).same_as_other(WinGradePath([w1, w2, w3]))
+    True
+    """
+    import re
+    wins = re.search('\[.*\]', text).group()
+    spl = wins[1:-1].split(':')
+    win_list = []
+    for w in spl:
+        ws = w.split()
+        temp_win = WinGrade(int(ws[0]), int(ws[2]), ws[4], ws[7], grade=float(ws[6]), length_element=float(ws[9]), charges=int(ws[8]))
+        win_list.append(temp_win)
+    return WinGradePath(win_list)

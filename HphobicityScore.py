@@ -84,6 +84,7 @@ class HphobicityScore():
         :return:grades all segments of self.seq, and aggregates them as WinGrades
         '''
         from WinGrade import WinGrade, count_charges
+        from TMConstraint import seg_within_tm_pos
         import sys
         if self.with_msa:
             from MSA_for_TMpredict import TMpredict_MSA
@@ -98,8 +99,9 @@ class HphobicityScore():
         sys.stdout.write("\b" * (bar_width+1))  # return to start of line, after '['
         for i in range(pos1, pos2+1):
             for inc in range(min(INC_MAX, self.seq_length - MIN_LENGTH - i)):
-                if not self.is_not_helical((i, i+MIN_LENGTH+inc), psi) and \
-                                count_charges(self.seq[i:i+MIN_LENGTH+inc]) < 3:
+                if seg_within_tm_pos((i, i+MIN_LENGTH+inc), self.csts.tm_pos, self.csts.tm_pos_fidelity) or \
+                        (not self.is_not_helical((i, i+MIN_LENGTH+inc), psi) and
+                                 count_charges(self.seq[i:i+MIN_LENGTH+inc]) < 3):
                     if self.with_msa:
                         grades.append(msa_obj.retrieve_seqs(i, i+MIN_LENGTH+inc, 'fwd'))
                         grades.append(msa_obj.retrieve_seqs(i, i+MIN_LENGTH+inc, 'rev'))
@@ -309,11 +311,13 @@ class HphobicityScore():
         psipred_vs_mm_nomm.py
         """
         import numpy as np
+        from WinGrade import sequential_coiled
         assert all([psi[i]['aa'] == self.seq[i] for i in range(pos[0], pos[1])])
+        if sequential_coiled(pos, psi):
+            return True
         return True if (np.mean([psi[a]['e'] for a in range(pos[0], pos[1])]) >= 0.3 or
                         np.mean([psi[a]['c'] for a in range(pos[0], pos[1])]) >= 0.48 or
                         np.mean([psi[a]['h'] for a in range(pos[0], pos[1])]) <= 0.3) else False
-
 
     def PsiReaderHelix(self):
         """
@@ -502,7 +506,7 @@ class HphobicityScore():
             from collections import deque
             from copy import deepcopy
             import timeit
-            from joblib import Parallel
+            # from joblib import Parallel
 
             win_list_25 = [a for a in win_list if a.length == 25 and a.direction == 'fwd']
             print "BFS building graph"
@@ -560,14 +564,16 @@ class HphobicityScore():
             if self.csts.tm_pos is None:
                 [G.add_edge(source_node, a, weight=a.msa_grade) for a in win_list]  # add all win to source edges with msa
             else:
-                [G.add_edge(source_node, a, weight=a.msa_grade) for a in win_list if a.end <= self.csts.tm_pos[0][1]]  # add all win to source edges with msa
+                [G.add_edge(source_node, a, weight=a.msa_grade) for a in win_list if a.end <= self.csts.tm_pos[0][1]+self.csts.tm_pos_fidelity]  # add all win to source edges with msa
         else:
             if self.csts.tm_pos is None:
                 [G.add_edge(source_node, a, weight=a.grade) for a in win_list]  # add all win to source edges
             else:
-                [G.add_edge(source_node, a, weight=a.grade) for a in win_list if a.end <= self.csts.tm_pos[0][1]]  # add all win to source edges
+                [G.add_edge(source_node, a, weight=a.grade) for a in win_list if a.end <= self.csts.tm_pos[0][1]+self.csts.tm_pos_fidelity]  # add all win to source edges
+        print 'aaa', win_list
         for win1 in win_list:   # add all win to win edges where condition applies
             cst_after = self.cst_after(win1)
+            print 'for', win1, 'cst_after is', cst_after
             for win2 in win_list:
                 if cst_after is None or win2.begin < cst_after[1]: #  make sure no edges skip a cst
                     # condition: non-overlapping, 2 is after 1, opposite directions
@@ -591,7 +597,7 @@ class HphobicityScore():
             temp_path = self.find_graph_path(pred, [last_path], source_node)
             if temp_path == [] or temp_path == [source_node]:
                 continue
-            # print 'tp', temp_path, total_grade
+            print 'tp', temp_path, total_grade
             if temp_direction != 'A' and self.csts.test_manager(temp_path) \
                     and temp_path[-1].direction is not temp_direction:
                 # print 'looking at sec', temp_path[-1].direction, temp_direction
@@ -609,6 +615,7 @@ class HphobicityScore():
         # print 'found best'
         print best_path
         print best_score
+        print WinGradePath(best_path)
         # print 'found sec best',
         # print sec_best_path[-1].direction
         # print sec_best_score

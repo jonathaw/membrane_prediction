@@ -194,6 +194,35 @@ def win_not_in_segments(win, segments):
     return True
 
 
+def seg_within_tm_pos(seg, tm_pos, fidelity):
+    """
+    :param seg: a segment tuple, for a potential WinGrade (start, end)
+    :param tm_pos: a pos list of type [(begin, end, direction)]
+    :param fidelity:
+    :return:True if there's no tm_pos, or if the segment is within any of the tm_poses
+    >>> seg = (10, 20)
+    >>> tm_pos = [(0, 5), (30, 40)]
+    >>> fidelity = 5
+    >>> seg_within_tm_pos(seg, tm_pos, fidelity)
+    False
+    >>> tm_pos = [(0, 5), (10, 20),(30, 40)]
+    >>> seg_within_tm_pos(seg, tm_pos, fidelity)
+    True
+    >>> tm_pos = [(0, 5), (11, 19),(30, 40)]
+    >>> seg_within_tm_pos(seg, tm_pos, fidelity)
+    True
+    >>> tm_pos = [(0, 5), (21, 29),(30, 40)]
+    >>> seg_within_tm_pos(seg, tm_pos, fidelity)
+    False
+    """
+    if tm_pos is None:
+        return False
+    for pos in tm_pos:
+        if pos[0]-fidelity <= seg[0] <= pos[1]+fidelity and pos[0]-fidelity <= seg[1] <= pos[1]+fidelity:
+            return True
+    return False
+
+
 def all_satisfying_wins(pos, win_list, fidelity):
     """
     :param pos: constraint pos

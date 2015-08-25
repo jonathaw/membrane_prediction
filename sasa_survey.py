@@ -1,3 +1,4 @@
+#!/usr/bin/env pythonsa
 from Bio.PDB import *
 
 
