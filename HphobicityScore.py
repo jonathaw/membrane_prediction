@@ -32,18 +32,6 @@ class HphobicityScore():
         # self.n_term_orient = self.topo[0].direction
         self.after_SP = 0 if self.seq[0] != 'u' else max([i for i, aa in enumerate(self.seq) if aa == 'u']) + 1
         self.WinGrades = self.win_grade_generator(self.after_SP, self.seq_length, 'both')
-        # self.topo_string = self.make_topo_string()
-        # print 'before sort', self.WinGrades
-        # self.sorted_grade = self.sort_WinGrades()
-        # print 'after sort', self.sorted_grade
-        # self.minimas = self.local_minima_finder(direction='both')
-        # self.fwd_minimas = self.local_minima_finder(direction='fwd')
-        # self.rev_minimas = self.local_minima_finder(direction='rev')
-        # self.topo = self.topo_determine_new()
-        # self.topo_minimas = self.topo_determine()
-        # self.sorted_grade_norm = self.sort_WinGrades_norm()
-        # self.minimas_norm = self.local_minima_finder_norm()
-        # self.topo = self.topo_brute()
         self.topo_best, self.topo_best_val, self.topo_sec_best, self.topo_sec_best_val = self.topo_graph
         try:
             self.best_c_term = 'out' if self.topo_best[-1].direction == 'fwd' else 'in'
@@ -59,25 +47,6 @@ class HphobicityScore():
         :return: A message with all Fwd/Rev minimas, and the selected topology
         """
         return 'Selectod topology:\n' + '\n'.join([str(i) for i in self.best_topo])
-
-    # def win_grade_generator(self, pos1, pos2, fwd_or_rev):
-    #     '''
-    #     :return:grades all segments of self.seq, and aggregates them as WinGrades
-    #     '''
-    #     from WinGrade import WinGrade
-    #     PSI_HP_THRESHOLD = -8.
-    #     psi = self.psipred
-    #     grades = []
-    #     for i in range(pos1, pos2):
-    #         for inc in range(min(INC_MAX, self.seq_length - 20 - i)):
-    #             is_not_helical = self.is_not_helical((i, i+20+inc), psi)
-    #             fwd_temp = WinGrade(i, i+20+inc, 'fwd', self.seq[i:i+20+inc], self.polyval)
-    #             rev_temp = WinGrade(i, i+20+inc, 'rev', self.seq[i:i+20+inc][::-1], self.polyval)
-    #             if (fwd_or_rev == 'both' or fwd_or_rev == 'fwd') and (not is_not_helical or fwd_temp.grade < PSI_HP_THRESHOLD):
-    #                 grades.append(WinGrade(i, i+20+inc, 'fwd', self.seq[i:i+20+inc], self.polyval))
-    #             if (fwd_or_rev == 'both' or fwd_or_rev == 'rev') and (not is_not_helical or rev_temp.grade < PSI_HP_THRESHOLD):
-    #                 grades.append(WinGrade(i, i+20+inc, 'rev', self.seq[i:i+20+inc][::-1], self.polyval))
-    #     return grades
 
     def win_grade_generator(self, pos1, pos2, fwd_or_rev):
         '''
@@ -97,11 +66,16 @@ class HphobicityScore():
         sys.stdout.write("[%s]" % (" " * bar_width))
         sys.stdout.flush()
         sys.stdout.write("\b" * (bar_width+1))  # return to start of line, after '['
+        verbose = False
         for i in range(pos1, pos2+1):
             for inc in range(min(INC_MAX, self.seq_length - MIN_LENGTH - i)):
-                if seg_within_tm_pos((i, i+MIN_LENGTH+inc), self.csts.tm_pos, self.csts.tm_pos_fidelity) or \
-                        (not self.is_not_helical((i, i+MIN_LENGTH+inc), psi) and
-                                 count_charges(self.seq[i:i+MIN_LENGTH+inc]) < 3):
+                if self.seq[i:i+MIN_LENGTH+inc][::-1] == 'LYPTALLQTFGLGLLFKLALPLVIF':
+                    verbose = True
+                    print 'found it\n\n'
+                # if seg_within_tm_pos((i, i+MIN_LENGTH+inc), self.csts.tm_pos, self.csts.tm_pos_fidelity) or \
+                #         (not self.is_not_helical((i, i+MIN_LENGTH+inc), psi) and
+                #                  count_charges(self.seq[i:i+MIN_LENGTH+inc]) < 3):
+                if (not self.is_not_helical((i, i+MIN_LENGTH+inc), psi, verbose) and count_charges(self.seq[i:i+MIN_LENGTH+inc]) < 3):
                     if self.with_msa:
                         grades.append(msa_obj.retrieve_seqs(i, i+MIN_LENGTH+inc, 'fwd'))
                         grades.append(msa_obj.retrieve_seqs(i, i+MIN_LENGTH+inc, 'rev'))
@@ -112,6 +86,10 @@ class HphobicityScore():
                         grades.append(WinGrade(i, i+MIN_LENGTH+inc, 'rev', self.seq[i:i+MIN_LENGTH+inc][::-1], self.polyval,
                                             poly_param))
             # writes to the progress bar
+                if self.seq[i:i+MIN_LENGTH+inc][::-1] == 'LYPTALLQTFGLGLLFKLALPLVIF':
+                    verbose = False
+                    # import sys
+                    # sys.exit()
             sys.stdout.write("-")
             sys.stdout.flush()
         sys.stdout.write("]\n")
@@ -303,7 +281,7 @@ class HphobicityScore():
                 non_helical += 1
         return False if non_helical < PSI_RES_NUM else True
 
-    def is_not_helical(self, pos, psi):
+    def is_not_helical(self, pos, psi, verbose=False):
         """
         :param pos:start and end positions of the corresponding window
         :param psi: a dict of c/e/h propensities
@@ -313,8 +291,12 @@ class HphobicityScore():
         import numpy as np
         from WinGrade import sequential_coiled
         assert all([psi[i]['aa'] == self.seq[i] for i in range(pos[0], pos[1])])
-        if sequential_coiled(pos, psi):
+        if sequential_coiled(pos, psi, verbose):
+            if verbose:
+                print 'failing sequential'
             return True
+        if verbose:
+            print 'didnt fail sequental'
         return True if (np.mean([psi[a]['e'] for a in range(pos[0], pos[1])]) >= 0.3 or
                         np.mean([psi[a]['c'] for a in range(pos[0], pos[1])]) >= 0.48 or
                         np.mean([psi[a]['h'] for a in range(pos[0], pos[1])]) <= 0.3) else False
@@ -490,7 +472,8 @@ class HphobicityScore():
         import operator
         # print self.WinGrades
         if self.csts.mode != 'only':
-            win_list = [a for a in self.WinGrades if a.grade < HP_THRESHOLD and a.charges < 3]  # make copy of negative wingrades list
+            win_list = [a for a in self.WinGrades if a.grade < HP_THRESHOLD and a.charges < 3 and len([b for b in a.seq if b in ['E', 'D', 'K', 'R', 'N', 'Q', 'H']]) < 5]  # make copy of negative wingrades list
+            print win_list
         else:
             win_list = [a for a in self.WinGrades if a.grade < HP_THRESHOLD and a.charges < 3
                         and a.within_segments(self.csts.tm_pos, self.csts.tm_pos_fidelity)]
@@ -506,57 +489,68 @@ class HphobicityScore():
             from collections import deque
             from copy import deepcopy
             import timeit
-            # from joblib import Parallel
-
-            win_list_25 = [a for a in win_list if a.length == 25 and a.direction == 'fwd']
+            win_list_25 = [source_node] + [a for a in win_list if a.length == 19]# and a.direction == 'fwd']
             print "BFS building graph"
             if self.with_msa:
                 if self.csts.tm_pos is None:
-                    [G.add_edge(source_node, a, weight=a.msa_grade) for a in win_list_25]  # add all win to source edges with msa
+                    [G.add_edge(0, i, weight=a.msa_grade) for i, a in enumerate(win_list_25) if a != source_node]  # add all win to source edges with msa
                 else:
-                    [G.add_edge(source_node, a, weight=a.msa_grade) for a in win_list_25 if a.end <= self.csts.tm_pos[0][1]]  # add all win to source edges with msa
+                    [G.add_edge(0, i, weight=a.msa_grade) for i, a in enumerate(win_list_25) if a.end <= self.csts.tm_pos[0][1] and a != source_node]  # add all win to source edges with msa
             else:
                 if self.csts.tm_pos is None:
-                    [G.add_edge(source_node, a, weight=a.grade) for a in win_list_25]  # add all win to source edges
+                    [G.add_edge(0, i, weight=a.grade) for i, a in enumerate(win_list_25) if a != source_node]  # add all win to source edges
                 else:
-                    [G.add_edge(source_node, a, weight=a.grade) for a in win_list_25 if a.end <= self.csts.tm_pos[0][1]]  # add all win to source edges
+                    [G.add_edge(0, i, weight=a.grade) for i, a in enumerate(win_list_25) if a.end <= self.csts.tm_pos[0][1] and a != source_node]  # add all win to source edges
             for win1 in win_list_25:   # add all win to win edges where condition applies
                 cst_after = self.cst_after(win1)
                 for win2 in win_list_25:
                     if cst_after is None or win2.begin < cst_after[1]: #  make sure no edges skip a cst
                         # condition: non-overlapping, 2 is after 1, opposite directions
-                        if not win1.grade_grade_colliding(win2) and win2.begin > win1.end and win2.begin-win1.end >= 2:
+                        if not win1.grade_grade_colliding(win2) and win2.begin > win1.end and win2.begin-win1.end >= 2\
+                                and win1.direction != win2.direction:
                             if not self.with_msa:
-                                G.add_edge(win1, win2, weight=win2.grade)
+                                G.add_edge(win_list_25.index(win1), win_list_25.index(win2), weight=win2.grade)
                             elif self.with_msa:
-                                G.add_edge(win1, win2, weight=win2.msa_grade)
+                                G.add_edge(win_list_25.index(win1), win_list_25.index(win2), weight=win2.msa_grade)
 
             print "BFS finished building graph"
             tic = timeit.default_timer()
             print 'looking for %i wins' % self.csts.tm_num
             best_fwd = WinGradePath([])
             best_rev = WinGradePath([])
-            Q = deque([WinGradePath([source_node])])
+            Q = deque([[0]])
             # with Parallel(n_jobs=20) as parallel:
+            num = 0
+            mini_tic = timeit.default_timer()
             while Q:  # continue as long as there si something in Q
+                # print len(Q)
                 path = Q.popleft()  # get the FIFO out
                 # print len(Q), path.win_num, self.csts.tm_num, path
-                if path.win_num == self.csts.tm_num:  # the path has enough nodes
-                    if self.csts.test_manager(path.path, True):
-                        if path.c_term == 'fwd' and path.total_grade < best_fwd.total_grade:
-                            best_fwd = deepcopy(path)
-                        elif path.c_term == 'rev' and path.total_grade < best_rev.total_grade:
-                            best_rev = deepcopy(path)
+
+                if len(path) != num:
+                    print "reached %i in path, the Q is %12i, took %f seconds" % (len(path), len(Q),
+                                                                                timeit.default_timer() - mini_tic)
+                    mini_tic = timeit.default_timer()
+                    num = len(path)
+                if len(path)-1 == self.csts.tm_num:  # the path has enough nodes
+                    path_wins = WinGradePath([win_list_25[i] for i in path])
+                    if self.csts.test_manager(path_wins.path):
+                        if path_wins.c_term == 'fwd' and path_wins.total_grade < best_fwd.total_grade:
+                            best_fwd = deepcopy(path_wins)
+                        elif path_wins.c_term == 'rev' and path_wins.total_grade < best_rev.total_grade:
+                            best_rev = deepcopy(path_wins)
                     continue
-                for neighbor in G.successors_iter(path.last()):  # go over all successors of last win of path
+                for neighbor in G.successors_iter(path[-1]):  # go over all successors of last win of path
                     temp_path = deepcopy(path)
-                    temp_path.add_win(neighbor)
+                    temp_path.append(neighbor)
                     Q.append(temp_path)
             print 'elapsed time for BFS', timeit.default_timer() - tic
             path_cst = best_fwd if best_fwd.total_grade < best_rev.total_grade else best_rev
             new_csts = []
+            print 'best', best_fwd, best_rev
+            print 'path_cst', path_cst
             for win in path_cst.path:
-                new_csts.append((min(0, win.begin-10), max(self.seq_length, win.end+10), None))
+                new_csts.append((max(0, win.begin-10), min(self.seq_length, win.end+10), None))
             self.csts.tm_pos = new_csts
 
         print "Constructing graph"
@@ -569,11 +563,11 @@ class HphobicityScore():
             if self.csts.tm_pos is None:
                 [G.add_edge(source_node, a, weight=a.grade) for a in win_list]  # add all win to source edges
             else:
+                print 'PPP', self.csts.tm_pos
                 [G.add_edge(source_node, a, weight=a.grade) for a in win_list if a.end <= self.csts.tm_pos[0][1]+self.csts.tm_pos_fidelity]  # add all win to source edges
-        print 'aaa', win_list
+        # print 'aaa', win_list
         for win1 in win_list:   # add all win to win edges where condition applies
             cst_after = self.cst_after(win1)
-            print 'for', win1, 'cst_after is', cst_after
             for win2 in win_list:
                 if cst_after is None or win2.begin < cst_after[1]: #  make sure no edges skip a cst
                     # condition: non-overlapping, 2 is after 1, opposite directions
@@ -590,6 +584,7 @@ class HphobicityScore():
         sorted_dist = sorted(dist.items(), key=operator.itemgetter(1))
         # for k, v in sorted_dist:
         #     print k, v
+        #     if v > -5: break
         temp_direction = 'A'
         best_path, sec_best_path = [], []
         best_score, sec_best_score = None, None
@@ -597,7 +592,7 @@ class HphobicityScore():
             temp_path = self.find_graph_path(pred, [last_path], source_node)
             if temp_path == [] or temp_path == [source_node]:
                 continue
-            print 'tp', temp_path, total_grade
+            # print 'tp', temp_path, total_grade
             if temp_direction != 'A' and self.csts.test_manager(temp_path) \
                     and temp_path[-1].direction is not temp_direction:
                 # print 'looking at sec', temp_path[-1].direction, temp_direction
@@ -613,9 +608,9 @@ class HphobicityScore():
                 temp_direction = best_path[-1].direction
                 # print 'now temp_direction is:', temp_direction
         # print 'found best'
-        print best_path
-        print best_score
-        print WinGradePath(best_path)
+        print 'best_path', best_path
+        print 'best_score', best_score
+        print 'WinGradePath(best_path)', WinGradePath(best_path)
         # print 'found sec best',
         # print sec_best_path[-1].direction
         # print sec_best_score

@@ -81,9 +81,9 @@ def process_single_protein(name, path):
                         hydrophobicity_polyval, args, entry_cst)
         topo_string = topo_string_rostlab_format(temp.topo_best, entry['seq'])
         sec_topo_string = topo_string_rostlab_format(temp.topo_sec_best, entry['seq'])
-    print temp.topo_best
-    print temp.topo_sec_best
-    print topo_string
+    print 'temp.topo_best', temp.topo_best
+    print 'temp.topo_sec_best', temp.topo_sec_best
+    print 'topo_string', topo_string
     # temp = HphobicityScore(name, entry['seq'],
     #                     '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/psipred/'+name+'.ss2',
     #                     hydrophobicity_polyval, args)

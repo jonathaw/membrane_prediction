@@ -83,8 +83,8 @@ def prd_directory(dir_path):
         first_passage = True
         for predictor in predictors:
             #print "predictor", predictor
-            comp_pdbtm = comparer(obse['pdbtm'], predictors[predictor], M, predictors['spoctopus'])
-            comp_opm = comparer(obse['opm'], predictors[predictor], M, predictors['spoctopus'])
+            comp_pdbtm = comparer(obse['pdbtm'], predictors[predictor], M, predictors['spoctopus'], pred['seq'])
+            comp_opm = comparer(obse['opm'], predictors[predictor], M, predictors['spoctopus'], pred['seq'])
 
             overM = comp_pdbtm['overlapM_ok'] or comp_opm['overlapM_ok']
 
@@ -93,20 +93,20 @@ def prd_directory(dir_path):
                 # print 'obse_tm_num', comp_pdbtm['obse_tm_num']
                 # print 'pred_tm_num', comp_pdbtm['pred_tm_num']
                 # print 'ok', comp_pdbtm['overlapM_ok_helices']
-                print '\n'
+                # print '\n'
                 if comp_pdbtm['obse_tm_num'] > comp_pdbtm['pred_tm_num']:
-                    # print 'MISS', pred['name'], comp_pdbtm['obse_tm_num']
+                    print 'MISS', pred['name'], comp_pdbtm['obse_tm_num']
                     errors['miss'] += 1
                 elif comp_pdbtm['obse_tm_num'] < comp_pdbtm['pred_tm_num']:
-                    # print 'OVER', pred['name'], comp_pdbtm['obse_tm_num']
+                    print 'OVER', pred['name'], comp_pdbtm['obse_tm_num']
                     errors['over'] += 1
                 else:
                     errors['exact'] += 1
                 errors['total'] += 1
-                # print pred['name']
-                # print 'pred_ts', predictors['pred_ts']
-                # print 'AA seq ', pred['seq']
-                # print 'pdbtm  ', obse['pdbtm']
+                print pred['name'], obse['pdb']
+                print 'pred_ts', predictors['pred_ts']
+                print 'AA seq ', pred['seq']
+                print 'pdbtm  ', obse['pdbtm']
 
             if comp_pdbtm['obse_tm_num'] == 0 or comp_opm['obse_tm_num'] == 0: continue
 
@@ -229,7 +229,7 @@ def comparer_old(obse, pred, M, name):
     return result
 
 
-def comparer(obse, pred, M, spoc):
+def comparer(obse, pred, M, spoc, seq):
     import re
     assert len(obse) == len(pred) == len(spoc), 'observed and predicted strings lengths do not match'
     allowed = ['1', '2', 'h', 'H']

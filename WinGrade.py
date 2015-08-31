@@ -273,24 +273,42 @@ def flatten_path_list(path_list):
     return result
 
 
-def sequential_coiled(pos, psi):
+def sequential_coiled(pos, psi, verbose=False):
     """
     :param pos: tuple of start and end of win
     :param psi: dictionary with psipred resutls
     :return: True iff a stretch of 3 residues at either end of the win is coiled > 0.5
     >>> pos = (0, 10)
-    >>> psi = {0: {'e': 0.6}, 1: {'e': 0.6}, 2: {'e': 0.6}, 3: {'e': 0.6}, 4: {'e': 0.6}, 5: {'e': 0.6}, 6: {'e': 0.6}, 7: {'e': 0.6}, 8: {'e': 0.6}, 9: {'e': 0.6}, 10: {'e': 0.6}}
+    >>> psi = {0: {'c': 0.6}, 1: {'c': 0.6}, 2: {'c': 0.6}, 3: {'c': 0.6}, 4: {'c': 0.6}, 5: {'c': 0.6}, 6: {'c': 0.6}, 7: {'c': 0.6}, 8: {'c': 0.6}, 9: {'c': 0.6}, 10: {'c': 0.6}}
     >>> sequential_coiled(pos, psi)
     True
-    >>> psi = {0: {'e': 0.4}, 1: {'e': 0.4}, 2: {'e': 0.4}, 3: {'e': 0.6}, 4: {'e': 0.6}, 5: {'e': 0.6}, 6: {'e': 0.6}, 7: {'e': 0.6}, 8: {'e': 0.4}, 9: {'e': 0.4}, 10: {'e': 0.4}}
+    >>> psi = {0: {'c': 0.4}, 1: {'c': 0.4}, 2: {'c': 0.4}, 3: {'c': 0.6}, 4: {'c': 0.6}, 5: {'c': 0.6}, 6: {'c': 0.6}, 7: {'c': 0.6}, 8: {'c': 0.4}, 9: {'c': 0.4}, 10: {'c': 0.4}}
     >>> sequential_coiled(pos, psi)
     False
-    >>> psi = {0: {'e': 0.4}, 1: {'e': 0.4}, 2: {'e': 0.4}, 3: {'e': 0.9}, 4: {'e': 0.9}, 5: {'e': 0.9}, 6: {'e': 0.9}, 7: {'e': 0.9}, 8: {'e': 0.4}, 9: {'e': 0.4}, 10: {'e': 0.4}}
+    >>> psi = {0: {'c': 0.4}, 1: {'c': 0.4}, 2: {'c': 0.4}, 3: {'c': 0.9}, 4: {'c': 0.9}, 5: {'c': 0.9}, 6: {'c': 0.9}, 7: {'c': 0.9}, 8: {'c': 0.4}, 9: {'c': 0.4}, 10: {'c': 0.4}}
     >>> sequential_coiled(pos, psi)
     False
+    >>> pos = (120, 141)
+    >>> psi = {120: {'c': 0.078}, 121: {'c': 0.111}, 122: {'c': 0.087}, 123: {'c': 0.077}, 124: {'c': 0.067}, 125: {'c': 0.074}, 126: {'c': 0.042}, 127: {'c': 0.02}, 128: {'c': 0.029}, 129: {'c': 0.041}, 130: {'c': 0.068}, 131: {'c': 0.234}, 132: {'c': 0.5}, 133: {'c': 0.778}, 134: {'c': 0.848}, 135: {'c': 0.819}, 136: {'c': 0.792}, 137: {'c': 0.806}, 138: {'c': 0.615}, 139: {'c': 0.458}, 140: {'c': 0.419}, 141: {'c': 0.403}}
+    >>> sequential_coiled(pos, psi)
+    True
     """
-    return all(psi[i]['c'] > 0.4 for i in range(pos[0], pos[0]+3)) or\
-           all(psi[i]['c'] > 0.4 for i in range(pos[1]-3, pos[1]))
+    if verbose:
+        print 'sequential:'
+        print all(psi[i]['c'] > 0.4 for i in range(pos[0], pos[0]+3)), [psi[i]['c'] for i in range(pos[0], pos[0]+3)]
+        print all(psi[i]['c'] > 0.4 for i in range(pos[1]-3, pos[1])), [psi[i]['c'] for i in range(pos[1]-3, pos[1])]
+        print all(psi[i]['e'] > 0.4 for i in range(pos[1]-3, pos[1])), [psi[i]['e'] for i in range(pos[1]-3, pos[1])]
+        print all(psi[i]['e'] > 0.4 for i in range(pos[0], pos[0]+3)), [psi[i]['e'] for i in range(pos[0], pos[0]+3)]
+    for i in range(pos[0], pos[1]-10+1):
+        if all(psi[j]['h'] < 0.4 for j in range(i, i+10+1)):
+            return True
+    return all(psi[i]['c'] > 0.4 for i in range(pos[0], pos[0]+3)) or \
+           all(psi[i]['c'] > 0.4 for i in range(pos[1]-3, pos[1])) or \
+           all(psi[i]['e'] > 0.4 for i in range(pos[0], pos[0]+3)) or \
+           all(psi[i]['e'] > 0.4 for i in range(pos[1]-3, pos[1])) or \
+           all(psi[i]['h'] < 0.4 for i in range(pos[0], pos[0]+3)) or \
+           all(psi[i]['h'] < 0.4 for i in range(pos[1]-3, pos[1]))
+
 
 
 def parse_WGP(text):

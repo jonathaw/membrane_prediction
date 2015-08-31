@@ -336,7 +336,7 @@ if __name__ == '__main__':
     parser.add_argument('-mode', default='pred2cst', type=str)
     parser.add_argument('-path', default=os.getcwd()+'/')
     parser.add_argument('-cst_mode', default=None)
-    parser.add_argument('-tm_pos_fidelity', type=int, default=5)
+    parser.add_argument('-tm_pos_fidelity', type=int, default=15)
     args = vars(parser.parse_args())
     if args['mode'] == 'pred2cst':
         prd = prd_parser(args['path'], args['name'].lower() + '.prd')
