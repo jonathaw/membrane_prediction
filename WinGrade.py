@@ -23,34 +23,25 @@ class WinGrade():
         if polyval is None:
             from TMpredict_WinGrade import MakeHydrophobicityGrade
             polyval = MakeHydrophobicityGrade()
-        # self.length_element = self.length_polynom()
         if length_element is None:
             self.length_element = membrane_deformation(self.length, self.poly_param['w'], self.poly_param['z_0'])
         else:
             self.length_element = length_element
-        # self.hp_moment = hp_moment(seq, polyval, poly_param)
-        # self.hp_sum = self.grade_segment(polyval)
-          # self.hp_sum + self.hp_moment + self.length_element
         if charges is None:
             self.charges = count_charges(self.seq)
         else:
             self.charges = charges
-        # if self.charges >= 2:
-        #     print 'found %i charges' % self.charges
-            # raise Exception()
         if grade is None:
             self.grade = self.grade_segment(polyval) + self.length_element
         else:
             self.grade = grade + self.length_element
         self.direction = direction
         self.span = range(self.begin, self.end+1)
-        # self.grade_norm = self.grade / (self.end-self.begin-19)
 
         self.msa_name = msa_name
         if msa_name != None:
             self.msa_seq = msa_seq
-            self.msa_grade = grade_segment(msa_seq, polyval) + length_polynom(msa_seq, poly_param) #  + hp_moment(msa_seq, polyval, poly_param) \
-                             #  + length_polynom(msa_seq, poly_param)
+            self.msa_grade = grade_segment(msa_seq, polyval) + self.length_element
         if self.seq == 'SOURCE' or self.seq == 'SINK' or self.seq == 'SOURCEPATH':
             self.grade = 0.0
 
@@ -138,7 +129,7 @@ class WinGradePath():
                 continue
             msg += str(win)
             if i < len(self.path)-1:
-                msg += ' : '
+                msg += '\n'
             else:
                 msg += ']'
         msg += ' }~> total_grade %10f win_num %2i c_term %s' % (self.total_grade, self.win_num, self.c_term)
@@ -295,19 +286,26 @@ def sequential_coiled(pos, psi, verbose=False):
     """
     if verbose:
         print 'sequential:'
-        print all(psi[i]['c'] > 0.4 for i in range(pos[0], pos[0]+3)), [psi[i]['c'] for i in range(pos[0], pos[0]+3)]
-        print all(psi[i]['c'] > 0.4 for i in range(pos[1]-3, pos[1])), [psi[i]['c'] for i in range(pos[1]-3, pos[1])]
-        print all(psi[i]['e'] > 0.4 for i in range(pos[1]-3, pos[1])), [psi[i]['e'] for i in range(pos[1]-3, pos[1])]
-        print all(psi[i]['e'] > 0.4 for i in range(pos[0], pos[0]+3)), [psi[i]['e'] for i in range(pos[0], pos[0]+3)]
-    for i in range(pos[0], pos[1]-10+1):
-        if all(psi[j]['h'] < 0.4 for j in range(i, i+10+1)):
-            return True
-    return all(psi[i]['c'] > 0.4 for i in range(pos[0], pos[0]+3)) or \
-           all(psi[i]['c'] > 0.4 for i in range(pos[1]-3, pos[1])) or \
-           all(psi[i]['e'] > 0.4 for i in range(pos[0], pos[0]+3)) or \
-           all(psi[i]['e'] > 0.4 for i in range(pos[1]-3, pos[1])) or \
-           all(psi[i]['h'] < 0.4 for i in range(pos[0], pos[0]+3)) or \
-           all(psi[i]['h'] < 0.4 for i in range(pos[1]-3, pos[1]))
+        print all(psi[i]['c'] > 0.4 for i in range(pos[0], pos[0]+4)), [psi[i]['c'] for i in range(pos[0], pos[0]+4)]
+        print all(psi[i]['c'] > 0.4 for i in range(pos[1]-4, pos[1])), [psi[i]['c'] for i in range(pos[1]-4, pos[1])]
+        print all(psi[i]['e'] > 0.4 for i in range(pos[1]-4, pos[1])), [psi[i]['e'] for i in range(pos[1]-4, pos[1])]
+        print all(psi[i]['e'] > 0.4 for i in range(pos[0], pos[0]+4)), [psi[i]['e'] for i in range(pos[0], pos[0]+4)]
+    # for i in range(pos[0], pos[1]-15+1):
+    #     if all(psi[j]['h'] < 0.4 for j in range(i, i+15+1)):
+    #         return True
+    # for a in range(pos[0], pos[0]+3):
+    #     print 'sequential beginning i %i, c: %f' % (a, psi[a]['c'])
+    # for a in range(pos[1]-3, pos[1]):
+    #     print 'sequential end i %i, c: %f' % (a, psi[a]['c'])
+    #
+    # print 'beginning', all(psi[i]['c'] > 0.4 for i in range(pos[0], pos[0]+3))
+    # print 'end', all(psi[i]['c'] > 0.4 for i in range(pos[1]-3, pos[1]))
+    return all(psi[i]['c'] > 0.4 for i in range(pos[0], pos[0]+4)) or \
+           all(psi[i]['c'] > 0.4 for i in range(pos[1]-4, pos[1])) or \
+           all(psi[i]['e'] > 0.4 for i in range(pos[0], pos[0]+4)) or \
+           all(psi[i]['e'] > 0.4 for i in range(pos[1]-4, pos[1])) #or \
+           # all(psi[i]['h'] < 0.4 for i in range(pos[0], pos[0]+3)) or \
+           # all(psi[i]['h'] < 0.4 for i in range(pos[1]-3, pos[1]))
 
 
 

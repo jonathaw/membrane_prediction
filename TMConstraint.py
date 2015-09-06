@@ -223,6 +223,32 @@ def seg_within_tm_pos(seg, tm_pos, fidelity):
     return False
 
 
+def win_in_tm_pos(pos, tm_pos, fidelity):
+    """
+    :param pos: a pos for a potential window
+    :param tm_pos: a list of tm_pos constraints
+    :param fidelity: fidelity
+    :return: False if none, or a tm_pos constraint that contains the pos
+    >>> pos = [20, 30]
+    >>> tm_pos = [[0, 10], [15, 25], [90, 100]]
+    >>> fidelity = 5
+    >>> win_in_tm_pos(pos, tm_pos, fidelity)
+    [15, 25]
+    >>> pos = [100, 110]
+    >>> win_in_tm_pos(pos, tm_pos, fidelity)
+    False
+    >>> tm_pos = None
+    >>> win_in_tm_pos(pos, tm_pos, fidelity)
+    False
+    """
+    if tm_pos is None:
+        return False, None
+    for i, tm in enumerate(sorted(tm_pos)):
+        if tm[0]-fidelity <= pos[0] and tm[1]+fidelity >= pos[1]:
+            return tm, i
+    return False, None
+
+
 def all_satisfying_wins(pos, win_list, fidelity):
     """
     :param pos: constraint pos
@@ -326,7 +352,6 @@ def rost2cst(args):
     return tmc
 
 
-
 if __name__ == '__main__':
     import argparse
     import os
@@ -336,7 +361,7 @@ if __name__ == '__main__':
     parser.add_argument('-mode', default='pred2cst', type=str)
     parser.add_argument('-path', default=os.getcwd()+'/')
     parser.add_argument('-cst_mode', default=None)
-    parser.add_argument('-tm_pos_fidelity', type=int, default=15)
+    parser.add_argument('-tm_pos_fidelity', type=int, default=5)
     args = vars(parser.parse_args())
     if args['mode'] == 'pred2cst':
         prd = prd_parser(args['path'], args['name'].lower() + '.prd')

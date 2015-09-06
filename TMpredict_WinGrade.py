@@ -12,24 +12,26 @@ def main():
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('-hp_threshold', default=6.0, type=float, help='set the hp threshold for constructing the graph')#10
-    parser.add_argument('-min_length', default=19, type=int)#18
-    parser.add_argument('-psi_helix', default=0.2, type=float)#0.001
-    parser.add_argument('-psi_res_num', default=3, type=int)#4
-    parser.add_argument('-mode', type=str, default='single')
-    parser.add_argument('-name', default=None, type=str)
-    parser.add_argument('-known_tm_num', default=-100, type=int)
-    parser.add_argument('-c0', default=0.0, type=float)#0.5
-    parser.add_argument('-c1', default=0, type=float)#9.0 9.29
-    parser.add_argument('-c2', default=0, type=float)#-0.2 -0.645
-    parser.add_argument('-c3', default=0, type=float)#-0.006 0.00822
-    parser.add_argument('-w', default=0.082, type=float) # 0.082 0.004
-    parser.add_argument('-z_0', default=35, type=float) #  35 43
-    parser.add_argument('-result_path', default=os.getcwd())
-    parser.add_argument('-seq', default='', type=str)
-    parser.add_argument('-with_msa', default=False)
-    parser.add_argument('-msa_percentile', default=20, type=int)
-    parser.add_argument('-with_cst', default=False)
-    parser.add_argument('-cst_path', default=os.getcwd())#+'/')
+    parser.add_argument('-min_length', default=19, type=int, help='minimum window length')#18
+    # parser.add_argument('-psi_helix', default=0.2, type=float, help='no longer in use')#0.001
+    # parser.add_argument('-psi_res_num', default=3, type=int, help='no longer in use')#4
+    parser.add_argument('-mode', type=str, default='single', help='mode of run')
+    parser.add_argument('-name', default=None, type=str, help='name of entry')
+    # parser.add_argument('-known_tm_num', default=-100, type=int)
+    # parser.add_argument('-c0', default=0.0, type=float)#0.5
+    # parser.add_argument('-c1', default=0, type=float)#9.0 9.29
+    # parser.add_argument('-c2', default=0, type=float)#-0.2 -0.645
+    # parser.add_argument('-c3', default=0, type=float)#-0.006 0.00822
+    parser.add_argument('-w', default=0.082, type=float, help='membrane deformation coeeficent') # 0.082 0.004
+    parser.add_argument('-z_0', default=35, type=float, help='non-deformed membrane width') #  35 43
+    parser.add_argument('-result_path', default=os.getcwd()+'/', help='path to write results to')
+    parser.add_argument('-seq', default='', type=str, help='entry AA sequence')
+    parser.add_argument('-with_msa', default=False, help='whether to use MSA or not')
+    parser.add_argument('-msa_percentile', default=20, type=int, help='what MSA percentile to use')
+    parser.add_argument('-with_cst', default=False, help='whether to use constraints')
+    parser.add_argument('-cst_path', default=os.getcwd(), help='path to cst file')#+'/')
+    parser.add_argument('-inc_max', default=10, type=int, help='maximal window increase')
+    parser.add_argument('-fidelity', default=5, type=int, help='flanks on sides of tm_pos constraints')
     args = vars(parser.parse_args())
 
     # import topdb_functions
@@ -45,6 +47,26 @@ def main():
         topo_VH()
     elif args['mode'] == 'ROC_by_single':
         ROC_rostlav_single_by_single()
+    elif args['mode'] == 'new':
+        args['with_msa'] = True
+        args['name'] = args['name'].lower()
+        process_single_new(args)
+
+
+def process_single_new(args):
+    from ProcessEntry import create_topo_entry, process_entry
+    import TMConstraint
+    rostlab_db_dict = parse_rostlab_db()
+    entry = rostlab_db_dict[args['name'].lower()]
+    if args['with_cst']:
+        entry_cst = TMConstraint.parse_cst(args['name'].lower(), args['cst_path'])
+    else:
+        entry_cst = TMConstraint.TMConstraint(args['name'])
+    topo_entry = create_topo_entry(args['name'], entry['seq'],
+                                   '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/psipred/'
+                                   +args['name'].lower()+'.ss2', args, entry_cst)
+    print topo_entry
+    process_entry(topo_entry, 'msa2plain')
 
 
 def process_single_protein(name, path):

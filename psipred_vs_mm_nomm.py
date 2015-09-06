@@ -31,7 +31,7 @@ def main():
 def check_beta_average():
     '''
     main function here. tests every TM in the Rost data base for its average sheet propensity, also every non-TM.
-    outpuits the number of windows that will be discarded for each.
+    outputs the number of windows that will be discarded for each.
     :return:
     '''
     from TMpredict_WinGrade import parse_rostlab_db

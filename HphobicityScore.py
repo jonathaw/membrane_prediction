@@ -24,12 +24,9 @@ class HphobicityScore():
         self.seq = seq
         self.ss2_file = ss2_file
         self.seq_length = len(seq)
-        # self.psipred = self.PsiReaderHelix()
         self.psipred = self.parse_psipred()
         self.polyval = hydro_polyval
         self.with_msa = param_list['with_msa']
-        # self.topo = self.topo_greedy_chooser()
-        # self.n_term_orient = self.topo[0].direction
         self.after_SP = 0 if self.seq[0] != 'u' else max([i for i, aa in enumerate(self.seq) if aa == 'u']) + 1
         self.WinGrades = self.win_grade_generator(self.after_SP, self.seq_length, 'both')
         self.topo_best, self.topo_best_val, self.topo_sec_best, self.topo_sec_best_val = self.topo_graph
@@ -75,7 +72,7 @@ class HphobicityScore():
                 # if seg_within_tm_pos((i, i+MIN_LENGTH+inc), self.csts.tm_pos, self.csts.tm_pos_fidelity) or \
                 #         (not self.is_not_helical((i, i+MIN_LENGTH+inc), psi) and
                 #                  count_charges(self.seq[i:i+MIN_LENGTH+inc]) < 3):
-                if (not self.is_not_helical((i, i+MIN_LENGTH+inc), psi, verbose) and count_charges(self.seq[i:i+MIN_LENGTH+inc]) < 3):
+                if (not self.is_not_helical(self.seq, (i, i+MIN_LENGTH+inc), psi, verbose) and count_charges(self.seq[i:i+MIN_LENGTH+inc]) < 3):
                     if self.with_msa:
                         grades.append(msa_obj.retrieve_seqs(i, i+MIN_LENGTH+inc, 'fwd'))
                         grades.append(msa_obj.retrieve_seqs(i, i+MIN_LENGTH+inc, 'rev'))
@@ -281,7 +278,27 @@ class HphobicityScore():
                 non_helical += 1
         return False if non_helical < PSI_RES_NUM else True
 
-    def is_not_helical(self, pos, psi, verbose=False):
+    def is_not_helical(self, seq, pos, psi, verbose=False):
+        win_size = 6
+        for i in range(pos[0], pos[1]-win_size+2):
+            if all(psi[i]['e'] >= 0.5 for i in range(i, i+win_size))or all(psi[i]['c'] >= 0.5 for i in range(i, i+win_size)) :
+                return True
+        cs = []
+        es = []
+        for i in range(pos[0], pos[0]+3):
+            cs.append(psi[i]['c'] > 0.5)
+            es.append(psi[i]['e'] > 0.5)
+        if all(cs) or all(es):
+            return True
+        cs = []
+        es = []
+        for i in range(pos[1]-3, pos[1]):
+            cs.append(psi[i]['c'] > 0.5)
+            es.append(psi[i]['e'] > 0.5)
+        if all(cs) or all(es):
+            return True
+
+    def is_not_helical_before_2_9(self, pos, psi, verbose=False):
         """
         :param pos:start and end positions of the corresponding window
         :param psi: a dict of c/e/h propensities
@@ -297,9 +314,11 @@ class HphobicityScore():
             return True
         if verbose:
             print 'didnt fail sequental'
-        return True if (np.mean([psi[a]['e'] for a in range(pos[0], pos[1])]) >= 0.3 or
-                        np.mean([psi[a]['c'] for a in range(pos[0], pos[1])]) >= 0.48 or
-                        np.mean([psi[a]['h'] for a in range(pos[0], pos[1])]) <= 0.3) else False
+        # for a in range(pos[0], pos[1]):
+        #     print 'in %i found e: %f c: %f h: %f' % (a, psi[a]['e'], psi[a]['c'], psi[a]['h'])
+        return True if (np.mean([psi[a]['e'] for a in range(pos[0], pos[1]+1)]) >= 0.3 or
+                        np.mean([psi[a]['c'] for a in range(pos[0], pos[1]+1)]) >= 0.48 or
+                        np.mean([psi[a]['h'] for a in range(pos[0], pos[1]+1)]) <= 0.3) else False
 
     def PsiReaderHelix(self):
         """
@@ -473,7 +492,7 @@ class HphobicityScore():
         # print self.WinGrades
         if self.csts.mode != 'only':
             win_list = [a for a in self.WinGrades if a.grade < HP_THRESHOLD and a.charges < 3 and len([b for b in a.seq if b in ['E', 'D', 'K', 'R', 'N', 'Q', 'H']]) < 5]  # make copy of negative wingrades list
-            print win_list
+            # print win_list
         else:
             win_list = [a for a in self.WinGrades if a.grade < HP_THRESHOLD and a.charges < 3
                         and a.within_segments(self.csts.tm_pos, self.csts.tm_pos_fidelity)]
@@ -569,14 +588,20 @@ class HphobicityScore():
         for win1 in win_list:   # add all win to win edges where condition applies
             cst_after = self.cst_after(win1)
             for win2 in win_list:
-                if cst_after is None or win2.begin < cst_after[1]: #  make sure no edges skip a cst
-                    # condition: non-overlapping, 2 is after 1, opposite directions
+                if cst_after is None or win2.end <= cst_after[1]+self.csts.tm_pos_fidelity: #  make sure no edges skip a cst
+                        # condition: non-overlapping, 2 is after 1, opposite directions
+                    # print 'testing between', win1, win2
+                    # if not self.cst_between(win1, win2):
+                    #     print 'passed between'
                     if not win1.grade_grade_colliding(win2) and win2.begin > win1.end and win1.direction != win2.direction \
                             and win2.begin-win1.end >= 2:
                         if not self.with_msa:
                             G.add_edge(win1, win2, weight=win2.grade)
                         elif self.with_msa:
                             G.add_edge(win1, win2, weight=win2.msa_grade)
+
+        # win_90 = [a for a in win_list if a.begin == 90]
+        # print 'AAAAAAAA',  win_90
 
         print "About to Bellman-Ford"
         pred, dist = nx.bellman_ford(G, source_node)
@@ -625,21 +650,21 @@ class HphobicityScore():
         :type win2: WinGrade
         :return:
         """
-        print 'cst between', self.csts.tm_pos
-        print win1
-        print win2
+        # print 'cst between', self.csts.tm_pos
+        # print win1
+        # print win2
         if self.csts.tm_pos is None:
-            print 'None so False'
+            # print 'None so False'
             return False
-        for cst in self.csts.tm_pos:
-            if cst[0]-self.csts.tm_pos_fidelity > win1.begin:
+        for cst in sorted(self.csts.tm_pos):
+            if cst[0]-self.csts.tm_pos_fidelity > win1.end:
+                print 'testing with', cst
                 if cst[1]+self.csts.tm_pos_fidelity < win2.begin:
-                    print 'found', cst, ' so True'
+                    print 'found to be between ', cst
                     return True
-            else:
-                print 'found', cst, ' so False'
-                return False
-        print 'non csts found'
+                else:
+                    print 'not between ', cst
+                    return False
         return False
 
     def cst_after(self, win):

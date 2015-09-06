@@ -63,10 +63,10 @@ def prd_directory(dir_path):
     import matplotlib
     import numpy as np
     M = 10
-    file_list = [x for x in os.listdir(dir_path) if re.match('.*\.prd', x)]
+    file_list = [x for x in os.listdir(dir_path) if re.match('.*\.prd', x) and x[-8:-4] != '_msa']
     if len(file_list) < args['num_prd']: return {'tm_1': 0, 'tm_2_5': 0, 'tm_5': 0}, {'tm_1': 0, 'tm_2_5': 0, 'tm_5': 0}
     rostlab_db_dict = parse_rostlab_db()
-    print rostlab_db_dict
+    # print rostlab_db_dict
     predictors = ['polyphobius', 'topcons', 'spoctopus', 'philius', 'octopus', 'scampi', 'pred_ts']
     results = {a: {'tm_1': 0, 'tm_2_5': 0, 'tm_5': 0} for a in predictors}
     totals = {'tm_1': 0, 'tm_2_5': 0, 'tm_5': 0}
@@ -309,6 +309,7 @@ def prd_parser(file_path, file_name):
         if split == [] or len(split) < 2 or split[1] == 'None' or split[1] == "''": continue
         result[split[0]] = split[1]
     result['name'] = result['name'].translate(None, "'")
+    result['pred_ts'] = result['best_path_ts']
     return result
 
 
