@@ -281,8 +281,14 @@ class HphobicityScore():
     def is_not_helical(self, seq, pos, psi, verbose=False):
         win_size = 6
         for i in range(pos[0], pos[1]-win_size+2):
-            if all(psi[i]['e'] >= 0.5 for i in range(i, i+win_size))or all(psi[i]['c'] >= 0.5 for i in range(i, i+win_size)) :
+            print "testing", [psi[j] for j in range(i, i+win_size)]
+            if all(psi[j]['e'] >= 0.5 for j in range(i, i+win_size)) or \
+                    all(psi[j]['c'] >= 0.5 for j in range(i, i+win_size)) or \
+                    all(psi[j]['h'] <= 0.3 for j in range(i, i+win_size)):
+                print 'failed'
                 return True
+            else:
+                'passed'
         cs = []
         es = []
         for i in range(pos[0], pos[0]+3):

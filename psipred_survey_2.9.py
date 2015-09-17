@@ -61,29 +61,53 @@ def try_to_pass(tm, seq, psi):
 #     else:
 #         return False
 
-
-
 def is_not_helical(seq, pos, psi, verbose=False):
     win_size = 6
     for i in range(pos[0], pos[1]-win_size+2):
-        if all(psi[i]['e'] >= 0.5 for i in range(i, i+win_size))or all(psi[i]['c'] >= 0.5 for i in range(i, i+win_size)) :
+        if all(psi[j]['e'] >= 0.5 for j in range(i, i+win_size))or \
+                all(psi[j]['c'] >= 0.5 for j in range(i, i+win_size)) or \
+                all(psi[j]['h'] <= 0.1 for j in range(i, i+win_size)):
             return True
     cs = []
     es = []
+    hs = []
     for i in range(pos[0], pos[0]+3):
-        cs.append(psi[i]['c'] > 0.5)
-        es.append(psi[i]['e'] > 0.5)
-    if all(cs) or all(es):
+        cs.append(psi[i]['c'] >= 0.5)
+        es.append(psi[i]['e'] >= 0.5)
+        hs.append(psi[i]['h'] <= 0.1)
+    if all(cs) or all(es) or all(hs):
         return True
     cs = []
     es = []
+    hs = []
     for i in range(pos[1]-3, pos[1]):
-        cs.append(psi[i]['c'] > 0.5)
-        es.append(psi[i]['e'] > 0.5)
-    if all(cs) or all(es):
+        cs.append(psi[i]['c'] >= 0.5)
+        es.append(psi[i]['e'] >= 0.5)
+        hs.append(psi[i]['h'] <= 0.1)
+    if all(cs) or all(es) or all(hs):
         return True
-    # return all(psi[i]['c'] > 0.5 for i in range(pos[0], pos[0]+3)) or \
-    #         all(psi[i]['c'] > 0.5 for i in range(pos[1]-3, pos[1])) or \
+
+# def is_not_helical(seq, pos, psi, verbose=False):
+#     win_size = 6
+#     for i in range(pos[0], pos[1]-win_size+2):
+#         if all(psi[j]['e'] >= 0.5 for i in range(i, i+win_size))or all(psi[i]['c'] >= 0.5 for i in range(i, i+win_size)) :
+#             return True
+#     cs = []
+#     es = []
+#     for i in range(pos[0], pos[0]+3):
+#         cs.append(psi[i]['c'] > 0.5)
+#         es.append(psi[i]['e'] > 0.5)
+#     if all(cs) or all(es):
+#         return True
+#     cs = []
+#     es = []
+#     for i in range(pos[1]-3, pos[1]):
+#         cs.append(psi[i]['c'] > 0.5)
+#         es.append(psi[i]['e'] > 0.5)
+#     if all(cs) or all(es):
+#         return True
+#     return all(psi[i]['c'] > 0.5 for i in range(pos[0], pos[0]+3)) or \
+#             all(psi[i]['c'] > 0.5 for i in range(pos[1]-3, pos[1])) or \
     #         all(psi[i]['e'] > 0.5 for i in range(pos[0], pos[0]+3)) or \
     #         all(psi[i]['e'] > 0.5 for i in range(pos[1]-3, pos[1]))
 

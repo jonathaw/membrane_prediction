@@ -11,7 +11,7 @@ def main():
     global hydrophobicity_polyval, args, param_list
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('-hp_threshold', default=6.0, type=float, help='set the hp threshold for constructing the graph')#10
+    parser.add_argument('-hp_threshold', default=7.5, type=float, help='set the hp threshold for constructing the graph')#10
     parser.add_argument('-min_length', default=19, type=int, help='minimum window length')#18
     # parser.add_argument('-psi_helix', default=0.2, type=float, help='no longer in use')#0.001
     # parser.add_argument('-psi_res_num', default=3, type=int, help='no longer in use')#4
@@ -22,16 +22,19 @@ def main():
     # parser.add_argument('-c1', default=0, type=float)#9.0 9.29
     # parser.add_argument('-c2', default=0, type=float)#-0.2 -0.645
     # parser.add_argument('-c3', default=0, type=float)#-0.006 0.00822
-    parser.add_argument('-w', default=0.082, type=float, help='membrane deformation coeeficent') # 0.082 0.004
-    parser.add_argument('-z_0', default=35, type=float, help='non-deformed membrane width') #  35 43
+    parser.add_argument('-w', default=0.011, type=float, help='membrane deformation coeeficent') # 0.082 0.004
+    parser.add_argument('-z_0', default=45, type=float, help='non-deformed membrane width') #  35 43
     parser.add_argument('-result_path', default=os.getcwd()+'/', help='path to write results to')
     parser.add_argument('-seq', default='', type=str, help='entry AA sequence')
     parser.add_argument('-with_msa', default=False, help='whether to use MSA or not')
-    parser.add_argument('-msa_percentile', default=20, type=int, help='what MSA percentile to use')
+    parser.add_argument('-msa_percentile', default=0, type=int, help='what MSA percentile to use')
     parser.add_argument('-with_cst', default=False, help='whether to use constraints')
     parser.add_argument('-cst_path', default=os.getcwd(), help='path to cst file')#+'/')
     parser.add_argument('-inc_max', default=10, type=int, help='maximal window increase')
     parser.add_argument('-fidelity', default=5, type=int, help='flanks on sides of tm_pos constraints')
+    parser.add_argument('-msa_threshold', type=int, default=5)
+    parser.add_argument('-db', default='rost')
+    parser.add_argument('-run_type', default='msa2plain')
     args = vars(parser.parse_args())
 
     # import topdb_functions
@@ -48,7 +51,10 @@ def main():
     elif args['mode'] == 'ROC_by_single':
         ROC_rostlav_single_by_single()
     elif args['mode'] == 'new':
+        if args['run_type'] == 'user_cst':
+            args['with_cst'] = True
         args['with_msa'] = True
+        args['original_name'] = args['name']
         args['name'] = args['name'].lower()
         process_single_new(args)
 
@@ -56,17 +62,28 @@ def main():
 def process_single_new(args):
     from ProcessEntry import create_topo_entry, process_entry
     import TMConstraint
-    rostlab_db_dict = parse_rostlab_db()
-    entry = rostlab_db_dict[args['name'].lower()]
+    if args['db'] == 'rost':
+        rostlab_db_dict = parse_rostlab_db()
+        entry = rostlab_db_dict[args['name'].lower()]
+        ss2_path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/psipred/'\
+                   +args['name'].lower()+'.ss2'
+        path_msa = '/home/labs/fleishman/jonathaw/membrane_prediction_DBs/BLASTs_9Aug/'
+    elif args['db'] == 'vh':
+        entry = topo_VH_parser(args['name'])
+        ss2_path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/VH_psipred/'\
+                   +args['original_name']+'.ss2'
+        args['c_term_VH'] = entry['c_term_VH']
+        # path_msa = '/home/labs/fleishman/jonathaw/membrane_prediction_DBs/BLAST_8Sep_VH/blast2fasta/'
+        path_msa = '/home/labs/fleishman/elazara/VH_MSA_60/blast2fasta/'
+    else:
+        assert "cant identify database (-db)"
     if args['with_cst']:
         entry_cst = TMConstraint.parse_cst(args['name'].lower(), args['cst_path'])
     else:
         entry_cst = TMConstraint.TMConstraint(args['name'])
-    topo_entry = create_topo_entry(args['name'], entry['seq'],
-                                   '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/psipred/'
-                                   +args['name'].lower()+'.ss2', args, entry_cst)
+    topo_entry = create_topo_entry(args['original_name'], entry['seq'], ss2_path, args, entry_cst, args['db'], path_msa)
     print topo_entry
-    process_entry(topo_entry, 'msa2plain')
+    process_entry(topo_entry, args['run_type'])
 
 
 def process_single_protein(name, path):

@@ -1,5 +1,5 @@
 class TopoEntry():
-    def __init__(self, name, seq, end_of_SP, psipred, hydro_polyval, param_list, csts):
+    def __init__(self, name, seq, end_of_SP, psipred, hydro_polyval, param_list, csts, path_msa):
         self.name = name
         self.seq = seq
         self.seq_length = len(seq)
@@ -7,6 +7,7 @@ class TopoEntry():
         self.hydro_polyval = hydro_polyval
         self.param_list = param_list
         self.csts = csts
+        self.path_msa = path_msa
 
     def __str__(self):
         msg = 'name %s\n' % self.name
@@ -19,23 +20,26 @@ class TopoEntry():
         return msg
 
 
-def create_topo_entry(name, seq, ss2, param_list, csts):
+def create_topo_entry(name, seq, ss2, param_list, csts, db, msa_path):
     import re
     psipred = parse_psipred(ss2)
     h_polyval = MakeHydrophobicityGrade()
-
-    topc = spc_parser(name)
-    if topc['spoctopus'].count('S') != 0:
-        end_of_SP = [a for a in re.finditer('S*', topc['spoctopus']) if a != ''][0].end() - 1
-        if end_of_SP == -1:
+    if db == 'rost':
+        topc = spc_parser(name)
+        if topc['spoctopus'].count('S') != 0:
+            end_of_SP = [a for a in re.finditer('S*', topc['spoctopus']) if a != ''][0].end() - 1
+            if end_of_SP == -1:
+                end_of_SP = 0
+            seq_no_SP = 'u'*end_of_SP + seq[end_of_SP:]
+        else:
             end_of_SP = 0
-        seq_no_SP = 'u'*end_of_SP + seq[end_of_SP:]
+            seq_no_SP = seq
     else:
         end_of_SP = 0
         seq_no_SP = seq
 
     return TopoEntry(name=name, seq=seq_no_SP, end_of_SP=end_of_SP, psipred=psipred, hydro_polyval=h_polyval,
-                     param_list=param_list, csts=csts)
+                     param_list=param_list, csts=csts, path_msa=msa_path)
 
 
 def parse_psipred(ss2):
@@ -113,15 +117,50 @@ def process_entry(topo_entry, run_type, verbose=False):
         print 'found %i wins without msa' % len(wins)
         best_path, sec_path = topo_graph(topo_entry, wins)
         write_results(topo_entry, run_type, best_path, sec_path)
+
     elif run_type == 'cst_only':
         wins = win_grade_generator(topo_entry, 'only')
         best_path, sec_path = topo_graph(topo_entry, wins)
         write_results(topo_entry, run_type, best_path, sec_path)
+
     elif run_type == 'tm_num_cst':
         wins = win_grade_generator(topo_entry)
         topo_entry.csts.tm_pos = topo_graph_tm_num(topo_entry, wins)
         best_path, sec_path = topo_graph(topo_entry, wins)
         write_results(topo_entry, run_type, best_path, sec_path)
+
+    elif run_type == 'plain':
+        topo_entry.param_list['with_msa'] = False
+        topo_entry.param_list['with_cst'] = False
+        wins = win_grade_generator(topo_entry)
+        best_path, sec_path = topo_graph(topo_entry, wins)
+        write_results(topo_entry, run_type, best_path, sec_path)
+
+    elif run_type == 'user_cst':
+        topo_entry.param_list['with_msa'] = False
+        topo_entry.param_list['with_cst'] = True
+        wins = win_grade_generator(topo_entry, mode='only')
+        try:
+            best_path, sec_path = topo_graph(topo_entry, wins)
+        except:
+            print 'failed topo_graph, will try with all wins'
+            wins = win_grade_generator(topo_entry, mode='only', tm_pos_mode='all')
+            best_path, sec_path = topo_graph(topo_entry, wins)
+        if topo_entry.csts.mode == 'only' and best_path.path == []:
+            wins = win_grade_generator(topo_entry, mode='only', tm_pos_mode='all')
+            for w in wins:
+                w.set_grade(-100.0)
+            best_path, sec_path = topo_graph(topo_entry, wins)
+        # if topo_entry.csts.mode == 'only' and best_path.path == []:
+        #     print 'did not found solution, going to BFS'
+        #     best_path, sec_path = topo_graph_only(topo_entry, wins)
+        # if best_path.path == []:
+        #     print 'did not find solution in selective only BFS'
+        #     wins = win_grade_generator(topo_entry, mode='only', tm_pos_mode='all')
+        #     best_path, sec_path = topo_graph_only(topo_entry, wins)
+        write_results(topo_entry, run_type, best_path, sec_path)
+    else:
+        print "unrecoginzed run-type"
 
 
 def topo_string_rostlab_format(topo_entry, wgp):
@@ -143,7 +182,7 @@ def topo_string_rostlab_format(topo_entry, wgp):
     return topo_string
 
 
-def win_grade_generator(topo_entry, mode='all'):
+def win_grade_generator(topo_entry, mode='all', tm_pos_mode='selective'):
         '''
         :return:grades all segments of seq, and aggregates them as WinGrades
         '''
@@ -154,9 +193,9 @@ def win_grade_generator(topo_entry, mode='all'):
         MIN_LENGTH = topo_entry.param_list['min_length']
         INC_MAX = topo_entry.param_list['inc_max']
         if topo_entry.param_list['with_msa']:
-            from MSA_for_TMpredict import TMpredict_MSA
+            from MSA_for_TMpredict import TMpredict_MSA, retrieve_seqs
             msa_obj = TMpredict_MSA(topo_entry.name, topo_entry.hydro_polyval, topo_entry.param_list,
-                                    topo_entry.param_list['msa_percentile'])
+                                    topo_entry.param_list['msa_percentile'], path_msa=topo_entry.path_msa)
         psi = topo_entry.psipred
         grades = []
         pos1 = 0 if topo_entry.seq[0] != 'u' else max([i for i, aa in enumerate(topo_entry.seq) if aa == 'u']) + 1
@@ -169,14 +208,14 @@ def win_grade_generator(topo_entry, mode='all'):
             tm_pos_wins = {tmp: [] for tmp in topo_entry.csts.tm_pos}
         for i in range(pos1, pos2+1):
             for inc in range(min(INC_MAX, topo_entry.seq_length - MIN_LENGTH - i)):
-                if mode == 'only':
-                    if not win_in_tm_pos((i, i+MIN_LENGTH+inc), topo_entry.csts.tm_pos, topo_entry.csts.tm_pos_fidelity):
-                        continue  #  this is to make sure that in "only" mode, only wins within the csts are generated
                 tm_pos, j = win_in_tm_pos((i, i+MIN_LENGTH+inc), topo_entry.csts.tm_pos, topo_entry.csts.tm_pos_fidelity)
-                if tm_pos:
+                if mode == 'only':
+                    if tm_pos is False:
+                        continue
+                if tm_pos is not False:
                     if topo_entry.param_list['with_msa']:
-                        tm_pos_wins[tm_pos].append(msa_obj.retrieve_seqs(i, i+MIN_LENGTH+inc, 'fwd'))
-                        tm_pos_wins[tm_pos].append(msa_obj.retrieve_seqs(i, i+MIN_LENGTH+inc, 'rev'))
+                        tm_pos_wins[tm_pos].append(retrieve_seqs(msa_obj, i, i+MIN_LENGTH+inc, 'fwd'))
+                        tm_pos_wins[tm_pos].append(retrieve_seqs(msa_obj, i, i+MIN_LENGTH+inc, 'rev'))
                     else:
                         tm_pos_wins[tm_pos].append(WinGrade(i, i+MIN_LENGTH+inc, 'fwd', topo_entry.seq[i:i+MIN_LENGTH+inc],
                                                        topo_entry.hydro_polyval, topo_entry.param_list))
@@ -189,40 +228,51 @@ def win_grade_generator(topo_entry, mode='all'):
                                     len([a for a in topo_entry.seq[i:i+MIN_LENGTH+inc] if a in
                                             ['R', 'K', 'H', 'D', 'E', 'N', 'Q']]) < 5:
                         if topo_entry.param_list['with_msa']:
-                            grades.append(msa_obj.retrieve_seqs(i, i+MIN_LENGTH+inc, 'fwd'))
-                            grades.append(msa_obj.retrieve_seqs(i, i+MIN_LENGTH+inc, 'rev'))
+                            grades.append(retrieve_seqs(msa_obj, i, i+MIN_LENGTH+inc, 'fwd'))
+                            grades.append(retrieve_seqs(msa_obj, i, i+MIN_LENGTH+inc, 'rev'))
+
                         else:
                             grades.append(WinGrade(i, i+MIN_LENGTH+inc, 'fwd', topo_entry.seq[i:i+MIN_LENGTH+inc],
                                                    topo_entry.hydro_polyval, topo_entry.param_list))
                             grades.append(WinGrade(i, i+MIN_LENGTH+inc, 'rev', topo_entry.seq[i:i+MIN_LENGTH+inc][::-1],
                                                    topo_entry.hydro_polyval, topo_entry.param_list))
+
             sys.stdout.write("-")
             sys.stdout.flush()
         sys.stdout.write("]\n")
         if topo_entry.csts.tm_pos is not None:
             for cst_pos in tm_pos_wins.values():
-                grades.extend(choose_wins_for_cst(topo_entry, cst_pos))
+                if tm_pos_mode == 'selective':
+                    grades.extend(choose_wins_for_cst(topo_entry, cst_pos))
+                elif tm_pos_mode == 'all':
+                    grades.extend(cst_pos)
         return grades
 
 
 def is_not_helical(seq, pos, psi, verbose=False):
     win_size = 6
     for i in range(pos[0], pos[1]-win_size+2):
-        if all(psi[i]['e'] >= 0.5 for i in range(i, i+win_size))or all(psi[i]['c'] >= 0.5 for i in range(i, i+win_size)):
+        if all(psi[j]['e'] >= 0.5 for j in range(i, i+win_size))or \
+                all(psi[j]['c'] >= 0.5 for j in range(i, i+win_size)) or \
+                all(psi[j]['h'] <= 0.1 for j in range(i, i+win_size)):
             return True
     cs = []
     es = []
+    hs = []
     for i in range(pos[0], pos[0]+3):
-        cs.append(psi[i]['c'] > 0.5)
-        es.append(psi[i]['e'] > 0.5)
-    if all(cs) or all(es):
+        cs.append(psi[i]['c'] >= 0.5)
+        es.append(psi[i]['e'] >= 0.5)
+        hs.append(psi[i]['h'] <= 0.1)
+    if all(cs) or all(es) or all(hs):
         return True
     cs = []
     es = []
+    hs = []
     for i in range(pos[1]-3, pos[1]):
-        cs.append(psi[i]['c'] > 0.5)
-        es.append(psi[i]['e'] > 0.5)
-    if all(cs) or all(es):
+        cs.append(psi[i]['c'] >= 0.5)
+        es.append(psi[i]['e'] >= 0.5)
+        hs.append(psi[i]['h'] <= 0.1)
+    if all(cs) or all(es) or all(hs):
         return True
 
 
@@ -293,7 +343,6 @@ def topo_graph(topo_entry, wins):
     # print self.WinGrades
     G = nx.DiGraph()
     source_node = WinGrade(0, 0, 'fwd', '', topo_entry.hydro_polyval, topo_entry.param_list)   # define source win
-
     print "Constructing graph"
     if topo_entry.param_list['with_msa']:
         if topo_entry.csts.tm_pos is None:
@@ -319,7 +368,6 @@ def topo_graph(topo_entry, wins):
                         G.add_edge(win1, win2, weight=win2.grade)
                     elif topo_entry.param_list['with_msa']:
                         G.add_edge(win1, win2, weight=win2.msa_grade)
-
     print "About to Bellman-Ford"
     pred, dist = nx.bellman_ford(G, source_node)
     print "Finished Bellman-Fording"
@@ -362,13 +410,13 @@ def topo_graph_tm_num(topo_entry, wins):
             [G.add_edge(0, i, weight=a.msa_grade) for i, a in enumerate(win_list_25) if a != source_node]  # add all win to source edges with msa
         else:
             [G.add_edge(0, i, weight=a.msa_grade) for i, a in enumerate(win_list_25) if a.end <=
-             topo_entry.csts.tm_pos[0][1] and a != source_node]  # add all win to source edges with msa
+             topo_entry.csts.tm_pos[0][1]+topo_entry.csts.tm_pos_fidelity and a != source_node]  # add all win to source edges with msa
     else:
         if topo_entry.csts.tm_pos is None:
             [G.add_edge(0, i, weight=a.grade) for i, a in enumerate(win_list_25) if a != source_node]  # add all win to source edges
         else:
             [G.add_edge(0, i, weight=a.grade) for i, a in enumerate(win_list_25) if a.end <=
-             topo_entry.csts.tm_pos[0][1] and a != source_node]  # add all win to source edges
+             topo_entry.csts.tm_pos[0][1]+topo_entry.csts.tm_pos_fidelity and a != source_node]  # add all win to source edges
     for win1 in win_list_25:   # add all win to win edges where condition applies
         cst_after = find_cst_after(topo_entry.csts, win1)
         for win2 in win_list_25:
@@ -415,6 +463,65 @@ def topo_graph_tm_num(topo_entry, wins):
         new_csts.append((max(0, win.begin), min(topo_entry.seq_length, win.end), None))
     return new_csts
 
+
+def topo_graph_only(topo_entry, wins):
+    from collections import deque
+    from copy import deepcopy
+    import timeit
+    import networkx as nx
+    from WinGrade import WinGrade, WinGradePath
+    G = nx.DiGraph()
+    source_node = WinGrade(0, 0, 'fwd', '', topo_entry.hydro_polyval, topo_entry.param_list)   # define source win
+    print "BFS building graph"
+    [G.add_edge(0, i, weight=a.grade) for i, a in enumerate(wins) if a.end <=
+     topo_entry.csts.tm_pos[0][1]+topo_entry.csts.tm_pos_fidelity and a != source_node]  # add all win to source edges
+    for win1 in wins:   # add all win to win edges where condition applies
+        cst_after = find_cst_after(topo_entry.csts, win1)
+        for win2 in wins:
+            if cst_after is None or win2.begin < cst_after[1]: #  make sure no edges skip a cst
+                # condition: non-overlapping, 2 is after 1, opposite directions
+                if not win1.grade_grade_colliding(win2) and win2.begin > win1.end and win2.begin-win1.end >= 2\
+                        and win1.direction != win2.direction:
+                    G.add_edge(wins.index(win1), wins.index(win2), weight=win2.grade)
+
+    print "BFS finished building graph"
+    tic = timeit.default_timer()
+    print 'looking for %i wins' % len(topo_entry.csts.tm_pos)
+    best_fwd, fwd_grade = WinGradePath([]), 1000
+    best_rev, rev_grade = WinGradePath([]), 1000
+    Q = deque([[0]])
+    num = 0
+    mini_tic = timeit.default_timer()
+    while Q:  # continue as long as there si something in Q
+        path = Q.popleft()  # get the FIFO out
+        if len(path) != num:
+            print "reached %i in path, the Q is %12i, took %f seconds" % (len(path), len(Q),
+                                                                          timeit.default_timer() - mini_tic)
+            mini_tic = timeit.default_timer()
+            num = len(path)
+        if len(path)-1 == len(topo_entry.csts.tm_pos):
+            # print 'found enpugh edges', path
+            # the path has enough nodes
+            path_wins = WinGradePath([wins[i] for i in path])
+            if topo_entry.csts.test_manager(path_wins.path):
+                if path_wins.c_term == 'fwd' and path_wins.total_grade < fwd_grade:
+                    best_fwd = deepcopy(path_wins)
+                    fwd_grade = best_fwd.total_grade
+                elif path_wins.c_term == 'rev' and path_wins.total_grade < rev_grade:
+                    best_rev = deepcopy(path_wins)
+                    rev_grade = best_rev.total_grade
+            continue
+        for neighbor in G.successors_iter(path[-1]):  # go over all successors of last win of path
+            temp_path = deepcopy(path)
+            temp_path.append(neighbor)
+            Q.append(temp_path)
+    print 'elapsed time for BFS', timeit.default_timer() - tic
+    print best_fwd
+    print best_rev
+    if best_fwd.total_grade < best_rev.total_grade:
+        return best_fwd, best_rev
+    else:
+        return best_rev, best_fwd
 
 if __name__ == '__main__':
     pass

@@ -352,6 +352,21 @@ def rost2cst(args):
     return tmc
 
 
+def topcons2cst(args):
+    import re
+    from topo_strings_comparer import spc_parser
+    topc = spc_parser(args['name'])
+    single_peptide = topc['spoctopus'].count('S') + topc['spoctopus'].count('s')
+    topcons = topc['topcons']
+    topcons_cln = 's'*single_peptide + topcons[single_peptide:]
+    hhh = re.compile('[Mm]*')
+    topc_hhh = [(a.start(), a.end()-1, None) for a in hhh.finditer(topcons_cln) if a.end()-a.start() > 1]
+    tmc = TMConstraint(args['name'].lower(), tm_num=None, tm_pos=topc_hhh, tm_pos_fidelity=7, mode='only')
+    with open(args['path']+args['name'].lower()+'.cst', 'wr+') as fout:
+        fout.write(str(tmc))
+    return tmc
+
+
 if __name__ == '__main__':
     import argparse
     import os
@@ -361,14 +376,23 @@ if __name__ == '__main__':
     parser.add_argument('-mode', default='pred2cst', type=str)
     parser.add_argument('-path', default=os.getcwd()+'/')
     parser.add_argument('-cst_mode', default=None)
-    parser.add_argument('-tm_pos_fidelity', type=int, default=5)
+    parser.add_argument('-tm_pos_fidelity', type=int, default=3)
     args = vars(parser.parse_args())
     if args['mode'] == 'pred2cst':
         prd = prd_parser(args['path'], args['name'].lower() + '.prd')
         print pred2cst(args['name'].lower(), args['path'], prd['pred_ts'], args['cst_mode'], args['tm_pos_fidelity'])
+
     elif args['mode'] == 'cst2TMC':
         tmc = parse_cst(args['name'].lower(), args['path'])
         print tmc
+
     elif args['mode'] == 'rost2cst':
         rost2cst(args)
         print rost2cst(args)
+
+    elif args['mode'] == 'topcons2cst':
+        tmc = topcons2cst(args)
+        print tmc
+
+    else:
+        print 'no mode recived'
