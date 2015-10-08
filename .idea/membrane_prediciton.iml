@@ -9,7 +9,7 @@
       <excludeFolder url="file://$MODULE_DIR$/data_sets/psipred" />
       <excludeFolder url="file://$MODULE_DIR$/topo_figures" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 2.7.8 (/opt/local/bin/python2.7)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 2.7.9 (/usr/local/Cellar/python/2.7.9/Frameworks/Python.framework/Versions/2.7/bin/python2.7)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

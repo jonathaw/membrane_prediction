@@ -72,7 +72,9 @@ def prd_directory(dir_path):
     totals = {'tm_1': 0, 'tm_2_5': 0, 'tm_5': 0}
 
     errors = {'over': 0, 'miss': 0, 'exact': 0, 'total': 0}
-
+    we_got_wrong = []
+    we_got_right = []
+    topcons_got_right = []
     for file_name in file_list:
         pred = prd_parser(dir_path, file_name)
         # if pred['name'] != 'p0c7b7': continue
@@ -81,6 +83,7 @@ def prd_directory(dir_path):
         predictors = {k: topcons2rostlab_ts_format(v) for k, v in topc.items() if k not in ['name', 'seq']}
         predictors['pred_ts'] = pred['pred_ts']
         first_passage = True
+
         for predictor in predictors:
             #print "predictor", predictor
             comp_pdbtm = comparer(obse['pdbtm'], predictors[predictor], M, predictors['spoctopus'], pred['seq'])
@@ -88,12 +91,16 @@ def prd_directory(dir_path):
 
             overM = comp_pdbtm['overlapM_ok'] or comp_opm['overlapM_ok']
 
+            if predictor == 'pred_ts' and overM:
+                we_got_right.append(pred['name'])
+
             if predictor == 'pred_ts' and not overM:
                 # print 'AAAAAAAHHHHHHH !!!!!! :('
                 # print 'obse_tm_num', comp_pdbtm['obse_tm_num']
                 # print 'pred_tm_num', comp_pdbtm['pred_tm_num']
                 # print 'ok', comp_pdbtm['overlapM_ok_helices']
                 # print '\n'
+                we_got_wrong.append(pred['name'])
                 if comp_pdbtm['obse_tm_num'] > comp_pdbtm['pred_tm_num']:
                     print 'MISS', pred['name'], comp_pdbtm['obse_tm_num']
                     errors['miss'] += 1
@@ -107,6 +114,9 @@ def prd_directory(dir_path):
                 print 'pred_ts', predictors['pred_ts']
                 print 'AA seq ', pred['seq']
                 print 'pdbtm  ', obse['pdbtm']
+
+            if predictor == 'topcons' and overM:
+                topcons_got_right.append(pred['name'])
 
             if comp_pdbtm['obse_tm_num'] == 0 or comp_opm['obse_tm_num'] == 0: continue
 
@@ -128,6 +138,7 @@ def prd_directory(dir_path):
         data = {k: v for k, v in results['pred_ts'].items()}
         return data, totals
     else:
+        print 'these are the names we got right:', we_got_right
         print 'results', results
         print 'totals', totals
         print 'errors', errors
@@ -170,9 +181,9 @@ def devide_with_zero(num1, num2):
 def tm_num2range(num):
     if num == 1:
         return 'tm_1'
-    elif 2 <= num <= 5:
+    elif 2 <= num <= 4:
         return 'tm_2_5'
-    elif num > 5:
+    elif num > 4:
         return 'tm_5'
 
 
@@ -258,12 +269,17 @@ def comparer(obse, pred, M, spoc, seq):
     sss_list = [(a.start(), a.end()) for a in sss.finditer(spoc) if a.end()-a.start() > 1]
     if sss_list != []:
         sss_list = sss_list[0]
-        temp_list = []
+        temp_list_obse, temp_list_pred = [], []
         for obse_helix in obse_list:
             if obse_helix[0] > sss_list[1]:
-                temp_list.append(obse_helix)
+                temp_list_obse.append(obse_helix)
 
-        obse_list = temp_list[:]
+        for pred_helix in pred_list:
+            if pred_helix[0] > sss_list[1]:
+                temp_list_pred.append(pred_helix)
+
+        obse_list = temp_list_obse[:]
+        pred_list = temp_list_pred[:]
 
     result['obse_tm_num'] = len(obse_list)
     result['pred_tm_num'] = len(pred_list)
@@ -335,11 +351,11 @@ def compare_just_one():
     # print 'spoc', predictors['spoctopus']
     for predictor in predictors:
         print 'predictor', predictor
-        comp_pdbtm = comparer(obse['pdbtm'], predictors[predictor], M, predictors['spoctopus'])
-        comp_opm = comparer(obse['opm'], predictors[predictor], M, predictors['spoctopus'])
+        comp_pdbtm = comparer(obse['pdbtm'], predictors[predictor], M, predictors['spoctopus'], pred['seq'])
+        comp_opm = comparer(obse['opm'], predictors[predictor], M, predictors['spoctopus'], pred['seq'])
         predictors_results[predictor] = comp_pdbtm['overlapM_ok'] or comp_opm['overlapM_ok']
-    comp_pdbtm = comparer(obse['pdbtm'], pred['pred_ts'], M, predictors['spoctopus'])
-    comp_opm = comparer(obse['opm'], pred['pred_ts'], M, predictors['spoctopus'])
+    comp_pdbtm = comparer(obse['pdbtm'], pred['pred_ts'], M, predictors['spoctopus'], pred['seq'])
+    comp_opm = comparer(obse['opm'], pred['pred_ts'], M, predictors['spoctopus'], pred['seq'])
     if comp_opm['overlapM_ok'] and comp_pdbtm['overlapM_ok']: print 'TopoGraph is correct by both'
     elif comp_opm['overlapM_ok']: print 'TopoGraph is correct ONLY by OPM'
     elif comp_pdbtm['overlapM_ok']: print 'TopoGraph is correct ONLY by PDBTM'

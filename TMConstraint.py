@@ -293,7 +293,9 @@ def parse_cst(name, in_path):
     :param in_path: path to .cst
     :return: a TMConstraint object with only position constraints
     """
-    with open(in_path+'/'+name+'.cst', 'r') as f:
+    if in_path[-1] != '/':
+        in_path += '/'
+    with open(in_path+name+'.cst', 'r') as f:
         cont = f.read().split('\n')
     result = {'tm_pos': []}
     for ln in cont:
@@ -354,14 +356,32 @@ def rost2cst(args):
 
 def topcons2cst(args):
     import re
+    from math import ceil, floor
     from topo_strings_comparer import spc_parser
-    topc = spc_parser(args['name'])
+    try:
+        topc = spc_parser(args['name'].lower())
+    except:
+        topc = spc_parser(args['name'])
     single_peptide = topc['spoctopus'].count('S') + topc['spoctopus'].count('s')
     topcons = topc['topcons']
     topcons_cln = 's'*single_peptide + topcons[single_peptide:]
     hhh = re.compile('[Mm]*')
     topc_hhh = [(a.start(), a.end()-1, None) for a in hhh.finditer(topcons_cln) if a.end()-a.start() > 1]
-    tmc = TMConstraint(args['name'].lower(), tm_num=None, tm_pos=topc_hhh, tm_pos_fidelity=7, mode='only')
+    final_topc_hhh = []
+    for seg in topc_hhh:
+        diff = 20-(seg[1]-seg[0])
+        if diff > 0:
+            if seg[0] <= single_peptide:
+                continue
+            s = [1, 1, 1]
+            s[0] = max(0, seg[0]-ceil(diff/2.))
+            s[1] = min(len(topcons), seg[1]+ceil(diff/2.))
+            s[2] = seg[2]
+            final_topc_hhh.append(tuple(s))
+        else:
+            final_topc_hhh.append(seg)
+    tmc = TMConstraint(args['name'].lower(), tm_num=None, tm_pos=final_topc_hhh, tm_pos_fidelity=args['tm_pos_fidelity']
+                       , mode='only')
     with open(args['path']+args['name'].lower()+'.cst', 'wr+') as fout:
         fout.write(str(tmc))
     return tmc

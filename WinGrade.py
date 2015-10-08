@@ -42,7 +42,7 @@ class WinGrade():
         if msa_name != None:
             self.msa_seq = msa_seq
             self.msa_grade = grade_segment(msa_seq, polyval) + self.length_element
-        if self.seq == 'SOURCE' or self.seq == 'SINK' or self.seq == 'SOURCEPATH':
+        if self.seq == 'SO2RCE' or self.seq == 'SINK' or self.seq == 'SOURCEPATH':
             self.grade = 0.0
 
     def __repr__(self):
@@ -51,6 +51,12 @@ class WinGrade():
         else:
             return '%-4i to %-4i in %3s => %10f %-35s %s %s %f' % (self.begin, self.end, self.direction, self.grade,
                                                                self.seq, self.msa_name, self.msa_seq, self.msa_grade)
+
+    def get_html(self, i):
+        return '<tr><td>%i</td><td>%-4.i</td><td>%-4.i</td><td>%3s</td><td>%5.3f</td><td>%-35s</td><td>%i</td>' \
+               '<td> %5.3f</td></tr>' % (i, self.begin+1, self.end+1,
+                                         "in" if self.direction == 'fwd' else "out",
+                                         self.grade, self.seq, self.charges, self.length_element)
 
     def grade_grade_colliding(self, other):
         return True if len(set(self.span) & set(other.span)) != 0 else False
@@ -135,6 +141,9 @@ class WinGradePath():
         msg += ' }~> total_grade %10f win_num %2i c_term %s' % (self.total_grade, self.win_num, self.c_term)
         return msg
 
+    def __eq__(self, other):
+        return self.path == other.path and self.c_term == other.c_term and self.total_grade == other.total_grade
+
     def add_win(self, win):
         import operator
         wins = self.path[:] + [win]
@@ -187,6 +196,13 @@ class WinGradePath():
         :return: True iff the first win of self is the same as the last of other
         """
         return self.first().same_as_other(other.last())
+
+    def add_to_all_wins(self, add):
+        import operator
+        for w in self.path:
+            w.set_grade(add)
+        self.path = sorted(self.path, key=operator.attrgetter('begin'))
+        self.total_grade = self.grade_path()
 
 
 def count_charges(seq):
@@ -307,6 +323,26 @@ def sequential_coiled(pos, psi, verbose=False):
            # all(psi[i]['h'] < 0.4 for i in range(pos[0], pos[0]+3)) or \
            # all(psi[i]['h'] < 0.4 for i in range(pos[1]-3, pos[1]))
 
+
+def topo_string_to_WGP(topo_string, seq):
+    """
+    :param topo_string: a rostlab format topo-string
+    :param seq: sequence
+    :return: a WGP instance
+    >>> topo_string = '22222222222222222222222222222222222222222222222222222222222222222HHHHHHHHHHHHHHHHHHHHHHH11111111111'
+    >>> seq =         'MAMSIAARSACCGVAAPRSSTVRVAAARPAVRPSLRTAGQKAAPSRGVATKAVNELAMIAGEAEFIAGTALTMVGMTLVGLAIGFVLLRVESLVEEGKI'
+    >>> topo_string_to_WGP(topo_string, seq) == WinGradePath([WinGrade(65, 87, 'rev', 'IAGTALTMVGMTLVGLAIGFVLL')])
+    False
+    """
+    import re
+    wgp = WinGradePath([])
+    hhh = re.compile('[hH]*')
+    h_list = [(a.start(), a.end()) for a in hhh.finditer(topo_string) if a.end()-a.start() > 1
+              and a.end()-a.start() >= 10]
+    for h in h_list:
+        direction = 'fwd' if topo_string[h[0]-1] == '1' else 'rev'
+        wgp.add_win(WinGrade(h[0], h[1]-1, direction, seq[h[0]:h[1]], ))
+    return wgp
 
 
 def parse_WGP(text):

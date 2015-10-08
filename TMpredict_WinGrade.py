@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7
 # coding=utf-8
 from WinGrade import *
 from HphobicityScore import *
@@ -15,7 +15,7 @@ def main():
     parser.add_argument('-min_length', default=19, type=int, help='minimum window length')#18
     # parser.add_argument('-psi_helix', default=0.2, type=float, help='no longer in use')#0.001
     # parser.add_argument('-psi_res_num', default=3, type=int, help='no longer in use')#4
-    parser.add_argument('-mode', type=str, default='single', help='mode of run')
+    parser.add_argument('-mode', type=str, default='user', help='mode of run')
     parser.add_argument('-name', default=None, type=str, help='name of entry')
     # parser.add_argument('-known_tm_num', default=-100, type=int)
     # parser.add_argument('-c0', default=0.0, type=float)#0.5
@@ -25,6 +25,8 @@ def main():
     parser.add_argument('-w', default=0.011, type=float, help='membrane deformation coeeficent') # 0.082 0.004
     parser.add_argument('-z_0', default=45, type=float, help='non-deformed membrane width') #  35 43
     parser.add_argument('-result_path', default=os.getcwd()+'/', help='path to write results to')
+    parser.add_argument('-in_path', type=str, default=os.getcwd()+'/')
+    parser.add_argument('-out_path', type=str, default=os.getcwd()+'/')
     parser.add_argument('-seq', default='', type=str, help='entry AA sequence')
     parser.add_argument('-with_msa', default=False, help='whether to use MSA or not')
     parser.add_argument('-msa_percentile', default=0, type=int, help='what MSA percentile to use')
@@ -35,7 +37,17 @@ def main():
     parser.add_argument('-msa_threshold', type=int, default=5)
     parser.add_argument('-db', default='rost')
     parser.add_argument('-run_type', default='msa2plain')
+    parser.add_argument('-ss2', default=None, type=str, help='name of ss2 file. if none is provided name.ss2 will be assumed')
     args = vars(parser.parse_args())
+
+    if args['ss2'] is None:
+        args['ss2'] = args['name'].lower()+'.ss2'
+
+    if args['in_path'][-1] != '/':
+        args['in_path'] += '/'
+
+    if args['out_path'][-1] != '/':
+        args['out_path'] += '/'
 
     # import topdb_functions
     hydrophobicity_polyval = MakeHydrophobicityGrade()
@@ -57,6 +69,22 @@ def main():
         args['original_name'] = args['name']
         args['name'] = args['name'].lower()
         process_single_new(args)
+    elif args['mode'] == 'user':
+        process_user(args)
+
+
+def process_user(args):
+    from ProcessEntry import create_topo_entry, process_entry
+    import TMConstraint
+    args['db'] = None
+    if args['with_cst']:
+        print args['with_cst']
+        cst = TMConstraint.parse_cst(args['name'].lower(), args['in_path'])
+    else:
+        cst = TMConstraint.TMConstraint(args['name'])
+    topo_entry = create_topo_entry(args['name'], args['seq'], args['in_path']+args['ss2'], args, cst, None,
+                                   args['in_path'])
+    process_entry(topo_entry, args['run_type'])
 
 
 def process_single_new(args):
