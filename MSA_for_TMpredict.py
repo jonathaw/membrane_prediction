@@ -113,6 +113,7 @@ class TMpredict_MSA():
             return WinGrade(start, end, direction, gap_remover(self.query.seq[start_wg:end_wg])[::-1], self.polyval,
                             self.poly_param, name, gap_remover(best_win.seq)[::-1])
 
+
 def retrieve_seqs(msa, start, end, direction):
     from WinGrade import WinGrade
 
@@ -135,6 +136,7 @@ def retrieve_seqs(msa, start, end, direction):
             elif direction == 'rev':
                 temp_win_grade = WinGrade(start, end, direction, gap_remover(target.seq[start_wg:end_wg])[::-1],
                                           msa.polyval, msa.poly_param)
+            # print 'found this', temp_win_grade.grade, query_grade, abs(temp_win_grade.grade-query_grade), msa.poly_param['msa_threshold']
             if abs(temp_win_grade.grade-query_grade) <= msa.poly_param['msa_threshold']:
                 grade_stack[temp_win_grade.grade] = {'win': temp_win_grade, 'name': target.name}
 

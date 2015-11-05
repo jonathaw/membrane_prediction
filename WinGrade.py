@@ -205,6 +205,14 @@ class WinGradePath():
         self.total_grade = self.grade_path()
 
 
+def wgp_msa_total_grade(wgp):
+    """
+    :param wgp: a WinGradePath
+    :return: float total msa win grades
+    """
+    return sum(a.msa_grade for a in wgp.path)
+
+
 def count_charges(seq):
     import numpy as np
     membrane_position = np.linspace(-20, 20, endpoint=True, num=len(seq))

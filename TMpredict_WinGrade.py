@@ -8,8 +8,10 @@ def main():
     # import subprocess
     # import re
     import os
-    global hydrophobicity_polyval, args, param_list
+    global hydrophobicity_polyval, args, param_list, tic
     import argparse
+    import timeit
+
     parser = argparse.ArgumentParser()
     parser.add_argument('-hp_threshold', default=7.5, type=float, help='set the hp threshold for constructing the graph')#10
     parser.add_argument('-min_length', default=19, type=int, help='minimum window length')#18
@@ -22,7 +24,7 @@ def main():
     # parser.add_argument('-c1', default=0, type=float)#9.0 9.29
     # parser.add_argument('-c2', default=0, type=float)#-0.2 -0.645
     # parser.add_argument('-c3', default=0, type=float)#-0.006 0.00822
-    parser.add_argument('-w', default=0.011, type=float, help='membrane deformation coeeficent') # 0.082 0.004
+    parser.add_argument('-w', default=0, type=float, help='membrane deformation coeficent') ##0.011,  0.082 0.004
     parser.add_argument('-z_0', default=45, type=float, help='non-deformed membrane width') #  35 43
     parser.add_argument('-result_path', default=os.getcwd()+'/', help='path to write results to')
     parser.add_argument('-in_path', type=str, default=os.getcwd()+'/')
@@ -40,6 +42,7 @@ def main():
     parser.add_argument('-ss2', default=None, type=str, help='name of ss2 file. if none is provided name.ss2 will be assumed')
     args = vars(parser.parse_args())
 
+    args['tic'] = timeit.default_timer()
     if args['ss2'] is None:
         args['ss2'] = args['name'].lower()+'.ss2'
 

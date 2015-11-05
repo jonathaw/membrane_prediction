@@ -7,13 +7,14 @@ a group of functions to create HTML output for a prediction
 
 def create_html(topo_entry, best_path, sec_path, wins):
     from ProcessEntry import topo_string_rostlab_format
+    from timeit import default_timer
     import os
     # print 'making win plot'
     # make_win_plot(topo_entry, best_path, wins)
     best_ts = topo_string_rostlab_format(topo_entry, best_path)
     sec_ts = topo_string_rostlab_format(topo_entry, sec_path)
-    print 'creating html at %s' % topo_entry.name + '.html'
-    with open(topo_entry.name + '.html', 'wr+') as html:
+    print 'creating html at %s' % topo_entry.param_list['out_path']+topo_entry.name + '.html'
+    with open(topo_entry.param_list['out_path']+topo_entry.name + '.html', 'wr+') as html:
         html.write('<html>\n')
 
         html.write('<style>\n')
@@ -45,7 +46,8 @@ def create_html(topo_entry, best_path, sec_path, wins):
                    abs(best_path.total_grade - sec_path.total_grade))
 
         html.write('<p>color index: <r> TMHs </r> <b> In </b> <g> Out </g> <u> Unknown </u></p>\n')
-        html.write('<p>Files to download</p>\n')
+        # html.write('<p>Files to download</p>\n')
+        html.write('<p>computation took %f seconds</p>' % (default_timer()-topo_entry.param_list['tic']))
         # what is the path to use for download from the browesr???
         html.write('<a href="file:///%s">prediction file</a>\n' % (os.getcwd()+'/'+topo_entry.name+'.prd'))
         html.write('<p style="text-align:right">The Fleishman Lab &copy;</p>\n')
@@ -97,12 +99,15 @@ def topo_string2html(ts, seq):
     '<pre><div><b>AAAA</b><r>HHHH</r><g>BBBB</g><r>HHHH</r><b>BBBB</b><u>UUUU</u></div></pre>'
     """
     html = '<pre><div>'
+    if ts.count('H') == 0:
+        return html
     ts2tag = {'1': ['<b>', '</b>'], '2': ['<g>', '</g>'], 'h': ['<r>', '</r>'], 'H': ['<r>', '</r>'],
               'U': ['<u>', '</u>']}
     split_points = [0] + [i + 1 for i in range(len(ts) - 1) if ts[i] != ts[i + 1]] + [len(seq)]
     split_segs = [[split_points[i], split_points[i + 1]] for i in range(len(split_points) - 1)]
     for seg in split_segs:
-        html += ts2tag[ts[seg[0] + 1]][0] + seq[seg[0]:seg[1]] + ts2tag[ts[seg[0] + 1]][1]
+        html += ts2tag[ts[min(seg[0] + 1, len(ts)-1)]][0] + seq[seg[0]:seg[1]] + \
+                ts2tag[ts[min(seg[0] + 1, len(ts)-1)]][1]
     html += '</div></pre>'
     return html
 

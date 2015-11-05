@@ -91,6 +91,7 @@ def spc_parser(name):
 
 
 def write_results(topo_entry, run_type, best_path, sec_path, msa=False):
+    from timeit import default_timer
     suffix = '.prd' if not msa else '_msa.prd'
     ts_best = topo_string_rostlab_format(topo_entry, best_path)
     ts_sec = topo_string_rostlab_format(topo_entry, sec_path)
@@ -102,21 +103,33 @@ def write_results(topo_entry, run_type, best_path, sec_path, msa=False):
         fout.write("best_path %s\n" % str(best_path))
         fout.write("sec_path %s\n" % str(sec_path))
         fout.write("ddG paths |%f|\n" % abs(best_path.total_grade - sec_path.total_grade))
+        fout.write("time %f\n" % (default_timer()-topo_entry.param_list['tic']))
 
 
 def process_entry(topo_entry, run_type, verbose=False):
     from output2html import create_html
+    from WinGrade import wgp_msa_total_grade
+
+    # this is a condition to prevent running as msa2plain when there's only one sequence in the MSA, which messes up
+    if run_type == 'msa2plain':
+        with open(topo_entry.path_msa+topo_entry.name+'.msa', 'r') as fin:
+            cont = fin.read()
+            if cont.count('>') == 1:
+                run_type = 'plain'
+                print 'found only 1 sequence in the MSA, so making this run as plain'
 
     if run_type == 'msa2plain':
         from TMConstraint import pred2cst
+
         topo_entry.param_list['with_msa'] = True
         wins = win_grade_generator(topo_entry)
         print 'found %i wins with msa' % len(wins)
         best_path, sec_path = topo_graph(topo_entry, wins)
         write_results(topo_entry, run_type, best_path, sec_path, msa=True)
-        if best_path.total_grade >= 0.:
-            create_html(topo_entry, best_path, sec_path, wins)
-            print 'found no solution with MSA, will not try without. this is not membranal'
+        print best_path
+        if best_path.total_grade >= 0. and wgp_msa_total_grade(best_path) >= 0.:
+            print 'found no solution with MSA, will try as plain'
+            run_type = 'plain'
         else:
             ts = topo_string_rostlab_format(topo_entry, best_path)
             topo_entry.param_list['with_msa'] = False
@@ -128,20 +141,20 @@ def process_entry(topo_entry, run_type, verbose=False):
             write_results(topo_entry, run_type, best_path, sec_path)
             create_html(topo_entry, best_path, sec_path, wins)
 
-    elif run_type == 'cst_only':
+    if run_type == 'cst_only':
         wins = win_grade_generator(topo_entry, 'only')
         best_path, sec_path = topo_graph(topo_entry, wins)
         write_results(topo_entry, run_type, best_path, sec_path)
         create_html(topo_entry, best_path, sec_path, wins)
 
-    elif run_type == 'tm_num_cst':
+    if run_type == 'tm_num_cst':
         wins = win_grade_generator(topo_entry)
         topo_entry.csts.tm_pos = topo_graph_tm_num(topo_entry, wins)
         best_path, sec_path = topo_graph(topo_entry, wins)
         write_results(topo_entry, run_type, best_path, sec_path)
         create_html(topo_entry, best_path, sec_path, wins)
 
-    elif run_type == 'plain':
+    if run_type == 'plain':
         topo_entry.param_list['with_msa'] = False
         topo_entry.param_list['with_cst'] = False
         wins = win_grade_generator(topo_entry)
@@ -149,7 +162,7 @@ def process_entry(topo_entry, run_type, verbose=False):
         write_results(topo_entry, run_type, best_path, sec_path)
         create_html(topo_entry, best_path, sec_path, wins)
 
-    elif run_type == 'user_cst':
+    if run_type == 'user_cst':
         topo_entry.param_list['with_msa'] = False
         topo_entry.param_list['with_cst'] = True
         # if topo_entry.csts.tm_pos
@@ -169,7 +182,8 @@ def process_entry(topo_entry, run_type, verbose=False):
             sec_path.add_to_all_wins(+100.0)
         write_results(topo_entry, run_type, best_path, sec_path)
         create_html(topo_entry, best_path, sec_path, wins)
-    else:
+
+    if run_type not in ['msa2plain', 'cst_only', 'tm_num_cst', 'plain', 'user_cst']:
         print "unrecoginzed run-type"
 
 
@@ -296,10 +310,10 @@ def is_not_helical(seq, pos, psi, verbose=False):
 
 def choose_wins_for_cst(topo_entry, cst_pos, verbose=False):
     """
-	:param topo_entry: a TopoEntry instance
-	:param cst_pos: a bunch of wins from a bin of a certain tm_pos constraint
-	:return: all wins that pass the thresholds, or the best one if none do
-	"""
+    :param topo_entry: a TopoEntry instance
+    :param cst_pos: a bunch of wins from a bin of a certain tm_pos constraint
+    :return: all wins that pass the thresholds, or the best one if none do
+    """
     from WinGrade import count_charges, WinGrade
 
     passed = []
@@ -323,9 +337,9 @@ def choose_wins_for_cst(topo_entry, cst_pos, verbose=False):
 
 def find_cst_after(csts, win):
     """
-	:param win: a WinGrade instance
-	:return: a (beginning, end, direction) tuple from tm_pos that is after win
-	"""
+    :param win: a WinGrade instance
+    :return: a (beginning, end, direction) tuple from tm_pos that is after win
+    """
     if csts.tm_pos is None:
         return None
     for cst in sorted(csts.tm_pos):
@@ -336,11 +350,11 @@ def find_cst_after(csts, win):
 
 def find_graph_path(pred, path, source_node):
     """
-	:param pred:
-	:param path:
-	:param source_node:
-	:return:
-	"""
+    :param pred:
+    :param path:
+    :param source_node:
+    :return:
+    """
     # find all wins in the minimal energy path from source to last win
     while path[-1].seq != source_node.seq:
         for k, v in pred.items():
@@ -354,10 +368,10 @@ def find_graph_path(pred, path, source_node):
 
 def topo_graph(topo_entry, wins):
     """
-	:return: a topology
-	"""
+    :return: a topology
+    """
     import networkx as nx
-    from WinGrade import WinGrade, WinGradePath
+    from WinGrade import WinGrade, WinGradePath, wgp_msa_total_grade
     import operator
     # print self.WinGrades
     G = nx.DiGraph()
@@ -378,7 +392,7 @@ def topo_graph(topo_entry, wins):
     for win1 in wins:  # add all win to win edges where condition applies
         cst_after = find_cst_after(topo_entry.csts, win1)
         for win2 in wins:
-            #  make sure no edges skip a cst:
+            # make sure no edges skip a cst:
             if cst_after is None or win2.end <= cst_after[1] + topo_entry.csts.tm_pos_fidelity:
                 # condition: non-overlapping, 2 is after 1, opposite directions
                 if not win1.grade_grade_colliding(win2) and win2.begin > win1.end and win1.direction != win2.direction \
@@ -388,6 +402,9 @@ def topo_graph(topo_entry, wins):
                     elif topo_entry.param_list['with_msa']:
                         G.add_edge(win1, win2, weight=win2.msa_grade)
     print "About to Bellman-Ford"
+    print 'found %i nodes' % G.number_of_nodes()
+    if G.number_of_nodes() == 0:
+        return WinGradePath([]), WinGradePath([])
     pred, dist = nx.bellman_ford(G, source_node)
     print "Finished Bellman-Fording"
     sorted_dist = sorted(dist.items(), key=operator.itemgetter(1))
@@ -408,19 +425,15 @@ def topo_graph(topo_entry, wins):
             temp_direction = best_path[-1].direction
     best_wgp = WinGradePath(best_path)
     sec_wgp = WinGradePath(sec_best_path)
-    if best_wgp.total_grade >= 0:
-        best_wgp = WinGradePath([])
-    if sec_wgp.total_grade >= 0:
-        sec_wgp = WinGradePath([])
     return best_wgp, sec_wgp
 
 
 def topo_graph_tm_num(topo_entry, wins):
     """
-	a method to find minimal path with only tm_num nodes. a BFS algorithm that stops every path building once
-	it gets to tm_num nodes. only saves the best solutions for c_term fwd & rev, and only if they pass all
-	constraints
-	"""
+    a method to find minimal path with only tm_num nodes. a BFS algorithm that stops every path building once
+    it gets to tm_num nodes. only saves the best solutions for c_term fwd & rev, and only if they pass all
+    constraints
+    """
     from collections import deque
     from copy import deepcopy
     import timeit

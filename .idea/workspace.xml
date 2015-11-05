@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6a73546c-b0e1-4c73-9c98-48c4af466cd3" name="Default" comment="during benchmarks by Assaf">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/MSAMaker.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/TOPCONS_funcs.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/output2html.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" />
+    <list default="true" id="6a73546c-b0e1-4c73-9c98-48c4af466cd3" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ncbiblast_urllib2.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/plot_time.py" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MSAMaker.py" afterPath="$PROJECT_DIR$/MSAMaker.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MSA_for_TMpredict.py" afterPath="$PROJECT_DIR$/MSA_for_TMpredict.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ProcessEntry.py" afterPath="$PROJECT_DIR$/ProcessEntry.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TMConstraint.py" afterPath="$PROJECT_DIR$/TMConstraint.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TMpredict_WinGrade.py" afterPath="$PROJECT_DIR$/TMpredict_WinGrade.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WinGrade.py" afterPath="$PROJECT_DIR$/WinGrade.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/membrane_prediciton.iml" afterPath="$PROJECT_DIR$/.idea/membrane_prediciton.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sasa_survey_26Aug.py" afterPath="$PROJECT_DIR$/sasa_survey_26Aug.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/output2html.py" afterPath="$PROJECT_DIR$/output2html.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/topo_strings_comparer.py" afterPath="$PROJECT_DIR$/topo_strings_comparer.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="membrane_prediciton.iws" />
     <ignored path=".idea/workspace.xml" />
+    <ignored path="$PROJECT_DIR$/data_sets/" />
+    <ignored path="$PROJECT_DIR$/topo_figures/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,124 +32,141 @@
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="DaemonCodeAnalyzer">
-    <disable_hints />
-  </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
     <favorites_list name="membrane_prediciton" />
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="TMpredict_WinGrade.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="TMpredict_WinGrade.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TMpredict_WinGrade.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1060" max-vertical-offset="16400">
-              <caret line="53" column="23" selection-start-line="53" selection-start-column="23" selection-end-line="53" selection-end-column="23" />
-              <folding />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="38" column="50" selection-start-line="38" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
+              <folding>
+                <element signature="e#40#62#0" expanded="true" />
+                <element signature="e#3702#4209#0" expanded="true" />
+                <element signature="e#4246#5569#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ProcessEntry.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="MSA_for_TMpredict.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/MSA_for_TMpredict.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="139" column="88" selection-start-line="139" selection-start-column="88" selection-end-line="139" selection-end-column="88" />
+              <folding>
+                <element signature="e#2481#3021#0" expanded="true" />
+                <element signature="e#7579#7837#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ProcessEntry.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ProcessEntry.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.13940725" vertical-offset="753" max-vertical-offset="3900">
-              <caret line="118" column="90" selection-start-line="118" selection-start-column="90" selection-end-line="118" selection-end-column="90" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="131" column="29" selection-start-line="131" selection-start-column="24" selection-end-line="131" selection-end-column="29" />
               <folding>
-                <element signature="e#3330#3968#0" expanded="true" />
-                <element signature="e#15071#18151#0" expanded="true" />
+                <element signature="e#125#368#0" expanded="true" />
+                <element signature="e#737#1448#0" expanded="true" />
+                <element signature="e#3330#4086#0" expanded="true" />
+                <element signature="e#8923#12954#0" expanded="true" />
+                <element signature="e#13011#13816#0" expanded="true" />
+                <element signature="e#15759#18859#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="WinGrade.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="WinGrade.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/WinGrade.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="460" max-vertical-offset="2060">
-              <caret line="135" column="26" selection-start-line="135" selection-start-column="23" selection-end-line="135" selection-end-column="26" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="212" column="44" selection-start-line="212" selection-start-column="44" selection-end-line="212" selection-end-column="44" />
               <folding>
-                <element signature="e#1933#2366#0" expanded="true" />
+                <element signature="e#304#1899#0" expanded="true" />
+                <element signature="e#3208#3547#0" expanded="true" />
+                <element signature="e#6129#6182#0" expanded="true" />
+                <element signature="e#7950#8247#0" expanded="true" />
+                <element signature="e#8291#8618#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TMConstraint.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/TMConstraint.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="5940" max-vertical-offset="8460">
-              <caret line="297" column="21" selection-start-line="297" selection-start-column="21" selection-end-line="297" selection-end-column="21" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="output2html.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="output2html.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/output2html.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1313" max-vertical-offset="2440">
-              <caret line="82" column="28" selection-start-line="82" selection-start-column="28" selection-end-line="82" selection-end-column="28" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="43" column="0" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MSAMaker.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="MSAMaker.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/MSAMaker.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1480">
-              <caret line="1" column="21" selection-start-line="1" selection-start-column="21" selection-end-line="1" selection-end-column="21" />
+            <state vertical-scroll-proportion="0.845645">
+              <caret line="471" column="33" selection-start-line="471" selection-start-column="26" selection-end-line="471" selection-end-column="33" />
               <folding>
-                <element signature="e#48#347#0" expanded="true" />
+                <element signature="e#25#39#0" expanded="true" />
+                <element signature="e#183#373#0" expanded="true" />
+                <element signature="e#1544#1569#0" expanded="true" />
+                <element signature="e#4124#6170#0" expanded="true" />
+                <element signature="e#6199#7274#0" expanded="true" />
+                <element signature="e#13215#14536#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TOPCONS_funcs.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/TOPCONS_funcs.py">
+      <file leaf-file-name="plot_time.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/plot_time.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="700" max-vertical-offset="1200">
-              <caret line="35" column="12" selection-start-line="35" selection-start-column="12" selection-end-line="35" selection-end-column="12" />
-              <folding />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="40" column="32" selection-start-line="40" selection-start-column="32" selection-end-line="40" selection-end-column="32" />
+              <folding>
+                <element signature="e#25#34#0" expanded="true" />
+                <element signature="e#129#446#0" expanded="true" />
+                <element signature="e#481#581#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="sasa_survey_26Aug.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="ncbiblast_urllib2.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ncbiblast_urllib2.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="26" column="1" selection-start-line="26" selection-start-column="1" selection-end-line="26" selection-end-column="1" />
+              <folding>
+                <element signature="e#1383#1444#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sasa_survey_26Aug.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sasa_survey_26Aug.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1420" max-vertical-offset="4000">
+            <state vertical-scroll-proportion="0.0">
               <caret line="141" column="4" selection-start-line="141" selection-start-column="4" selection-end-line="142" selection-end-column="44" />
-              <folding>
-                <element signature="e#2025#6198#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="sasa_survey.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sasa_survey.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="3360" max-vertical-offset="3700">
-              <caret line="168" column="39" selection-start-line="168" selection-start-column="30" selection-end-line="168" selection-end-column="39" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="topo_strings_comparer.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="topo_strings_comparer.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/topo_strings_comparer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-23.846153" vertical-offset="1780" max-vertical-offset="5620">
-              <caret line="140" column="63" selection-start-line="140" selection-start-column="63" selection-end-line="140" selection-end-column="63" />
-              <folding>
-                <element signature="e#160#1051#0" expanded="true" />
-                <element signature="e#10212#12313#0" expanded="true" />
-                <element signature="e#13503#15173#0" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="0.0">
+              <caret line="119" column="0" selection-start-line="119" selection-start-column="0" selection-end-line="119" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -161,67 +182,24 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
-    <option name="changedFiles">
+    <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/win_grade.py" />
-        <option value="$PROJECT_DIR$/TMpredict.py" />
-        <option value="$PROJECT_DIR$/uniprot_parser.py" />
-        <option value="$PROJECT_DIR$/database_new.csv" />
-        <option value="$PROJECT_DIR$/database_new.txt" />
-        <option value="$PROJECT_DIR$/separate_dataset_to_fastas.py" />
-        <option value="$PROJECT_DIR$/poly_vals_23.2.txt" />
-        <option value="$PROJECT_DIR$/sw_database_by_xml.py" />
-        <option value="$PROJECT_DIR$/topdb_functions.py" />
-        <option value="$PROJECT_DIR$/poly_vals_25.2.txt" />
-        <option value="$PROJECT_DIR$/data_sets/V_Database.txt" />
-        <option value="$PROJECT_DIR$/first_50_VH_cutoff_1.txt" />
-        <option value="$PROJECT_DIR$/data_sets/V_Database_noNos.txt" />
-        <option value="$PROJECT_DIR$/rostlab_db_to_fastas.py" />
-        <option value="$PROJECT_DIR$/vispy_temp.py" />
-        <option value="$PROJECT_DIR$/rostlab_evaluator.pl" />
-        <option value="$PROJECT_DIR$/ROC_res_parser.py" />
-        <option value="$PROJECT_DIR$/psipred_rost_optimization.py" />
-        <option value="$PROJECT_DIR$/temp.py" />
-        <option value="$PROJECT_DIR$/prd_summarize.py" />
-        <option value="$PROJECT_DIR$/polynom_params_ROC.py" />
-        <option value="$PROJECT_DIR$/win_lebgth_over_pred.py" />
-        <option value="$PROJECT_DIR$/hp_moment_over_pred.py" />
-        <option value="$PROJECT_DIR$/result_slicer.py" />
-        <option value="$PROJECT_DIR$/phobius_from_topcons.py" />
-        <option value="$PROJECT_DIR$/topcons_result_parser.py" />
-        <option value="$PROJECT_DIR$/blaster.py" />
-        <option value="$USER_HOME$/Library/Caches/PyCharm30/python_stubs/-2131660280/__builtin__.py" />
-        <option value="$PROJECT_DIR$/psipred_graph_by_type.py" />
-        <option value="$PROJECT_DIR$/polyval_21_5_15.txt" />
-        <option value="$PROJECT_DIR$/BlastMSA.py" />
-        <option value="$PROJECT_DIR$/make_empty_csts.py" />
-        <option value="$PROJECT_DIR$/pred_obs_pymol.py" />
-        <option value="$PROJECT_DIR$/prediction_analyser.py" />
-        <option value="$PROJECT_DIR$/win_len_scatter.py" />
-        <option value="$PROJECT_DIR$/sasa_survey.py" />
-        <option value="$PROJECT_DIR$/psipred_vs_mm_nomm.py" />
-        <option value="$PROJECT_DIR$/HphobicityScore.py" />
-        <option value="$PROJECT_DIR$/psipred_survey_2.9.py" />
-        <option value="$PROJECT_DIR$/MSA_for_TMpredict.py" />
-        <option value="$PROJECT_DIR$/topo_VH_analysis.py" />
-        <option value="$PROJECT_DIR$/RosettaFilter.py" />
-        <option value="$PROJECT_DIR$/output2html.py" />
-        <option value="$PROJECT_DIR$/WinGrade.py" />
-        <option value="$PROJECT_DIR$/sasa_survey_26Aug.py" />
-        <option value="$PROJECT_DIR$/TMConstraint.py" />
-        <option value="$PROJECT_DIR$/MSAMaker.py" />
+        <option value="$PROJECT_DIR$/plot_time.py" />
         <option value="$PROJECT_DIR$/TMpredict_WinGrade.py" />
-        <option value="$PROJECT_DIR$/TOPCONS_funcs.py" />
+        <option value="$PROJECT_DIR$/MSAMaker.py" />
+        <option value="$PROJECT_DIR$/MSA_for_TMpredict.py" />
+        <option value="$PROJECT_DIR$/WinGrade.py" />
         <option value="$PROJECT_DIR$/ProcessEntry.py" />
-        <option value="$PROJECT_DIR$/topo_strings_comparer.py" />
       </list>
     </option>
   </component>
+  <component name="NamedScopeManager">
+    <order />
+  </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="100" />
     <option name="y" value="23" />
     <option name="width" value="1920" />
-    <option name="height" value="1057" />
+    <option name="height" value="1053" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -265,7 +243,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -286,17 +263,19 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="recentsLimit" value="5" />
-    <property name="options.lastSelected" value="vcs.Git" />
+    <property name="options.lastSelected" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
     <property name="FullScreen" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../doc_analysis_16Aug" />
-    <property name="last.edited.regexp" value="" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../scripts/general_scripts" />
+    <property name="last.edited.regexp" value="&lt;sdfsdfsdfsdf&gt;" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="262" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder0" value="0" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="264" />
@@ -313,6 +292,8 @@
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder2" value="2" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="1062" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder3" value="3" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.splitter.proportion" value="0.2" />
   </component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
@@ -327,7 +308,7 @@
       <recent name="$PROJECT_DIR$/data_sets" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Doctest topo_string_to_WGP">
+  <component name="RunManager" selected="Python.MSAMaker">
     <configuration default="false" name="Doctest is_not_helical" type="tests" factoryName="Doctests" temporary="true" nameIsGenerated="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -345,24 +326,6 @@
       <option name="TEST_TYPE" value="TEST_FUNCTION" />
       <option name="PATTERN" value="" />
       <option name="USE_PATTERN" value="false" />
-      <RunnerSettings RunnerId="PythonRunner" />
-      <ConfigurationWrapper RunnerId="PythonRunner" />
-      <method />
-    </configuration>
-    <configuration default="false" name="psipred_survey_2.9" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="membrane_prediciton" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/psipred_survey_2.9.py" />
-      <option name="PARAMETERS" value="" />
       <RunnerSettings RunnerId="PythonRunner" />
       <ConfigurationWrapper RunnerId="PythonRunner" />
       <method />
@@ -430,7 +393,43 @@
       <ConfigurationWrapper RunnerId="PythonRunner" />
       <method />
     </configuration>
-    <configuration default="true" type="tests" factoryName="py.test">
+    <configuration default="false" name="MSAMaker" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="membrane_prediciton" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/MSAMaker.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <RunnerSettings RunnerId="PythonRunner" />
+      <ConfigurationWrapper RunnerId="PythonRunner" />
+      <method />
+    </configuration>
+    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="membrane_prediciton" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <method />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="Attests">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs />
@@ -447,11 +446,25 @@
       <option name="TEST_TYPE" value="TEST_SCRIPT" />
       <option name="PATTERN" value="" />
       <option name="USE_PATTERN" value="false" />
-      <option name="testToRun" value="" />
-      <option name="keywords" value="" />
-      <option name="params" value="" />
-      <option name="USE_PARAM" value="false" />
-      <option name="USE_KEYWORD" value="false" />
+      <method />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="Doctests">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="membrane_prediciton" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
       <method />
     </configuration>
     <configuration default="true" type="tests" factoryName="Nosetests">
@@ -473,22 +486,6 @@
       <option name="USE_PATTERN" value="false" />
       <option name="PARAMS" value="" />
       <option name="USE_PARAM" value="false" />
-      <method />
-    </configuration>
-    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="membrane_prediciton" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="PARAMETERS" value="" />
       <method />
     </configuration>
     <configuration default="true" type="tests" factoryName="Unittests">
@@ -513,7 +510,7 @@
       <option name="USE_PARAM" value="false" />
       <method />
     </configuration>
-    <configuration default="true" type="tests" factoryName="Doctests">
+    <configuration default="true" type="tests" factoryName="py.test">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs />
@@ -530,41 +527,27 @@
       <option name="TEST_TYPE" value="TEST_SCRIPT" />
       <option name="PATTERN" value="" />
       <option name="USE_PATTERN" value="false" />
-      <method />
-    </configuration>
-    <configuration default="true" type="tests" factoryName="Attests">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="membrane_prediciton" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_SCRIPT" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
+      <option name="testToRun" value="" />
+      <option name="keywords" value="" />
+      <option name="params" value="" />
+      <option name="USE_PARAM" value="false" />
+      <option name="USE_KEYWORD" value="false" />
       <method />
     </configuration>
     <list size="5">
       <item index="0" class="java.lang.String" itemvalue="Python tests.Doctest is_not_helical" />
-      <item index="1" class="java.lang.String" itemvalue="Python.psipred_survey_2.9" />
-      <item index="2" class="java.lang.String" itemvalue="Python tests.Doctest win_in_tm_pos" />
-      <item index="3" class="java.lang.String" itemvalue="Python tests.Doctest parse_WGP" />
-      <item index="4" class="java.lang.String" itemvalue="Python tests.Doctest topo_string_to_WGP" />
+      <item index="1" class="java.lang.String" itemvalue="Python tests.Doctest win_in_tm_pos" />
+      <item index="2" class="java.lang.String" itemvalue="Python tests.Doctest parse_WGP" />
+      <item index="3" class="java.lang.String" itemvalue="Python tests.Doctest topo_string_to_WGP" />
+      <item index="4" class="java.lang.String" itemvalue="Python.MSAMaker" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python tests.Doctest topo_string_to_WGP" />
-        <item index="1" class="java.lang.String" itemvalue="Python tests.Doctest parse_WGP" />
-        <item index="2" class="java.lang.String" itemvalue="Python tests.Doctest win_in_tm_pos" />
-        <item index="3" class="java.lang.String" itemvalue="Python tests.Doctest is_not_helical" />
-        <item index="4" class="java.lang.String" itemvalue="Python.psipred_survey_2.9" />
+        <item index="0" class="java.lang.String" itemvalue="Python.MSAMaker" />
+        <item index="1" class="java.lang.String" itemvalue="Python tests.Doctest topo_string_to_WGP" />
+        <item index="2" class="java.lang.String" itemvalue="Python tests.Doctest parse_WGP" />
+        <item index="3" class="java.lang.String" itemvalue="Python tests.Doctest win_in_tm_pos" />
+        <item index="4" class="java.lang.String" itemvalue="Python tests.Doctest is_not_helical" />
       </list>
     </recent_temporary>
   </component>
@@ -576,321 +559,304 @@
     <task active="true" id="Default" summary="Default task">
       <changelist id="6a73546c-b0e1-4c73-9c98-48c4af466cd3" name="Default" comment="" />
       <created>1416142765897</created>
+      <option name="number" value="Default" />
       <updated>1416142765897</updated>
-    </task>
-    <task id="LOCAL-00001" summary="push test">
-      <created>1416146101393</created>
-      <updated>1416146101393</updated>
-    </task>
-    <task id="LOCAL-00002" summary="added and debugged (with success) SecondaryMinimas which finds minimas that were not found originally because they were skipped. PymolMark was also improved to color secondary minimas in blue">
-      <created>1416157739148</created>
-      <updated>1416157739148</updated>
-    </task>
-    <task id="LOCAL-00003" summary="rotated xticks, added some remarks">
-      <created>1416160092837</created>
-      <updated>1416160092837</updated>
-    </task>
-    <task id="LOCAL-00004" summary="improved plotting, using PlotParams()">
-      <created>1416163781485</created>
-      <updated>1416163781485</updated>
-    </task>
-    <task id="LOCAL-00005" summary="inserted PRIMARY_THRESHOLD for evading 'bad' minimas.">
-      <created>1416213045558</created>
-      <updated>1416213045558</updated>
-    </task>
-    <task id="LOCAL-00006" summary="made new examples. changed axis labels to latex">
-      <created>1416215930915</created>
-      <updated>1416215930915</updated>
-    </task>
-    <task id="LOCAL-00007" summary="last commit with Plot in the old fashion">
-      <created>1416298034023</created>
-      <updated>1416298034023</updated>
-    </task>
-    <task id="LOCAL-00008" summary="split Plot to Plot and Grades2Array">
-      <created>1416298567767</created>
-      <updated>1416298567767</updated>
-    </task>
-    <task id="LOCAL-00009" summary="first commit of SW_parser.">
-      <created>1416303627890</created>
-      <updated>1416303627891</updated>
-    </task>
-    <task id="LOCAL-00010" summary="created minimaOrganizer">
-      <created>1416398446724</created>
-      <updated>1416398446724</updated>
-    </task>
-    <task id="LOCAL-00011" summary="improvments to combined writer. now">
-      <created>1416411034550</created>
-      <updated>1416411034550</updated>
-    </task>
-    <task id="LOCAL-00012" summary="alignment now working">
-      <created>1416481512312</created>
-      <updated>1416481512312</updated>
-    </task>
-    <task id="LOCAL-00013" summary="now we can score multiple entries">
-      <created>1416494517400</created>
-      <updated>1416494517400</updated>
-    </task>
-    <task id="LOCAL-00014" summary="added Range2Tups, for coloring stuff. and made a new PymolMark that colors by start-end (not start+win).">
-      <created>1416504614154</created>
-      <updated>1416504614154</updated>
-    </task>
-    <task id="LOCAL-00015" summary="added oteher_functions and it's Psi results reading function. changed plotting parameters to bigger fonts and axis ticks.">
-      <created>1416765984566</created>
-      <updated>1416765984566</updated>
-    </task>
-    <task id="LOCAL-00016" summary="started work on ss_awareness. see comment">
-      <created>1416767938671</created>
-      <updated>1416767938671</updated>
-    </task>
-    <task id="LOCAL-00017" summary="added PsiREaderHelix that returns a list of helix probability. WindowGrades now checks for the minimal window's helix probability, and hydrophobicity_grade only tests the increments. an overall working version">
-      <created>1417014602760</created>
-      <updated>1417014602760</updated>
-    </task>
-    <task id="LOCAL-00018" summary="fixed plotting with psipred awareness problem (didn't add starters for non-helical WIN_MINs)">
-      <created>1417080609359</created>
-      <updated>1417080609359</updated>
-    </task>
-    <task id="LOCAL-00019" summary="changed the psi-pred consideration. now IsHelical checks the condition for both increments, and minimal windows. see comment in funciton">
-      <created>1417086794255</created>
-      <updated>1417086794255</updated>
-    </task>
-    <task id="LOCAL-00020" summary="added a second run of secondary minima search, so that neighbouring secondary minnimas will be found.">
-      <created>1417098500404</created>
-      <updated>1417098500404</updated>
-    </task>
-    <task id="LOCAL-00021" summary="trying to push all files">
-      <created>1417332023054</created>
-      <updated>1417332023054</updated>
-    </task>
-    <task id="LOCAL-00022" summary="trying to push all files, again">
-      <created>1417332107804</created>
-      <updated>1417332107804</updated>
-    </task>
-    <task id="LOCAL-00023" summary="added grade_seq_single_go which checks all modes and types, retrnns best score, with direction, mode and type. also added dictionaries of membrane spanes by type for third and two thirds">
-      <created>1417609202826</created>
-      <updated>1417609202826</updated>
-    </task>
-    <task id="LOCAL-00024" summary="added pymol by exposed for coloring only residues that are supposed to be exposed. doesm't come out very well.">
-      <created>1417619354811</created>
-      <updated>1417619354811</updated>
-    </task>
-    <task id="LOCAL-00025" summary="tesed some samples">
-      <created>1418559282163</created>
-      <updated>1418559282163</updated>
-    </task>
-    <task id="LOCAL-00026" summary="new polyval values">
-      <created>1423672440700</created>
-      <updated>1423672440700</updated>
-    </task>
-    <task id="LOCAL-00027" summary="missing file">
-      <created>1423733854697</created>
-      <updated>1423733854697</updated>
-    </task>
-    <task id="LOCAL-00028" summary="major revision!!!! TMpredict is the new work horse&#10;">
-      <created>1424002457148</created>
-      <updated>1424002457149</updated>
-    </task>
-    <task id="LOCAL-00029" summary="moved to TMpredict_Wingrades.&#10;this new class improves and simplifies everything.&#10;">
-      <created>1424024805594</created>
-      <updated>1424024805594</updated>
-    </task>
-    <task id="LOCAL-00030" summary="ploting Win_grades now shows all win grades, with a legend">
-      <created>1424073079120</created>
-      <updated>1424073079120</updated>
     </task>
     <task id="LOCAL-00031" summary="added PsiPred integration, and a parser for the DB to test multiple entries">
       <created>1424251910861</created>
+      <option name="number" value="00031" />
+      <option name="project" value="LOCAL" />
       <updated>1424251910861</updated>
     </task>
     <task id="LOCAL-00032" summary="documentation">
       <created>1424278559412</created>
+      <option name="number" value="00032" />
+      <option name="project" value="LOCAL" />
       <updated>1424278559412</updated>
     </task>
     <task id="LOCAL-00033" summary="last commit before changing to new topology prediction.">
       <created>1424772131794</created>
+      <option name="number" value="00033" />
+      <option name="project" value="LOCAL" />
       <updated>1424772131794</updated>
     </task>
     <task id="LOCAL-00034" summary="new topology determination algorithm, and integration of TOPDB.">
       <created>1424786056838</created>
+      <option name="number" value="00034" />
+      <option name="project" value="LOCAL" />
       <updated>1424786056838</updated>
     </task>
     <task id="LOCAL-00035" summary="new poly vals from assaf">
       <created>1424876122389</created>
+      <option name="number" value="00035" />
+      <option name="project" value="LOCAL" />
       <updated>1424876122389</updated>
     </task>
     <task id="LOCAL-00036" summary="introducing the von heijne db">
       <created>1425831143705</created>
+      <option name="number" value="00036" />
+      <option name="project" value="LOCAL" />
       <updated>1425831143705</updated>
     </task>
     <task id="LOCAL-00037" summary="added db">
       <created>1425831180091</created>
+      <option name="number" value="00037" />
+      <option name="project" value="LOCAL" />
       <updated>1425831180091</updated>
     </task>
     <task id="LOCAL-00038" summary="localisined hphobicity">
       <created>1425831759890</created>
+      <option name="number" value="00038" />
+      <option name="project" value="LOCAL" />
       <updated>1425831759890</updated>
     </task>
     <task id="LOCAL-00039" summary="last commit before miluim">
       <created>1425842612671</created>
+      <option name="number" value="00039" />
+      <option name="project" value="LOCAL" />
       <updated>1425842612672</updated>
     </task>
     <task id="LOCAL-00040" summary="Adding the VDB dataset">
       <created>1425884255247</created>
+      <option name="number" value="00040" />
+      <option name="project" value="LOCAL" />
       <updated>1425884255247</updated>
     </task>
     <task id="LOCAL-00041" summary="Adding the VDB dataset">
       <created>1425884300608</created>
+      <option name="number" value="00041" />
+      <option name="project" value="LOCAL" />
       <updated>1425884300608</updated>
     </task>
     <task id="LOCAL-00042" summary="decided to make new topology greedy alfgorithm">
       <created>1426262525519</created>
+      <option name="number" value="00042" />
+      <option name="project" value="LOCAL" />
       <updated>1426262525519</updated>
     </task>
     <task id="LOCAL-00043" summary="new topo predictor with graph theory implementation">
       <created>1426613966930</created>
+      <option name="number" value="00043" />
+      <option name="project" value="LOCAL" />
       <updated>1426613966930</updated>
     </task>
     <task id="LOCAL-00044" summary="documented graph theory base topology predictor">
       <created>1426615135022</created>
+      <option name="number" value="00044" />
+      <option name="project" value="LOCAL" />
       <updated>1426615135022</updated>
     </task>
     <task id="LOCAL-00045" summary="von heijne DB loop">
       <created>1426671995851</created>
+      <option name="number" value="00045" />
+      <option name="project" value="LOCAL" />
       <updated>1426671995851</updated>
     </task>
     <task id="LOCAL-00046" summary="topo_graph now gives best and secondary best (sec_best) results with opposite directions. add a ROC function to TMpredict to run ROC processes from cmd line">
       <created>1426762874768</created>
+      <option name="number" value="00046" />
+      <option name="project" value="LOCAL" />
       <updated>1426762874768</updated>
     </task>
     <task id="LOCAL-00047" summary="moving to rostlab DB. added a parser and topo string creator and comparer">
       <created>1427868452479</created>
+      <option name="number" value="00047" />
+      <option name="project" value="LOCAL" />
       <updated>1427868452479</updated>
     </task>
     <task id="LOCAL-00048" summary="topo-string comparer improved to determine topology correctness">
       <created>1427878232890</created>
+      <option name="number" value="00048" />
+      <option name="project" value="LOCAL" />
       <updated>1427878232890</updated>
     </task>
     <task id="LOCAL-00049" summary="now calculating Qok such that only a protein where all TMHs were predicted correctly (determined by the rostlab_evaluator.pl script) are counted. that's averaged over all mezsured proteins.">
       <created>1427916647817</created>
+      <option name="number" value="00049" />
+      <option name="project" value="LOCAL" />
       <updated>1427916647817</updated>
     </task>
     <task id="LOCAL-00050" summary="moved to /Volumes/...&#10;now gets topo-string of both opm and pdbtm.&#10;next: make calculate dist for both strings.">
       <created>1427986264742</created>
+      <option name="number" value="00050" />
+      <option name="project" value="LOCAL" />
       <updated>1427986264742</updated>
     </task>
     <task id="LOCAL-00051" summary="improved ROC graph making in ROC_res_parser.&#10;added pred_obs_pymol to mark pred, obs, and overlap on pymol">
       <created>1428390164782</created>
+      <option name="number" value="00051" />
+      <option name="project" value="LOCAL" />
       <updated>1428390164782</updated>
     </task>
     <task id="LOCAL-00052" summary="topology determination now CAN take a known_tm_num and force best and sec-best to be of that length.&#10;a new standard, overlap10 is implemented.">
       <created>1428584410655</created>
+      <option name="number" value="00052" />
+      <option name="project" value="LOCAL" />
       <updated>1428584410656</updated>
     </task>
     <task id="LOCAL-00053" summary="added a parser for SCAMPI results in topcons output files.&#10;">
       <created>1428858372876</created>
+      <option name="number" value="00053" />
+      <option name="project" value="LOCAL" />
       <updated>1428858372876</updated>
     </task>
     <task id="LOCAL-00054" summary="many mnay changes">
       <created>1429513057567</created>
+      <option name="number" value="00054" />
+      <option name="project" value="LOCAL" />
       <updated>1429513057567</updated>
     </task>
     <task id="LOCAL-00055" summary="topo prediction over von-heijne DB, with phobius comparison">
       <created>1429710830265</created>
+      <option name="number" value="00055" />
+      <option name="project" value="LOCAL" />
       <updated>1429710830265</updated>
     </task>
     <task id="LOCAL-00056" summary="added SP recognition and more">
       <created>1430225109476</created>
+      <option name="number" value="00056" />
+      <option name="project" value="LOCAL" />
       <updated>1430225109476</updated>
     </task>
     <task id="LOCAL-00057" summary="last commit before integrating blast results. has blaster , topo_strings_comparer, MSA_for_TMpredict object(s) etc.">
       <created>1430840100814</created>
+      <option name="number" value="00057" />
+      <option name="project" value="LOCAL" />
       <updated>1430840100814</updated>
     </task>
     <task id="LOCAL-00058" summary="various improvements to blaster etc.">
       <created>1431022810303</created>
+      <option name="number" value="00058" />
+      <option name="project" value="LOCAL" />
       <updated>1431022810310</updated>
     </task>
     <task id="LOCAL-00059" summary="documentation, debugging etc.">
       <created>1432538176805</created>
+      <option name="number" value="00059" />
+      <option name="project" value="LOCAL" />
       <updated>1432538176805</updated>
     </task>
     <task id="LOCAL-00060" summary="documentation, debugging etc.">
       <created>1432631521658</created>
+      <option name="number" value="00060" />
+      <option name="project" value="LOCAL" />
       <updated>1432631521658</updated>
     </task>
     <task id="LOCAL-00061" summary="last commit before median feature is added">
       <created>1434024512567</created>
+      <option name="number" value="00061" />
+      <option name="project" value="LOCAL" />
       <updated>1434024512567</updated>
     </task>
     <task id="LOCAL-00062" summary="last commit before changing psipred to avergae of both beta sheet and coil">
       <created>1434120952201</created>
+      <option name="number" value="00062" />
+      <option name="project" value="LOCAL" />
       <updated>1434120952201</updated>
     </task>
     <task id="LOCAL-00063" summary="implementation of new psipred rules, and median for MSA">
       <created>1434350400523</created>
+      <option name="number" value="00063" />
+      <option name="project" value="LOCAL" />
       <updated>1434350400524</updated>
     </task>
     <task id="LOCAL-00064" summary="commit....">
       <created>1436681009882</created>
+      <option name="number" value="00064" />
+      <option name="project" value="LOCAL" />
       <updated>1436681009883</updated>
     </task>
     <task id="LOCAL-00065" summary="introduced a percentile function for MSA. and the ability to input a precentile from the command line. -msa_percentile.&#10;potentially fixed error where a non AA single letter is trying to be graded in WinGrade.grade_segment()">
       <created>1437332256180</created>
+      <option name="number" value="00065" />
+      <option name="project" value="LOCAL" />
       <updated>1437332256180</updated>
     </task>
     <task id="LOCAL-00066" summary="changed to new length model, after ben-tal.">
       <created>1437660396883</created>
+      <option name="number" value="00066" />
+      <option name="project" value="LOCAL" />
       <updated>1437660396883</updated>
     </task>
     <task id="LOCAL-00067" summary="introducing constraints TMConstraint.py">
       <created>1439294460531</created>
+      <option name="number" value="00067" />
+      <option name="project" value="LOCAL" />
       <updated>1439294460531</updated>
     </task>
     <task id="LOCAL-00068" summary="implemented funcs to write and read .cst">
       <created>1439297311524</created>
+      <option name="number" value="00068" />
+      <option name="project" value="LOCAL" />
       <updated>1439297311524</updated>
     </task>
     <task id="LOCAL-00069" summary="before changing graph part to finding multiple source-&gt;sink segments">
       <created>1439364160127</created>
+      <option name="number" value="00069" />
+      <option name="project" value="LOCAL" />
       <updated>1439364160127</updated>
     </task>
     <task id="LOCAL-00070" summary="last commit before swithcing to double Bellman-Ford">
       <created>1439399266048</created>
+      <option name="number" value="00070" />
+      <option name="project" value="LOCAL" />
       <updated>1439399266048</updated>
     </task>
     <task id="LOCAL-00071" summary="implemented the graph pruning that allows constraints.">
       <created>1439895350637</created>
+      <option name="number" value="00071" />
+      <option name="project" value="LOCAL" />
       <updated>1439895350637</updated>
     </task>
     <task id="LOCAL-00072" summary="before implementing BFS for #TM&#10;">
       <created>1440056520908</created>
+      <option name="number" value="00072" />
+      <option name="project" value="LOCAL" />
       <updated>1440056520908</updated>
     </task>
     <task id="LOCAL-00073" summary="a working version of the BFS of the graph for n nodes. will now try to use assaf's idea">
       <created>1440080290909</created>
+      <option name="number" value="00073" />
+      <option name="project" value="LOCAL" />
       <updated>1440080290909</updated>
     </task>
     <task id="LOCAL-00074" summary="BFS now only runs 25aa FWD wins. will now try enumerating the nodes">
       <created>1440319099552</created>
+      <option name="number" value="00074" />
+      <option name="project" value="LOCAL" />
       <updated>1440319099552</updated>
     </task>
     <task id="LOCAL-00075" summary="added parse_WGP and tested it.&#10;improved same_as_other for WGP.&#10;will now change BFS to graph of indices...">
       <created>1440498599773</created>
+      <option name="number" value="00075" />
+      <option name="project" value="LOCAL" />
       <updated>1440498599773</updated>
     </task>
     <task id="LOCAL-00076" summary="pushing!!!!!">
       <created>1441017248351</created>
+      <option name="number" value="00076" />
+      <option name="project" value="LOCAL" />
       <updated>1441017248352</updated>
     </task>
     <task id="LOCAL-00077" summary="first push with ProcessEntry functional">
       <created>1441531084059</created>
+      <option name="number" value="00077" />
+      <option name="project" value="LOCAL" />
       <updated>1441531084060</updated>
     </task>
     <task id="LOCAL-00078" summary="during benchmarks by Assaf">
       <created>1442487517853</created>
+      <option name="number" value="00078" />
+      <option name="project" value="LOCAL" />
       <updated>1442487517853</updated>
     </task>
-    <option name="localTasksCounter" value="79" />
+    <task id="LOCAL-00079" summary="preparations for server...">
+      <created>1444285623637</created>
+      <option name="number" value="00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1444285623637</updated>
+    </task>
+    <option name="localTasksCounter" value="80" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -914,27 +880,29 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="100" y="23" width="1920" height="1057" extended-state="6" />
+    <frame x="0" y="23" width="1920" height="1053" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.4997367" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.10110585" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3299428" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39251336" sideWeight="0.5002633" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.428877" sideWeight="0.4997367" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.077935755" sideWeight="0.49625668" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.077935755" sideWeight="0.5037433" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.428877" sideWeight="0.5002633" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.428877" sideWeight="0.4997367" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -949,10 +917,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <option name="myTodoPanelSettings">
-      <TodoPanelSettings />
-    </option>
-    <MESSAGE value="added a parser for SCAMPI results in topcons output files.&#10;" />
     <MESSAGE value="many mnay changes" />
     <MESSAGE value="topo prediction over von-heijne DB, with phobius comparison" />
     <MESSAGE value="added SP recognition and more" />
@@ -977,7 +941,8 @@
     <MESSAGE value="pushing!!!!!" />
     <MESSAGE value="first push with ProcessEntry functional" />
     <MESSAGE value="during benchmarks by Assaf" />
-    <option name="LAST_COMMIT_MESSAGE" value="during benchmarks by Assaf" />
+    <MESSAGE value="preparations for server..." />
+    <option name="LAST_COMMIT_MESSAGE" value="preparations for server..." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -990,39 +955,48 @@
       </breakpoints>
       <option name="time" value="4" />
     </breakpoint-manager>
+    <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/topo_strings_comparer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="119" column="0" selection-start-line="119" selection-start-column="0" selection-end-line="119" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/data_sets/VDB/V_Database.fasta">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.6446402" vertical-offset="439" max-vertical-offset="1120">
+        <state vertical-scroll-proportion="-0.6446402">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/SW_database.csv">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2740">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/database_new.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="20" max-vertical-offset="2720">
+        <state vertical-scroll-proportion="0.0">
           <caret line="1" column="351" selection-start-line="1" selection-start-column="347" selection-end-line="1" selection-end-column="351" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data_sets/V_Database.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1100">
+        <state vertical-scroll-proportion="0.0">
           <caret line="5" column="10" selection-start-line="5" selection-start-column="10" selection-end-line="5" selection-end-column="10" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data_sets/V_Database_noNos.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="960">
+        <state vertical-scroll-proportion="0.0">
           <caret line="42" column="0" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="4" />
           <caret line="41" column="0" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="4" />
           <caret line="40" column="0" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="4" />
@@ -1071,345 +1045,359 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/first_50_VH_cutoff_1.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="253" max-vertical-offset="1160">
+        <state vertical-scroll-proportion="0.0">
           <caret line="28" column="4" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="4" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/separate_dataset_to_fastas.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="300">
+        <state vertical-scroll-proportion="0.0">
           <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/vispy_temp.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.25682184" vertical-offset="0" max-vertical-offset="3560">
+        <state vertical-scroll-proportion="0.25682184">
           <caret line="8" column="8" selection-start-line="8" selection-start-column="8" selection-end-line="8" selection-end-column="8" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/rostlab_db_to_fastas.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="280">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="5" selection-end-column="37" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/rostlab_evaluator.pl">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4600">
+        <state vertical-scroll-proportion="0.0">
           <caret line="16" column="16" selection-start-line="16" selection-start-column="16" selection-end-line="16" selection-end-column="16" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/prd_analyser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="695">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/temp.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1680">
+        <state vertical-scroll-proportion="0.0">
           <caret line="11" column="12" selection-start-line="11" selection-start-column="12" selection-end-line="11" selection-end-column="12" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/win_lebgth_over_pred.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1409" max-vertical-offset="2280">
+        <state vertical-scroll-proportion="0.0">
           <caret line="109" column="26" selection-start-line="109" selection-start-column="26" selection-end-line="109" selection-end-column="26" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/prd_summarize.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="956" max-vertical-offset="1840">
+        <state vertical-scroll-proportion="0.0">
           <caret line="8" column="28" selection-start-line="8" selection-start-column="28" selection-end-line="8" selection-end-column="28" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/hp_moment_over_pred.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="609" max-vertical-offset="3020">
+        <state vertical-scroll-proportion="0.0">
           <caret line="104" column="20" selection-start-line="104" selection-start-column="4" selection-end-line="104" selection-end-column="20" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/polynom_params_ROC.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1380">
+        <state vertical-scroll-proportion="0.0">
           <caret line="12" column="30" selection-start-line="12" selection-start-column="30" selection-end-line="12" selection-end-column="30" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/topcons_result_parser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="745" max-vertical-offset="1420">
+        <state vertical-scroll-proportion="0.0">
           <caret line="22" column="0" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/poly_vals_23.2.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="500">
+        <state vertical-scroll-proportion="0.0">
           <caret line="19" column="49" selection-start-line="19" selection-start-column="49" selection-end-line="19" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Library/Caches/PyCharm30/python_stubs/-2131660280/time.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.74660635" vertical-offset="0" max-vertical-offset="2600">
-          <caret line="130" column="4" selection-start-line="130" selection-start-column="4" selection-end-line="130" selection-end-column="4" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/psipred_rost_optimization.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.09049774" vertical-offset="0" max-vertical-offset="1140">
+        <state vertical-scroll-proportion="0.09049774">
           <caret line="8" column="51" selection-start-line="8" selection-start-column="51" selection-end-line="8" selection-end-column="51" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ROC_res_parser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.09184845" vertical-offset="0" max-vertical-offset="1600">
+        <state vertical-scroll-proportion="0.09184845">
           <caret line="6" column="12" selection-start-line="6" selection-start-column="12" selection-end-line="6" selection-end-column="12" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/result_slicer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.11025358" vertical-offset="0" max-vertical-offset="907">
+        <state vertical-scroll-proportion="0.11025358">
           <caret line="6" column="19" selection-start-line="6" selection-start-column="19" selection-end-line="6" selection-end-column="19" />
         </state>
       </provider>
     </entry>
     <entry file="file:///usr/local/lib/python2.7/site-packages/numpy/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4100">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/psipred_graph_by_type.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="40" max-vertical-offset="880">
+        <state vertical-scroll-proportion="0.0">
           <caret line="10" column="81" selection-start-line="10" selection-start-column="81" selection-end-line="10" selection-end-column="81" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/win_grade.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="884">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/polyval_21_5_15.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="500">
+        <state vertical-scroll-proportion="0.0">
           <caret line="19" column="49" selection-start-line="19" selection-start-column="49" selection-end-line="19" selection-end-column="49" />
         </state>
       </provider>
     </entry>
     <entry file="file://$APPLICATION_HOME_DIR$/helpers/python-skeletons/re.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7963801" vertical-offset="596" max-vertical-offset="1600">
+        <state vertical-scroll-proportion="0.7963801">
           <caret line="262" column="8" selection-start-line="262" selection-start-column="8" selection-end-line="262" selection-end-column="8" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/blaster.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.24255788" vertical-offset="0" max-vertical-offset="1060">
+        <state vertical-scroll-proportion="0.24255788">
           <caret line="74" column="0" selection-start-line="74" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/BlastMSA.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="3020" max-vertical-offset="4200">
+        <state vertical-scroll-proportion="0.0">
           <caret line="151" column="8" selection-start-line="151" selection-start-column="8" selection-end-line="151" selection-end-column="84" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/poly_vals_25.2.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="500">
+        <state vertical-scroll-proportion="0.0">
           <caret line="15" column="5" selection-start-line="15" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Library/Caches/PyCharm30/python_stubs/-2131660280/__builtin__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3325792" vertical-offset="166" max-vertical-offset="39520">
-          <caret line="27" column="0" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/make_empty_csts.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="720">
+        <state vertical-scroll-proportion="0.0">
           <caret line="0" column="21" selection-start-line="0" selection-start-column="21" selection-end-line="0" selection-end-column="21" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pred_obs_pymol.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1320">
+        <state vertical-scroll-proportion="0.0">
           <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/prediction_analyser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="340">
+        <state vertical-scroll-proportion="0.0">
           <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/win_len_scatter.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="16" max-vertical-offset="1380">
+        <state vertical-scroll-proportion="0.0">
           <caret line="35" column="29" selection-start-line="35" selection-start-column="29" selection-end-line="35" selection-end-column="29" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/psipred_vs_mm_nomm.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="40" max-vertical-offset="2600">
+        <state vertical-scroll-proportion="0.0">
           <caret line="152" column="23" selection-start-line="0" selection-start-column="0" selection-end-line="225" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/MSA_for_TMpredict.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="140" max-vertical-offset="1260">
-          <caret line="70" column="27" selection-start-line="70" selection-start-column="23" selection-end-line="70" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///opt/local/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/argparse.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7960309" vertical-offset="9098" max-vertical-offset="10760">
-          <caret line="2111" column="28" selection-start-line="2111" selection-start-column="28" selection-end-line="2111" selection-end-column="28" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/HphobicityScore.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="5780" max-vertical-offset="24120">
+        <state vertical-scroll-proportion="0.0">
           <caret line="289" column="17" selection-start-line="289" selection-start-column="17" selection-end-line="289" selection-end-column="17" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/topo_VH_analysis.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1376" max-vertical-offset="4100">
+        <state vertical-scroll-proportion="0.0">
           <caret line="85" column="57" selection-start-line="85" selection-start-column="57" selection-end-line="85" selection-end-column="57" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/psipred_survey_2.9.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2105" max-vertical-offset="2980">
+        <state vertical-scroll-proportion="0.0">
           <caret line="6" column="11" selection-start-line="6" selection-start-column="11" selection-end-line="6" selection-end-column="11" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sasa_survey.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1633" max-vertical-offset="2540">
+        <state vertical-scroll-proportion="0.0">
           <caret line="168" column="39" selection-start-line="168" selection-start-column="30" selection-end-line="168" selection-end-column="39" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/output2html.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1313" max-vertical-offset="2440">
-          <caret line="82" column="28" selection-start-line="82" selection-start-column="28" selection-end-line="82" selection-end-column="28" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/TMConstraint.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="713" max-vertical-offset="2420">
+        <state vertical-scroll-proportion="0.0">
           <caret line="297" column="21" selection-start-line="297" selection-start-column="21" selection-end-line="297" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TMpredict_WinGrade.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1060" max-vertical-offset="16400">
-          <caret line="53" column="23" selection-start-line="53" selection-start-column="23" selection-end-line="53" selection-end-column="23" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/TOPCONS_funcs.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="700" max-vertical-offset="1200">
+        <state vertical-scroll-proportion="0.0">
           <caret line="35" column="12" selection-start-line="35" selection-start-column="12" selection-end-line="35" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/output2html.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="43" column="0" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/plot_time.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="40" column="32" selection-start-line="40" selection-start-column="32" selection-end-line="40" selection-end-column="32" />
+          <folding>
+            <element signature="e#25#34#0" expanded="true" />
+            <element signature="e#129#446#0" expanded="true" />
+            <element signature="e#481#581#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ncbiblast_urllib2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="26" column="1" selection-start-line="26" selection-start-column="1" selection-end-line="26" selection-end-column="1" />
+          <folding>
+            <element signature="e#1383#1444#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sasa_survey_26Aug.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1420" max-vertical-offset="4000">
+        <state vertical-scroll-proportion="0.0">
           <caret line="141" column="4" selection-start-line="141" selection-start-column="4" selection-end-line="142" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/topo_strings_comparer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="119" column="0" selection-start-line="119" selection-start-column="0" selection-end-line="119" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MSA_for_TMpredict.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="139" column="88" selection-start-line="139" selection-start-column="88" selection-end-line="139" selection-end-column="88" />
           <folding>
-            <element signature="e#2025#6198#0" expanded="true" />
+            <element signature="e#2481#3021#0" expanded="true" />
+            <element signature="e#7579#7837#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/WinGrade.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="460" max-vertical-offset="2060">
-          <caret line="135" column="26" selection-start-line="135" selection-start-column="23" selection-end-line="135" selection-end-column="26" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="212" column="44" selection-start-line="212" selection-start-column="44" selection-end-line="212" selection-end-column="44" />
           <folding>
-            <element signature="e#1933#2366#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/topo_strings_comparer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-23.846153" vertical-offset="1780" max-vertical-offset="5620">
-          <caret line="140" column="63" selection-start-line="140" selection-start-column="63" selection-end-line="140" selection-end-column="63" />
-          <folding>
-            <element signature="e#160#1051#0" expanded="true" />
-            <element signature="e#10212#12313#0" expanded="true" />
-            <element signature="e#13503#15173#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/MSAMaker.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1480">
-          <caret line="1" column="21" selection-start-line="1" selection-start-column="21" selection-end-line="1" selection-end-column="21" />
-          <folding>
-            <element signature="e#48#347#0" expanded="true" />
+            <element signature="e#304#1899#0" expanded="true" />
+            <element signature="e#3208#3547#0" expanded="true" />
+            <element signature="e#6129#6182#0" expanded="true" />
+            <element signature="e#7950#8247#0" expanded="true" />
+            <element signature="e#8291#8618#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ProcessEntry.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.13940725" vertical-offset="753" max-vertical-offset="3900">
-          <caret line="118" column="90" selection-start-line="118" selection-start-column="90" selection-end-line="118" selection-end-column="90" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="131" column="29" selection-start-line="131" selection-start-column="24" selection-end-line="131" selection-end-column="29" />
           <folding>
-            <element signature="e#3330#3968#0" expanded="true" />
-            <element signature="e#15071#18151#0" expanded="true" />
+            <element signature="e#125#368#0" expanded="true" />
+            <element signature="e#737#1448#0" expanded="true" />
+            <element signature="e#3330#4086#0" expanded="true" />
+            <element signature="e#8923#12954#0" expanded="true" />
+            <element signature="e#13011#13816#0" expanded="true" />
+            <element signature="e#15759#18859#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TMpredict_WinGrade.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="38" column="50" selection-start-line="38" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
+          <folding>
+            <element signature="e#40#62#0" expanded="true" />
+            <element signature="e#3702#4209#0" expanded="true" />
+            <element signature="e#4246#5569#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MSAMaker.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.845645">
+          <caret line="471" column="33" selection-start-line="471" selection-start-column="26" selection-end-line="471" selection-end-column="33" />
+          <folding>
+            <element signature="e#25#39#0" expanded="true" />
+            <element signature="e#183#373#0" expanded="true" />
+            <element signature="e#1544#1569#0" expanded="true" />
+            <element signature="e#4124#6170#0" expanded="true" />
+            <element signature="e#6199#7274#0" expanded="true" />
+            <element signature="e#13215#14536#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1431,4 +1419,3 @@
     </states>
   </component>
 </project>
-

@@ -371,7 +371,7 @@ if __name__ == '__main__':
     parser.add_argument('-mode', default='single', type=str)
     parser.add_argument('-path', default=os.getcwd(), type=str)
     parser.add_argument('-name', type=str)
-    parser.add_argument('-num_prd', default=80, type=int)
+    parser.add_argument('-num_prd', default=10, type=int)
     args = vars(parser.parse_args())
 
     if args['mode'] == 'single':
