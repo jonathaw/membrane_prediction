@@ -143,6 +143,9 @@ def prd_directory(dir_path):
         print 'totals', totals
         print 'errors', errors
 
+        print 'at total topgrph got right', float(sum(results['pred_ts'].values())) / float(sum(totals.values()))
+        print 'at total topcons got right', float(sum(results['topcons'].values())) / float(sum(totals.values()))
+
         plt.figure()
         data = {}
         for predictor, results_d in results.items():

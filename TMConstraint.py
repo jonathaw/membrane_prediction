@@ -28,7 +28,7 @@ class TMConstraint():
         msg += 'tm_pos_fidelity %r\n' % self.tm_pos_fidelity
         if self.non_tm_pos is not None:
             for t in self.non_tm_pos:
-                msg += 'non_tm_pos %i %i %s\n' % (t[0], t[1], t[2])
+                msg += 'non_tm_pos %i %i\n' % (t[0], t[1])
         else:
             msg += 'non_tm_pos None\n'
         msg += 'c_term %r\n' % self.c_term
@@ -189,7 +189,7 @@ def win_not_in_segments(win, segments):
     :return: True iff the win does not overlap with ANY of the segments
     """
     for seg in segments:
-        if (seg[0] <= win.start <= seg[1]) or (seg[0] <= win.end <= seg[1]):
+        if (seg[0] <= win.begin <= seg[1]) or (seg[0] <= win.begin <= seg[1]):
             return False
     return True
 
@@ -249,6 +249,32 @@ def win_in_tm_pos(pos, tm_pos, fidelity):
     return False, None
 
 
+def pos_in_non_tm(pos, non_tm_pos):
+    """
+    :param pos: a tm pos [begin, end]
+    :param non_tm_pos: list of non tm poses [[begin, end],...]
+    :return: True iff pos is within any of the non_tm_pos
+    >>> pos_in_non_tm([10, 20], [[0, 5]])
+    False
+    >>> pos_in_non_tm([10, 20], [[0, 15]])
+    True
+    >>> pos_in_non_tm([10, 20], [[9, 21]])
+    True
+    >>> pos_in_non_tm([100, 120], [[9, 21]])
+    False
+    >>> pos_in_non_tm([10, 20], [[12, 15]])
+    True
+    """
+    if non_tm_pos is None or non_tm_pos is []:
+        return False
+    pos_range = range(pos[0], pos[1]+1)
+    for non in non_tm_pos:
+        non_range = range(non[0], non[1]+1)
+        if any([a in non_range for a in pos_range]):
+            return True
+    return False
+
+
 def all_satisfying_wins(pos, win_list, fidelity):
     """
     :param pos: constraint pos
@@ -297,7 +323,7 @@ def parse_cst(name, in_path):
         in_path += '/'
     with open(in_path+name+'.cst', 'r') as f:
         cont = f.read().split('\n')
-    result = {'tm_pos': []}
+    result = {'tm_pos': [], 'non_tm_pos': []}
     for ln in cont:
         sp = ln.split()
         if len(sp) <= 0:
@@ -308,6 +334,13 @@ def parse_cst(name, in_path):
             else:
                 result['tm_pos'] = None
             continue
+        if sp[0] == 'non_tm_pos':
+            if sp[1] != 'None':
+                result['non_tm_pos'].append((int(sp[1]), int(sp[2])))
+            else:
+                result['non_tm_pos'] = None
+            continue
+
         try:
             result[sp[0]] = int(sp[1])
         except:
@@ -315,11 +348,11 @@ def parse_cst(name, in_path):
                 result[sp[0]] = None
             else:
                 result[sp[0]] = sp[1]
-    return TMConstraint(result['name'], result['mode'], result['tm_num'], result['tm_pos'], result['tm_pos_fidelity'], result['c_term'],
-                        result['n_term'])
+    return TMConstraint(result['name'], result['mode'], result['tm_num'], result['tm_pos'], result['tm_pos_fidelity'],
+                        result['c_term'], result['n_term'], non_tm_pos=result['non_tm_pos'])
 
 
-def pred2cst(name, path, ts, cst_mode, tm_pos_fidelity):
+def pred2cst(name, path, ts, cst_mode, tm_pos_fidelity, write=True):
     """
     :param name: protein name
     :param path: path for writing .cst
@@ -329,11 +362,19 @@ def pred2cst(name, path, ts, cst_mode, tm_pos_fidelity):
     import re
     hhh = re.compile('[hH]*')
     tms = [(a.start(), a.end(), None) for a in hhh.finditer(ts) if a.end()-a.start() > 1]
-    msg = str(TMConstraint(name, tm_pos=tms, tm_pos_fidelity=tm_pos_fidelity, mode=cst_mode))
-    with open(path + name + '.cst', 'wr+') as fout:
-        fout.write(msg)
-    return TMConstraint(name, tm_pos=tms, tm_pos_fidelity=tm_pos_fidelity, mode=cst_mode)
+    # msg = str(TMConstraint(name, tm_pos=tms, tm_pos_fidelity=tm_pos_fidelity, mode=cst_mode))
+    tmc = TMConstraint(name, tm_pos=tms, tm_pos_fidelity=tm_pos_fidelity, mode=cst_mode)
+    if write:
+        # with open(path + name + '.cst', 'wr+') as fout:
+        #     fout.write(msg)
+        write_cst(path, name, tmc)
+    return tmc
+    # return TMConstraint(name, tm_pos=tms, tm_pos_fidelity=tm_pos_fidelity, mode=cst_mode)
 
+
+def write_cst(path, name, tmc):
+    with open(path + name + '.cst', 'wr+') as fout:
+            fout.write(str(tmc))
 
 def rost2cst(args):
     import re

@@ -42,6 +42,10 @@ def create_html(topo_entry, best_path, sec_path, wins):
         html.write(path2html_table(sec_path))
         html.write(topo_string2html(sec_ts, topo_entry.seq) + '\n')
 
+        protter = protter_api(topo_entry, best_path)
+
+
+
         html.write('<p>the difference in energy between the two best paths is %f</p>\n' %
                    abs(best_path.total_grade - sec_path.total_grade))
 
@@ -49,19 +53,21 @@ def create_html(topo_entry, best_path, sec_path, wins):
         # html.write('<p>Files to download</p>\n')
         html.write('<p>computation took %f seconds</p>' % (default_timer()-topo_entry.param_list['tic']))
         # what is the path to use for download from the browesr???
-        html.write('<a href="file:///%s">prediction file</a>\n' % (os.getcwd()+'/'+topo_entry.name+'.prd'))
         html.write('<p style="text-align:right">The Fleishman Lab &copy;</p>\n')
 
         html.write('</all>\n')
         html.write('</body>\n')
         html.write('</html>\n')
+        html.write('protter text: %s\n' % protter)
 
 
 def path2html_table(wgp):
     html = '<p>Found %i %s:</p>\n' % (len(wgp.path), 'TMHs' if len(wgp.path) > 1 else 'TMH')
     html += '<table style="width:80%">\n'
-    html += '<tr><th>#</th><th>Begin</th><th>End</th><th>N terminus orientation</th><th>&#916;G<sup>apparent</sup>' \
-            '[kcal/mol]</th><th>Sequence</th><th>#charges</th><th>Membrane-deformation</th></tr>\n'
+    # html += '<tr><th>#</th><th>Begin</th><th>End</th><th>N terminus orientation</th><th>&#916;G<sup>apparent</sup>' \
+    #         '[kcal/mol]</th><th>Sequence</th><th>#charges</th><th>Membrane-deformation</th></tr>\n'
+    html += '<tr><th>#</th><th>Begin</th><th>End</th><th>N terminus orientation</th><th>&#916;G<sup>app</sup>' \
+            '[kcal/mol]</th><th>Sequence</th></tr>\n'
     for i, w in enumerate(wgp.path):
         html += '<p>%s</p>\n' % w.get_html(i+1)
     html += '</table>\n'
@@ -110,6 +116,20 @@ def topo_string2html(ts, seq):
                 ts2tag[ts[min(seg[0] + 1, len(ts)-1)]][1]
     html += '</div></pre>'
     return html
+
+
+def protter_api(te, wgp):
+    """
+    :param te: topo_entry
+    :param wgp: WinGradePath
+    :return:
+    """
+    import urllib
+    wins = [w.seq if w.direction == 'fwd' else w.seq[::-1] for w in wgp.path]
+    query = 'http://wlab.ethz.ch/protter/create?seq=%s&nterm=extra&tm=%s&mc=lightsalmon&lc=blue&tml=none&tex=;&' \
+            'n:positives,s:circ,bc:cornflowerblue=R,K&format=svg' % (te.seq, ','.join(wins))
+    urllib.urlretrieve(query, "%s.svg" % te.name)
+    return query
 
 
 if __name__ == '__main__':

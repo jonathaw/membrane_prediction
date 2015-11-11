@@ -105,7 +105,8 @@ def process_single_new(args):
                    +args['original_name']+'.ss2'
         args['c_term_VH'] = entry['c_term_VH']
         # path_msa = '/home/labs/fleishman/jonathaw/membrane_prediction_DBs/BLAST_8Sep_VH/blast2fasta/'
-        path_msa = '/home/labs/fleishman/elazara/VH_MSA_60/blast2fasta/'
+        # path_msa = '/home/labs/fleishman/elazara/VH_MSA_60/blast2fasta/'
+        path_msa = './'
     else:
         assert "cant identify database (-db)"
     if args['with_cst']:

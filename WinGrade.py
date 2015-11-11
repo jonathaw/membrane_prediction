@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7
 class WinGrade():
     '''
     A class to parameterise a window in hydrophobicity manners.
@@ -53,10 +53,8 @@ class WinGrade():
                                                                self.seq, self.msa_name, self.msa_seq, self.msa_grade)
 
     def get_html(self, i):
-        return '<tr><td>%i</td><td>%-4.i</td><td>%-4.i</td><td>%3s</td><td>%5.3f</td><td>%-35s</td><td>%i</td>' \
-               '<td> %5.3f</td></tr>' % (i, self.begin+1, self.end+1,
-                                         "in" if self.direction == 'fwd' else "out",
-                                         self.grade, self.seq, self.charges, self.length_element)
+        return '<tr><td>%i</td><td>%-4.i</td><td>%-4.i</td><td>%3s</td><td>%5.3f</td><td>%-35s</td></tr>' % \
+               (i, self.begin+1, self.end+1, "in" if self.direction == 'fwd' else "out", self.grade, self.seq)
 
     def grade_grade_colliding(self, other):
         return True if len(set(self.span) & set(other.span)) != 0 else False

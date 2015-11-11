@@ -109,6 +109,7 @@ def write_results(topo_entry, run_type, best_path, sec_path, msa=False):
 def process_entry(topo_entry, run_type, verbose=False):
     from output2html import create_html
     from WinGrade import wgp_msa_total_grade
+    from TMConstraint import pred2cst, write_cst
 
     # this is a condition to prevent running as msa2plain when there's only one sequence in the MSA, which messes up
     if run_type == 'msa2plain':
@@ -119,8 +120,6 @@ def process_entry(topo_entry, run_type, verbose=False):
                 print 'found only 1 sequence in the MSA, so making this run as plain'
 
     if run_type == 'msa2plain':
-        from TMConstraint import pred2cst
-
         topo_entry.param_list['with_msa'] = True
         wins = win_grade_generator(topo_entry)
         print 'found %i wins with msa' % len(wins)
@@ -154,6 +153,33 @@ def process_entry(topo_entry, run_type, verbose=False):
         write_results(topo_entry, run_type, best_path, sec_path)
         create_html(topo_entry, best_path, sec_path, wins)
 
+    if run_type == 'csts_msa2plain':
+        topo_entry.param_list['with_msa'] = True
+        topo_entry.param_list['with_cst'] = True
+        wins = win_grade_generator(topo_entry)
+        print 'found %i wins with msa' % len(wins)
+        best_path, sec_path = topo_graph(topo_entry, wins)
+        write_results(topo_entry, run_type, best_path, sec_path, msa=True)
+        print best_path
+        if best_path.total_grade >= 0. and wgp_msa_total_grade(best_path) >= 0.:
+            print 'found no solution with MSA, will try as plain'
+            run_type = 'plain'
+        else:
+            non_tm_cst = topo_entry.csts.non_tm_pos
+            # save the non_tm_pos constraints for the second run
+            ts = topo_string_rostlab_format(topo_entry, best_path)
+            topo_entry.param_list['with_msa'] = False
+            topo_entry.csts = pred2cst(topo_entry.name, topo_entry.param_list['out_path'], ts, cst_mode=None,
+                                       tm_pos_fidelity=topo_entry.param_list['fidelity'])
+            topo_entry.csts.non_tm_pos = non_tm_cst
+            write_cst(topo_entry.param_list['out_path'], topo_entry.name, topo_entry.csts)
+            print 'created these constriants:\n', topo_entry.csts
+            wins = win_grade_generator(topo_entry)
+            print 'found %i wins without msa' % len(wins)
+            best_path, sec_path = topo_graph(topo_entry, wins)
+            write_results(topo_entry, run_type, best_path, sec_path)
+            create_html(topo_entry, best_path, sec_path, wins)
+
     if run_type == 'plain':
         topo_entry.param_list['with_msa'] = False
         topo_entry.param_list['with_cst'] = False
@@ -165,8 +191,7 @@ def process_entry(topo_entry, run_type, verbose=False):
     if run_type == 'user_cst':
         topo_entry.param_list['with_msa'] = False
         topo_entry.param_list['with_cst'] = True
-        # if topo_entry.csts.tm_pos
-        wins = win_grade_generator(topo_entry, mode='only')
+        wins = win_grade_generator(topo_entry)  # , mode='only')
         try:
             best_path, sec_path = topo_graph(topo_entry, wins)
         except:
@@ -180,10 +205,15 @@ def process_entry(topo_entry, run_type, verbose=False):
             best_path, sec_path = topo_graph(topo_entry, wins)
             best_path.add_to_all_wins(+100.0)
             sec_path.add_to_all_wins(+100.0)
+        if not wins:
+            print 'found no solution with csts, so canceling those. and running again!'
+            topo_entry.param_list['with_cst'], topo_entry.csts.tm_pos = False, None
+            wins = win_grade_generator(topo_entry)
+            best_path, sec_path = topo_graph(topo_entry, wins)
         write_results(topo_entry, run_type, best_path, sec_path)
         create_html(topo_entry, best_path, sec_path, wins)
 
-    if run_type not in ['msa2plain', 'cst_only', 'tm_num_cst', 'plain', 'user_cst']:
+    if run_type not in ['msa2plain', 'cst_only', 'tm_num_cst', 'plain', 'user_cst', 'csts_msa2plain']:
         print "unrecoginzed run-type"
 
 
@@ -212,7 +242,7 @@ def win_grade_generator(topo_entry, mode='all', tm_pos_mode='selective'):
     :return:grades all segments of seq, and aggregates them as WinGrades
     """
     from WinGrade import WinGrade, count_charges
-    from TMConstraint import seg_within_tm_pos, win_in_tm_pos
+    from TMConstraint import seg_within_tm_pos, win_in_tm_pos, pos_in_non_tm
     import sys
 
     assert isinstance(topo_entry, TopoEntry)
@@ -237,6 +267,9 @@ def win_grade_generator(topo_entry, mode='all', tm_pos_mode='selective'):
         for inc in range(min(INC_MAX, topo_entry.seq_length - MIN_LENGTH - i)):
             tm_pos, j = win_in_tm_pos((i, i + MIN_LENGTH + inc), topo_entry.csts.tm_pos,
                                       topo_entry.csts.tm_pos_fidelity)
+            if topo_entry.csts.non_tm_pos is not None:
+                if pos_in_non_tm([i,i+MIN_LENGTH+inc], topo_entry.csts.non_tm_pos):
+                    continue
             if mode == 'only':
                 if tm_pos is False:
                     continue

@@ -202,8 +202,11 @@ def topo_prd_parse(name):
         if split[0] == 'ddG':
             result['delta'] = float(split[2][1:-1])
     result['pred_ts'] = result['best_path_ts']
-    result['pred_correct'] = (result['pred_ts'][-1] == '1' and result['c_term_VH'] == 'in') or \
-                             (result['pred_ts'][-1] == '2' and result['c_term_VH'] == 'out')
+    try:
+        result['pred_correct'] = (result['pred_ts'][-1] == '1' and result['c_term_VH'] == 'in') or \
+                                 (result['pred_ts'][-1] == '2' and result['c_term_VH'] == 'out')
+    except:
+        result['pred_correct'] = False
     return result
 
 

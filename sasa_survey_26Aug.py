@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7
 # coding=utf-8
 """
 a script to make a SASA Vs. hydrophobicity plot.
@@ -81,7 +81,12 @@ def analyse():
         without_neighbours += 1 if is_no_neighbour else 0
         single += 1 if is_single else 0
 
-        prediction = prd_parser('/home/labs/fleishman/elazara/benchmark_paper_new/Mean/Plain', v['name']+'.prd')
+        # before cutting out the spring:
+        # prediction = prd_parser('/home/labs/fleishman/elazara/benchmark_paper_new/Mean/Plain', v['name']+'.prd')
+        # after cutting out spring, with MSA:
+        # prediction = prd_parser('/home/labs/fleishman/elazara/length_21/w_0_with_MSA/', v['name']+'.prd')
+        # after cutting out spring, without MSA:
+        prediction = prd_parser('/home/labs/fleishman/elazara/length_21/', v['name']+'.prd')
         wgp_pred = topo_string_to_WGP(prediction['best_path_ts'], v['seq'])
 
         spoc = spc_parser(v['name'])['spoctopus']
