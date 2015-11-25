@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7
 # coding=utf-8
 """
 A script to analyse TopoGraph prediciton runs. useful both for ROC and single folders
@@ -78,8 +78,12 @@ def prd_directory(dir_path):
     for file_name in file_list:
         pred = prd_parser(dir_path, file_name)
         # if pred['name'] != 'p0c7b7': continue
-        obse = rostlab_db_dict[pred['name']]
-        topc = spc_parser(pred['name'])
+        try:
+            obse = rostlab_db_dict[pred['name']]
+            topc = spc_parser(pred['name'])
+        except:
+            obse = rostlab_db_dict[pred['name'].lower()]
+            topc = spc_parser(pred['name'].lower())
         predictors = {k: topcons2rostlab_ts_format(v) for k, v in topc.items() if k not in ['name', 'seq']}
         predictors['pred_ts'] = pred['pred_ts']
         first_passage = True

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7
 class TMConstraint():
     """
     a class to describe constraints on a protein's topology
@@ -376,7 +376,8 @@ def write_cst(path, name, tmc):
     with open(path + name + '.cst', 'wr+') as fout:
             fout.write(str(tmc))
 
-def rost2cst(args):
+
+def rost2cst_tm_num(args):
     import re
     from topo_strings_comparer import parse_rostlab_db, spc_parser
     topc = spc_parser(args['name'].lower())
@@ -390,6 +391,44 @@ def rost2cst(args):
     pdbtm_num = len([(a.start(), a.end(), None) for a in hhh.finditer(pdbtm_cln) if a.end()-a.start() > 1])
     opm_num =len([(a.start(), a.end(), None) for a in hhh.finditer(opm_cln) if a.end()-a.start() > 1])
     tmc = TMConstraint(args['name'].lower(), tm_num=max(pdbtm_num, opm_num))
+    with open(args['path']+args['name'].lower()+'.cst', 'wr+') as fout:
+        fout.write(str(tmc))
+    return tmc
+
+
+def rost2cst_tm_pos(args):
+    import re
+    from topo_strings_comparer import parse_rostlab_db, spc_parser
+    topc = spc_parser(args['name'].lower())
+    signle_peptide = topc['spoctopus'].count('S') + topc['spoctopus'].count('s')
+    rostdb = parse_rostlab_db()[args['name'].lower()]
+    pdbtm = rostdb['pdbtm']
+    pdbtm_cln = 's'*signle_peptide + pdbtm[signle_peptide:]
+    # opm = rostdb['opm']
+    # opm_cln = 's'*signle_peptide + opm[signle_peptide:]
+    hhh = re.compile('[hH]*')
+    pdbtm = [[a.start(), a.end(), None] for a in hhh.finditer(pdbtm_cln) if a.end()-a.start() > 1]
+    # opm = [(a.start(), a.end(), None) for a in hhh.finditer(opm_cln) if a.end()-a.start() > 1]
+    for h in pdbtm:
+        if h[1] < len(pdbtm_cln):
+            if pdbtm_cln[h[1]] == '1':
+                h[2] = 'rev'
+                continue
+            elif pdbtm_cln[h[1]] == '2':
+                h[2] = 'fwd'
+                continue
+        if pdbtm_cln[h[0]-1] == '1':
+            h[2] = 'fwd'
+        else:
+            h[2] = 'rev'
+
+    # for i, h in enumerate(pdbtm[:-1]):
+    #     if h[2] == pdbtm[i+1][2]:
+    #         print 'HELP!!!!!!!!!', args['name']
+    #         import sys
+    #         sys.exit()
+
+    tmc = TMConstraint(args['name'].lower(), tm_pos=pdbtm, mode='only', tm_pos_fidelity=7)
     with open(args['path']+args['name'].lower()+'.cst', 'wr+') as fout:
         fout.write(str(tmc))
     return tmc
@@ -454,6 +493,9 @@ if __name__ == '__main__':
     elif args['mode'] == 'topcons2cst':
         tmc = topcons2cst(args)
         print tmc
+
+    elif args['mode'] == 'rost2cst_tm_pos':
+        rost2cst_tm_pos(args)
 
     else:
         print 'no mode recived'

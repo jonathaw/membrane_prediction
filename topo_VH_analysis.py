@@ -24,6 +24,7 @@ def main():
                              'topograph': 0}
     predicotrs_wrong_eg = {'spoctopus': 0, 'topcons': 0, 'scampi': 0, 'octopus': 0, 'philius': 0, 'polyphobius': 0,
                            'topograph': 0}
+    correct_names = []
     for prd in prd_list:
         prd_pars = topo_prd_parse(prd)
         # print prd_pars
@@ -43,6 +44,8 @@ def main():
 
         if prd_pars['pred_correct'] == True:
             pred_correct.append(prd_pars['delta'])
+
+            correct_names.append(prd_pars['name'])
 
             if prd_pars['delta'] <= energy_gap:
                 results['pred_correct_gap'] += 1
@@ -74,6 +77,7 @@ def main():
     print 'num correct', len(pred_correct)
     print 'num incorrect', len(pred_incorrect)
     plt.figure()
+    print 'all correct names are:', correct_names
     # plt.subplot(121)
     print [results['pred_correct'], results['entries']-results['pred_correct']]
     print 'result gap correct', results['pred_correct_gap']

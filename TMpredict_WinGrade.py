@@ -14,7 +14,7 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-hp_threshold', default=7.5, type=float, help='set the hp threshold for constructing the graph')#10
-    parser.add_argument('-min_length', default=19, type=int, help='minimum window length')#18
+    parser.add_argument('-min_length', default=21, type=int, help='minimum window length') # 19
     # parser.add_argument('-psi_helix', default=0.2, type=float, help='no longer in use')#0.001
     # parser.add_argument('-psi_res_num', default=3, type=int, help='no longer in use')#4
     parser.add_argument('-mode', type=str, default='user', help='mode of run')
@@ -40,12 +40,20 @@ def main():
     parser.add_argument('-db', default='rost')
     parser.add_argument('-run_type', default='msa2plain')
     parser.add_argument('-ss2', default=None, type=str, help='name of ss2 file. if none is provided name.ss2 will be assumed')
+    parser.add_argument('-create_html', default=True, help='whther to create an html')
+    parser.add_argument('-with_sp', default=True, help='whether to check the TOPCONS output for spoctopus on signal peptide')
     args = vars(parser.parse_args())
 
     args['tic'] = timeit.default_timer()
-    if args['ss2'] is None:
+    if args['ss2'] is None and args['mode'] != 'dG':
         args['ss2'] = args['name'].lower()+'.ss2'
 
+    if args['with_msa'] == 'False':
+        args['with_msa'] = False
+    if args['create_html'] == 'True':
+        args['create_html'] = True
+    else:
+        args['create_html'] = False
     if args['in_path'][-1] != '/':
         args['in_path'] += '/'
 
@@ -80,7 +88,7 @@ def process_user(args):
     from ProcessEntry import create_topo_entry, process_entry
     import TMConstraint
     args['db'] = None
-    if args['with_cst']:
+    if args['with_cst'] or args['mode'] == 'csts_msa2plain':
         print args['with_cst']
         cst = TMConstraint.parse_cst(args['name'].lower(), args['in_path'])
     else:
@@ -93,6 +101,8 @@ def process_user(args):
 def process_single_new(args):
     from ProcessEntry import create_topo_entry, process_entry
     import TMConstraint
+    import os
+
     if args['db'] == 'rost':
         rostlab_db_dict = parse_rostlab_db()
         entry = rostlab_db_dict[args['name'].lower()]
@@ -103,6 +113,14 @@ def process_single_new(args):
         entry = topo_VH_parser(args['name'])
         ss2_path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/VH_psipred/'\
                    +args['original_name']+'.ss2'
+        if not os.path.isfile(ss2_path):
+            for l in open('/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/VH_Data_Base_All_Sequences_No_SP_name_list.txt', 'r').read().split('\n'):
+                if l.lower().rstrip() == args['name'].lower():
+                    args['original_name'] = l.rstrip()
+                    ss2_path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/VH_psipred/'\
+                               +args['original_name']+'.ss2'
+                    break
+
         args['c_term_VH'] = entry['c_term_VH']
         # path_msa = '/home/labs/fleishman/jonathaw/membrane_prediction_DBs/BLAST_8Sep_VH/blast2fasta/'
         # path_msa = '/home/labs/fleishman/elazara/VH_MSA_60/blast2fasta/'
@@ -114,7 +132,6 @@ def process_single_new(args):
     else:
         entry_cst = TMConstraint.TMConstraint(args['name'])
     topo_entry = create_topo_entry(args['original_name'], entry['seq'], ss2_path, args, entry_cst, args['db'], path_msa)
-    print topo_entry
     process_entry(topo_entry, args['run_type'])
 
 
