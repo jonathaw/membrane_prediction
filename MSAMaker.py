@@ -175,8 +175,8 @@ def run_blastp(args):
                                                                                         args['name'] +
                                                                                         args['blast_suffix'])
     system('blastp -query %s -db %s -evalue %f -max_target_seqs %i -outfmt 5 -out %s' %
-           (args['name'] + args['seq_file_suffix'], args['blastp_db'], args['blast_evalue'],
-            args['blast_max_target_seqs'], args['name'] + args['blast_suffix']))
+           (args['path']+args['name'] + args['seq_file_suffix'], args['blastp_db'], args['blast_evalue'],
+            args['blast_max_target_seqs'], args['path']+args['name'] + args['blast_suffix']))
 
 
 def retrive_pfam_matches(args):
@@ -307,7 +307,7 @@ def concatenate_msas(args, matches):
 
 def write_seq_to_file(args):
     print 'writing sequence to file'
-    with open(args['name'] + args['seq_file_suffix'], 'wr+') as fout:
+    with open(args['path']+args['name'] + args['seq_file_suffix'], 'wr+') as fout:
         fout.write('>%s\n%s' % (args['name'], args['seq']))
 
 
@@ -319,9 +319,9 @@ def parse_blast_xml(args):
     from Bio.Blast.NCBIXML import read
 
     print 'parsing BLASTP reuslts'
-    xml_handle = open(args['name'] + args['blast_suffix'], 'r')
+    xml_handle = open(args['path']+args['name'] + args['blast_suffix'], 'r')
     xml = read(xml_handle)
-    fout = open(args['name'] + args['fastas_suffix'], 'wr+')
+    fout = open(args['path']+args['name'] + args['fastas_suffix'], 'wr+')
     fout.write(">%s\n" % args['name'])
     fout.write("%s\n" % args['seq'])
     for aln in xml.alignments:
@@ -343,9 +343,9 @@ def parse_blast_xml(args):
 def cd_hit_cluster(args):
     from os import system
 
-    print 'RUNNING CDHIT %s' % args['name'] + args['fastas_suffix']
-    system('cd-hit -i %s -o %s -c %f ' % (args['name'] + args['fastas_suffix'], args['name'] + args['cdhit_suffix'],
-                                          args['cdhit_threshold']))
+    print 'RUNNING CDHIT %s' % args['path']+args['name'] + args['fastas_suffix']
+    system('cd-hit -i %s -o %s -c %f ' % (args['path']+args['name'] + args['fastas_suffix'], args['path']+args['name']
+                                          + args['cdhit_suffix'], args['cdhit_threshold']))
 
 
 def read_multi_fastas(file):
@@ -365,8 +365,8 @@ def read_multi_fastas(file):
 
 def insure_query_in_cd_hit(args, segment=None):
     print 'insuring the query is in the cdhit results'
-    cdhit_fastas = read_multi_fastas(args['name'] + args['cdhit_suffix'])
-    with open(args['name'] + args['cdhit_suffix'], 'w') as fout:
+    cdhit_fastas = read_multi_fastas(args['path']+args['name'] + args['cdhit_suffix'])
+    with open(args['path']+args['name'] + args['cdhit_suffix'], 'w') as fout:
         fout.write(">%s\n" % args['name'])
         if segment is None:
             fout.write("%s\n" % args['seq'])
@@ -383,8 +383,9 @@ def insure_query_in_cd_hit(args, segment=None):
 def run_muscle(args):
     import os
 
-    print 'RUNNIN MUSCLE %s' % args['name'] + args['cdhit_suffix']
-    os.system('muscle -in ' + args['name'] + args['cdhit_suffix'] + ' -out ' + args['name'] + args['msa_suffix'])
+    print 'RUNNIN MUSCLE %s' % args['path']+args['name'] + args['cdhit_suffix']
+    os.system('muscle -in ' + args['path']+args['name'] + args['cdhit_suffix'] + ' -out ' + args['path']+args['name'] +
+              args['msa_suffix'])
 
 
 if __name__ == '__main__':
@@ -416,6 +417,9 @@ if __name__ == '__main__':
     parser.add_argument('-psipred_db', type=str, default='nr', help='what BLASTP DB to use for psipred')
 
     args = vars(parser.parse_args())
+
+    if args['path'][-1] != '/':
+        args['path'] += '/'
 
     if args['uniprot'] is not None and args['use_pfam']:
         if args['seq'] is None:

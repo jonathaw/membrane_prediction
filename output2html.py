@@ -42,23 +42,25 @@ def create_html(topo_entry, best_path, sec_path, wins):
         html.write(path2html_table(sec_path))
         html.write(topo_string2html(sec_ts, topo_entry.seq) + '\n')
 
-        protter = protter_api(topo_entry, best_path)
-
-
-
         html.write('<p>the difference in energy between the two best paths is %f</p>\n' %
                    abs(best_path.total_grade - sec_path.total_grade))
 
         html.write('<p>color index: <r> TMHs </r> <b> In </b> <g> Out </g> <u> Unknown </u></p>\n')
+
+        html.write('<p>Protter view of the best path:</p>\n')
+        protter_link, protter_down = protter_api(topo_entry, best_path)
+        html.write('<img src="%s" alt="Protter view"">\n' % protter_down)# style="width:912px;height:684px;">\n' % protter_down)
+        html.write('<p>purple is unknown, usually signal peptide</p>\n')
+        html.write('<a href="%s">Protter link to design your figure</a>\n' % protter_link)
         # html.write('<p>Files to download</p>\n')
-        html.write('<p>computation took %f seconds</p>' % (default_timer()-topo_entry.param_list['tic']))
+        html.write('<p>computation took %f seconds</p>\n' % (default_timer()-topo_entry.param_list['tic']))
         # what is the path to use for download from the browesr???
-        html.write('<p style="text-align:right">The Fleishman Lab &copy;</p>\n')
+        # html.write('<p style="text-align:right">The Fleishman Lab &copy;</p>\n')
 
         html.write('</all>\n')
         html.write('</body>\n')
         html.write('</html>\n')
-        html.write('protter text: %s\n' % protter)
+        html.write('protter text: %s\n' % protter_down)
 
 
 def path2html_table(wgp):
@@ -125,11 +127,16 @@ def protter_api(te, wgp):
     :return:
     """
     import urllib
+    signal_peptide = [1, te.seq.count('u')] if 'u' in te.seq else [0, 0]
     wins = [w.seq if w.direction == 'fwd' else w.seq[::-1] for w in wgp.path]
     query = 'http://wlab.ethz.ch/protter/create?seq=%s&nterm=extra&tm=%s&mc=lightsalmon&lc=blue&tml=none&tex=;&' \
-            'n:positives,s:circ,bc:cornflowerblue=R,K&format=svg' % (te.seq, ','.join(wins))
-    urllib.urlretrieve(query, "%s.svg" % te.name)
-    return query
+            'n:positives,s:circ,bc:cornflowerblue=R,K&n:signal peptide,cc:white,fc:mediumvioletred,bc:red=%i-%i&format=png' % \
+            (te.original_seq, ','.join(wins), signal_peptide[0], signal_peptide[1])
+    urllib.urlretrieve(query, "%s%s.png" % (te.param_list['out_path'], te.name))
+    link = 'http://wlab.ethz.ch/protter/#seq=%s&nterm=extra&tm=%s&mc=lightsalmon&lc=blue&tml=none&tex=;&' \
+            'n:positives,s:circ,bc:cornflowerblue=R,K&n:signal peptide,cc:white,fc:mediumvioletred,bc:red=%i-%i&format=png' \
+           % (te.original_seq, ','.join(wins), signal_peptide[0], signal_peptide[1])
+    return link, "%s.png" % te.name
 
 
 if __name__ == '__main__':

@@ -1,5 +1,5 @@
 class TopoEntry():
-    def __init__(self, name, seq, end_of_SP, psipred, hydro_polyval, param_list, csts, path_msa):
+    def __init__(self, name, seq, end_of_SP, psipred, hydro_polyval, param_list, csts, path_msa, original_seq):
         self.name = name
         self.seq = seq
         self.seq_length = len(seq)
@@ -8,6 +8,8 @@ class TopoEntry():
         self.param_list = param_list
         self.csts = csts
         self.path_msa = path_msa
+        self.original_seq = original_seq
+        self.signle_peptide = end_of_SP
 
     def __str__(self):
         msg = 'name %s\n' % self.name
@@ -42,7 +44,7 @@ def create_topo_entry(name, seq, ss2, param_list, csts, db, msa_path):
         seq_no_SP = seq
 
     return TopoEntry(name=name, seq=seq_no_SP, end_of_SP=end_of_SP, psipred=psipred, hydro_polyval=h_polyval,
-                     param_list=param_list, csts=csts, path_msa=msa_path)
+                     param_list=param_list, csts=csts, path_msa=msa_path, original_seq=seq)
 
 
 def parse_psipred(ss2):
@@ -89,7 +91,6 @@ def spc_parser(name, path_to):
         split = line.split()
         if split == []:
             continue
-        print split
         result[split[0]] = split[1]
     return result
 
@@ -203,18 +204,20 @@ def process_entry(topo_entry, run_type, verbose=False):
             create_html(topo_entry, best_path, sec_path, wins)
 
     if run_type == 'user_cst':
+        print 'user csts'
         topo_entry.param_list['with_msa'] = False
         topo_entry.param_list['with_cst'] = True
         wins = win_grade_generator(topo_entry)  # , mode='only')
         try:
             best_path, sec_path = topo_graph(topo_entry, wins)
         except:
-            print 'failed topo_graph, will try with all wins'
+            print 'failed topgraph, will try with all wins'
             wins = win_grade_generator(topo_entry, mode='only', tm_pos_mode='all')
             best_path, sec_path = topo_graph(topo_entry, wins)
-        if  best_path.path == []:
+        if best_path.path == []:
             wins = win_grade_generator(topo_entry, mode='only' if topo_entry.csts.mode == 'only' else 'all',
                                        tm_pos_mode='all')
+            print 'decreaing grades by 100...'
             for w in wins:
                 w.set_grade(-100.0)
             best_path, sec_path = topo_graph(topo_entry, wins)
@@ -425,6 +428,7 @@ def topo_graph(topo_entry, wins):
     # print self.WinGrades
     G = nx.DiGraph()
     source_node = WinGrade(0, 0, 'fwd', '', topo_entry.hydro_polyval, topo_entry.param_list)  # define source win
+    G.add_node(source_node)
     print "Constructing graph"
     if topo_entry.param_list['with_msa']:
         if topo_entry.csts.tm_pos is None:

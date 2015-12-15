@@ -2,17 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6a73546c-b0e1-4c73-9c98-48c4af466cd3" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/degrade_data.tsv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dinola_data.tsv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/positive_inside_analysis.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/scale_comp.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/senes_data.tsv" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/encodings.xml" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/grephs_for_figures.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/wgp_flipper_protter.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MSAMaker.py" afterPath="$PROJECT_DIR$/MSAMaker.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ProcessEntry.py" afterPath="$PROJECT_DIR$/ProcessEntry.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TMConstraint.py" afterPath="$PROJECT_DIR$/TMConstraint.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TMpredict_WinGrade.py" afterPath="$PROJECT_DIR$/TMpredict_WinGrade.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/topo_VH_analysis.py" afterPath="$PROJECT_DIR$/topo_VH_analysis.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TOPCONS_funcs.py" afterPath="$PROJECT_DIR$/TOPCONS_funcs.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WinGrade.py" afterPath="$PROJECT_DIR$/WinGrade.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/output2html.py" afterPath="$PROJECT_DIR$/output2html.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/positive_inside_analysis.py" afterPath="$PROJECT_DIR$/positive_inside_analysis.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/topo_strings_comparer.py" afterPath="$PROJECT_DIR$/topo_strings_comparer.py" />
     </list>
     <ignored path="membrane_prediciton.iws" />
@@ -36,20 +35,17 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="TMpredict_WinGrade.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="TMpredict_WinGrade.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TMpredict_WinGrade.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.4112458">
-              <caret line="64" column="29" selection-start-line="64" selection-start-column="29" selection-end-line="64" selection-end-column="29" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="307" column="10" selection-start-line="307" selection-start-column="6" selection-end-line="307" selection-end-column="10" />
               <folding>
                 <element signature="e#40#62#0" expanded="true" />
-                <element signature="e#4130#4673#0" expanded="true" />
-                <element signature="e#4710#6589#0" expanded="true" />
-                <element signature="e#6636#9969#0" expanded="true" />
-                <element signature="e#23583#24077#0" expanded="true" />
-                <element signature="e#34622#35700#0" expanded="true" />
-                <element signature="e#41411#41558#0" expanded="true" />
-                <element signature="e#42333#42554#0" expanded="true" />
+                <element signature="e#111#4194#0" expanded="true" />
+                <element signature="e#4225#4770#0" expanded="true" />
+                <element signature="e#4807#6686#0" expanded="true" />
+                <element signature="e#11640#16449#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -59,97 +55,88 @@
         <entry file="file://$PROJECT_DIR$/ProcessEntry.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="90" column="12" selection-start-line="90" selection-start-column="12" selection-end-line="90" selection-end-column="12" />
+              <caret line="11" column="39" selection-start-line="11" selection-start-column="39" selection-end-line="11" selection-end-column="39" />
               <folding>
-                <element signature="e#125#368#0" expanded="true" />
-                <element signature="e#737#1675#0" expanded="true" />
-                <element signature="e#1706#2011#0" expanded="true" />
-                <element signature="e#4345#10655#0" expanded="true" />
-                <element signature="e#11633#15848#0" expanded="true" />
-                <element signature="e#18653#21753#0" expanded="true" />
+                <element signature="e#139#463#0" expanded="true" />
+                <element signature="e#832#1788#0" expanded="true" />
+                <element signature="e#1819#2124#0" expanded="true" />
+                <element signature="e#4438#10818#0" expanded="true" />
+                <element signature="e#11796#16011#0" expanded="true" />
+                <element signature="e#18816#21944#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TOPCONS_funcs.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/TOPCONS_funcs.py">
+      <file leaf-file-name="wgp_flipper_protter.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/wgp_flipper_protter.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="16" column="15" selection-start-line="16" selection-start-column="15" selection-end-line="16" selection-end-column="15" />
+              <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="topcons_result_parser.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/topcons_result_parser.py">
+      <file leaf-file-name="MSAMaker.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/MSAMaker.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="22" column="0" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
-              <folding />
+              <caret line="386" column="105" selection-start-line="386" selection-start-column="105" selection-end-line="386" selection-end-column="105" />
+              <folding>
+                <element signature="e#6199#7300#0" expanded="true" />
+                <element signature="e#13045#13220#0" expanded="true" />
+                <element signature="e#13254#14601#0" expanded="true" />
+                <element signature="e#14634#14948#0" expanded="true" />
+                <element signature="e#15444#16088#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="positive_inside_analysis.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="grephs_for_figures.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/grephs_for_figures.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="39" column="18" selection-start-line="39" selection-start-column="18" selection-end-line="39" selection-end-column="18" />
+              <folding>
+                <element signature="e#109#140#0" expanded="true" />
+                <element signature="e#465#570#0" expanded="true" />
+                <element signature="e#603#685#0" expanded="true" />
+                <element signature="e#719#740#0" expanded="true" />
+                <element signature="e#764#768#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="positive_inside_analysis.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/positive_inside_analysis.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="242" column="27" selection-start-line="242" selection-start-column="27" selection-end-line="242" selection-end-column="27" />
+            <state vertical-scroll-proportion="0.8676957">
+              <caret line="422" column="48" selection-start-line="422" selection-start-column="48" selection-end-line="422" selection-end-column="48" />
               <folding>
                 <element signature="e#25#34#0" expanded="true" />
-                <element signature="e#603#3436#0" expanded="true" />
-                <element signature="e#3486#4590#0" expanded="true" />
-                <element signature="e#5087#5251#0" expanded="true" />
-                <element signature="e#11821#12516#0" expanded="true" />
+                <element signature="e#686#4444#0" expanded="true" />
+                <element signature="e#14629#15324#0" expanded="true" />
+                <element signature="e#22994#23247#0" expanded="true" />
+                <element signature="e#23319#24612#0" expanded="true" />
+                <marker date="1450196468000" expanded="true" signature="13229:14567" placeholder="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="scale_comp.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/scale_comp.py">
+      <file leaf-file-name="TMConstraint.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/TMConstraint.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="85" column="38" selection-start-line="85" selection-start-column="38" selection-end-line="85" selection-end-column="38" />
+              <caret line="436" column="22" selection-start-line="436" selection-start-column="22" selection-end-line="436" selection-end-column="22" />
               <folding>
-                <element signature="e#25#56#0" expanded="true" />
-                <element signature="e#681#1166#0" expanded="true" />
-                <element signature="e#1193#2544#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="senes_data.tsv" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/senes_data.tsv">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="21" column="23" selection-start-line="21" selection-start-column="23" selection-end-line="21" selection-end-column="23" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="dinola_data.tsv" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dinola_data.tsv">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="17" column="87" selection-start-line="17" selection-start-column="87" selection-end-line="17" selection-end-column="87" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="sasa_survey_26Aug.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sasa_survey_26Aug.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="170" column="0" selection-start-line="170" selection-start-column="0" selection-end-line="170" selection-end-column="0" />
-              <folding>
-                <element signature="e#2028#6540#0" expanded="true" />
-                <element signature="e#9820#10767#0" expanded="true" />
+                <element signature="e#260#585#0" expanded="true" />
+                <element signature="e#10777#12053#0" expanded="true" />
+                <element signature="e#12918#12998#0" expanded="true" />
+                <element signature="e#15335#16547#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -159,18 +146,39 @@
         <entry file="file://$PROJECT_DIR$/WinGrade.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="34" column="51" selection-start-line="34" selection-start-column="44" selection-end-line="34" selection-end-column="51" />
+              <caret line="70" column="4" selection-start-line="70" selection-start-column="4" selection-end-line="77" selection-end-column="20" />
               <folding>
+                <element signature="e#307#1902#0" expanded="true" />
                 <element signature="e#2406#2618#0" expanded="true" />
                 <element signature="e#3065#3404#0" expanded="true" />
-                <element signature="e#4814#5108#0" expanded="true" />
-                <element signature="e#5986#6039#0" expanded="true" />
-                <element signature="e#7648#7776#0" expanded="true" />
-                <element signature="e#7807#8104#0" expanded="true" />
-                <element signature="e#8148#8475#0" expanded="true" />
-                <element signature="e#9437#9656#0" expanded="true" />
-                <element signature="e#13976#14876#0" expanded="true" />
+                <element signature="e#4650#4944#0" expanded="true" />
+                <element signature="e#5822#5875#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="topo_strings_comparer.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/topo_strings_comparer.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="210" column="25" selection-start-line="210" selection-start-column="25" selection-end-line="210" selection-end-column="25" />
+              <folding>
+                <element signature="e#40#133#1" expanded="true" />
+                <element signature="e#1946#8422#0" expanded="true" />
+                <element signature="e#8467#8938#0" expanded="true" />
+                <element signature="e#8971#9193#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="topo_VH_analysis.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/topo_VH_analysis.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="67" column="25" selection-start-line="67" selection-start-column="25" selection-end-line="67" selection-end-column="25" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -196,23 +204,25 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/plot_time.py" />
-        <option value="$PROJECT_DIR$/MSAMaker.py" />
         <option value="$PROJECT_DIR$/MSA_for_TMpredict.py" />
         <option value="$PROJECT_DIR$/prd_length_test.py" />
-        <option value="$PROJECT_DIR$/output2html.py" />
         <option value="$PROJECT_DIR$/TMConstraint.py" />
-        <option value="$PROJECT_DIR$/WinGrade.py" />
-        <option value="$PROJECT_DIR$/topo_strings_comparer.py" />
         <option value="$PROJECT_DIR$/sasa_survey_26Aug.py" />
         <option value="$PROJECT_DIR$/topo_VH_analysis.py" />
         <option value="$PROJECT_DIR$/degrade_data.tsv" />
-        <option value="$PROJECT_DIR$/positive_inside_analysis.py" />
         <option value="$PROJECT_DIR$/dinola_data.tsv" />
         <option value="$PROJECT_DIR$/senes_data.tsv" />
         <option value="$PROJECT_DIR$/scale_comp.py" />
-        <option value="$PROJECT_DIR$/ProcessEntry.py" />
         <option value="$PROJECT_DIR$/TOPCONS_funcs.py" />
+        <option value="$PROJECT_DIR$/grephs_for_figures.py" />
+        <option value="$PROJECT_DIR$/output2html.py" />
+        <option value="$PROJECT_DIR$/topo_strings_comparer.py" />
+        <option value="$PROJECT_DIR$/wgp_flipper_protter.py" />
+        <option value="$PROJECT_DIR$/ProcessEntry.py" />
         <option value="$PROJECT_DIR$/TMpredict_WinGrade.py" />
+        <option value="$PROJECT_DIR$/MSAMaker.py" />
+        <option value="$PROJECT_DIR$/WinGrade.py" />
+        <option value="$PROJECT_DIR$/positive_inside_analysis.py" />
       </list>
     </option>
   </component>
@@ -265,6 +275,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -286,7 +297,6 @@
         </subPane>
       </pane>
       <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -295,7 +305,6 @@
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
-    <property name="FullScreen" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../scripts/general_scripts" />
     <property name="last.edited.regexp" value=" [43   to 64   in rev =&gt;  -1.474022 LAAAGCRVGFMIAQTVTSNVL               2 0.000000&#10;76   to 97   in fwd =&gt;  -8.800408 KTPIFIINQVSLFLIILHSAL               2 0.000000&#10;132  to 155  in rev =&gt;  -5.445467 TFIVKIQFVLSTEISAVLLVQII             2 0.000000&#10;159  to 180  in fwd =&gt;  -4.339571 KRIGLMLTSISFTLGIATVTM               0 0.000000&#10;208  to 233  in rev =&gt; -14.345040 RSRIALILKVVLVFSMFNISSALLI           2 0.000000&#10;242  to 268  in fwd =&gt;  -7.987325 SFHILLIMSCQSLLVPSIIFILAYSL          1 0.000000&#10;275  to 299  in rev =&gt;  -5.753443 AATAWMSSLPLSLVALLTAVTTLV            0 0.000000] }" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="262" />
@@ -330,28 +339,7 @@
       <recent name="$PROJECT_DIR$/data_sets" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Doctest pos_in_non_tm">
-    <configuration default="false" name="Doctest win_in_tm_pos" type="tests" factoryName="Doctests" temporary="true" nameIsGenerated="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="membrane_prediciton" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/TMConstraint.py" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="win_in_tm_pos" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_FUNCTION" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <RunnerSettings RunnerId="PythonRunner" />
-      <ConfigurationWrapper RunnerId="PythonRunner" />
-      <method />
-    </configuration>
+  <component name="RunManager" selected="Python tests.Doctest KR_grade">
     <configuration default="false" name="Doctest parse_WGP" type="tests" factoryName="Doctests" temporary="true" nameIsGenerated="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -365,27 +353,6 @@
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/WinGrade.py" />
       <option name="CLASS_NAME" value="" />
       <option name="METHOD_NAME" value="parse_WGP" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_FUNCTION" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <RunnerSettings RunnerId="PythonRunner" />
-      <ConfigurationWrapper RunnerId="PythonRunner" />
-      <method />
-    </configuration>
-    <configuration default="false" name="Doctest topo_string_to_WGP" type="tests" factoryName="Doctests" temporary="true" nameIsGenerated="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="membrane_prediciton" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/WinGrade.py" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="topo_string_to_WGP" />
       <option name="FOLDER_NAME" value="" />
       <option name="TEST_TYPE" value="TEST_FUNCTION" />
       <option name="PATTERN" value="" />
@@ -426,6 +393,44 @@
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/TMConstraint.py" />
       <option name="CLASS_NAME" value="" />
       <option name="METHOD_NAME" value="pos_in_non_tm" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_FUNCTION" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="Doctest test_c_term" type="tests" factoryName="Doctests" temporary="true" nameIsGenerated="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="membrane_prediciton" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/topo_strings_comparer.py" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="test_c_term" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_FUNCTION" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="Doctest KR_grade" type="tests" factoryName="Doctests" temporary="true" nameIsGenerated="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="membrane_prediciton" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/positive_inside_analysis.py" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="KR_grade" />
       <option name="FOLDER_NAME" value="" />
       <option name="TEST_TYPE" value="TEST_FUNCTION" />
       <option name="PATTERN" value="" />
@@ -555,19 +560,19 @@
       <method />
     </configuration>
     <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="Python tests.Doctest win_in_tm_pos" />
-      <item index="1" class="java.lang.String" itemvalue="Python tests.Doctest parse_WGP" />
-      <item index="2" class="java.lang.String" itemvalue="Python tests.Doctest topo_string_to_WGP" />
-      <item index="3" class="java.lang.String" itemvalue="Python.MSAMaker" />
-      <item index="4" class="java.lang.String" itemvalue="Python tests.Doctest pos_in_non_tm" />
+      <item index="0" class="java.lang.String" itemvalue="Python tests.Doctest parse_WGP" />
+      <item index="1" class="java.lang.String" itemvalue="Python.MSAMaker" />
+      <item index="2" class="java.lang.String" itemvalue="Python tests.Doctest pos_in_non_tm" />
+      <item index="3" class="java.lang.String" itemvalue="Python tests.Doctest test_c_term" />
+      <item index="4" class="java.lang.String" itemvalue="Python tests.Doctest KR_grade" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python tests.Doctest pos_in_non_tm" />
-        <item index="1" class="java.lang.String" itemvalue="Python tests.Doctest parse_WGP" />
-        <item index="2" class="java.lang.String" itemvalue="Python.MSAMaker" />
-        <item index="3" class="java.lang.String" itemvalue="Python tests.Doctest topo_string_to_WGP" />
-        <item index="4" class="java.lang.String" itemvalue="Python tests.Doctest win_in_tm_pos" />
+        <item index="0" class="java.lang.String" itemvalue="Python tests.Doctest KR_grade" />
+        <item index="1" class="java.lang.String" itemvalue="Python tests.Doctest test_c_term" />
+        <item index="2" class="java.lang.String" itemvalue="Python tests.Doctest pos_in_non_tm" />
+        <item index="3" class="java.lang.String" itemvalue="Python tests.Doctest parse_WGP" />
+        <item index="4" class="java.lang.String" itemvalue="Python.MSAMaker" />
       </list>
     </recent_temporary>
   </component>
@@ -581,12 +586,6 @@
       <created>1416142765897</created>
       <option name="number" value="Default" />
       <updated>1416142765897</updated>
-    </task>
-    <task id="LOCAL-00033" summary="last commit before changing to new topology prediction.">
-      <created>1424772131794</created>
-      <option name="number" value="00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1424772131794</updated>
     </task>
     <task id="LOCAL-00034" summary="new topology determination algorithm, and integration of TOPDB.">
       <created>1424786056838</created>
@@ -876,8 +875,31 @@
       <option name="project" value="LOCAL" />
       <updated>1447236027541</updated>
     </task>
-    <option name="localTasksCounter" value="82" />
+    <task id="LOCAL-00082" summary="bioinfirmatic analysis scripts">
+      <created>1448437422462</created>
+      <option name="number" value="00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1448437422510</updated>
+    </task>
+    <option name="localTasksCounter" value="83" />
     <servers />
+  </component>
+  <component name="TestHistory">
+    <history-entry file="Doctest_KR_grade - 2015.12.15 at 16h 04m 40s.xml">
+      <configuration name="Doctest KR_grade" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Doctest_test_c_term - 2015.12.10 at 11h 27m 04s.xml">
+      <configuration name="Doctest test_c_term" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Doctest_test_c_term - 2015.12.10 at 11h 27m 12s.xml">
+      <configuration name="Doctest test_c_term" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Doctest_test_c_term - 2015.12.10 at 11h 27m 33s.xml">
+      <configuration name="Doctest test_c_term" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Doctest_test_c_term - 2015.12.10 at 11h 27m 37s.xml">
+      <configuration name="Doctest test_c_term" configurationId="tests" />
+    </history-entry>
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -900,7 +922,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1920" height="1053" extended-state="0" />
+    <frame x="0" y="23" width="1920" height="1053" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1716693" sideWeight="0.49197862" order="0" side_tool="false" content_ui="combo" />
@@ -908,9 +930,11 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.428877" sideWeight="0.5002633" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32941177" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.42780748" sideWeight="0.4997367" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32941177" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.1716693" sideWeight="0.5080214" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32941177" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -918,11 +942,9 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.428877" sideWeight="0.4997367" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32941177" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -937,7 +959,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added SP recognition and more" />
     <MESSAGE value="last commit before integrating blast results. has blaster , topo_strings_comparer, MSA_for_TMpredict object(s) etc." />
     <MESSAGE value="various improvements to blaster etc." />
     <MESSAGE value="documentation, debugging etc." />
@@ -962,19 +983,15 @@
     <MESSAGE value="preparations for server..." />
     <MESSAGE value="fixed issue where msa returned paths that were total grade positive by query were sent to 'plain'." />
     <MESSAGE value="added user_msa2plain and non_tm_pos capabilities" />
-    <option name="LAST_COMMIT_MESSAGE" value="added user_msa2plain and non_tm_pos capabilities" />
+    <MESSAGE value="bioinfirmatic analysis scripts" />
+    <option name="LAST_COMMIT_MESSAGE" value="bioinfirmatic analysis scripts" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="python-line">
-          <url>file://$PROJECT_DIR$/TMConstraint.py</url>
-          <line>7</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/positive_inside_analysis.py</url>
-          <line>107</line>
+          <line>131</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
@@ -983,20 +1000,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/first_50_VH_cutoff_1.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="28" column="4" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/separate_dataset_to_fastas.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/vispy_temp.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.25682184">
@@ -1214,13 +1217,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/MSAMaker.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="471" column="33" selection-start-line="471" selection-start-column="26" selection-end-line="471" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/MSA_for_TMpredict.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1235,135 +1231,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/output2html.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="131" column="16" selection-start-line="131" selection-start-column="16" selection-end-line="131" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/topo_strings_comparer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="24" selection-start-line="0" selection-start-column="24" selection-end-line="0" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TMConstraint.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="354" column="68" selection-start-line="354" selection-start-column="68" selection-end-line="354" selection-end-column="68" />
-          <folding>
-            <element signature="e#260#585#0" expanded="false" />
-            <element signature="e#2703#2900#0" expanded="false" />
-            <element signature="e#6838#7150#0" expanded="false" />
-            <element signature="e#8169#8891#0" expanded="false" />
-            <element signature="e#12129#12879#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/topo_VH_analysis.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="79" column="49" selection-start-line="79" selection-start-column="49" selection-end-line="79" selection-end-column="49" />
-          <folding>
-            <element signature="e#8934#9632#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/degrade_data.tsv">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="21" column="61" selection-start-line="21" selection-start-column="61" selection-end-line="21" selection-end-column="61" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/positive_inside_analysis.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="242" column="27" selection-start-line="242" selection-start-column="27" selection-end-line="242" selection-end-column="27" />
-          <folding>
-            <element signature="e#25#34#0" expanded="true" />
-            <element signature="e#603#3436#0" expanded="true" />
-            <element signature="e#3486#4590#0" expanded="true" />
-            <element signature="e#5087#5251#0" expanded="true" />
-            <element signature="e#11821#12516#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dinola_data.tsv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="17" column="87" selection-start-line="17" selection-start-column="87" selection-end-line="17" selection-end-column="87" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/WinGrade.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="34" column="51" selection-start-line="34" selection-start-column="44" selection-end-line="34" selection-end-column="51" />
-          <folding>
-            <element signature="e#2406#2618#0" expanded="true" />
-            <element signature="e#3065#3404#0" expanded="true" />
-            <element signature="e#4814#5108#0" expanded="true" />
-            <element signature="e#5986#6039#0" expanded="true" />
-            <element signature="e#7648#7776#0" expanded="true" />
-            <element signature="e#7807#8104#0" expanded="true" />
-            <element signature="e#8148#8475#0" expanded="true" />
-            <element signature="e#9437#9656#0" expanded="true" />
-            <element signature="e#13976#14876#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/senes_data.tsv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="21" column="23" selection-start-line="21" selection-start-column="23" selection-end-line="21" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scale_comp.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="85" column="38" selection-start-line="85" selection-start-column="38" selection-end-line="85" selection-end-column="38" />
-          <folding>
-            <element signature="e#25#56#0" expanded="true" />
-            <element signature="e#681#1166#0" expanded="true" />
-            <element signature="e#1193#2544#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sasa_survey_26Aug.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="170" column="0" selection-start-line="170" selection-start-column="0" selection-end-line="170" selection-end-column="0" />
-          <folding>
-            <element signature="e#2028#6540#0" expanded="true" />
-            <element signature="e#9820#10767#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ProcessEntry.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="90" column="12" selection-start-line="90" selection-start-column="12" selection-end-line="90" selection-end-column="12" />
-          <folding>
-            <element signature="e#125#368#0" expanded="true" />
-            <element signature="e#737#1675#0" expanded="true" />
-            <element signature="e#1706#2011#0" expanded="true" />
-            <element signature="e#4345#10655#0" expanded="true" />
-            <element signature="e#11633#15848#0" expanded="true" />
-            <element signature="e#18653#21753#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1371,32 +1242,176 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="22" column="0" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
-          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scale_comp.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="85" column="38" selection-start-line="85" selection-start-column="38" selection-end-line="85" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/senes_data.tsv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="21" column="23" selection-start-line="21" selection-start-column="23" selection-end-line="21" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dinola_data.tsv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="17" column="87" selection-start-line="17" selection-start-column="87" selection-end-line="17" selection-end-column="87" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sasa_survey_26Aug.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="170" column="0" selection-start-line="170" selection-start-column="0" selection-end-line="170" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/TOPCONS_funcs.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="16" column="15" selection-start-line="16" selection-start-column="15" selection-end-line="16" selection-end-column="15" />
+          <caret line="50" column="33" selection-start-line="50" selection-start-column="26" selection-end-line="50" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/output2html.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/grephs_for_figures.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="39" column="18" selection-start-line="39" selection-start-column="18" selection-end-line="39" selection-end-column="18" />
+          <folding>
+            <element signature="e#109#140#0" expanded="true" />
+            <element signature="e#465#570#0" expanded="true" />
+            <element signature="e#603#685#0" expanded="true" />
+            <element signature="e#719#740#0" expanded="true" />
+            <element signature="e#764#768#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wgp_flipper_protter.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ProcessEntry.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="11" column="39" selection-start-line="11" selection-start-column="39" selection-end-line="11" selection-end-column="39" />
+          <folding>
+            <element signature="e#139#463#0" expanded="true" />
+            <element signature="e#832#1788#0" expanded="true" />
+            <element signature="e#1819#2124#0" expanded="true" />
+            <element signature="e#4438#10818#0" expanded="true" />
+            <element signature="e#11796#16011#0" expanded="true" />
+            <element signature="e#18816#21944#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/TMpredict_WinGrade.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.4112458">
-          <caret line="64" column="29" selection-start-line="64" selection-start-column="29" selection-end-line="64" selection-end-column="29" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="307" column="10" selection-start-line="307" selection-start-column="6" selection-end-line="307" selection-end-column="10" />
           <folding>
             <element signature="e#40#62#0" expanded="true" />
-            <element signature="e#4130#4673#0" expanded="true" />
-            <element signature="e#4710#6589#0" expanded="true" />
-            <element signature="e#6636#9969#0" expanded="true" />
-            <element signature="e#23583#24077#0" expanded="true" />
-            <element signature="e#34622#35700#0" expanded="true" />
-            <element signature="e#41411#41558#0" expanded="true" />
-            <element signature="e#42333#42554#0" expanded="true" />
+            <element signature="e#111#4194#0" expanded="true" />
+            <element signature="e#4225#4770#0" expanded="true" />
+            <element signature="e#4807#6686#0" expanded="true" />
+            <element signature="e#11640#16449#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MSAMaker.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="386" column="105" selection-start-line="386" selection-start-column="105" selection-end-line="386" selection-end-column="105" />
+          <folding>
+            <element signature="e#6199#7300#0" expanded="true" />
+            <element signature="e#13045#13220#0" expanded="true" />
+            <element signature="e#13254#14601#0" expanded="true" />
+            <element signature="e#14634#14948#0" expanded="true" />
+            <element signature="e#15444#16088#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/positive_inside_analysis.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8676957">
+          <caret line="422" column="48" selection-start-line="422" selection-start-column="48" selection-end-line="422" selection-end-column="48" />
+          <folding>
+            <element signature="e#25#34#0" expanded="true" />
+            <element signature="e#686#4444#0" expanded="true" />
+            <element signature="e#14629#15324#0" expanded="true" />
+            <element signature="e#22994#23247#0" expanded="true" />
+            <element signature="e#23319#24612#0" expanded="true" />
+            <marker date="1450196468000" expanded="true" signature="13229:14567" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TMConstraint.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="436" column="22" selection-start-line="436" selection-start-column="22" selection-end-line="436" selection-end-column="22" />
+          <folding>
+            <element signature="e#260#585#0" expanded="true" />
+            <element signature="e#10777#12053#0" expanded="true" />
+            <element signature="e#12918#12998#0" expanded="true" />
+            <element signature="e#15335#16547#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WinGrade.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="70" column="4" selection-start-line="70" selection-start-column="4" selection-end-line="77" selection-end-column="20" />
+          <folding>
+            <element signature="e#307#1902#0" expanded="true" />
+            <element signature="e#2406#2618#0" expanded="true" />
+            <element signature="e#3065#3404#0" expanded="true" />
+            <element signature="e#4650#4944#0" expanded="true" />
+            <element signature="e#5822#5875#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/topo_strings_comparer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="210" column="25" selection-start-line="210" selection-start-column="25" selection-end-line="210" selection-end-column="25" />
+          <folding>
+            <element signature="e#40#133#1" expanded="true" />
+            <element signature="e#1946#8422#0" expanded="true" />
+            <element signature="e#8467#8938#0" expanded="true" />
+            <element signature="e#8971#9193#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/topo_VH_analysis.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="67" column="25" selection-start-line="67" selection-start-column="25" selection-end-line="67" selection-end-column="25" />
+          <folding />
         </state>
       </provider>
     </entry>

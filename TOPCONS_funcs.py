@@ -32,7 +32,7 @@ def parse_topcons_output(args):
     #             break
     if args['special']:
         name = l_name.split('GN=')[1].split()[0]
-    with open(args['out_path']+name+'.topc', 'wr+') as fout:
+    with open(args['out_path']+name+'.spc', 'wr+') as fout:
         fout.write('name %s\n' % name)
         for k, v in result.items():
             fout.write('%s %s\n' % (k, v))

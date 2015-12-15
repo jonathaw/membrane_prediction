@@ -35,9 +35,9 @@ def main():
     parser.add_argument('-with_cst', default=False, help='whether to use constraints')
     parser.add_argument('-cst_path', default=os.getcwd(), help='path to cst file')#+'/')
     parser.add_argument('-inc_max', default=10, type=int, help='maximal window increase')
-    parser.add_argument('-fidelity', default=5, type=int, help='flanks on sides of tm_pos constraints')
+    parser.add_argument('-fidelity', default=0, type=int, help='flanks on sides of tm_pos constraints')
     parser.add_argument('-msa_threshold', type=int, default=5)
-    parser.add_argument('-db', default='rost')
+    parser.add_argument('-db', default=None)
     parser.add_argument('-run_type', default='msa2plain')
     parser.add_argument('-ss2', default=None, type=str, help='name of ss2 file. if none is provided name.ss2 will be assumed')
     parser.add_argument('-create_html', default=True, help='whther to create an html')
@@ -52,13 +52,16 @@ def main():
         args['with_msa'] = False
     if args['create_html'] == 'True':
         args['create_html'] = True
-    else:
-        args['create_html'] = False
+    # else:
+    #     args['create_html'] = False
     if args['in_path'][-1] != '/':
         args['in_path'] += '/'
 
     if args['out_path'][-1] != '/':
         args['out_path'] += '/'
+
+    if args['run_type'] in ['msa2plain', 'csts_msa2plain']:
+        args['with_msa'] = True
 
     # import topdb_functions
     hydrophobicity_polyval = MakeHydrophobicityGrade()
@@ -87,7 +90,7 @@ def main():
 def process_user(args):
     from ProcessEntry import create_topo_entry, process_entry
     import TMConstraint
-    args['db'] = None
+    # args['db'] = None
     if args['with_cst'] or args['mode'] == 'csts_msa2plain':
         print args['with_cst']
         cst = TMConstraint.parse_cst(args['name'].lower(), args['in_path'])

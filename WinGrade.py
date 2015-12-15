@@ -113,8 +113,7 @@ class WinGrade():
             if self.within_segment(seg, flaps):
                 return True
         return False
-# a=WinGradePath([WinGrade(1,2,'',''), WinGrade(3,4,'',''), WinGrade(100,110,'',''), WinGrade(50,60,'','')])
-# a.add_win(WinGrade(30, 40,'fwd', 'AAAAAAAAAAAAAAAA'))
+
 class WinGradePath():
     def __init__(self, win_list):
         import operator

@@ -63,7 +63,7 @@ def prd_directory(dir_path):
     import matplotlib
     import numpy as np
     M = 10
-    file_list = [x for x in os.listdir(dir_path) if re.match('.*\.prd', x) and x[-8:-4] != '_msa']
+    file_list = [x for x in os.listdir(dir_path) if re.match('.*\.prd', x) and '_msa' not in x]
     if len(file_list) < args['num_prd']: return {'tm_1': 0, 'tm_2_5': 0, 'tm_5': 0}, {'tm_1': 0, 'tm_2_5': 0, 'tm_5': 0}
     rostlab_db_dict = parse_rostlab_db()
     # print rostlab_db_dict
@@ -75,6 +75,7 @@ def prd_directory(dir_path):
     we_got_wrong = []
     we_got_right = []
     topcons_got_right = []
+    topgraph_c_term, topcons_c_term, c_term_total = 0, 0, 0
     for file_name in file_list:
         pred = prd_parser(dir_path, file_name)
         # if pred['name'] != 'p0c7b7': continue
@@ -87,6 +88,10 @@ def prd_directory(dir_path):
         predictors = {k: topcons2rostlab_ts_format(v) for k, v in topc.items() if k not in ['name', 'seq']}
         predictors['pred_ts'] = pred['pred_ts']
         first_passage = True
+
+        topgraph_c_term += 1 if test_c_term(obse['pdbtm'], obse['opm'], predictors['pred_ts']) else 0
+        topcons_c_term += 1 if test_c_term(obse['pdbtm'], obse['opm'], predictors['topcons']) else 0
+        c_term_total += 1
 
         for predictor in predictors:
             #print "predictor", predictor
@@ -150,6 +155,10 @@ def prd_directory(dir_path):
         print 'at total topgrph got right', float(sum(results['pred_ts'].values())) / float(sum(totals.values()))
         print 'at total topcons got right', float(sum(results['topcons'].values())) / float(sum(totals.values()))
 
+        print 'topcons got c_term right', topcons_c_term, 100.*topcons_c_term/c_term_total
+        print 'topgraph got c_term right', topgraph_c_term, 100.*topgraph_c_term/c_term_total
+        print 'total c_term tested', c_term_total
+
         plt.figure()
         data = {}
         for predictor, results_d in results.items():
@@ -178,6 +187,37 @@ def prd_directory(dir_path):
         names[0] = 'TopoGraph'
         plt.legend(plots.values(), names, loc='upper right')
         plt.show()
+
+
+def test_c_term(pdbtm, opm, pred_ts):
+    """
+    :param pdbtm: pdbtm ts
+    :param opm: opm ts
+    :param pred_ts: predictors ts
+    :return: True iff the c terms agree
+    >>> test_c_term('2hhhhu', '2hhhhu', '2hhhu')
+    True
+    >>> test_c_term('2hhhhu', '2hhhhu', '1hhhu')
+    False
+    >>> test_c_term('2hhhhu', '2hhhhu', '1hhh1')
+    True
+    """
+    pdbtm_ = determine_c_term(pdbtm)
+    opm_ = determine_c_term(opm)
+    pred_ts_ = determine_c_term(pred_ts)
+    return pred_ts_ == pdbtm_ or pred_ts_ == opm_
+
+
+def determine_c_term(ts):
+    flip = False
+    for n in ts[::-1]:
+        if n == '1':
+            return '1' if not flip else '2'
+        if n == '2':
+            return '2' if not flip else '1'
+        if n == 'h' or n == 'H':
+            flip = True
+
 
 
 def devide_with_zero(num1, num2):
