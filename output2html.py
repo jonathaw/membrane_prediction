@@ -138,7 +138,7 @@ def protter_api(te, wgp):
         nterm = 'extra'
     elif wgp.path[0].direction == 'rev' and signal_peptide != [0, 0]:
         nterm = 'intra'
-        
+
     if signal_peptide != [0, 0]:
         query = 'http://wlab.ethz.ch/protter/create?seq=%s&nterm=%s&tm=%s&mc=lightsalmon&lc=blue&tml=none&tex=;&' \
                 'n:positives,s:circ,bc:cornflowerblue=R,K&n:signal peptide,cc:white,fc:mediumvioletred,bc:red=%i-%i&format=png' % \

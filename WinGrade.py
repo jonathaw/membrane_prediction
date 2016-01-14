@@ -21,7 +21,7 @@ class WinGrade():
         else:
             self.poly_param = {'w': 0, 'z_0': 0}
         if polyval is None:
-            from TMpredict_WinGrade import MakeHydrophobicityGrade
+            from ProcessEntry import MakeHydrophobicityGrade
             polyval = MakeHydrophobicityGrade()
         if length_element is None:
             self.length_element = membrane_deformation(self.length, self.poly_param['w'], self.poly_param['z_0'])

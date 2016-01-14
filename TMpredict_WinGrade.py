@@ -64,7 +64,7 @@ def main():
         args['with_msa'] = True
 
     # import topdb_functions
-    hydrophobicity_polyval = MakeHydrophobicityGrade()
+    # hydrophobicity_polyval = MakeHydrophobicityGrade()
     if args['mode'] == 'ROC':
         rostlab_ROC(args)
     elif args['mode'] == 'single':
@@ -657,28 +657,30 @@ def topo_string_rostlab_format(topo, seq):
     return topo_string
 
 
-def MakeHydrophobicityGrade():
-    '''
-    :return: returns a dictionary of the polynom values for each residue
-    '''
-    global hydrophobicity_polyval
-    # hydrophobicity_grade = open('Poly_Values.txt', 'r')
-    # hydrophobicity_grade = open('poly_value_11.2.txt', 'r')
-    # hydrophobicity_grade = open('poly_vals_23.2.txt', 'r')
-    # hydrophobicity_grade = open('/home/labs/fleishman/jonathaw/membrane_prediciton/poly_vals_25.2.txt', 'r')
-    try:
-        hydrophobicity_grade = open('/home/labs/fleishman/jonathaw/membrane_prediciton/polyval_21_5_15.txt', 'r')
-    # else:
-    except:
-        hydrophobicity_grade = open('/Volumes/labs/fleishman/jonathaw/membrane_prediciton/polyval_21_5_15.txt', 'r')
-    # hydrophobicity_grade = open('/Volumes/jonathaw-1/membrane_prediciton/poly_vals_25.2.txt', 'r')
-    # hydrophobicity_grade = open('./poly_vals_25.2.txt', 'r')
-    hydrophobicity_polyval = {}
-    for line in hydrophobicity_grade:
-        split = line.split()
-        hydrophobicity_polyval[split[0]] = [float(n) for n in split[1:6]]
-    hydrophobicity_grade.close()
-    return hydrophobicity_polyval
+# def MakeHydrophobicityGrade():
+#     '''
+#     :return: returns a dictionary of the polynom values for each residue
+#     '''
+#     global hydrophobicity_polyval
+#     # hydrophobicity_grade = open('Poly_Values.txt', 'r')
+#     # hydrophobicity_grade = open('poly_value_11.2.txt', 'r')
+#     # hydrophobicity_grade = open('poly_vals_23.2.txt', 'r')
+#     # hydrophobicity_grade = open('/home/labs/fleishman/jonathaw/membrane_prediciton/poly_vals_25.2.txt', 'r')
+#     try:
+#         # hydrophobicity_grade = open('/home/labs/fleishman/jonathaw/membrane_prediciton/polyval_21_5_15.txt', 'r')
+#         hydrophobicity_grade = open('/home/labs/fleishman/jonathaw/membrane_prediciton/polyval_Kfix_14Jan2016.txt', 'r')
+#     # else:
+#     except:
+#         # hydrophobicity_grade = open('/Volumes/labs/fleishman/jonathaw/membrane_prediciton/polyval_21_5_15.txt', 'r')
+#         hydrophobicity_grade = open('/Volumes/labs/fleishman/jonathaw/membrane_prediciton/polyval_Kfix_14Jan2016.txt', 'r')
+#     # hydrophobicity_grade = open('/Volumes/jonathaw-1/membrane_prediciton/poly_vals_25.2.txt', 'r')
+#     # hydrophobicity_grade = open('./poly_vals_25.2.txt', 'r')
+#     hydrophobicity_polyval = {}
+#     for line in hydrophobicity_grade:
+#         split = line.split()
+#         hydrophobicity_polyval[split[0]] = [float(n) for n in split[1:6]]
+#     hydrophobicity_grade.close()
+#     return hydrophobicity_polyval
 
 
 def pymol_mark_segments(name, segments_set_set):

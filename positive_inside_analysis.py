@@ -9,7 +9,7 @@ from sasa_survey_26Aug import parse_rsa, nacces_for_win, pair_wise_aln_from_seqs
 from topo_strings_comparer import spc_parser
 from TMpredict_WinGrade import topo_VH_parser
 import matplotlib.pyplot as plt
-from TMpredict_WinGrade import MakeHydrophobicityGrade
+from ProcessEntry import MakeHydrophobicityGrade
 import pickle
 import pandas as pd
 from scipy.stats import gaussian_kde
@@ -126,9 +126,14 @@ def parse_prd(file_name):
     text = open(file_name, 'r').read()
     one_liner = text.split('best_path ')[1].split('sec_path')[0].replace('\n', ':')
     if '{ [ }~> total_grade' in one_liner:
-        return None
-    wgp = parse_WGP(one_liner)
-    return wgp
+        return None, None
+    best_wgp = parse_WGP(one_liner)
+
+    one_liner = text.split('sec_path ')[1].split('ddG paths')[0].replace('\n', ':')
+    if '{ [ }~> total_grade' in one_liner:
+        return None, None
+    sec_wgp = parse_WGP(one_liner)
+    return best_wgp, sec_wgp
 
 
 def parse_prd_csts(file_name):
@@ -450,6 +455,14 @@ def analyse_positive_same_place():
                                                                                      100*over_n_posw_neg_dalta/total_over_n)
 
 
+def protter_make():
+    path_to_nocsts = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_14.12/with_msa_no_csts/'
+    prd_files = 'o29285.prd'
+    wgp = parse_prd(path_to_nocsts+prd_files)
+    print 'segments for original:\n', '\n'.join([a.seq if a.direction == 'fwd' else a.seq[::-1] for a in wgp.path])
+    extract_w_and_calculate_best_path(wgp, wgp.path[7], MakeHydrophobicityGrade())
+
+
 def grade_segment(seq, polyval):
         membrane_position = np.linspace(-20, 20, endpoint=True, num=len(seq))
         grade = 0
@@ -478,9 +491,11 @@ def extract_w_and_calculate_best_path(wgp, chosen_win, polyval):
     if fwd_first_grade < rev_first_grade:
         best_path = fwd_first
         best_grade = fwd_first_grade
+        print 'best path without pos win was chosen as first helix FWD'
     else:
         best_path = rev_first
         best_grade = rev_first_grade
+        print 'best path without pos win was chosen as first helix REV'
 
     # for i, k in enumerate(wgp.path[:-1]):
     #     print i, ''.join(a if a in ['K', 'R'] else 'A' for a in k.seq), k.seq
@@ -488,6 +503,7 @@ def extract_w_and_calculate_best_path(wgp, chosen_win, polyval):
     KR_grade_best = sum([grade_segment(''.join(a if a in ['K', 'R'] else 'A' for a in w), polyval) for w in best_path])
     KR_grade_original = sum([grade_segment(''.join(a if a in ['K', 'R'] else 'A' for a in w.seq), polyval) for w in wgp.path])
     return best_grade, KR_grade_original-KR_grade_best
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -510,6 +526,9 @@ if __name__ == '__main__':
 
     elif args['mode'] == 'positive_inside':
         analyse_positive_same_place()
+
+    elif args['mode'] == 'protter':
+        protter_make()
 
     else:
         print 'no mode chosen'

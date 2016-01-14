@@ -68,10 +68,12 @@ def MakeHydrophobicityGrade():
     # hydrophobicity_grade = open('poly_vals_23.2.txt', 'r')
     # hydrophobicity_grade = open('/home/labs/fleishman/jonathaw/membrane_prediciton/poly_vals_25.2.txt', 'r')
     try:
-        hydrophobicity_grade = open('/home/labs/fleishman/jonathaw/membrane_prediciton/polyval_21_5_15.txt', 'r')
+        # hydrophobicity_grade = open('/home/labs/fleishman/jonathaw/membrane_prediciton/polyval_21_5_15.txt', 'r')
+        hydrophobicity_grade = open('/home/labs/fleishman/jonathaw/membrane_prediciton/polyval_Kfix_14Jan2016.txt', 'r')
     # else:
     except:
-        hydrophobicity_grade = open('/Volumes/labs/fleishman/jonathaw/membrane_prediciton/polyval_21_5_15.txt', 'r')
+        # hydrophobicity_grade = open('/Volumes/labs/fleishman/jonathaw/membrane_prediciton/polyval_21_5_15.txt', 'r')
+        hydrophobicity_grade = open('/Volumes/labs/fleishman/jonathaw/membrane_prediciton/polyval_Kfix_14Jan2016.txt', 'r')
     # hydrophobicity_grade = open('/Volumes/jonathaw-1/membrane_prediciton/poly_vals_25.2.txt', 'r')
     # hydrophobicity_grade = open('./poly_vals_25.2.txt', 'r')
     hydrophobicity_polyval = {}
@@ -144,6 +146,7 @@ def process_entry(topo_entry, run_type, verbose=False):
             best_path, sec_path = topo_graph(topo_entry, wins)
             write_results(topo_entry, run_type, best_path, sec_path)
             if topo_entry.param_list['create_html']:
+                print 'AAAAAAAAAA', best_path
                 create_html(topo_entry, best_path, sec_path, wins)
 
     if run_type == 'cst_only':

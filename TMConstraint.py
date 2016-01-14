@@ -439,9 +439,9 @@ def topcons2cst(args):
     from math import ceil, floor
     from topo_strings_comparer import spc_parser
     try:
-        topc = spc_parser(args['name'].lower())
+        topc = spc_parser(args['name'].lower(), path=args['path'])
     except:
-        topc = spc_parser(args['name'])
+        topc = spc_parser(args['name'], path=args['path'])
     single_peptide = topc['spoctopus'].count('S') + topc['spoctopus'].count('s')
     topcons = topc['topcons']
     topcons_cln = 's'*single_peptide + topcons[single_peptide:]

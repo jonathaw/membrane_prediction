@@ -346,12 +346,12 @@ def overlappM(pred_h, obse_set, M=10):
     return False
 
 
-def spc_parser(name):
+def spc_parser(name, path='/home/labs/fleishman/jonathaw/membrane_prediction_DBs/spoctopus_SPDB/'):
     """
     :param name: protein name
     :return: dictionary with data from topcons regarding name
     """
-    with open('/home/labs/fleishman/jonathaw/membrane_prediction_DBs/spoctopus_SPDB/'+name+'.spc', 'r') as f:
+    with open(path+name+'.spc', 'r') as f:
         cont = f.read().split('\n')
     result = {}
     for line in cont:
