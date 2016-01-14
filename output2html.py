@@ -129,13 +129,31 @@ def protter_api(te, wgp):
     import urllib
     signal_peptide = [1, te.seq.count('u')] if 'u' in te.seq else [0, 0]
     wins = [w.seq if w.direction == 'fwd' else w.seq[::-1] for w in wgp.path]
-    query = 'http://wlab.ethz.ch/protter/create?seq=%s&nterm=extra&tm=%s&mc=lightsalmon&lc=blue&tml=none&tex=;&' \
-            'n:positives,s:circ,bc:cornflowerblue=R,K&n:signal peptide,cc:white,fc:mediumvioletred,bc:red=%i-%i&format=png' % \
-            (te.original_seq, ','.join(wins), signal_peptide[0], signal_peptide[1])
+
+    if wgp.path[0].direction == 'fwd' and signal_peptide == [0, 0]:
+        nterm = 'intra'
+    elif wgp.path[0].direction == 'rev' and signal_peptide == [0, 0]:
+        nterm = 'extra'
+    elif wgp.path[0].direction == 'fwd' and signal_peptide != [0, 0]:
+        nterm = 'extra'
+    elif wgp.path[0].direction == 'rev' and signal_peptide != [0, 0]:
+        nterm = 'intra'
+        
+    if signal_peptide != [0, 0]:
+        query = 'http://wlab.ethz.ch/protter/create?seq=%s&nterm=%s&tm=%s&mc=lightsalmon&lc=blue&tml=none&tex=;&' \
+                'n:positives,s:circ,bc:cornflowerblue=R,K&n:signal peptide,cc:white,fc:mediumvioletred,bc:red=%i-%i&format=png' % \
+                (te.original_seq, nterm, ','.join(wins), signal_peptide[0], signal_peptide[1])
+    else:
+        query = 'http://wlab.ethz.ch/protter/create?seq=%s&nterm=%s&tm=%s&mc=lightsalmon&lc=blue&tml=none&tex=;&' \
+                'n:positives,s:circ,bc:cornflowerblue=R,K&format=png' % (te.original_seq, nterm, ','.join(wins))
     urllib.urlretrieve(query, "%s%s.png" % (te.param_list['out_path'], te.name))
-    link = 'http://wlab.ethz.ch/protter/#seq=%s&nterm=extra&tm=%s&mc=lightsalmon&lc=blue&tml=none&tex=;&' \
-            'n:positives,s:circ,bc:cornflowerblue=R,K&n:signal peptide,cc:white,fc:mediumvioletred,bc:red=%i-%i&format=png' \
-           % (te.original_seq, ','.join(wins), signal_peptide[0], signal_peptide[1])
+    if signal_peptide != [0, 0]:
+        link = 'http://wlab.ethz.ch/protter/#seq=%s&nterm=%s&tm=%s&mc=lightsalmon&lc=blue&tml=none&tex=;&' \
+                'n:positives,s:circ,bc:cornflowerblue=R,K&n:signal peptide,cc:white,fc:mediumvioletred,bc:red=%i-%i&format=png' \
+                % (te.original_seq, nterm, ','.join(wins), signal_peptide[0], signal_peptide[1])
+    else:
+        link = 'http://wlab.ethz.ch/protter/#seq=%s&nterm=%s&tm=%s&mc=lightsalmon&lc=blue&tml=none&tex=;&' \
+                'n:positives,s:circ,bc:cornflowerblue=R,K&format=png' % (te.original_seq, nterm, ','.join(wins))
     return link, "%s.png" % te.name
 
 
