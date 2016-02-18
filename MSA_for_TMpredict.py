@@ -127,8 +127,8 @@ def retrieve_seqs(msa, start, end, direction):
         query_grade = WinGrade(start, end, direction, gap_remover(msa.query.seq[start_wg:end_wg])[::-1],
                             msa.polyval, msa.poly_param).grade
     grade_stack = {}
-    for target in msa.stack:
 
+    for target in msa.stack:
         if target_has_gaps_in_query_stretch(msa.query, target, start_wg, end_wg):
             if direction == 'fwd':
                 temp_win_grade = WinGrade(start, end, direction, gap_remover(target.seq[start_wg:end_wg]),
@@ -144,6 +144,10 @@ def retrieve_seqs(msa, start, end, direction):
     med_grade = precentile_for_wins(grade_stack.keys(), msa.percentile)
     med_win = grade_stack[med_grade]['win']
     med_name = grade_stack[med_grade]['name']
+    if gap_remover(msa.query.seq[start_wg:end_wg]) == 'REMDLCLALALTLHVHWGVWGV':
+        print 'AAAAA', direction
+        print 'found ME', WinGrade(start, end, direction, gap_remover(msa.query.seq[start_wg:end_wg]), msa.polyval,
+                        msa.poly_param, med_name, gap_remover(med_win.seq))
     if direction == 'fwd':
         return WinGrade(start, end, direction, gap_remover(msa.query.seq[start_wg:end_wg]), msa.polyval,
                         msa.poly_param, med_name, gap_remover(med_win.seq))
@@ -185,7 +189,7 @@ def read_fasta_msa(file_name):
 
 if __name__ == '__main__':
     import sys
-    from TMpredict_WinGrade import MakeHydrophobicityGrade
-
+    # from TMpredict_WinGrade import MakeHydrophobicityGrade
+    pass
     # read_fasta_msa(sys.argv[1])
-    TMpredict_MSA(sys.argv[1], MakeHydrophobicityGrade(), {'c0': 3., 'c1': 6.8, 'c2': 0.7, 'c3': -0.03})
+    # TMpredict_MSA(sys.argv[1], MakeHydrophobicityGrade(), {'c0': 3., 'c1': 6.8, 'c2': 0.7, 'c3': -0.03})
