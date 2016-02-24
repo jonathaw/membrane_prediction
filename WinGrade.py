@@ -1,5 +1,8 @@
 #!/usr/bin/env python2.7
-class WinGrade():
+MEMBRANE_HALF_WIDTH = 15
+
+
+class WinGrade:
     '''
     A class to parameterise a window in hydrophobicity manners.
     '''
@@ -47,9 +50,11 @@ class WinGrade():
 
     def __repr__(self):
         if self.msa_name == None:
-            return '%-4i to %-4i in %3s => %10f %-35s %i %f' % (self.begin, self.end, self.direction, self.grade, self.seq, self.charges, self.length_element)
+            # print 'you win', self.begin, self.end, self.direction, self.grade, self.seq, self.charges, self.length_element
+            return '%-4i to %-4i in %3s => %2.1f %-35s %i %f' % (self.begin, self.end, self.direction, self.grade,
+                                                                self.seq, self.charges, self.length_element)
         else:
-            return '%-4i to %-4i in %3s => %10f %-35s %s %s %f' % (self.begin, self.end, self.direction, self.grade,
+            return '%-4i to %-4i in %3s => %2.1f %-35s %s %s %f' % (self.begin, self.end, self.direction, self.grade,
                                                                self.seq, self.msa_name, self.msa_seq, self.msa_grade)
 
     def get_html(self, i):
@@ -70,11 +75,11 @@ class WinGrade():
 
     def grade_segment(self, polyval):
         import numpy as np
-        membrane_position = np.linspace(-20, 20, endpoint=True, num=self.length)
+        membrane_position = np.linspace(-MEMBRANE_HALF_WIDTH, MEMBRANE_HALF_WIDTH, endpoint=True, num=self.length)
         grade = 0
         for i, aa in enumerate(self.seq):
             if aa in polyval.keys():
-                grade += np.polyval(polyval[aa], membrane_position[i])
+                grade += round(np.polyval(polyval[aa], membrane_position[i]), 1)
         return grade    #+self.hp_moment(polyval)+self.length_polynom()
 
     def length_polynom(self):
@@ -259,10 +264,10 @@ def hp_moment(seq, polyval, poly_param):
 
 def grade_segment(seq, polyval):
     import numpy as np
-    membrane_position = np.linspace(-15, 15, endpoint=True, num=len(seq))
+    membrane_position = np.linspace(-MEMBRANE_HALF_WIDTH, MEMBRANE_HALF_WIDTH, endpoint=True, num=len(seq))
     grade = 0
     for i, aa in enumerate(seq):
-        grade += np.polyval(polyval[aa], membrane_position[i])
+        grade += round(np.polyval(polyval[aa], membrane_position[i]), 1)
     return grade
 
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env python2.7
+# coding=utf-8
 import os
 import argparse
 from scipy import stats
@@ -12,8 +13,9 @@ import matplotlib.pyplot as plt
 from ProcessEntry import MakeHydrophobicityGrade
 import pickle
 import pandas as pd
-from scipy.stats import gaussian_kde
+from scipy.stats import gaussian_kde, ttest_1samp, linregress
 import numpy as np
+from collections import OrderedDict
 import sys
 
 polyval = MakeHydrophobicityGrade()
@@ -41,7 +43,7 @@ def analyse_sasa_and_positive(write=False, with_sasa=True, vh=False):
             vh_db = topo_VH_parser(prd_file[:-4])
         else:
             rost_prd = rost_db[prd_file[:-4]]
-        wgp = parse_prd(path_to_nocsts+prd_file)
+        wgp = parse_prd(path_to_nocsts+prd_file)[0]
         if wgp.total_grade == 0.:
             print 'no path FOUND, F#$% it', prd_file
             continue
@@ -95,7 +97,7 @@ def win_sasa(wins, pdb, chain, name, seq):
     is_neighbor = os.path.isfile('%swith_neighbours/%s_%s_with_neighbors.pdb' % (path_d, pdb, chain.upper()))
     is_no_neighbour = os.path.isfile('%swithout_neighbours/%s_%s_without_neighbours.pdb' % (path_d, pdb, chain.upper()))
 
-    spoc = spc_parser(name)['spoctopus']
+    spoc = spc_parser(name)['topcons']
     signal = [0, spoc.count('s') + spoc.count('S')]
 
     if is_single:
@@ -200,18 +202,22 @@ def analyse_3d_results(args):
     all_res = ['R', 'K', 'H', 'D', 'E', 'N', 'Q', 'T', 'S', 'V', 'I', 'L', 'F', 'M', 'P', 'G', 'C', 'Y', 'W', 'A']
     #all_res = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y']
     diff_KR = {k: [] for k in all_res}
-    returny, results = {}, {}
+    returny, results, wgps = {}, {}, {}
     print 'there are %i prds' % len(prd_files)
     print prd_files
     for prd in prd_files:
         name_full = prd[:-4]
         name = name_full.split('_')[0]
         pos_num = int(name_full.split('_')[1].split('.')[0])
-        withcsts_wgp = parse_prd(path_withcsts+prd)
+        withcsts_wgp = parse_prd(path_withcsts+prd)[0]
         if withcsts_wgp is None:
             print 'found nothing in the prediction', prd
             continue
         nocsts_wgp = no_csts[name][pos_num]['wgp']
+
+        print 'examining', name
+        print nocsts_wgp
+        # draw_ddg_fwd_rev(nocsts_wgp, polyval)
 
         # removing wrongly predicted entries (by c term)
         pdbtm_c = determine_c_term(rost_db[name]['pdbtm'])
@@ -221,6 +227,8 @@ def analyse_3d_results(args):
             print 'discarding', name
             print pdbtm_c, opm_c, topgraph_c
             continue
+
+        wgps[name] = nocsts_wgp
 
         # print name, no_csts[name]['chosen_w'], no_csts[name]['sasa'], withcsts_wgp.total_grade, nocsts_wgp.total_grade
         # print nocsts_wgp
@@ -255,6 +263,8 @@ def analyse_3d_results(args):
     for a in data:
         print "%-2.2f\t%2.2r\t%-2.2f\t%s\t%-2.2f\t%-3i\t%-3i\t%-3i\t%-2.2f\t%-20s\t%i (%i)" % (a[0], a[1], a[2], a[3], a[4]-50, a[5], a[6],
                                                                            a[7], a[8], a[9], a[11], a[10])
+    # creates a fig with boxplots around the positive win
+    create_boxplot_array(wgps)
 
     if False:
         plt.figure()
@@ -302,6 +312,82 @@ def analyse_3d_results(args):
         return returny
 
 
+def create_boxplot_array_max_only(wgps):
+    results = OrderedDict([(i, []) for i in range(-20, 21)])
+    for name, wgp in wgps.items():
+        print name
+        pos_wins = [w for w in wgp.path if w.grade >= -1]
+        max_pos = max([w.grade for w in pos_wins])
+        pos_win = [(i, w) for i, w in enumerate(wgp.path) if w.grade == max_pos][0]
+        print wgp
+        print pos_win
+        for i, w in enumerate(wgp.path):
+            print i, w
+            results[i-pos_win[0]].append(w.grade)
+    print results
+    plt.boxplot([v for v in results.values()])
+    plt.show()
+
+
+def create_boxplot_array(wgps, pos_most_pos='pos', hline=0):
+    lim = 10
+    the_rng = range(-lim, lim+1)
+
+    results = OrderedDict([(i, []) for i in the_rng])
+    overall_average = []
+    lines = []
+    for name, wgp in wgps.items():
+        # print name
+        if pos_most_pos == 'pos':
+            pos_wins = [(i, w) for i, w in enumerate(wgp.path) if w.grade >= -1]
+        else:
+            pos_wins = [(i, w) for i, w in enumerate(wgp.path) if w.grade == np.median([t.grade for t in wgp.path])]
+        print 'ZZZZZZ %s has %i pos wins' % (name, len(pos_wins))
+        print wgp
+        for pos_win in pos_wins:
+            # if pos_most_pos != 'pos' and pos_win[1].grade > -2:
+            #     continue
+
+            # print 'pos_win', pos_win
+            if pos_win[0] == 0 or pos_win[0] == len(wgp.path)-1 or pos_win[0] == 1 or pos_win[0] == len(wgp.path)-2:
+                # print 'AT EDGE!!!!!!!!!', pos_win[0], len(wgp.path)
+                continue
+
+            line_ = []
+            for i in range(max(0, pos_win[0]-lim), min(len(wgp.path), pos_win[0]+lim+1)):
+                ### disregard wins that are positive or beyond a positive
+                for other_pos in [a for a in pos_wins if a != pos_win]:
+                    if (i-pos_win[0] >= other_pos[0]-pos_win[0] and i-pos_win[0]>0 and other_pos[0]-pos_win[0]>0) or \
+                            (i-pos_win[0] <= other_pos[0]-pos_win[0] and i-pos_win[0]<0 and other_pos[0]-pos_win[0]<0):
+                        # print 'diregarding', i, other_pos[0], pos_win[0]
+                        continue
+                ###
+                results[i-pos_win[0]].append(wgp.path[i].grade-grade_segment(wgp.path[i].seq[::-1], polyval))
+                line_.append([i-pos_win[0], wgp.path[i].grade-grade_segment(wgp.path[i].seq[::-1], polyval)])
+            lines.append(line_)
+        [overall_average.append(w.grade - grade_segment(w.seq[::-1], polyval)) for w in wgp.path]
+    print results
+    print 'AAAAAAAAAAAAAAAAAA'
+    # for p, res in results.items():
+    #     plt.scatter(np.random.normal(p, 0.05, len(res)), res, s=1)
+    # plt.boxplot([v for v in results.values()], positions=the_rng)
+    # [plt.text(p, 5, len(results[p])) for p in the_rng]
+    # plt.hlines(np.mean(overall_average), xmin=-len(the_rng)-0.5, xmax=len(the_rng)+0.5, color='grey')
+    # plt.hlines(0, xmin=-len(the_rng)-0.5, xmax=len(the_rng)+0.5, color='k')
+    # plt.hlines(hline, xmin=-len(the_rng)-0.5, xmax=len(the_rng)+0.5, color='g')
+    # plt.xlabel('TMH index (positive TMH at 0)')
+    # plt.ylabel('ddG true-opposite')
+    # plt.xlim([-10.5, 10.5])
+    fig = plt.figure(1)
+    for i, line_ in enumerate(lines):
+        fig.add_subplot(11, 5, i)
+        plt.plot([a[0] for a in line_], [a[1] for a in line_])
+        print 'AAAAAA', i, line_
+        plt.xlabel(str(i))
+        plt.xticks([a[0] for a in line_])
+    plt.show()
+
+
 def arg_lys_assymetry(wgp_nocsts, wgp_withcsts, ress):
     """
     :param ress: list or res to count in
@@ -322,6 +408,23 @@ def arg_lys_assymetry(wgp_nocsts, wgp_withcsts, ress):
         withcsts_grade += grade_segment(seq_a, polyval)
 
     return nocsts_grade - withcsts_grade
+
+
+def draw_ddg_fwd_rev(wgp, polyval):
+    """
+    :param wgp: a WinGradePath
+    :return: shows a plot of the dG insertion and ddG^native-opposite(direction) of the WGP
+    """
+    native_grades, ddg_rev_fwd = [], []
+    for w in wgp.path:
+        native_grades.append(w.grade)
+        opposite_seq = w.seq[::-1]
+        opposite_grade = grade_segment(opposite_seq, polyval)
+        ddg_rev_fwd.append(opposite_grade) # w.grade-
+    plt.scatter(range(1, wgp.win_num+1), native_grades, color='b')
+    plt.scatter(range(1, wgp.win_num+1), ddg_rev_fwd, color='r')
+    plt.hlines(-1, 1, wgp.win_num, colors='k')
+    plt.show()
 
 
 def extrimities_analysis(args):
@@ -505,6 +608,176 @@ def extract_w_and_calculate_best_path(wgp, chosen_win, polyval):
     return best_grade, KR_grade_original-KR_grade_best
 
 
+def get_ddg_from_prd(prd_file):
+    with open(prd_file, 'r') as fin:
+        for l in fin.read().split('\n'):
+            s = l.split()
+            if s[0] == 'ddG':
+                return float(s[2].split('|')[1].split('|')[0])
+
+
+def vh_boxplots():
+    vh_path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_14.12/VH_topcons_31Jan/'
+    prd_files = [a for a in os.listdir(vh_path) if '.prd' in a]
+    wgps, wgps_no_pos, no_pos_grade = {}, {}, []
+    dG_1, dG_m1, dG_others = [], [], []
+
+    fig = plt.figure()
+    p = 1
+    no_pos_all, pos_all = [], []
+    KRx, KRy = {0: [], 1: [], 2: [], 3:[], 4: []}, {0: [], 1: [], 2: [], 3:[], 4: []}
+    pp, mp, mm = [], [], []
+    for prd_file in prd_files:
+        wgp = parse_prd(vh_path+prd_file)[0]
+
+        if wgp is None:
+            continue
+
+        if len(wgp.path) < 5:
+            continue
+
+        if get_ddg_from_prd(vh_path+prd_file) < 6:
+            continue
+        # validation:
+        pos_wins = [w for w in wgp.path if w.grade >= -1]
+        if len(pos_wins) > 1:
+            # print 'found %i pos wins' % len(pos_wins)
+            continue
+
+        for w in wgp.path:
+            ddG = w.grade-grade_segment(w.seq[::-1], polyval)
+            KRx[w.seq.count('K')+w.seq.count('R')].append(w.grade)
+            KRy[w.seq.count('K')+w.seq.count('R')].append(ddG)
+
+        if len(pos_wins) == 0:
+            [no_pos_grade.append(w.grade-grade_segment(w.seq[::-1], polyval)) for w in wgp.path]
+            for w in wgp.path:
+                ddG = w.grade-grade_segment(w.seq[::-1], polyval)
+                if w.grade > 0 and ddG > 0:
+                    pp.append([w.seq, w.grade, ddG])
+                if w.grade < 0 and ddG > 0:
+                    mp.append([w.seq, w.grade, ddG])
+                if w.grade < 0 and ddG < 0:
+                    mm.append([w.seq, w.grade, ddG])
+                # KRx[w.seq.count('K')+w.seq.count('R')].append(w.grade)
+                # KRy[w.seq.count('K')+w.seq.count('R')].append(ddG)
+
+            wgps_no_pos[prd_file[:-4]] = wgp
+        wgps[prd_file[:-4]] = wgp
+
+        if pos_wins == []:
+            [dG_others.append(w.grade) for w in wgp.path]
+            [no_pos_all.append([w.grade, grade_segment(w.seq[::-1], polyval)]) for w in wgp.path]
+        # ignore proteins with mTMHs at edges
+        elif pos_wins[0] == wgp.path[0] or pos_wins[0] == wgp.path[-1]:
+            continue
+        else:
+            pos_win_i = [i for i, w in enumerate(wgp.path) if w == pos_wins[0]][0]
+            # print 'RRR'
+            # print str(wgp)
+            # print pos_wins, pos_win_i
+            # print wgp.path[pos_win_i+1].grade, wgp.path[pos_win_i-1].grade
+            [dG_others.append(w.grade) for i, w in enumerate(wgp.path) if (i < pos_win_i-1 or i > pos_win_i+1) and
+             (i != 0 and i != len(wgp.path)-1)]
+            dG_1.append(wgp.path[pos_win_i+1].grade)
+            dG_m1.append(wgp.path[pos_win_i-1].grade)
+
+            [pos_all.append([w.grade, grade_segment(w.seq[::-1], polyval)]) for w in wgp.path]
+
+            fig.add_subplot(11, 5, p)
+            p += 1
+            wgp_max = wgp.path[-1].end+10
+            for w in wgp.path:
+                plt.hlines(w.grade, w.begin, w.end, color='r' if w.grade >= -1 else 'k')
+                plt.scatter(np.mean([w.begin, w.end]), w.grade-grade_segment(w.seq[::-1], polyval))
+                plt.hlines(0, xmin=0, xmax=wgp_max, color='grey')
+                plt.xlim([0, wgp_max])
+                ddG = w.grade-grade_segment(w.seq[::-1], polyval)
+                if w.grade > 0 and ddG > 0:
+                    pp.append([w.seq, w.grade, ddG])
+                if w.grade < 0 and ddG > 0:
+                    mp.append([w.seq, w.grade, ddG])
+                if w.grade < 0 and ddG < 0:
+                    mm.append([w.seq, w.grade, ddG])
+                # KRx[w.seq.count('K')+w.seq.count('R')].append(w.grade)
+                # KRy[w.seq.count('K')+w.seq.count('R')].append(ddG)
+
+    print 'found %i non 1/-1 found avg %f' % (len(dG_others), np.mean(dG_others))
+    print 'found %i 1 found avg %f' % (len(dG_1), np.mean(dG_1))
+    print 't-test diff %f and the p-value is %f' % ttest_1samp(dG_1, np.mean(dG_others))
+    print 'found %i -1 found avg %f' % (len(dG_m1), np.mean(dG_m1))
+    print 't-test diff %f and the p-value is %f' % ttest_1samp(dG_m1, np.mean(dG_others))
+    # plt.boxplot([dG_m1, dG_1, dG_others])
+    plt.show()
+
+    # print 'x with pos', [a[0] for a in pos_all]
+    # print 'y with pos', [a[1] for a in pos_all]
+    # print 'x no pos', [a[0] for a in no_pos_all]
+    # print 'y no pos', [a[1] for a in no_pos_all]
+
+    plt.scatter([a[0] for a in no_pos_all], [a[1] for a in no_pos_all], color='r')
+    plt.scatter([a[0] for a in pos_all], [a[1] for a in pos_all], color='b')
+
+    all_x = [a[0] for a in no_pos_all] + [a[0] for a in pos_all]
+    all_y = [a[1] for a in no_pos_all] + [a[1] for a in pos_all]
+    slope, intercept, r_value, p_value, std_err = stats.linregress(all_x, all_y)
+    plt.plot(np.arange(-10, 20), [intercept+slope*a for a in np.arange(-10, 20)])
+    print 'found %f r value and %f p-value' % (r_value**2, p_value)
+    plt.hlines(0, -20, 10)
+    plt.vlines(0, -20, 15)
+    plt.show()
+
+    # create_boxplot_array(wgps, pos_most_pos='pos', hline=np.mean(no_pos_grade))
+    # create_boxplot_array(wgps_no_pos, pos_most_pos='all',hline=np.mean(no_pos_grade))
+
+    # print 'seqs plus plus', pp
+    # print 'seqs minus plus', mp
+    # print 'seqs minus minus', mm
+
+    for i, k in enumerate(KRx.keys()):
+        # print 'moving to k %i' % k
+        for x, y in zip(KRx[k], KRy[k]):
+            print '%.3f%s%.3f' % (x, str(''.join(['\t']*(i+1))), y)
+
+
+def topgraphMSA_phase_diagram():
+    from WinGrade import topo_string_to_WGP
+    from topo_strings_comparer import overlappM
+    msa_path = '/home/labs/fleishman/elazara/length_21/w_0_with_MSA/'
+    prd_files = [a for a in os.listdir(msa_path) if '.prd' in a and 'msa' not in a]
+    rost_db = parse_rostlab_db()
+
+    true, false = [], []
+    for prd_file in prd_files:
+        print prd_file
+        wgp, clue = parse_prd(msa_path+prd_file)
+        if clue is None:
+            continue
+        spoc = spc_parser(rost_db[prd_file[:-4]]['name'])['topcons']
+        signal = [0, spoc.count('s') + spoc.count('S')]
+        wgp_pdbtm = topo_string_to_WGP(rost_db[prd_file[:-4]]['pdbtm'], rost_db[prd_file[:-4]]['seq'])
+        for w in wgp.path:
+            if w.begin <= signal[1]:
+                continue
+            predicted = overlappM([w.begin, w.end], [[a.begin, a.end] for a in wgp_pdbtm.path])
+            if predicted:
+                true.append([w.grade, w.grade-grade_segment(w.seq[::-1], polyval)])
+            else:
+                print 'fail', w
+                print wgp_pdbtm
+                false.append([w.grade, w.grade-grade_segment(w.seq[::-1], polyval)])
+    plt.scatter([a[0] for a in true], [a[1] for a in true], color='k')
+    plt.scatter([a[0] for a in false], [a[1] for a in false], color='r')
+    xmin, xmax = min([a[0] for a in true]+[a[0] for a in false]), max([a[0] for a in true]+[a[0] for a in false])
+    ymin, ymax = min([a[1] for a in true]+[a[1] for a in false]), max([a[1] for a in true]+[a[1] for a in false])
+
+    plt.hlines(0, xmin, xmax)
+    plt.vlines(0, ymin, ymax)
+    plt.xlim([xmin, xmax])
+    plt.ylim([ymin, ymax])
+    plt.show()
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-mode')
@@ -529,6 +802,12 @@ if __name__ == '__main__':
 
     elif args['mode'] == 'protter':
         protter_make()
+
+    elif args['mode'] == 'vh_boxplot':
+        vh_boxplots()
+
+    elif args['mode'] == 'msa':
+        topgraphMSA_phase_diagram()
 
     else:
         print 'no mode chosen'

@@ -52,6 +52,8 @@ def main():
         args['with_msa'] = False
     if args['create_html'] == 'True':
         args['create_html'] = True
+    else:
+        args['create_html'] = False
     # else:
     #     args['create_html'] = False
     if args['in_path'][-1] != '/':
@@ -127,7 +129,7 @@ def process_single_new(args):
         args['c_term_VH'] = entry['c_term_VH']
         # path_msa = '/home/labs/fleishman/jonathaw/membrane_prediction_DBs/BLAST_8Sep_VH/blast2fasta/'
         # path_msa = '/home/labs/fleishman/elazara/VH_MSA_60/blast2fasta/'
-        path_msa = './'
+        path_msa = '/home/labs/fleishman/jonathaw/membrane_prediction_DBs/BLAST_8Sep_VH/blast2fasta/'
     else:
         assert "cant identify database (-db)"
     if args['with_cst']:
@@ -151,9 +153,9 @@ def process_single_protein(name, path):
     else:
         entry_cst = TMConstraint.TMConstraint(args['name'])
     print entry
-    if topc['spoctopus'].count('S') != 0:
-        print 'spoctopus', topc['spoctopus']
-        end_of_SP = [a for a in re.finditer('S*', topc['spoctopus']) if a != ''][0].end() - 1
+    if topc['topcons'].count('S') != 0:
+        print 'topcons', topc['topcons']
+        end_of_SP = [a for a in re.finditer('S*', topc['topcons']) if a != ''][0].end() - 1
         if end_of_SP == -1:
             end_of_SP = 0
         print 'end of SP', end_of_SP
@@ -803,8 +805,10 @@ def ROC():
 
 
 def single_win_dG():
-    temp = WinGrade(0, len(args['seq']), 'fwd', args['seq'], hydrophobicity_polyval,
-        {'w': args['w'], 'z_0': args['z_0']})
+    from ProcessEntry import MakeHydrophobicityGrade
+
+    temp = WinGrade(0, len(args['seq']), 'fwd', args['seq'], MakeHydrophobicityGrade(),
+                    {'w': args['w'], 'z_0': args['z_0']})
     print temp.grade
 
 

@@ -3,7 +3,7 @@
 """
 A script to analyse TopoGraph prediciton runs. useful both for ROC and single folders
 """
-
+import sys
 
 def compare_ROC(path):
     '''
@@ -94,10 +94,9 @@ def prd_directory(dir_path):
         c_term_total += 1
 
         for predictor in predictors:
-            #print "predictor", predictor
-            comp_pdbtm = comparer(obse['pdbtm'], predictors[predictor], M, predictors['spoctopus'], pred['seq'])
-            comp_opm = comparer(obse['opm'], predictors[predictor], M, predictors['spoctopus'], pred['seq'])
-
+            # print "predictor", predictor, pred['name']
+            comp_pdbtm = comparer(obse['pdbtm'], predictors[predictor], M, predictors['topcons'], pred['seq'])
+            comp_opm = comparer(obse['opm'], predictors[predictor], M, predictors['topcons'], pred['seq'])
             overM = comp_pdbtm['overlapM_ok'] or comp_opm['overlapM_ok']
 
             if predictor == 'pred_ts' and overM:
@@ -159,6 +158,8 @@ def prd_directory(dir_path):
         print 'topgraph got c_term right', topgraph_c_term, 100.*topgraph_c_term/c_term_total
         print 'total c_term tested', c_term_total
 
+        print 'ASSAF!!!! TOPCONS GOT THESE RIGHT:', topcons_got_right
+
         plt.figure()
         data = {}
         for predictor, results_d in results.items():
@@ -175,7 +176,7 @@ def prd_directory(dir_path):
         print ind
         plots = {}
         for predictor, details, inc, col in zip(data.keys(), data.values(), incs, colors):
-            print predictor, details, inc
+            # print predictor, details, inc
             plots[predictor] = plt.bar(ind + inc, details.values(), width, color=col)
         plt.ylim((0, 105))
         plt.xlim((-0.15, 3.7))
@@ -219,7 +220,6 @@ def determine_c_term(ts):
             flip = True
 
 
-
 def devide_with_zero(num1, num2):
     if num2 == 0: return 0
     else: return float(num1)/float(num2)
@@ -251,9 +251,9 @@ def comparer_old(obse, pred, M, name):
     allowed = ['1', '2', 'h', 'l']
     obse_cln, pred_cln = '', ''
     for i, c in enumerate(obse):
-        obse_cln += c if (pred[i].lower() in allowed and c.lower() in allowed and topc['spoctopus'][i] != 'S') else 'u'
+        obse_cln += c if (pred[i].lower() in allowed and c.lower() in allowed and topc['topcons'][i] != 'S') else 'u'
     for i, c in enumerate(pred):
-        pred_cln += c if (obse[i].lower() in allowed and c.lower() in allowed and topc['spoctopus'][i] != 'S') else 'u'
+        pred_cln += c if (obse[i].lower() in allowed and c.lower() in allowed and topc['topcons'][i] != 'S') else 'u'
     obse_cln = obse_cln.replace('l', 'h')
     obse_cln = obse_cln.replace('L', 'h')
     # print obse_cln
@@ -290,7 +290,7 @@ def comparer_old(obse, pred, M, name):
 def comparer(obse, pred, M, spoc, seq):
     import re
     assert len(obse) == len(pred) == len(spoc), 'observed and predicted strings lengths do not match'
-    allowed = ['1', '2', 'h', 'H']
+    allowed = ['1', '2', 'h', 'H', '0']
     result = {}
     # obse = obse.lower()
     pred = pred.lower()
@@ -395,14 +395,14 @@ def compare_just_one():
     # print 'in one'
     # print 'obse', obse['pdbtm']
     # print 'topo', pred['pred_ts']
-    # print 'spoc', predictors['spoctopus']
+    # print 'topcons', predictors['topcons']
     for predictor in predictors:
         print 'predictor', predictor
-        comp_pdbtm = comparer(obse['pdbtm'], predictors[predictor], M, predictors['spoctopus'], pred['seq'])
-        comp_opm = comparer(obse['opm'], predictors[predictor], M, predictors['spoctopus'], pred['seq'])
+        comp_pdbtm = comparer(obse['pdbtm'], predictors[predictor], M, predictors['topcons'], pred['seq'])
+        comp_opm = comparer(obse['opm'], predictors[predictor], M, predictors['topcons'], pred['seq'])
         predictors_results[predictor] = comp_pdbtm['overlapM_ok'] or comp_opm['overlapM_ok']
-    comp_pdbtm = comparer(obse['pdbtm'], pred['pred_ts'], M, predictors['spoctopus'], pred['seq'])
-    comp_opm = comparer(obse['opm'], pred['pred_ts'], M, predictors['spoctopus'], pred['seq'])
+    comp_pdbtm = comparer(obse['pdbtm'], pred['pred_ts'], M, predictors['topcons'], pred['seq'])
+    comp_opm = comparer(obse['opm'], pred['pred_ts'], M, predictors['topcons'], pred['seq'])
     if comp_opm['overlapM_ok'] and comp_pdbtm['overlapM_ok']: print 'TopoGraph is correct by both'
     elif comp_opm['overlapM_ok']: print 'TopoGraph is correct ONLY by OPM'
     elif comp_pdbtm['overlapM_ok']: print 'TopoGraph is correct ONLY by PDBTM'

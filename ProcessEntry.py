@@ -31,8 +31,8 @@ def create_topo_entry(name, seq, ss2, param_list, csts, db, msa_path):
             topc = spc_parser(name, '/home/labs/fleishman/jonathaw/membrane_prediction_DBs/spoctopus_SPDB/')
         else:
             topc = spc_parser(name, param_list['in_path'])
-        if topc['spoctopus'].count('S') != 0:
-            end_of_SP = [a for a in re.finditer('S*', topc['spoctopus']) if a != ''][0].end() - 1
+        if topc['topcons'].count('S') != 0:
+            end_of_SP = [a for a in re.finditer('S*', topc['topcons']) if a != ''][0].end() - 1
             if end_of_SP == -1:
                 end_of_SP = 0
             seq_no_SP = 'u' * end_of_SP + seq[end_of_SP:]
@@ -68,14 +68,19 @@ def MakeHydrophobicityGrade():
     # hydrophobicity_grade = open('poly_vals_23.2.txt', 'r')
     # hydrophobicity_grade = open('/home/labs/fleishman/jonathaw/membrane_prediciton/poly_vals_25.2.txt', 'r')
     try:
-        # hydrophobicity_grade = open('/home/labs/fleishman/jonathaw/membrane_prediciton/polyval_21_5_15.txt', 'r')
-        hydrophobicity_grade = open('/home/labs/fleishman/jonathaw/membrane_prediciton/polyval_Kfix_14Jan2016.txt', 'r')
-    # else:
+        # hydrophobicity_grade = '/home/labs/fleishman/jonathaw/membrane_prediciton/polyval_21_5_15.txt'
+        # hydrophobicity_grade = '/home/labs/fleishman/jonathaw/membrane_prediciton/polyval_17_2_16_symmetric.txt'
+        hydrophobicity_grade = '/home/labs/fleishman/elazara/mother_fucker_only_LUE_sym.txt'
+        # hydrophobicity_grade = '/home/labs/fleishman/jonathaw/membrane_prediciton/polyval_17_2_16_symmetric_non_zero_aliphatics.txt'
+        # hydrophobicity_grade = '/home/labs/fleishman/jonathaw/membrane_prediciton/poly_test.txt'
+        # hydrophobicity_grade = '/home/labs/fleishman/jonathaw/membrane_prediciton/polyval_Kfix_14Jan2016.txt'
+        print 'switched to %s' % hydrophobicity_grade
+        hydrophobicity_grade = open(hydrophobicity_grade, 'r')
     except:
-        # hydrophobicity_grade = open('/Volumes/labs/fleishman/jonathaw/membrane_prediciton/polyval_21_5_15.txt', 'r')
-        hydrophobicity_grade = open('/Volumes/labs/fleishman/jonathaw/membrane_prediciton/polyval_Kfix_14Jan2016.txt', 'r')
-    # hydrophobicity_grade = open('/Volumes/jonathaw-1/membrane_prediciton/poly_vals_25.2.txt', 'r')
-    # hydrophobicity_grade = open('./poly_vals_25.2.txt', 'r')
+        hydrophobicity_grade = open('/Volumes/labs/fleishman/jonathaw/membrane_prediciton/polyval_21_5_15.txt', 'r')
+        # hydrophobicity_grade = open('/Volumes/labs/fleishman/jonathaw/membrane_prediciton/polyval_Kfix_14Jan2016.txt', 'r')
+        # hydrophobicity_grade = open('/Volumes/jonathaw-1/membrane_prediciton/poly_vals_25.2.txt', 'r')
+        # hydrophobicity_grade = open('./poly_vals_25.2.txt', 'r')
     hydrophobicity_polyval = {}
     for line in hydrophobicity_grade:
         split = line.split()
@@ -115,7 +120,7 @@ def write_results(topo_entry, run_type, best_path, sec_path, msa=False):
 
 def process_entry(topo_entry, run_type, verbose=False):
     from output2html import create_html
-    from WinGrade import wgp_msa_total_grade
+    from WinGrade import wgp_msa_total_grade, WinGradePath
     from TMConstraint import pred2cst, write_cst
 
     # this is a condition to prevent running as msa2plain when there's only one sequence in the MSA, which messes up
@@ -144,10 +149,10 @@ def process_entry(topo_entry, run_type, verbose=False):
             wins = win_grade_generator(topo_entry)
             print 'found %i wins without msa' % len(wins)
             best_path, sec_path = topo_graph(topo_entry, wins)
-            write_results(topo_entry, run_type, best_path, sec_path)
-            if topo_entry.param_list['create_html']:
-                print 'AAAAAAAAAA', best_path
-                create_html(topo_entry, best_path, sec_path, wins)
+            # write_results(topo_entry, run_type, best_path, sec_path)
+            # if topo_entry.param_list['create_html']:
+            #     print 'AAAAAAAAAA', best_path
+            #     create_html(topo_entry, best_path, sec_path, wins)
 
     if run_type == 'cst_only':
         wins = win_grade_generator(topo_entry, 'only')
@@ -156,17 +161,17 @@ def process_entry(topo_entry, run_type, verbose=False):
             print 'failed topo_graph, will try with all wins'
             wins = win_grade_generator(topo_entry, mode='only', tm_pos_mode='all')
             best_path, sec_path = topo_graph(topo_entry, wins)
-        write_results(topo_entry, run_type, best_path, sec_path)
-        if topo_entry.param_list['create_html']:
-            create_html(topo_entry, best_path, sec_path, wins)
+        # write_results(topo_entry, run_type, best_path, sec_path)
+        # if topo_entry.param_list['create_html']:
+        #     create_html(topo_entry, best_path, sec_path, wins)
 
     if run_type == 'tm_num_cst':
         wins = win_grade_generator(topo_entry)
         topo_entry.csts.tm_pos = topo_graph_tm_num(topo_entry, wins)
         best_path, sec_path = topo_graph(topo_entry, wins)
-        write_results(topo_entry, run_type, best_path, sec_path)
-        if topo_entry.param_list['create_html']:
-            create_html(topo_entry, best_path, sec_path, wins)
+        # write_results(topo_entry, run_type, best_path, sec_path)
+        # if topo_entry.param_list['create_html']:
+        #     create_html(topo_entry, best_path, sec_path, wins)
 
     if run_type == 'csts_msa2plain':
         print 'RUNNING as csts_msa2plain'
@@ -193,18 +198,18 @@ def process_entry(topo_entry, run_type, verbose=False):
             wins = win_grade_generator(topo_entry)
             print 'found %i wins without msa' % len(wins)
             best_path, sec_path = topo_graph(topo_entry, wins)
-            write_results(topo_entry, run_type, best_path, sec_path)
-            if topo_entry.param_list['create_html']:
-                create_html(topo_entry, best_path, sec_path, wins)
+            # write_results(topo_entry, run_type, best_path, sec_path)
+            # if topo_entry.param_list['create_html']:
+            #     create_html(topo_entry, best_path, sec_path, wins)
 
     if run_type == 'plain':
         topo_entry.param_list['with_msa'] = False
         topo_entry.param_list['with_cst'] = False
         wins = win_grade_generator(topo_entry)
         best_path, sec_path = topo_graph(topo_entry, wins)
-        write_results(topo_entry, run_type, best_path, sec_path)
-        if topo_entry.param_list['create_html']:
-            create_html(topo_entry, best_path, sec_path, wins)
+        # write_results(topo_entry, run_type, best_path, sec_path)
+        # if topo_entry.param_list['create_html']:
+        #     create_html(topo_entry, best_path, sec_path, wins)
 
     if run_type == 'user_cst':
         print 'user csts'
@@ -231,9 +236,19 @@ def process_entry(topo_entry, run_type, verbose=False):
             topo_entry.param_list['with_cst'], topo_entry.csts.tm_pos = False, None
             wins = win_grade_generator(topo_entry)
             best_path, sec_path = topo_graph(topo_entry, wins)
-        write_results(topo_entry, run_type, best_path, sec_path)
-        if topo_entry.param_list['create_html']:
-            create_html(topo_entry, best_path, sec_path, wins)
+        # write_results(topo_entry, run_type, best_path, sec_path)
+        # if topo_entry.param_list['create_html']:
+        #     create_html(topo_entry, best_path, sec_path, wins)
+
+    # write resutls:
+    # if mode is plain, and the path is positive, than it's not membranal
+    if run_type == 'plain' and best_path.total_grade > 0:
+        best_path, sec_path = WinGradePath([]), WinGradePath([])
+        wins = []
+    write_results(topo_entry, run_type, best_path, sec_path)
+    print 'best_path', best_path
+    if topo_entry.param_list['create_html']:
+        create_html(topo_entry, best_path, sec_path, wins)
 
     if run_type not in ['msa2plain', 'cst_only', 'tm_num_cst', 'plain', 'user_cst', 'csts_msa2plain']:
         print "unrecoginzed run-type"
@@ -263,7 +278,7 @@ def win_grade_generator(topo_entry, mode='all', tm_pos_mode='selective'):
     """
     :return:grades all segments of seq, and aggregates them as WinGrades
     """
-    from WinGrade import WinGrade, count_charges
+    from WinGrade import WinGrade, count_charges, grade_segment
     from TMConstraint import seg_within_tm_pos, win_in_tm_pos, pos_in_non_tm
     import sys
 
@@ -289,6 +304,16 @@ def win_grade_generator(topo_entry, mode='all', tm_pos_mode='selective'):
         for inc in range(min(INC_MAX, topo_entry.seq_length - MIN_LENGTH - i)):
             tm_pos, j = win_in_tm_pos((i, i + MIN_LENGTH + inc), topo_entry.csts.tm_pos,
                                       topo_entry.csts.tm_pos_fidelity)
+
+            # this caused many windows to be missed!!!! BAz
+            # new condition for positive dG and ddG
+            # dG = grade_segment(topo_entry.seq[i:i + MIN_LENGTH + inc], topo_entry.hydro_polyval)
+            # ddG = dG - grade_segment(topo_entry.seq[i:i + MIN_LENGTH + inc][::-1], topo_entry.hydro_polyval)
+            # if dG > 0 and ddG > 0:
+            #     print 'ddiscarding win', topo_entry.seq[i:i + MIN_LENGTH + inc][::-1], i, i+MIN_LENGTH+inc
+            #     continue
+            #
+
             if topo_entry.csts.non_tm_pos is not None:
                 if pos_in_non_tm([i, i+MIN_LENGTH+inc], topo_entry.csts.non_tm_pos):
                     continue
@@ -346,7 +371,7 @@ def is_not_helical(seq, pos, psi, verbose=False):
     cs = []
     es = []
     hs = []
-    for i in range(pos[0], pos[0] + 3):
+    for i in range(pos[0], pos[0] + 5):
         cs.append(psi[i]['c'] >= 0.5)
         es.append(psi[i]['e'] >= 0.5)
         hs.append(psi[i]['h'] <= 0.1)
@@ -355,12 +380,37 @@ def is_not_helical(seq, pos, psi, verbose=False):
     cs = []
     es = []
     hs = []
-    for i in range(pos[1] - 3, pos[1]):
+    for i in range(pos[1] - 5, pos[1]):
         cs.append(psi[i]['c'] >= 0.5)
         es.append(psi[i]['e'] >= 0.5)
         hs.append(psi[i]['h'] <= 0.1)
     if all(cs) or all(es) or all(hs):
         return True
+    # def is_not_helical(seq, pos, psi, verbose=False):
+    # win_size = 6
+    # for i in range(pos[0], pos[1] - win_size + 2):
+    #     if all(psi[j]['e'] >= 0.5 for j in range(i, i + win_size)) or \
+    #             all(psi[j]['c'] >= 0.5 for j in range(i, i + win_size)) or \
+    #             all(psi[j]['h'] <= 0.1 for j in range(i, i + win_size)):
+    #         return True
+    # cs = []
+    # es = []
+    # hs = []
+    # for i in range(pos[0], pos[0] + 3):
+    #     cs.append(psi[i]['c'] >= 0.5)
+    #     es.append(psi[i]['e'] >= 0.5)
+    #     hs.append(psi[i]['h'] <= 0.1)
+    # if all(cs) or all(es) or all(hs):
+    #     return True
+    # cs = []
+    # es = []
+    # hs = []
+    # for i in range(pos[1] - 3, pos[1]):
+    #     cs.append(psi[i]['c'] >= 0.5)
+    #     es.append(psi[i]['e'] >= 0.5)
+    #     hs.append(psi[i]['h'] <= 0.1)
+    # if all(cs) or all(es) or all(hs):
+    #     return True
 
 
 def choose_wins_for_cst(topo_entry, cst_pos, verbose=False):
@@ -372,7 +422,8 @@ def choose_wins_for_cst(topo_entry, cst_pos, verbose=False):
     from WinGrade import count_charges, WinGrade
 
     passed = []
-    best_fwd, best_rev = WinGrade(0, 0, 'fwd', '', grade=100.0), WinGrade(0, 0, 'fwd', '', grade=100.0)
+    best_fwd, best_rev = WinGrade(0, 0, 'fwd', '', polyval=topo_entry.hydro_polyval, grade=100.0), \
+                         WinGrade(0, 0, 'fwd', '', polyval=topo_entry.hydro_polyval, grade=100.0)
     for win in cst_pos:
         if not is_not_helical(win.seq, [win.begin, win.end], topo_entry.psipred, verbose) and \
                         count_charges(win.seq) < 3 and \

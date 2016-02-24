@@ -169,11 +169,20 @@ def main():
         plt.boxplot([correct_KR, wrong_KR])
         plt.show()
 
+    print 'pred_correct', pred_correct
+    print 'pred_incorrect', pred_incorrect
+
+    print 'correct_KR', correct_KR
+    print 'wrong_KR', wrong_KR
+
+    # print 'pred_correct', pred_correct
+    # print 'pred_incorrect', pred_incorrect
+
 
 def KR_ddG(wgp, polyval):
     sum = 0
     for w in wgp.path:
-        w_ = ''.join([a if a not in ['K', 'R'] else 'A' for a in w.seq])
+        w_ = ''.join([a if a in ['K', 'R'] else 'A' for a in w.seq])
         sum += grade_segment(w_, polyval)
     return sum
 

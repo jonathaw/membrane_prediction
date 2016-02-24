@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from math import e as e_
 from scipy.constants import k as k_
-from TMpredict_WinGrade import MakeHydrophobicityGrade
+from ProcessEntry import MakeHydrophobicityGrade
 
 __author__ = 'jonathan'
 

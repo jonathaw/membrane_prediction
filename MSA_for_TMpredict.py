@@ -115,7 +115,7 @@ class TMpredict_MSA():
 
 
 def retrieve_seqs(msa, start, end, direction):
-    from WinGrade import WinGrade
+    from WinGrade import WinGrade, grade_segment
 
     start_wg = msa.query.nogap2withgap(start)
     end_wg = msa.query.nogap2withgap(end)
@@ -136,18 +136,15 @@ def retrieve_seqs(msa, start, end, direction):
             elif direction == 'rev':
                 temp_win_grade = WinGrade(start, end, direction, gap_remover(target.seq[start_wg:end_wg])[::-1],
                                           msa.polyval, msa.poly_param)
-            # print 'found this', temp_win_grade.grade, query_grade, abs(temp_win_grade.grade-query_grade), msa.poly_param['msa_threshold']
-            if abs(temp_win_grade.grade-query_grade) <= msa.poly_param['msa_threshold']:
+            if abs(temp_win_grade.grade-query_grade) <= msa.poly_param['msa_threshold'] and temp_win_grade.seq != '':
                 grade_stack[temp_win_grade.grade] = {'win': temp_win_grade, 'name': target.name}
 
     # med_grade = median_low(grade_stack.keys())
     med_grade = precentile_for_wins(grade_stack.keys(), msa.percentile)
+    med_grade = min(grade_stack.keys())
     med_win = grade_stack[med_grade]['win']
     med_name = grade_stack[med_grade]['name']
-    if gap_remover(msa.query.seq[start_wg:end_wg]) == 'REMDLCLALALTLHVHWGVWGV':
-        print 'AAAAA', direction
-        print 'found ME', WinGrade(start, end, direction, gap_remover(msa.query.seq[start_wg:end_wg]), msa.polyval,
-                        msa.poly_param, med_name, gap_remover(med_win.seq))
+
     if direction == 'fwd':
         return WinGrade(start, end, direction, gap_remover(msa.query.seq[start_wg:end_wg]), msa.polyval,
                         msa.poly_param, med_name, gap_remover(med_win.seq))
