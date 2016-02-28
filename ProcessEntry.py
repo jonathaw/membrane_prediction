@@ -1,3 +1,5 @@
+from TMConstraint import pred2cst, write_cst
+
 class TopoEntry():
     def __init__(self, name, seq, end_of_SP, psipred, hydro_polyval, param_list, csts, path_msa, original_seq):
         self.name = name
@@ -70,11 +72,14 @@ def MakeHydrophobicityGrade():
     try:
         # hydrophobicity_grade = '/home/labs/fleishman/jonathaw/membrane_prediciton/polyval_21_5_15.txt'
         # hydrophobicity_grade = '/home/labs/fleishman/jonathaw/membrane_prediciton/polyval_17_2_16_symmetric.txt'
-        hydrophobicity_grade = '/home/labs/fleishman/elazara/mother_fucker_only_LUE_sym.txt'
+        hydrophobicity_grade = '/home/labs/fleishman/elazara/mother_fucker_MET_LUE_VAL_sym.txt'
+        # hydrophobicity_grade = '/home/labs/fleishman/elazara/mother_fucker_only_LUE_sym.txt'
         # hydrophobicity_grade = '/home/labs/fleishman/jonathaw/membrane_prediciton/polyval_17_2_16_symmetric_non_zero_aliphatics.txt'
         # hydrophobicity_grade = '/home/labs/fleishman/jonathaw/membrane_prediciton/poly_test.txt'
         # hydrophobicity_grade = '/home/labs/fleishman/jonathaw/membrane_prediciton/polyval_Kfix_14Jan2016.txt'
-        print 'switched to %s' % hydrophobicity_grade
+
+        # print 'switched to %s' % hydrophobicity_grade
+
         hydrophobicity_grade = open(hydrophobicity_grade, 'r')
     except:
         hydrophobicity_grade = open('/Volumes/labs/fleishman/jonathaw/membrane_prediciton/polyval_21_5_15.txt', 'r')
@@ -121,7 +126,6 @@ def write_results(topo_entry, run_type, best_path, sec_path, msa=False):
 def process_entry(topo_entry, run_type, verbose=False):
     from output2html import create_html
     from WinGrade import wgp_msa_total_grade, WinGradePath
-    from TMConstraint import pred2cst, write_cst
 
     # this is a condition to prevent running as msa2plain when there's only one sequence in the MSA, which messes up
     if run_type == 'msa2plain':
@@ -142,13 +146,15 @@ def process_entry(topo_entry, run_type, verbose=False):
             print 'found no solution with MSA, will try as plain'
             run_type = 'plain'
         else:
-            ts = topo_string_rostlab_format(topo_entry, best_path)
-            topo_entry.param_list['with_msa'] = False
-            topo_entry.csts = pred2cst(topo_entry.name, topo_entry.param_list['out_path'], ts, cst_mode=None,
-                                       tm_pos_fidelity=topo_entry.param_list['fidelity'])
-            wins = win_grade_generator(topo_entry)
-            print 'found %i wins without msa' % len(wins)
-            best_path, sec_path = topo_graph(topo_entry, wins)
+            best_path, sec_path = msa_paths_to_csts_to_paths(topo_entry, best_path, sec_path, wins)
+            # ts = topo_string_rostlab_format(topo_entry, best_path)
+            # topo_entry.param_list['with_msa'] = False
+            # topo_entry.csts = pred2cst(topo_entry.name, topo_entry.param_list['out_path'], ts, cst_mode=None,
+            #                            tm_pos_fidelity=topo_entry.param_list['fidelity'])
+            # wins = win_grade_generator(topo_entry)
+            # print 'found %i wins without msa' % len(wins)
+            # best_path, sec_path = topo_graph(topo_entry, wins)
+
             # write_results(topo_entry, run_type, best_path, sec_path)
             # if topo_entry.param_list['create_html']:
             #     print 'AAAAAAAAAA', best_path
@@ -188,16 +194,17 @@ def process_entry(topo_entry, run_type, verbose=False):
         else:
             non_tm_cst = topo_entry.csts.non_tm_pos
             # save the non_tm_pos constraints for the second run
-            ts = topo_string_rostlab_format(topo_entry, best_path)
-            topo_entry.param_list['with_msa'] = False
-            topo_entry.csts = pred2cst(topo_entry.name, topo_entry.param_list['out_path'], ts, cst_mode=None,
-                                       tm_pos_fidelity=topo_entry.param_list['fidelity'], write=False)
-            topo_entry.csts.non_tm_pos = non_tm_cst
-            write_cst(topo_entry.param_list['out_path'], topo_entry.name+'_msa', topo_entry.csts)
-            print 'created these constriants:\n', topo_entry.csts
-            wins = win_grade_generator(topo_entry)
-            print 'found %i wins without msa' % len(wins)
-            best_path, sec_path = topo_graph(topo_entry, wins)
+            # ts = topo_string_rostlab_format(topo_entry, best_path)
+            # topo_entry.param_list['with_msa'] = False
+            # topo_entry.csts = pred2cst(topo_entry.name, topo_entry.param_list['out_path'], ts, cst_mode=None,
+            #                            tm_pos_fidelity=topo_entry.param_list['fidelity'], write=False)
+            # topo_entry.csts.non_tm_pos = non_tm_cst
+            # write_cst(topo_entry.param_list['out_path'], topo_entry.name+'_msa', topo_entry.csts)
+            # print 'created these constriants:\n', topo_entry.csts
+            # wins = win_grade_generator(topo_entry)
+            # print 'found %i wins without msa' % len(wins)
+            # best_path, sec_path = topo_graph(topo_entry, wins)
+            msa_paths_to_csts_to_paths(topo_entry, best_path, sec_path, wins, non_tm_cst)
             # write_results(topo_entry, run_type, best_path, sec_path)
             # if topo_entry.param_list['create_html']:
             #     create_html(topo_entry, best_path, sec_path, wins)
@@ -212,10 +219,10 @@ def process_entry(topo_entry, run_type, verbose=False):
         #     create_html(topo_entry, best_path, sec_path, wins)
 
     if run_type == 'user_cst':
-        print 'user csts'
+        print 'user csts', topo_entry.csts
         topo_entry.param_list['with_msa'] = False
         topo_entry.param_list['with_cst'] = True
-        wins = win_grade_generator(topo_entry)  # , mode='only')
+        wins = win_grade_generator(topo_entry, mode='only' if topo_entry.csts.mode == 'only' else 'all')# , mode='only')
         try:
             best_path, sec_path = topo_graph(topo_entry, wins)
         except:
@@ -254,6 +261,49 @@ def process_entry(topo_entry, run_type, verbose=False):
         print "unrecoginzed run-type"
 
 
+def msa_paths_to_csts_to_paths(topo_entry, best_path, sec_path, wins, non_tm_csts=None):
+    """
+    :param topo_entry: topo entry instance
+    :param best_path:
+    :param sec_path:
+    :param wins: all generated wins
+    :return: best and second best path by constraints from both best and sec best apths from the MSA
+    """
+    topo_entry.param_list['with_msa'] = False
+
+    # for MSA best path:
+    best_ts = topo_string_rostlab_format(topo_entry, best_path)
+    topo_entry.csts = pred2cst(topo_entry.name, topo_entry.param_list['out_path'], best_ts, cst_mode=None,
+                               tm_pos_fidelity=topo_entry.param_list['fidelity'])
+    if non_tm_csts is not None:
+        topo_entry.csts.non_tm_pos = non_tm_csts
+    wins = win_grade_generator(topo_entry)
+    best_best_path, best_sec_path = topo_graph(topo_entry, wins)
+
+    # for MSA sec best:
+    sec_ts = topo_string_rostlab_format(topo_entry, sec_path)
+    topo_entry.csts = pred2cst(topo_entry.name, topo_entry.param_list['out_path'], sec_ts, cst_mode=None,
+                               tm_pos_fidelity=topo_entry.param_list['fidelity'])
+    if non_tm_csts is not None:
+        topo_entry.csts.non_tm_pos = non_tm_csts
+    wins = win_grade_generator(topo_entry)
+    sec_best_path, sec_sec_path = topo_graph(topo_entry, wins)
+
+    all_paths = [best_best_path, best_sec_path, sec_best_path, sec_sec_path]
+    # choose best and return
+    overall_best = [a for a in all_paths if a.total_grade == min([b.total_grade for b in all_paths])][0]
+    overall_sec = [a for a in all_paths if a.total_grade ==
+                    min([b.total_grade for b in all_paths if b != overall_best])][0]  # and b.c_term != overall_best.c_term])][0]
+
+    tm_nums = [len(a.path) for a in all_paths]
+    if len(list(set(tm_nums))) != 1:
+        overall_sec = [a for a in all_paths if a.total_grade ==
+                       min([b.total_grade for b in all_paths if b != overall_best
+                            and len(b.path) != len(overall_best.path)])][0]
+
+    return overall_best, overall_sec
+
+
 def topo_string_rostlab_format(topo_entry, wgp):
     """
     :param topo:a topo (list of WinGrades describing a constructed topology)
@@ -265,6 +315,7 @@ def topo_string_rostlab_format(topo_entry, wgp):
     topo_string = ''
     last_tm = WinGrade(0, 0, 'fwd', '', topo_entry.hydro_polyval,
                        {k: v for k, v in topo_entry.param_list.items() if k in ['c0', 'c1', 'c2', 'c3', 'w', 'z_0']})
+    print wgp, type(wgp)
     for tm in wgp.path:
         topo_string += '1' * (tm.begin - last_tm.end) if tm.direction == 'fwd' else '2' * (tm.begin - last_tm.end)
         topo_string += 'H' * (tm.end - tm.begin)
