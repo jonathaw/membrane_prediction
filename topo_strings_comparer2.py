@@ -2,7 +2,7 @@
 import os
 import re
 import argparse
-######################## import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
 from positive_inside_analysis import parse_prd
 from topo_strings_comparer import spc_parser
@@ -426,11 +426,47 @@ def rost_new_old():
     return result
 
 
+def observed_lengths(args):
+    """
+    :param args: run arguments
+    :return: draws histograms of lengths of either PDBTM or OPM win lengths and inter helix loops
+    """
+    rost_db = parse_rostlab_db()
+    lengths = []
+    between_helices_lengths = []
+
+    for k, v in rost_db.items():
+        topc = spc_parser(k)
+        signal_peptide = topc['topcons'].count('S') + topc['topcons'].count('s')
+        obs_loc_list = pdbtm_opm_loc_list(v[args['data_base']], signal_peptide)
+
+        for i, w in enumerate(obs_loc_list):
+            lengths.append(w[1]-w[0])
+
+            if i+1 in range(0, len(obs_loc_list)):
+                between_helices_lengths.append(obs_loc_list[i+1][0] - w[1])
+
+    plt.hist(lengths, 30, normed=1, facecolor='green', alpha=0.75)
+    plt.hist(between_helices_lengths, 100, normed=1, facecolor='blue', alpha=0.5)
+    plt.xlabel('Window lengths in %s dataset' % args['data_base'])
+    plt.ylabel('Frequency')
+    plt.xlim([0, 100])
+    plt.grid(True)
+    plt.show()
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-mode', default='rost')
+    parser.add_argument('-data_base', default='pdbtm')
 
     args = vars(parser.parse_args())
 
     if args['mode'] == 'rost':
         main_rost()
+
+    elif args['mode'] == 'observed_lengths':
+        observed_lengths(args)
+
+    else:
+        print 'no mode found'

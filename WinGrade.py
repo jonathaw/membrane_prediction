@@ -1,13 +1,14 @@
 #!/usr/bin/env python2.7
+import numpy as np
 MEMBRANE_HALF_WIDTH = 15
 
 
 class WinGrade:
-    '''
+    """
     A class to parameterise a window in hydrophobicity manners.
-    '''
+    """
     def __init__(self, begin, end, direction, seq, polyval=None, poly_param=None, msa_name=None, msa_seq=None,
-                 grade=None, length_element=None, charges=None):
+                 grade=None, length_element=None, charges=None, inner_tail=''):
         """
         :param begin: seq position (from 0) where the window begins
         :param end: seq position (from 0) where the window ends
@@ -19,25 +20,33 @@ class WinGrade:
         self.end = end
         self.seq = seq
         self.length = len(seq)
+
         if poly_param is not None:
             self.poly_param = poly_param
         else:
             self.poly_param = {'w': 0, 'z_0': 0}
+
         if polyval is None:
             from ProcessEntry import MakeHydrophobicityGrade
             polyval = MakeHydrophobicityGrade()
+
         if length_element is None:
             self.length_element = membrane_deformation(self.length, self.poly_param['w'], self.poly_param['z_0'])
         else:
             self.length_element = length_element
+
         if charges is None:
             self.charges = count_charges(self.seq)
         else:
             self.charges = charges
+
+        self.inner_tail_seq = inner_tail
+        self.inner_tail_score = score_KR_tail(self.inner_tail_seq, polyval)
+
         if grade is None:
-            self.grade = self.grade_segment(polyval) + self.length_element
+            self.grade = self.grade_segment(polyval) + self.length_element + self.inner_tail_score
         else:
-            self.grade = grade + self.length_element
+            self.grade = grade + self.length_element + self.length_element + self.inner_tail_score
         self.direction = direction
         self.span = range(self.begin, self.end+1)
 
@@ -51,11 +60,11 @@ class WinGrade:
     def __repr__(self):
         if self.msa_name == None:
             # print 'you win', self.begin, self.end, self.direction, self.grade, self.seq, self.charges, self.length_element
-            return '%-4i to %-4i in %3s => %2.1f %-35s %i %f' % (self.begin, self.end, self.direction, self.grade,
-                                                                self.seq, self.charges, self.length_element)
+            return '%-4i to %-4i in %3s => %2.1f %-35s %i %.1f inner_tail %s %.1f' % (self.begin, self.end, self.direction, self.grade,
+                                                                self.seq, self.charges, self.length_element, self.inner_tail_seq, self.inner_tail_score)
         else:
-            return '%-4i to %-4i in %3s => %2.1f %-35s %s %s %f' % (self.begin, self.end, self.direction, self.grade,
-                                                               self.seq, self.msa_name, self.msa_seq, self.msa_grade)
+            return '%-4i to %-4i in %3s => %2.1f %-35s %s %s %.1f inner tail %s %.1f' % (self.begin, self.end, self.direction, self.grade,
+                                                               self.seq, self.msa_name, self.msa_seq, self.msa_grade, self.inner_tail_seq, self.inner_tail_score)
 
     def get_html(self, i):
         return '<tr><td>%i</td><td>%-4.i</td><td>%-4.i</td><td>%3s</td><td>%5.3f</td><td>%-35s</td></tr>' % \
@@ -119,7 +128,8 @@ class WinGrade:
                 return True
         return False
 
-class WinGradePath():
+
+class WinGradePath:
     def __init__(self, win_list):
         import operator
         self.path = sorted(win_list, key=operator.attrgetter('begin'))
@@ -140,7 +150,7 @@ class WinGradePath():
                 msg += '\n'
             else:
                 msg += ']'
-        msg += ' }~> total_grade %10f win_num %2i c_term %s' % (self.total_grade, self.win_num, self.c_term)
+        msg += ' }~> total_grade %10.1f win_num %2i c_term %s' % (self.total_grade, self.win_num, self.c_term)
         return msg
 
     def __eq__(self, other):
@@ -207,6 +217,26 @@ class WinGradePath():
         self.total_grade = self.grade_path()
 
 
+def score_KR_tail(inner_tail_, polyval):
+    """
+    :param inner_tail_: cytosolic side tail
+    :param polyval: polyval dict
+    :return: energy for K, R in inside tail
+    >>> from ProcessEntry import MakeHydrophobicityGrade
+    >>> score_KR_tail('', MakeHydrophobicityGrade())
+    0.0
+    >>> score_KR_tail('KAA', MakeHydrophobicityGrade())
+    0.4
+    >>> score_KR_tail('RAA', MakeHydrophobicityGrade())
+    -1.0
+    """
+    # return 0.0
+    grade = float(sum([-0.1 for aa in inner_tail_ if aa == 'K']))
+    grade += float(sum([round(np.polyval(polyval[aa], -MEMBRANE_HALF_WIDTH), 1)
+                      for aa in inner_tail_ if aa == 'R']))
+    return grade
+
+
 def wgp_msa_total_grade(wgp):
     """
     :param wgp: a WinGradePath
@@ -217,7 +247,7 @@ def wgp_msa_total_grade(wgp):
 
 def count_charges(seq):
     import numpy as np
-    membrane_position = np.linspace(-20, 20, endpoint=True, num=len(seq))
+    membrane_position = np.linspace(-MEMBRANE_HALF_WIDTH, MEMBRANE_HALF_WIDTH, endpoint=True, num=len(seq))
     charges = 0
     for i, aa in enumerate(seq):
         if -12.5 <= membrane_position[i] <= 12.5:
@@ -263,7 +293,6 @@ def hp_moment(seq, polyval, poly_param):
 
 
 def grade_segment(seq, polyval):
-    import numpy as np
     membrane_position = np.linspace(-MEMBRANE_HALF_WIDTH, MEMBRANE_HALF_WIDTH, endpoint=True, num=len(seq))
     grade = 0
     for i, aa in enumerate(seq):
@@ -372,6 +401,7 @@ def parse_WGP(text):
     win_list = []
     for w in spl:
         ws = w.split()
-        temp_win = WinGrade(int(ws[0]), int(ws[2]), ws[4], ws[7], grade=float(ws[6]), length_element=float(ws[9]), charges=int(ws[8]))
+        temp_win = WinGrade(int(ws[0]), int(ws[2]), ws[4], ws[7], grade=float(ws[6]), length_element=float(ws[9]),
+                            charges=int(ws[8]), inner_tail=ws[11])
         win_list.append(temp_win)
     return WinGradePath(win_list)

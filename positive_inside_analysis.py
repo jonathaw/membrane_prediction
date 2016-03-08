@@ -17,6 +17,9 @@ from scipy.stats import gaussian_kde, ttest_1samp, linregress
 import numpy as np
 from collections import OrderedDict
 import sys
+import shutil
+
+from soluble_helix_grade import collect_win_analysis
 
 polyval = MakeHydrophobicityGrade()
 
@@ -27,9 +30,11 @@ def analyse_sasa_and_positive(write=False, with_sasa=True, vh=False):
     # path_to_nocsts = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_12Nov/minus_2/with_msa_no_csts/'
     # for Rost DB with all pos and 0 fidelity
     # path_to_nocsts = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_12Nov/all_pos_no_fidelity_7Dec/with_msa_no_csts/'
+    path_to_nocsts = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_29.2/with_msa_no_csts/'
     # for the entire VH DB:
     # path_to_nocsts = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_12Nov/vh_positives/topcons_no_csts/'
-    path_to_nocsts = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_14.12/with_msa_no_csts/'
+    # path_to_nocsts = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_14.12/with_msa_no_csts/'
+    # path_to_nocsts = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_14.12/with_msa_no_csts/'
     prd_files = [a for a in os.listdir(path_to_nocsts)
                  if a[-4:] == '.prd' and '_msa' not in a]
     rost_db = parse_rostlab_db()
@@ -44,13 +49,17 @@ def analyse_sasa_and_positive(write=False, with_sasa=True, vh=False):
         else:
             rost_prd = rost_db[prd_file[:-4]]
         wgp = parse_prd(path_to_nocsts+prd_file)[0]
+
+        if wgp is None:
+            print 'skipping', prd_file, wgp
+            continue
         if wgp.total_grade == 0.:
             print 'no path FOUND, F#$% it', prd_file
             continue
         if wgp.win_num >= 3:
             total += 1 if wgp.win_num >= 6 else 0
             three_n_over += 1
-            pos_in = [w for w in wgp.path[1:-1] if w.grade >= -1.0]
+            pos_in = [w for w in wgp.path[1:-1] if w.grade-w.inner_tail_score >= -3.0]
             if pos_in:
                 with_pos += 1
                 # for doing the max win
@@ -68,7 +77,8 @@ def analyse_sasa_and_positive(write=False, with_sasa=True, vh=False):
                     # print prd_file
                     if write:
                         try:
-                            print "took %f with sasa %r at %i-%i" % (chosen_w.grade, sasas, chosen_w.begin, chosen_w.end)
+                            print "took %f with sasa %r at %i-%i" % (chosen_w.grade-chosen_w.inner_tail_score, sasas,
+                                                                     chosen_w.begin, chosen_w.end)
                             cst = parse_prd_csts(prd_file)
                             for tm_pos in cst.tm_pos:
                                 if tm_pos[0]-cst.tm_pos_fidelity <= chosen_w.begin and chosen_w.end <= tm_pos[1]+cst.tm_pos_fidelity:
@@ -83,7 +93,9 @@ def analyse_sasa_and_positive(write=False, with_sasa=True, vh=False):
     if write and not vh:
         print "found %i with positive in, out of %i with 3 or over" % (len(results.keys()), three_n_over)
         for k, v in results.items():
+            print 'AA', k, v
             print 'for %s there are %i positive insides\t %s\t %r' % (k, len(v['pos_in']), rost_db[k]['pdb'], v['pos_in'])
+            print 'BB'
     print 'found a total of %i with 3 or more helices' % total
     print 'found %i with a positive helix' % with_pos
     print 'that is %f percent' % (100*with_pos/total)
@@ -179,6 +191,34 @@ def parse_prd_csts(file_name):
     return TMConstraint(name, mode, tm_num, tm_pos, tm_pos_fidelity, c_term, n_term, non_tm_pos)
 
 
+def from_csts_to_prds():
+    """
+    :return: after creating the win remove csts. use this to create the folders and jobs to make the with_csts
+    prediction
+    """
+    work_path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_29.2/with_msa_with_csts/'
+    csts_files = [a for a in os.listdir(work_path) if '.cst' in a]
+    for cst_file in csts_files:
+        name = cst_file[:-4]
+        os.mkdir(work_path+name)
+        shutil.move(cst_file, work_path+name+'/'+name[:-2]+'.cst')
+        os.chdir(work_path+name)
+
+        with open('job.%s' % name, 'w+') as fout:
+            fout.write('#!/bin/bash\n')
+            fout.write('. /usr/share/lsf/conf/profile.lsf\n')
+            fout.write('cd %s\n' % (work_path+name))
+            fout.write('/apps/RH6U4/python/2.7.6/bin/python '
+                       '/home/labs/fleishman/jonathaw/membrane_prediciton/TMpredict_WinGrade.py  '
+                       '-name  %s  '
+                       '-mode  new  '
+                       '-run_type  user_cst  '
+                       '-in_path ./ -out_path ./ -db  rost  '
+                       '-create_html  False  '
+                       '-fidelity  0\n' % name[:-2])
+
+        os.chdir(work_path)
+
 def analyse_3d_results(args):
     """
     analyse the results with all helices (no csts), and with removing the positive (with csts), and that window's SASA
@@ -193,11 +233,13 @@ def analyse_3d_results(args):
     # path_withcsts = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_12Nov/vh_positives/topcons_with_csts/'
     # for Rost with all positive helices and fidelity=0
     # path_withcsts = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_12Nov/all_pos_no_fidelity_7Dec/with_msa_with_csts/'
-    path_withcsts = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_14.12/with_msa_with_csts/'
+    # path_withcsts = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_14.12/with_msa_with_csts/'
+    path_withcsts = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_29.2/with_msa_with_csts/'
+
     prd_files = [a for a in os.listdir(path_withcsts) if a[-4:] == '.prd' and 'msa' not in a]
     no_csts = analyse_sasa_and_positive(False, with_sasa=args['with_sasa'], vh=args['vh'])
     for k, v in no_csts.items():
-        print k, v.keys()
+        print 'top', k, v.keys()
     min_dists = set()
     all_res = ['R', 'K', 'H', 'D', 'E', 'N', 'Q', 'T', 'S', 'V', 'I', 'L', 'F', 'M', 'P', 'G', 'C', 'Y', 'W', 'A']
     #all_res = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y']
@@ -253,7 +295,8 @@ def analyse_3d_results(args):
         returny[name_full] = {'KR': arg_lys_assymetry(nocsts_wgp, withcsts_wgp, ['K', 'R', 'H']),
                          'delta': nocsts_wgp.total_grade-withcsts_wgp.total_grade}
     print '%i entries in results ' % len(results.keys())
-    data = [[a['pos_win'].grade, a['sasa'], a['nocsts']-a['withcsts'], k.upper().split('_')[0], a['loc_perc'], a['min_dist'], a['positives'],
+    data = [[a['pos_win'].grade-a['pos_win'].inner_tail_score, a['sasa'], a['nocsts']-a['withcsts'], k.upper().split('_')[0],
+             a['loc_perc'], a['min_dist'], a['positives'],
              a['num_pos_win'], a['KR'], a['pos_win'].seq if a['pos_win'].direction == 'fwd' else a['pos_win'].seq[::-1],
              a['win_num'], a['pos_loc']] for k, a in results.items()]
     print '%i results in sdata' % len(data)
@@ -264,7 +307,7 @@ def analyse_3d_results(args):
         print "%-2.2f\t%2.2r\t%-2.2f\t%s\t%-2.2f\t%-3i\t%-3i\t%-3i\t%-2.2f\t%-20s\t%i (%i)" % (a[0], a[1], a[2], a[3], a[4]-50, a[5], a[6],
                                                                            a[7], a[8], a[9], a[11], a[10])
     # creates a fig with boxplots around the positive win
-    create_boxplot_array(wgps)
+    # create_boxplot_array(wgps)
 
     if False:
         plt.figure()
@@ -339,7 +382,7 @@ def create_boxplot_array(wgps, pos_most_pos='pos', hline=0):
     for name, wgp in wgps.items():
         # print name
         if pos_most_pos == 'pos':
-            pos_wins = [(i, w) for i, w in enumerate(wgp.path) if w.grade >= -1]
+            pos_wins = [(i, w) for i, w in enumerate(wgp.path) if w.grade-w.inner_tail_score >= -1]
         else:
             pos_wins = [(i, w) for i, w in enumerate(wgp.path) if w.grade == np.median([t.grade for t in wgp.path])]
         print 'ZZZZZZ %s has %i pos wins' % (name, len(pos_wins))
@@ -743,40 +786,65 @@ def vh_boxplots():
 def topgraphMSA_phase_diagram():
     from WinGrade import topo_string_to_WGP
     from topo_strings_comparer import overlappM
-    msa_path = '/home/labs/fleishman/elazara/length_21/w_0_with_MSA/'
+    # msa_path = '/home/labs/fleishman/elazara/length_21/w_0_with_MSA/'
+    # msa_path = '/home/labs/fleishman/elazara/TopGraph/TopGarph_symmetric/rost/msa/' # rost msa
+    msa_path = '/home/labs/fleishman/elazara/TopGraph/TopGarph_symmetric/vh/msa/correct_prds/' # vh msa
     prd_files = [a for a in os.listdir(msa_path) if '.prd' in a and 'msa' not in a]
     rost_db = parse_rostlab_db()
+    vh_names_lower_to_wierd = vh_name_dict()
 
-    true, false = [], []
+    result = []
+    # true, false = [], []
     for prd_file in prd_files:
-        print prd_file
         wgp, clue = parse_prd(msa_path+prd_file)
         if clue is None:
             continue
-        spoc = spc_parser(rost_db[prd_file[:-4]]['name'])['topcons']
+        try:
+            spoc = spc_parser(rost_db[prd_file[:-4]]['name'])['topcons']
+            wgp_pdbtm = topo_string_to_WGP(rost_db[prd_file[:-4]]['pdbtm'], rost_db[prd_file[:-4]]['seq'])
+        except:
+            spoc = spc_parser(vh_names_lower_to_wierd[prd_file[:-4]])['topcons']
         signal = [0, spoc.count('s') + spoc.count('S')]
-        wgp_pdbtm = topo_string_to_WGP(rost_db[prd_file[:-4]]['pdbtm'], rost_db[prd_file[:-4]]['seq'])
+
         for w in wgp.path:
             if w.begin <= signal[1]:
                 continue
-            predicted = overlappM([w.begin, w.end], [[a.begin, a.end] for a in wgp_pdbtm.path])
-            if predicted:
-                true.append([w.grade, w.grade-grade_segment(w.seq[::-1], polyval)])
-            else:
-                print 'fail', w
-                print wgp_pdbtm
-                false.append([w.grade, w.grade-grade_segment(w.seq[::-1], polyval)])
-    plt.scatter([a[0] for a in true], [a[1] for a in true], color='k')
-    plt.scatter([a[0] for a in false], [a[1] for a in false], color='r')
-    xmin, xmax = min([a[0] for a in true]+[a[0] for a in false]), max([a[0] for a in true]+[a[0] for a in false])
-    ymin, ymax = min([a[1] for a in true]+[a[1] for a in false]), max([a[1] for a in true]+[a[1] for a in false])
+            # predicted = overlappM([w.begin, w.end], [[a.begin, a.end] for a in wgp_pdbtm.path])
+            # if predicted:
+            #     true.append([w.grade, w.grade-grade_segment(w.seq[::-1], polyval)])
+            # else:
+            #     print 'fail', w
+            #     print wgp_pdbtm
+            #     false.append([w.grade, w.grade-grade_segment(w.seq[::-1], polyval)])
+            result.append([w.grade, w.grade-grade_segment(w.seq[::-1], polyval)])
 
+    soluble_dGs, soluble_ddGs = collect_win_analysis(dict())
+
+    plt.scatter([a[0] for a in result], [a[1] for a in result], color='k')
+
+    plt.scatter(soluble_dGs, soluble_ddGs, edgecolors='g', alpha=0.2)
+
+    # plt.scatter([a[0] for a in true], [a[1] for a in true], color='k')
+    # plt.scatter([a[0] for a in false], [a[1] for a in false], color='r')
+    xmin = min([a[0] for a in result])  # +[a[0] for a in false])
+    xmax = max([a[0] for a in result])  # +[a[0] for a in false])
+    ymin = min([a[1] for a in result])  # +[a[1] for a in false])
+    ymax = max([a[1] for a in result])  # +[a[1] for a in false])
+    #
     plt.hlines(0, xmin, xmax)
     plt.vlines(0, ymin, ymax)
     plt.xlim([xmin, xmax])
     plt.ylim([ymin, ymax])
     plt.show()
 
+
+def vh_name_dict():
+    """
+    :return: {lower_case: wierd case}
+    """
+    list_ = [a.split('.')[0] for a in os.listdir('/home/labs/fleishman/jonathaw/membrane_prediction_DBs/spoctopus_SPDB')
+            if 3 <= len(a.split('.')[0]) <= 4 and '.spc' in a]
+    return {k.lower(): k for k in list_}
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -808,6 +876,12 @@ if __name__ == '__main__':
 
     elif args['mode'] == 'msa':
         topgraphMSA_phase_diagram()
+
+    elif args['mode'] == 'from_csts_to_prds':
+        from_csts_to_prds()
+
+    elif args['mode'] == 'test':
+        print vh_name_dict()
 
     else:
         print 'no mode chosen'
