@@ -50,10 +50,10 @@ def main():
 
     if args['with_msa'] == 'False':
         args['with_msa'] = False
-    if args['create_html'] == 'True':
-        args['create_html'] = True
-    else:
-        args['create_html'] = False
+    # if args['create_html'] == 'True':
+    #     args['create_html'] = True
+    # else:
+    #     args['create_html'] = False
     # else:
     #     args['create_html'] = False
     if args['in_path'][-1] != '/':
@@ -657,32 +657,6 @@ def topo_string_rostlab_format(topo, seq):
         last_tm = tm
     topo_string += '2' * (len(seq)-last_tm.end) if last_tm.direction == 'fwd' else '1' * (len(seq)-last_tm.end)
     return topo_string
-
-
-# def MakeHydrophobicityGrade():
-#     '''
-#     :return: returns a dictionary of the polynom values for each residue
-#     '''
-#     global hydrophobicity_polyval
-#     # hydrophobicity_grade = open('Poly_Values.txt', 'r')
-#     # hydrophobicity_grade = open('poly_value_11.2.txt', 'r')
-#     # hydrophobicity_grade = open('poly_vals_23.2.txt', 'r')
-#     # hydrophobicity_grade = open('/home/labs/fleishman/jonathaw/membrane_prediciton/poly_vals_25.2.txt', 'r')
-#     try:
-#         # hydrophobicity_grade = open('/home/labs/fleishman/jonathaw/membrane_prediciton/polyval_21_5_15.txt', 'r')
-#         hydrophobicity_grade = open('/home/labs/fleishman/jonathaw/membrane_prediciton/polyval_Kfix_14Jan2016.txt', 'r')
-#     # else:
-#     except:
-#         # hydrophobicity_grade = open('/Volumes/labs/fleishman/jonathaw/membrane_prediciton/polyval_21_5_15.txt', 'r')
-#         hydrophobicity_grade = open('/Volumes/labs/fleishman/jonathaw/membrane_prediciton/polyval_Kfix_14Jan2016.txt', 'r')
-#     # hydrophobicity_grade = open('/Volumes/jonathaw-1/membrane_prediciton/poly_vals_25.2.txt', 'r')
-#     # hydrophobicity_grade = open('./poly_vals_25.2.txt', 'r')
-#     hydrophobicity_polyval = {}
-#     for line in hydrophobicity_grade:
-#         split = line.split()
-#         hydrophobicity_polyval[split[0]] = [float(n) for n in split[1:6]]
-#     hydrophobicity_grade.close()
-#     return hydrophobicity_polyval
 
 
 def pymol_mark_segments(name, segments_set_set):

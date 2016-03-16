@@ -4,12 +4,14 @@ import os
 import argparse
 from scipy import stats
 from TMpredict_WinGrade import parse_rostlab_db
-from WinGrade import parse_WGP
-from TMConstraint import TMConstraint
+from WinGrade import parse_WGP, grade_segment, WinGradePath, WinGrade, flip_win_grade
+from TMConstraint import TMConstraint, pred2cst
 from sasa_survey_26Aug import parse_rsa, nacces_for_win, pair_wise_aln_from_seqs, parse_standard_data
 from topo_strings_comparer import spc_parser
 from TMpredict_WinGrade import topo_VH_parser
 import matplotlib.pyplot as plt
+import matplotlib
+from matplotlib.ticker import FuncFormatter
 from ProcessEntry import MakeHydrophobicityGrade
 import pickle
 import pandas as pd
@@ -18,10 +20,29 @@ import numpy as np
 from collections import OrderedDict
 import sys
 import shutil
+import pandas as pd
 
 from soluble_helix_grade import collect_win_analysis
 
+
+matplotlib.rc_context(fname="/home/labs/fleishman/jonathaw/.matplotlib/publishable_matplotlibrc")
+# matplotlib.rc_context(fname="/Volumes/labs/fleishman/jonathaw/.matplotlib/publishable_matplotlibrc")
 polyval = MakeHydrophobicityGrade()
+
+
+def to_percent(y, position):
+    if y == 0:
+        return ''
+    # Ignore the passed in position. This has the effect of scaling the default
+    # tick locations.
+    s = str(int(100 * round(y, 2)))
+
+    # The percent symbol needs escaping in latex
+
+    if matplotlib.rcParams['text.usetex'] is True:
+        return s + r'$\%$'
+    else:
+        return s + '%'
 
 
 def analyse_sasa_and_positive(write=False, with_sasa=True, vh=False):
@@ -30,7 +51,8 @@ def analyse_sasa_and_positive(write=False, with_sasa=True, vh=False):
     # path_to_nocsts = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_12Nov/minus_2/with_msa_no_csts/'
     # for Rost DB with all pos and 0 fidelity
     # path_to_nocsts = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_12Nov/all_pos_no_fidelity_7Dec/with_msa_no_csts/'
-    path_to_nocsts = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_29.2/with_msa_no_csts/'
+    # path_to_nocsts = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_29.2/with_msa_no_csts/'
+    path_to_nocsts = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_10.3/with_msa_no_csts/' # msa rost 10.3
     # for the entire VH DB:
     # path_to_nocsts = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_12Nov/vh_positives/topcons_no_csts/'
     # path_to_nocsts = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_14.12/with_msa_no_csts/'
@@ -74,22 +96,27 @@ def analyse_sasa_and_positive(write=False, with_sasa=True, vh=False):
                         continue
                     sasas = sasas[0]
                     results[prd_file[:-4]][i] = {'wgp': wgp, 'pos_in': pos_in, 'chosen_w': chosen_w, 'sasa': sasas}
-                    # print prd_file
                     if write:
-                        try:
-                            print "took %f with sasa %r at %i-%i" % (chosen_w.grade-chosen_w.inner_tail_score, sasas,
-                                                                     chosen_w.begin, chosen_w.end)
-                            cst = parse_prd_csts(prd_file)
-                            for tm_pos in cst.tm_pos:
-                                if tm_pos[0]-cst.tm_pos_fidelity <= chosen_w.begin and chosen_w.end <= tm_pos[1]+cst.tm_pos_fidelity:
-                                    cst.tm_pos.remove(tm_pos)
-                                    cst.non_tm_pos = [[chosen_w.begin, chosen_w.end]]
-                                    cst.tm_pos_fidelity = 0
-                                    # print str(cst)
-                            with open('remove_w_csts/%s_%i.cst' % (prd_file[:-4], i), 'w+') as fout:
+                        tm_poses = [[w.begin, w.end, None] for w in wgp.path if w != chosen_w]
+                        cst = TMConstraint(name=prd_file.split('.')[0], mode='only', tm_pos=tm_poses, tm_pos_fidelity=0)
+                        print cst
+                        with open('remove_w_csts/%s_%i.cst' % (prd_file[:-4], i), 'w+') as fout:
                                 fout.write(str(cst))
-                        except:
-                            pass
+                    # print prd_file
+                    # if write:
+                    #     try:
+                    #         print "took %f with sasa %r at %i-%i" % (chosen_w.grade-chosen_w.inner_tail_score, sasas,
+                    #                                                  chosen_w.begin, chosen_w.end)
+                    #         cst = parse_prd_csts(prd_file)
+                    #         for tm_pos in cst.tm_pos:
+                    #             if tm_pos[0]-cst.tm_pos_fidelity <= chosen_w.begin and chosen_w.end <= tm_pos[1]+cst.tm_pos_fidelity:
+                    #                 cst.tm_pos.remove(tm_pos)
+                    #                 cst.non_tm_pos = [[chosen_w.begin, chosen_w.end]]
+                    #                 cst.tm_pos_fidelity = 0
+                            # with open('remove_w_csts/%s_%i.cst' % (prd_file[:-4], i), 'w+') as fout:
+                            #     fout.write(str(cst))
+                        # except:
+                        #     pass
     if write and not vh:
         print "found %i with positive in, out of %i with 3 or over" % (len(results.keys()), three_n_over)
         for k, v in results.items():
@@ -196,7 +223,8 @@ def from_csts_to_prds():
     :return: after creating the win remove csts. use this to create the folders and jobs to make the with_csts
     prediction
     """
-    work_path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_29.2/with_msa_with_csts/'
+    # work_path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_29.2/with_msa_with_csts/'
+    work_path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_10.3/with_msa_with_csts/' # msa rost 10.3
     csts_files = [a for a in os.listdir(work_path) if '.cst' in a]
     for cst_file in csts_files:
         name = cst_file[:-4]
@@ -219,6 +247,7 @@ def from_csts_to_prds():
 
         os.chdir(work_path)
 
+
 def analyse_3d_results(args):
     """
     analyse the results with all helices (no csts), and with removing the positive (with csts), and that window's SASA
@@ -234,7 +263,8 @@ def analyse_3d_results(args):
     # for Rost with all positive helices and fidelity=0
     # path_withcsts = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_12Nov/all_pos_no_fidelity_7Dec/with_msa_with_csts/'
     # path_withcsts = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_14.12/with_msa_with_csts/'
-    path_withcsts = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_29.2/with_msa_with_csts/'
+    # path_withcsts = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_29.2/with_msa_with_csts/'
+    path_withcsts = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_10.3/with_msa_with_csts/'
 
     prd_files = [a for a in os.listdir(path_withcsts) if a[-4:] == '.prd' and 'msa' not in a]
     no_csts = analyse_sasa_and_positive(False, with_sasa=args['with_sasa'], vh=args['vh'])
@@ -609,15 +639,6 @@ def protter_make():
     extract_w_and_calculate_best_path(wgp, wgp.path[7], MakeHydrophobicityGrade())
 
 
-def grade_segment(seq, polyval):
-        membrane_position = np.linspace(-20, 20, endpoint=True, num=len(seq))
-        grade = 0
-        for i, aa in enumerate(seq):
-            if aa in polyval.keys():
-                grade += np.polyval(polyval[aa], membrane_position[i])
-        return grade
-
-
 def extract_w_and_calculate_best_path(wgp, chosen_win, polyval):
     path_removed = wgp.path[:]
     path_removed.remove(chosen_win)
@@ -787,8 +808,7 @@ def topgraphMSA_phase_diagram():
     from WinGrade import topo_string_to_WGP
     from topo_strings_comparer import overlappM
     # msa_path = '/home/labs/fleishman/elazara/length_21/w_0_with_MSA/'
-    # msa_path = '/home/labs/fleishman/elazara/TopGraph/TopGarph_symmetric/rost/msa/' # rost msa
-    msa_path = '/home/labs/fleishman/elazara/TopGraph/TopGarph_symmetric/vh/msa/correct_prds/' # vh msa
+    msa_path = '/home/labs/fleishman/elazara/TopGraph/TopGarph_symmetric/vh/msa_no_fildel/for_jonathan/' # vh msa symmetric
     prd_files = [a for a in os.listdir(msa_path) if '.prd' in a and 'msa' not in a]
     rost_db = parse_rostlab_db()
     vh_names_lower_to_wierd = vh_name_dict()
@@ -818,24 +838,214 @@ def topgraphMSA_phase_diagram():
             #     false.append([w.grade, w.grade-grade_segment(w.seq[::-1], polyval)])
             result.append([w.grade, w.grade-grade_segment(w.seq[::-1], polyval)])
 
+    if args['mode'] != 'msa':
+        return [a[0] for a in result], [a[1] for a in result]
+
     soluble_dGs, soluble_ddGs = collect_win_analysis(dict())
 
-    plt.scatter([a[0] for a in result], [a[1] for a in result], color='k')
-
     plt.scatter(soluble_dGs, soluble_ddGs, edgecolors='g', alpha=0.2)
+    plt.scatter([a[0] for a in result], [a[1] for a in result], color='r', alpha=0.8)
 
     # plt.scatter([a[0] for a in true], [a[1] for a in true], color='k')
     # plt.scatter([a[0] for a in false], [a[1] for a in false], color='r')
-    xmin = min([a[0] for a in result])  # +[a[0] for a in false])
-    xmax = max([a[0] for a in result])  # +[a[0] for a in false])
-    ymin = min([a[1] for a in result])  # +[a[1] for a in false])
-    ymax = max([a[1] for a in result])  # +[a[1] for a in false])
+    xmin = min([a[0] for a in result]+soluble_dGs)  # +[a[0] for a in false])
+    xmax = max([a[0] for a in result]+soluble_dGs)  # +[a[0] for a in false])
+    ymin = min([a[1] for a in result]+soluble_ddGs)  # +[a[1] for a in false])
+    ymax = max([a[1] for a in result]+soluble_ddGs)  # +[a[1] for a in false])
     #
     plt.hlines(0, xmin, xmax)
     plt.vlines(0, ymin, ymax)
     plt.xlim([xmin, xmax])
     plt.ylim([ymin, ymax])
+    # plt.show()
+
+    # for a in result:
+    #     print a[0], '\t', a[1]
+
+
+def draw_random_combined_scatter_hist():
+    import random
+    data_1_x = [int(1000*random.random()) for i in xrange(100)]
+    data_1_y = [int(1000*random.random()) for i in xrange(100)]
+    data_2_x = [int(1000*random.random()) for i in xrange(100)]
+    data_2_y = [int(1000*random.random()) for i in xrange(100)]
+
+    ax_scat = plt.subplot2grid((3, 3), (1, 0), colspan=2, rowspan=2)
+    ax_hist_dG = plt.subplot2grid((3, 3), (0, 0), colspan=2, rowspan=1)
+    ax_hist_ddG = plt.subplot2grid((3, 3), (1, 2), colspan=1, rowspan=2)
+
+    ax_scat.scatter(data_1_x, data_1_y, alpha=0.2, color='grey')
+    ax_scat.scatter(data_2_x, data_2_y, alpha=0.8, color='red')
+
+    ax_hist_dG.hist(data_1_x, color='grey', alpha=0.2)
+    ax_hist_dG.hist(data_2_x, color='red', alpha=0.8)
+
+    ax_hist_ddG.hist(data_1_y, color='grey', alpha=0.2, orientation='horizontal')
+    ax_hist_ddG.hist(data_2_y, color='red', alpha=0.8, orientation='horizontal')
+
     plt.show()
+
+
+def draw_combined_scatter_hist():
+    import matplotlib.gridspec as gridspec
+    import pickle
+    import os
+    wp = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/soluble_helix_grading/data.obj'
+
+    if not os.path.isfile(wp):
+        print 'gathering data from soluble'
+        soluble_dGs, soluble_ddGs = collect_win_analysis(dict())
+        print 'gathering TM data'
+        tm_dGs, tm_ddGs = topgraphMSA_phase_diagram()
+        print 'finished gathering data'
+        pickle.dump((soluble_dGs, soluble_ddGs, tm_dGs, tm_ddGs), open(wp, 'wb'))
+    else:
+        print 'reading pickled data'
+        soluble_dGs, soluble_ddGs, tm_dGs, tm_ddGs = pickle.load(open(wp, 'rb'))
+
+    soluble_color = 'cornflowerblue'
+    tm_color = 'indianred'
+
+    formatter = FuncFormatter(to_percent)
+
+    xmin, xmax = min(soluble_dGs+tm_dGs)-1, max(soluble_dGs+tm_dGs)+1
+    ymin, ymax = min(soluble_ddGs+tm_ddGs)-1, max(soluble_ddGs+tm_ddGs)+1
+
+    # arrang
+    gs1 = gridspec.GridSpec(3, 3)
+    gs1.update(wspace=0.0, hspace=0.0)
+    ax_scat = plt.subplot(gs1[1:, :-1])
+    ax_hist_dG = plt.subplot(gs1[0, :-1])
+    ax_hist_ddG = plt.subplot(gs1[1:, -1])
+
+    ax_scat.axhline(color='k', linestyle='dotted', markeredgewidth=8)
+    ax_scat.axvline(color='k', linestyle='dotted', markeredgewidth=8)
+    ax_scat.scatter(soluble_dGs, soluble_ddGs, alpha=0.2, color=soluble_color)
+    ax_scat.scatter(tm_dGs, tm_ddGs, alpha=0.4, color=tm_color)
+    ax_scat.set_xlim([xmin, xmax])
+    ax_scat.set_ylim([ymin, ymax])
+    ax_scat.set_xlabel('dG')
+    ax_scat.set_ylabel('ddG')
+
+    ax_hist_dG.hist(soluble_dGs, color=soluble_color, alpha=0.2, normed=1, bins=50)
+    ax_hist_dG.hist(tm_dGs, color=tm_color, alpha=0.4, normed=1, bins=50)
+    ax_hist_dG.tick_params(axis='both', which='both', bottom='off', top='off', labelbottom='off', right='off', left='off')
+    ax_hist_dG.set_xlim([xmin, xmax])
+    ax_hist_dG.yaxis.set_major_formatter(formatter)
+    ax_hist_dG.set_ylabel('Frequency')
+
+    ax_hist_ddG.hist(soluble_ddGs, color=soluble_color, alpha=0.2, orientation='horizontal', normed=1, bins=50)
+    ax_hist_ddG.hist(tm_ddGs, color=tm_color, alpha=0.4, orientation='horizontal', normed=1, bins=50)
+    ax_hist_ddG.tick_params(axis='both', which='both', bottom='off', top='off', labelleft='off', right='off', left='off')
+    ax_hist_ddG.set_ylim([ymin, ymax])
+    ax_hist_ddG.xaxis.set_major_formatter(formatter)
+    ax_hist_ddG.set_xlabel('Frequency')
+
+    plt.show()
+
+
+def analyse_positive_inside_results(args):
+    score_threshold = -1
+    # work_path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_10.3/with_msa_no_csts/'
+    work_path = '/home/labs/fleishman/elazara/TopGraph/TopGarph_symmetric/rost/temp_msa_50/correct_only/correct_c_term_non_conservative/' # rostr msa correct by C term
+    prd_files = [a for a in os.listdir(work_path) if '.prd' in a]
+
+    rost_db = parse_rostlab_db()
+    df = pd.DataFrame(columns=['uniprot', 'pos_win_grade', 'pos_win_num', 'delta_wgp_flipped', 'SASA', 'pos_total', 'seq'])
+
+    for prd_file in prd_files:
+        name = prd_file.split('.')[0]
+        full_wgp = parse_prd(work_path+prd_file)[0]
+
+        # skipping if no wgp, or less than 3 wins
+        if full_wgp is None:
+            continue
+        # print full_wgp
+        if full_wgp.win_num < 4:
+            # print '%s has only %i windows. skipping' % (prd_file, full_wgp.win_num)
+            continue
+
+        pos_wins = [w for w in full_wgp.path if w.grade > score_threshold and
+                    full_wgp.path[-1] != w != full_wgp.path[0]]
+
+        rost_prd = rost_db[name]
+
+        for i, pos_w in enumerate(pos_wins):
+            # print 'positive window', pos_w
+            delta_wgp_flipped, flipped_grade, flipped_c_term, flipped_n_term = \
+                find_constrained_delta(full_wgp, pos_w, rost_prd['seq'])
+            w_sasa = win_sasa([pos_w], rost_prd['pdb'], rost_prd['chain'], name, rost_prd['seq'])[0]
+            pos_win_index = [i+1 for i, w in enumerate(full_wgp.path) if w == pos_w][0]
+            df = df.append({'uniprot': name,
+                            'pos_win_grade': pos_w.grade,
+                            'pos_win_num': pos_win_index,
+                            'delta_wgp_flipped': delta_wgp_flipped,
+                            'flipped_grade': flipped_grade,
+                            'SASA': w_sasa,
+                            'pos_total': '%i (%i)' % (pos_win_index, full_wgp.win_num),
+                            'seq': pos_w.seq if pos_w.direction == 'fwd' else pos_w.seq[::-1],
+                            'flipped_c_term': 'in' if flipped_c_term == 'rev' else 'out',
+                            'flipped_n_term': 'in' if flipped_n_term == 'rev' else 'out'},
+                           ignore_index=True)
+    print df
+
+
+def find_constrained_delta(wgp, w_pos, full_seq, verbose=False):
+    """
+    :param verbose: whether to print stuff or not
+    :param wgp: the WinGradePath
+    :param full_seq: full protein sequence
+    :param w_pos: a positive window to remove
+    :return: the delta between, and the best grade
+    """
+    pos_win_ind = [i for i, w in enumerate(wgp.path) if w == w_pos][0]
+
+    # crerate wgp where all wins after pos win are flipped
+    opt_1_list = []
+    for i, w in enumerate(wgp.path):
+        if i < pos_win_ind:
+            opt_1_list.append(w)
+        elif i == pos_win_ind:
+            continue
+        elif i > pos_win_ind:
+            # opt_1_list.append(WinGrade(w.begin, w.end, 'fwd' if w.direction == 'rev' else 'rev', w.seq[::-1], polyval,
+            #                            inner_tail=find_inner_tail(full_seq, w, 'fwd' if w.direction == 'rev' else 'rev')
+            #                            ))
+            opt_1_list.append(flip_win_grade(w, full_seq))
+    opt_1_wgp = WinGradePath(opt_1_list)
+
+    # crerate wgp where all wins before pos win are flipped
+    opt_2_list = []
+    for i, w in enumerate(wgp.path):
+        if i > pos_win_ind:
+            opt_2_list.append(w)
+        elif i == pos_win_ind:
+            continue
+        elif i < pos_win_ind:
+            # opt_2_list.append(WinGrade(w.begin, w.end, 'fwd' if w.direction == 'rev' else 'rev', w.seq[::-1], polyval,
+            #                            inner_tail=find_inner_tail(full_seq, w, 'fwd' if w.direction == 'rev' else 'rev')
+            #                            ))
+            opt_2_list.append(flip_win_grade(w, full_seq))
+    opt_2_wgp = WinGradePath(opt_2_list)
+
+    best_wgp = opt_1_wgp if opt_1_wgp.total_grade < opt_2_wgp.total_grade else opt_2_wgp
+
+    if verbose:
+        print 'wgp\n', wgp
+        print 'wgp1\n', opt_1_wgp
+        print 'wgp2\n', opt_2_wgp
+        print 'best\n', best_wgp
+        print 'seq %s\n' % full_seq
+
+    return wgp.total_grade - best_wgp.total_grade, best_wgp.total_grade, best_wgp.c_term, best_wgp.path[0].direction
+
+
+def find_inner_tail(full_seq, w, direction):
+    if direction == 'fwd':
+        return full_seq[max([0, w.begin-5]): w.begin]
+    elif direction == 'rev':
+        return full_seq[w.end: min([w.end+5, len(full_seq)])]
+
 
 
 def vh_name_dict():
@@ -845,6 +1055,7 @@ def vh_name_dict():
     list_ = [a.split('.')[0] for a in os.listdir('/home/labs/fleishman/jonathaw/membrane_prediction_DBs/spoctopus_SPDB')
             if 3 <= len(a.split('.')[0]) <= 4 and '.spc' in a]
     return {k.lower(): k for k in list_}
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -880,8 +1091,14 @@ if __name__ == '__main__':
     elif args['mode'] == 'from_csts_to_prds':
         from_csts_to_prds()
 
+    elif args['mode'] == 'combined':
+        draw_combined_scatter_hist()
+
+    elif args['mode'] == 'new_pos':
+        analyse_positive_inside_results(args)
+
     elif args['mode'] == 'test':
-        print vh_name_dict()
+        draw_combined_scatter_hist()
 
     else:
         print 'no mode chosen'

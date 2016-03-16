@@ -2,13 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6a73546c-b0e1-4c73-9c98-48c4af466cd3" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/soluble_helix_grade.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MSA_for_TMpredict.py" afterPath="$PROJECT_DIR$/MSA_for_TMpredict.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ProcessEntry.py" afterPath="$PROJECT_DIR$/ProcessEntry.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TMpredict_WinGrade.py" afterPath="$PROJECT_DIR$/TMpredict_WinGrade.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WinGrade.py" afterPath="$PROJECT_DIR$/WinGrade.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/positive_inside_analysis.py" afterPath="$PROJECT_DIR$/positive_inside_analysis.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/topo_strings_comparer2.py" afterPath="$PROJECT_DIR$/topo_strings_comparer2.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/soluble_helix_grade.py" afterPath="$PROJECT_DIR$/soluble_helix_grade.py" />
     </list>
     <ignored path="membrane_prediciton.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -35,28 +35,15 @@
         <entry file="file://$PROJECT_DIR$/TMpredict_WinGrade.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="36" column="33" selection-start-line="36" selection-start-column="25" selection-end-line="36" selection-end-column="33" />
+              <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
               <folding>
-                <element signature="e#4273#4818#0" expanded="true" />
-                <element signature="e#4855#6812#0" expanded="true" />
-                <element signature="e#6859#10184#0" expanded="true" />
-                <element signature="e#36268#37441#0" expanded="true" />
-                <element signature="e#37493#39445#0" expanded="true" />
-                <element signature="e#42177#42880#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TMConstraint.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/TMConstraint.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="444" column="63" selection-start-line="444" selection-start-column="63" selection-end-line="444" selection-end-column="63" />
-              <folding>
-                <element signature="e#260#585#0" expanded="true" />
-                <element signature="e#10777#12053#0" expanded="true" />
-                <element signature="e#12918#12998#0" expanded="true" />
+                <element signature="e#40#62#0" expanded="true" />
+                <element signature="e#23278#23381#1" expanded="false" />
+                <element signature="e#23806#23910#1" expanded="false" />
+                <element signature="e#30967#31139#1" expanded="false" />
+                <element signature="e#34030#34251#1" expanded="false" />
+                <element signature="e#34863#35127#1" expanded="false" />
+                <element signature="e#36088#36298#1" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -65,13 +52,21 @@
       <file leaf-file-name="ProcessEntry.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ProcessEntry.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-1.4917309">
-              <caret line="274" column="0" selection-start-line="274" selection-start-column="0" selection-end-line="274" selection-end-column="0" />
+            <state vertical-scroll-proportion="2.7333333">
+              <caret line="787" column="31" selection-start-line="787" selection-start-column="31" selection-end-line="787" selection-end-column="31" />
               <folding>
-                <element signature="e#4689#5445#0" expanded="true" />
-                <element signature="e#5508#12646#0" expanded="true" />
-                <element signature="e#14892#15733#0" expanded="true" />
-                <element signature="e#25192#28321#0" expanded="true" />
+                <element signature="e#0#44#0" expanded="true" />
+                <element signature="e#139#870#0" expanded="false" />
+                <element signature="e#2274#2358#1" expanded="false" />
+                <element signature="e#12813#13047#1" expanded="false" />
+                <element signature="e#15056#15277#1" expanded="false" />
+                <element signature="e#15978#16062#1" expanded="false" />
+                <element signature="e#24813#25021#1" expanded="false" />
+                <element signature="e#25938#26064#1" expanded="false" />
+                <element signature="e#26294#26376#1" expanded="false" />
+                <element signature="e#26783#29914#0" expanded="true" />
+                <element signature="e#26783#26818#1" expanded="false" />
+                <element signature="e#29962#30206#1" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -81,32 +76,15 @@
         <entry file="file://$PROJECT_DIR$/MSA_for_TMpredict.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="18" selection-start-line="0" selection-start-column="18" selection-end-line="0" selection-end-column="18" />
+              <caret line="144" column="33" selection-start-line="144" selection-start-column="33" selection-end-line="144" selection-end-column="33" />
               <folding>
-                <element signature="e#24#1468#0" expanded="false" />
                 <element signature="e#122#348#0" expanded="true" />
                 <element signature="e#381#433#0" expanded="true" />
                 <element signature="e#467#519#0" expanded="true" />
-                <element signature="e#563#997#0" expanded="true" />
-                <element signature="e#1041#1468#0" expanded="true" />
-                <element signature="e#2483#5215#0" expanded="false" />
-                <element signature="e#2675#3215#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="topo_strings_comparer.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/topo_strings_comparer.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="397" column="20" selection-start-line="397" selection-start-column="20" selection-end-line="397" selection-end-column="20" />
-              <folding>
-                <element signature="e#1956#8515#0" expanded="true" />
-                <element signature="e#9588#11926#0" expanded="true" />
-                <element signature="e#11973#14079#0" expanded="true" />
-                <element signature="e#14125#14312#0" expanded="true" />
-                <element signature="e#14419#14755#0" expanded="true" />
+                <element signature="e#563#1070#0" expanded="true" />
+                <element signature="e#1114#1541#0" expanded="true" />
+                <element signature="e#2556#5288#0" expanded="false" />
+                <element signature="e#2748#3288#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -143,9 +121,18 @@
         <entry file="file://$PROJECT_DIR$/WinGrade.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="132" column="33" selection-start-line="132" selection-start-column="33" selection-end-line="132" selection-end-column="33" />
+              <caret line="225" column="29" selection-start-line="225" selection-start-column="18" selection-end-line="225" selection-end-column="29" />
               <folding>
-                <element signature="e#4948#5018#0" expanded="true" />
+                <element signature="e#107#5414#0" expanded="false" />
+                <element signature="e#397#2391#0" expanded="true" />
+                <element signature="e#2425#3155#0" expanded="true" />
+                <element signature="e#5167#5237#0" expanded="true" />
+                <element signature="e#5441#8278#0" expanded="false" />
+                <element signature="e#5479#5773#0" expanded="true" />
+                <element signature="e#8347#9258#0" expanded="true" />
+                <element signature="e#16631#17239#0" expanded="true" />
+                <element signature="e#17323#18454#0" expanded="true" />
+                <element signature="e#17323#18007#1" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -155,12 +142,14 @@
         <entry file="file://$PROJECT_DIR$/soluble_helix_grade.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="92" column="0" selection-start-line="92" selection-start-column="0" selection-end-line="92" selection-end-column="0" />
+              <caret line="94" column="24" selection-start-line="94" selection-start-column="24" selection-end-line="94" selection-end-column="24" />
               <folding>
                 <element signature="e#92#101#0" expanded="true" />
-                <element signature="e#379#856#0" expanded="true" />
-                <element signature="e#895#1390#0" expanded="true" />
-                <element signature="e#1416#2186#0" expanded="true" />
+                <element signature="e#469#1206#0" expanded="true" />
+                <element signature="e#1237#1817#0" expanded="true" />
+                <element signature="e#2649#3020#0" expanded="true" />
+                <element signature="e#3048#3231#0" expanded="true" />
+                <element signature="e#3813#4426#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -169,15 +158,22 @@
       <file leaf-file-name="positive_inside_analysis.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/positive_inside_analysis.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="824" column="68" selection-start-line="824" selection-start-column="68" selection-end-line="824" selection-end-column="68" />
+            <state vertical-scroll-proportion="-55.62963">
+              <caret line="1027" column="56" selection-start-line="1027" selection-start-column="56" selection-end-line="1027" selection-end-column="56" />
               <folding>
                 <element signature="e#40#49#0" expanded="true" />
-                <element signature="e#824#5112#0" expanded="true" />
-                <element signature="e#8479#9687#0" expanded="true" />
-                <element signature="e#9723#17116#0" expanded="true" />
-                <element signature="e#20665#21360#0" expanded="true" />
-                <element signature="e#39963#40237#0" expanded="true" />
+                <element signature="e#1537#6381#0" expanded="true" />
+                <element signature="e#7563#7997#0" expanded="true" />
+                <element signature="e#8030#8471#0" expanded="true" />
+                <element signature="e#9748#9885#1" expanded="false" />
+                <element signature="e#11141#11284#1" expanded="false" />
+                <element signature="e#22219#22491#1" expanded="false" />
+                <element signature="e#22957#23091#1" expanded="false" />
+                <element signature="e#42321#44757#0" expanded="true" />
+                <element signature="e#44807#47104#0" expanded="true" />
+                <element signature="e#47176#47410#1" expanded="false" />
+                <element signature="e#49219#49386#0" expanded="true" />
+                <element signature="e#49414#49688#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -219,14 +215,14 @@
         <option value="$PROJECT_DIR$/GOanalysis.py" />
         <option value="$PROJECT_DIR$/topo_VH_analysis.py" />
         <option value="$PROJECT_DIR$/draw_polyvals.py" />
-        <option value="$PROJECT_DIR$/TMpredict_WinGrade.py" />
         <option value="$PROJECT_DIR$/TMConstraint.py" />
-        <option value="$PROJECT_DIR$/MSA_for_TMpredict.py" />
         <option value="$PROJECT_DIR$/topo_strings_comparer.py" />
         <option value="$PROJECT_DIR$/topo_strings_comparer2.py" />
-        <option value="$PROJECT_DIR$/positive_inside_analysis.py" />
-        <option value="$PROJECT_DIR$/WinGrade.py" />
         <option value="$PROJECT_DIR$/soluble_helix_grade.py" />
+        <option value="$PROJECT_DIR$/TMpredict_WinGrade.py" />
+        <option value="$PROJECT_DIR$/positive_inside_analysis.py" />
+        <option value="$PROJECT_DIR$/MSA_for_TMpredict.py" />
+        <option value="$PROJECT_DIR$/WinGrade.py" />
         <option value="$PROJECT_DIR$/ProcessEntry.py" />
       </list>
     </option>
@@ -280,8 +276,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -302,6 +296,8 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -344,45 +340,7 @@
       <recent name="$PROJECT_DIR$/data_sets" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Doctest score_KR_tail">
-    <configuration default="false" name="Doctest ts_loc_list" type="tests" factoryName="Doctests" temporary="true" nameIsGenerated="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="membrane_prediciton" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/topo_strings_comparer2.py" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="ts_loc_list" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_FUNCTION" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <method />
-    </configuration>
-    <configuration default="false" name="Doctest pdbtm_opm_loc_list" type="tests" factoryName="Doctests" temporary="true" nameIsGenerated="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="membrane_prediciton" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/topo_strings_comparer2.py" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="pdbtm_opm_loc_list" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_FUNCTION" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <method />
-    </configuration>
+  <component name="RunManager" selected="Python.ProcessEntry">
     <configuration default="false" name="Doctest overlapM_loc_lists" type="tests" factoryName="Doctests" temporary="true" nameIsGenerated="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -438,6 +396,42 @@
       <option name="TEST_TYPE" value="TEST_FUNCTION" />
       <option name="PATTERN" value="" />
       <option name="USE_PATTERN" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="Doctest find_inner_outer_tail" type="tests" factoryName="Doctests" temporary="true" nameIsGenerated="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="membrane_prediciton" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/WinGrade.py" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="find_inner_outer_tail" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_FUNCTION" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="ProcessEntry" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="membrane_prediciton" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ProcessEntry.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
     </configuration>
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
@@ -563,19 +557,19 @@
       <method />
     </configuration>
     <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="Python tests.Doctest ts_loc_list" />
-      <item index="1" class="java.lang.String" itemvalue="Python tests.Doctest pdbtm_opm_loc_list" />
-      <item index="2" class="java.lang.String" itemvalue="Python tests.Doctest overlapM_loc_lists" />
-      <item index="3" class="java.lang.String" itemvalue="Python tests.Doctest pdbtm_opm_uuus_list" />
-      <item index="4" class="java.lang.String" itemvalue="Python tests.Doctest score_KR_tail" />
+      <item index="0" class="java.lang.String" itemvalue="Python tests.Doctest overlapM_loc_lists" />
+      <item index="1" class="java.lang.String" itemvalue="Python tests.Doctest pdbtm_opm_uuus_list" />
+      <item index="2" class="java.lang.String" itemvalue="Python tests.Doctest score_KR_tail" />
+      <item index="3" class="java.lang.String" itemvalue="Python tests.Doctest find_inner_outer_tail" />
+      <item index="4" class="java.lang.String" itemvalue="Python.ProcessEntry" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python tests.Doctest score_KR_tail" />
-        <item index="1" class="java.lang.String" itemvalue="Python tests.Doctest pdbtm_opm_uuus_list" />
-        <item index="2" class="java.lang.String" itemvalue="Python tests.Doctest overlapM_loc_lists" />
-        <item index="3" class="java.lang.String" itemvalue="Python tests.Doctest pdbtm_opm_loc_list" />
-        <item index="4" class="java.lang.String" itemvalue="Python tests.Doctest ts_loc_list" />
+        <item index="0" class="java.lang.String" itemvalue="Python.ProcessEntry" />
+        <item index="1" class="java.lang.String" itemvalue="Python tests.Doctest find_inner_outer_tail" />
+        <item index="2" class="java.lang.String" itemvalue="Python tests.Doctest score_KR_tail" />
+        <item index="3" class="java.lang.String" itemvalue="Python tests.Doctest pdbtm_opm_uuus_list" />
+        <item index="4" class="java.lang.String" itemvalue="Python tests.Doctest overlapM_loc_lists" />
       </list>
     </recent_temporary>
   </component>
@@ -589,12 +583,6 @@
       <created>1416142765897</created>
       <option name="number" value="Default" />
       <updated>1416142765897</updated>
-    </task>
-    <task id="LOCAL-00040" summary="Adding the VDB dataset">
-      <created>1425884255247</created>
-      <option name="number" value="00040" />
-      <option name="project" value="LOCAL" />
-      <updated>1425884255247</updated>
     </task>
     <task id="LOCAL-00041" summary="Adding the VDB dataset">
       <created>1425884300608</created>
@@ -884,33 +872,39 @@
       <option name="project" value="LOCAL" />
       <updated>1456653560000</updated>
     </task>
-    <option name="localTasksCounter" value="89" />
+    <task id="LOCAL-00089" summary="just a commit">
+      <created>1457436765267</created>
+      <option name="number" value="00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1457436765282</updated>
+    </task>
+    <option name="localTasksCounter" value="90" />
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="Doctest_pdbtm_opm_uuus_list - 2016.02.25 at 16h 17m 53s.xml">
-      <configuration name="Doctest pdbtm_opm_uuus_list" configurationId="tests" />
+    <history-entry file="Doctest_find_inner_outer_tail - 2016.03.16 at 13h 52m 05s.xml">
+      <configuration name="Doctest find_inner_outer_tail" configurationId="tests" />
     </history-entry>
-    <history-entry file="Doctest_pdbtm_opm_uuus_list - 2016.02.25 at 17h 00m 25s.xml">
-      <configuration name="Doctest pdbtm_opm_uuus_list" configurationId="tests" />
+    <history-entry file="Doctest_find_inner_outer_tail - 2016.03.16 at 13h 52m 33s.xml">
+      <configuration name="Doctest find_inner_outer_tail" configurationId="tests" />
     </history-entry>
-    <history-entry file="Doctest_pdbtm_opm_uuus_list - 2016.02.25 at 17h 00m 40s.xml">
-      <configuration name="Doctest pdbtm_opm_uuus_list" configurationId="tests" />
+    <history-entry file="Doctest_find_inner_outer_tail - 2016.03.16 at 13h 53m 43s.xml">
+      <configuration name="Doctest find_inner_outer_tail" configurationId="tests" />
     </history-entry>
-    <history-entry file="Doctest_pdbtm_opm_uuus_list - 2016.02.25 at 17h 00m 57s.xml">
-      <configuration name="Doctest pdbtm_opm_uuus_list" configurationId="tests" />
+    <history-entry file="Doctest_find_inner_outer_tail - 2016.03.16 at 13h 54m 28s.xml">
+      <configuration name="Doctest find_inner_outer_tail" configurationId="tests" />
     </history-entry>
-    <history-entry file="Doctest_pdbtm_opm_uuus_list - 2016.02.25 at 17h 01m 02s.xml">
-      <configuration name="Doctest pdbtm_opm_uuus_list" configurationId="tests" />
+    <history-entry file="Doctest_find_inner_outer_tail - 2016.03.16 at 13h 54m 41s.xml">
+      <configuration name="Doctest find_inner_outer_tail" configurationId="tests" />
     </history-entry>
-    <history-entry file="Doctest_pdbtm_opm_uuus_list - 2016.02.25 at 17h 01m 07s.xml">
-      <configuration name="Doctest pdbtm_opm_uuus_list" configurationId="tests" />
+    <history-entry file="Doctest_find_inner_outer_tail - 2016.03.16 at 13h 55m 08s.xml">
+      <configuration name="Doctest find_inner_outer_tail" configurationId="tests" />
     </history-entry>
-    <history-entry file="Doctest_pdbtm_opm_uuus_list - 2016.02.25 at 17h 01m 10s.xml">
-      <configuration name="Doctest pdbtm_opm_uuus_list" configurationId="tests" />
+    <history-entry file="Doctest_find_inner_outer_tail - 2016.03.16 at 13h 55m 21s.xml">
+      <configuration name="Doctest find_inner_outer_tail" configurationId="tests" />
     </history-entry>
-    <history-entry file="Doctest_score_KR_tail - 2016.02.28 at 12h 04m 56s.xml">
-      <configuration name="Doctest score_KR_tail" configurationId="tests" />
+    <history-entry file="Doctest_find_inner_outer_tail - 2016.03.16 at 13h 58m 00s.xml">
+      <configuration name="Doctest find_inner_outer_tail" configurationId="tests" />
     </history-entry>
     <history-entry file="Doctest_score_KR_tail - 2016.02.28 at 12h 07m 29s.xml">
       <configuration name="Doctest score_KR_tail" configurationId="tests" />
@@ -946,11 +940,14 @@
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1716693" sideWeight="0.49197862" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32941177" sideWeight="0.4997367" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.428877" sideWeight="0.5002633" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32834226" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32941177" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32941177" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.42780748" sideWeight="0.4997367" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32941177" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.1716693" sideWeight="0.5080214" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32941177" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -958,11 +955,8 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.42780748" sideWeight="0.4997367" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32941177" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -977,7 +971,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="commit...." />
     <MESSAGE value="introduced a percentile function for MSA. and the ability to input a precentile from the command line. -msa_percentile.&#10;potentially fixed error where a non AA single letter is trying to be graded in WinGrade.grade_segment()" />
     <MESSAGE value="changed to new length model, after ben-tal." />
     <MESSAGE value="introducing constraints TMConstraint.py" />
@@ -1002,7 +995,8 @@
     <MESSAGE value="trying to fix MSA problems" />
     <MESSAGE value="bug fixes" />
     <MESSAGE value="last commit before inner KR scoring" />
-    <option name="LAST_COMMIT_MESSAGE" value="last commit before inner KR scoring" />
+    <MESSAGE value="just a commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="just a commit" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1011,6 +1005,138 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/TMpredict_WinGrade.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="36" column="33" selection-start-line="36" selection-start-column="25" selection-end-line="36" selection-end-column="33" />
+          <folding>
+            <element signature="e#40#62#0" expanded="true" />
+            <element signature="e#23278#23381#1" expanded="false" />
+            <element signature="e#23806#23910#1" expanded="false" />
+            <element signature="e#30967#31139#1" expanded="false" />
+            <element signature="e#34030#34251#1" expanded="false" />
+            <element signature="e#34863#35127#1" expanded="false" />
+            <element signature="e#36088#36298#1" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ProcessEntry.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="298" column="94" selection-start-line="298" selection-start-column="94" selection-end-line="298" selection-end-column="94" />
+          <folding>
+            <element signature="e#0#44#0" expanded="true" />
+            <element signature="e#139#870#0" expanded="false" />
+            <element signature="e#2274#2358#1" expanded="false" />
+            <element signature="e#12813#13047#1" expanded="false" />
+            <element signature="e#15056#15277#1" expanded="false" />
+            <element signature="e#15978#16062#1" expanded="false" />
+            <element signature="e#24813#25021#1" expanded="false" />
+            <element signature="e#25938#26064#1" expanded="false" />
+            <element signature="e#26294#26376#1" expanded="false" />
+            <element signature="e#26783#29914#0" expanded="true" />
+            <element signature="e#26783#26818#1" expanded="false" />
+            <element signature="e#29962#30206#1" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MSA_for_TMpredict.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="170" column="41" selection-start-line="170" selection-start-column="41" selection-end-line="170" selection-end-column="41" />
+          <folding>
+            <element signature="e#122#348#0" expanded="true" />
+            <element signature="e#381#433#0" expanded="true" />
+            <element signature="e#467#519#0" expanded="true" />
+            <element signature="e#563#1070#0" expanded="true" />
+            <element signature="e#1114#1541#0" expanded="true" />
+            <element signature="e#2556#5288#0" expanded="false" />
+            <element signature="e#2748#3288#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/topo_strings_comparer2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="431" column="97" selection-start-line="431" selection-start-column="97" selection-end-line="431" selection-end-column="97" />
+          <folding>
+            <element signature="e#25#34#0" expanded="true" />
+            <element signature="e#343#2599#0" expanded="true" />
+            <element signature="e#15275#15790#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/draw_polyvals.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding>
+            <element signature="e#25#56#0" expanded="true" />
+            <element signature="e#185#530#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WinGrade.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="124" column="49" selection-start-line="124" selection-start-column="49" selection-end-line="124" selection-end-column="49" />
+          <folding>
+            <element signature="e#107#5414#0" expanded="false" />
+            <element signature="e#397#2391#0" expanded="true" />
+            <element signature="e#2425#3155#0" expanded="true" />
+            <element signature="e#5167#5237#0" expanded="true" />
+            <element signature="e#5441#8278#0" expanded="false" />
+            <element signature="e#5479#5773#0" expanded="true" />
+            <element signature="e#8347#9258#0" expanded="true" />
+            <element signature="e#16631#17239#0" expanded="true" />
+            <element signature="e#17323#18454#0" expanded="true" />
+            <element signature="e#17323#18007#1" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/soluble_helix_grade.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="41" column="23" selection-start-line="41" selection-start-column="23" selection-end-line="41" selection-end-column="23" />
+          <folding>
+            <element signature="e#92#101#0" expanded="true" />
+            <element signature="e#469#1206#0" expanded="true" />
+            <element signature="e#1237#1817#0" expanded="true" />
+            <element signature="e#2649#3020#0" expanded="true" />
+            <element signature="e#3048#3231#0" expanded="true" />
+            <element signature="e#3813#4426#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/positive_inside_analysis.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#40#49#0" expanded="true" />
+            <element signature="e#1537#6381#0" expanded="true" />
+            <element signature="e#7563#7997#0" expanded="true" />
+            <element signature="e#8030#8471#0" expanded="true" />
+            <element signature="e#9748#9885#1" expanded="false" />
+            <element signature="e#11141#11284#1" expanded="false" />
+            <element signature="e#22219#22491#1" expanded="false" />
+            <element signature="e#22957#23091#1" expanded="false" />
+            <element signature="e#42321#44757#0" expanded="true" />
+            <element signature="e#44807#47104#0" expanded="true" />
+            <element signature="e#47176#47410#1" expanded="false" />
+            <element signature="e#49219#49386#0" expanded="true" />
+            <element signature="e#49414#49688#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/temp.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1148,7 +1274,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="58" column="36" selection-start-line="57" selection-start-column="12" selection-end-line="58" selection-end-column="36" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1156,13 +1281,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="397" column="20" selection-start-line="397" selection-start-column="20" selection-end-line="397" selection-end-column="20" />
-          <folding>
-            <element signature="e#1956#8515#0" expanded="true" />
-            <element signature="e#9588#11926#0" expanded="true" />
-            <element signature="e#11973#14079#0" expanded="true" />
-            <element signature="e#14125#14312#0" expanded="true" />
-            <element signature="e#14419#14755#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1189,54 +1307,32 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/positive_inside_analysis.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="824" column="68" selection-start-line="824" selection-start-column="68" selection-end-line="824" selection-end-column="68" />
-          <folding>
-            <element signature="e#40#49#0" expanded="true" />
-            <element signature="e#824#5112#0" expanded="true" />
-            <element signature="e#8479#9687#0" expanded="true" />
-            <element signature="e#9723#17116#0" expanded="true" />
-            <element signature="e#20665#21360#0" expanded="true" />
-            <element signature="e#39963#40237#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TMpredict_WinGrade.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="36" column="33" selection-start-line="36" selection-start-column="25" selection-end-line="36" selection-end-column="33" />
-          <folding>
-            <element signature="e#4273#4818#0" expanded="true" />
-            <element signature="e#4855#6812#0" expanded="true" />
-            <element signature="e#6859#10184#0" expanded="true" />
-            <element signature="e#36268#37441#0" expanded="true" />
-            <element signature="e#37493#39445#0" expanded="true" />
-            <element signature="e#42177#42880#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/TMConstraint.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="444" column="63" selection-start-line="444" selection-start-column="63" selection-end-line="444" selection-end-column="63" />
-          <folding>
-            <element signature="e#260#585#0" expanded="true" />
-            <element signature="e#10777#12053#0" expanded="true" />
-            <element signature="e#12918#12998#0" expanded="true" />
-          </folding>
+          <caret line="11" column="39" selection-start-line="11" selection-start-column="33" selection-end-line="11" selection-end-column="39" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/WinGrade.py">
+    <entry file="file://$PROJECT_DIR$/positive_inside_analysis.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="132" column="33" selection-start-line="132" selection-start-column="33" selection-end-line="132" selection-end-column="33" />
+        <state vertical-scroll-proportion="-55.62963">
+          <caret line="1027" column="56" selection-start-line="1027" selection-start-column="56" selection-end-line="1027" selection-end-column="56" />
           <folding>
-            <element signature="e#4948#5018#0" expanded="true" />
+            <element signature="e#40#49#0" expanded="true" />
+            <element signature="e#1537#6381#0" expanded="true" />
+            <element signature="e#7563#7997#0" expanded="true" />
+            <element signature="e#8030#8471#0" expanded="true" />
+            <element signature="e#9748#9885#1" expanded="false" />
+            <element signature="e#11141#11284#1" expanded="false" />
+            <element signature="e#22219#22491#1" expanded="false" />
+            <element signature="e#22957#23091#1" expanded="false" />
+            <element signature="e#42321#44757#0" expanded="true" />
+            <element signature="e#44807#47104#0" expanded="true" />
+            <element signature="e#47176#47410#1" expanded="false" />
+            <element signature="e#49219#49386#0" expanded="true" />
+            <element signature="e#49414#49688#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1244,42 +1340,86 @@
     <entry file="file://$PROJECT_DIR$/soluble_helix_grade.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="92" column="0" selection-start-line="92" selection-start-column="0" selection-end-line="92" selection-end-column="0" />
+          <caret line="94" column="24" selection-start-line="94" selection-start-column="24" selection-end-line="94" selection-end-column="24" />
           <folding>
             <element signature="e#92#101#0" expanded="true" />
-            <element signature="e#379#856#0" expanded="true" />
-            <element signature="e#895#1390#0" expanded="true" />
-            <element signature="e#1416#2186#0" expanded="true" />
+            <element signature="e#469#1206#0" expanded="true" />
+            <element signature="e#1237#1817#0" expanded="true" />
+            <element signature="e#2649#3020#0" expanded="true" />
+            <element signature="e#3048#3231#0" expanded="true" />
+            <element signature="e#3813#4426#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TMpredict_WinGrade.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+          <folding>
+            <element signature="e#40#62#0" expanded="true" />
+            <element signature="e#23278#23381#1" expanded="false" />
+            <element signature="e#23806#23910#1" expanded="false" />
+            <element signature="e#30967#31139#1" expanded="false" />
+            <element signature="e#34030#34251#1" expanded="false" />
+            <element signature="e#34863#35127#1" expanded="false" />
+            <element signature="e#36088#36298#1" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/MSA_for_TMpredict.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.0">
-          <caret line="0" column="18" selection-start-line="0" selection-start-column="18" selection-end-line="0" selection-end-column="18" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="144" column="33" selection-start-line="144" selection-start-column="33" selection-end-line="144" selection-end-column="33" />
           <folding>
-            <element signature="e#24#1468#0" expanded="false" />
             <element signature="e#122#348#0" expanded="true" />
             <element signature="e#381#433#0" expanded="true" />
             <element signature="e#467#519#0" expanded="true" />
-            <element signature="e#563#997#0" expanded="true" />
-            <element signature="e#1041#1468#0" expanded="true" />
-            <element signature="e#2483#5215#0" expanded="false" />
-            <element signature="e#2675#3215#0" expanded="true" />
+            <element signature="e#563#1070#0" expanded="true" />
+            <element signature="e#1114#1541#0" expanded="true" />
+            <element signature="e#2556#5288#0" expanded="false" />
+            <element signature="e#2748#3288#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WinGrade.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="225" column="29" selection-start-line="225" selection-start-column="18" selection-end-line="225" selection-end-column="29" />
+          <folding>
+            <element signature="e#107#5414#0" expanded="false" />
+            <element signature="e#397#2391#0" expanded="true" />
+            <element signature="e#2425#3155#0" expanded="true" />
+            <element signature="e#5167#5237#0" expanded="true" />
+            <element signature="e#5441#8278#0" expanded="false" />
+            <element signature="e#5479#5773#0" expanded="true" />
+            <element signature="e#8347#9258#0" expanded="true" />
+            <element signature="e#16631#17239#0" expanded="true" />
+            <element signature="e#17323#18454#0" expanded="true" />
+            <element signature="e#17323#18007#1" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ProcessEntry.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.4917309">
-          <caret line="274" column="0" selection-start-line="274" selection-start-column="0" selection-end-line="274" selection-end-column="0" />
+        <state vertical-scroll-proportion="2.7333333">
+          <caret line="787" column="31" selection-start-line="787" selection-start-column="31" selection-end-line="787" selection-end-column="31" />
           <folding>
-            <element signature="e#4689#5445#0" expanded="true" />
-            <element signature="e#5508#12646#0" expanded="true" />
-            <element signature="e#14892#15733#0" expanded="true" />
-            <element signature="e#25192#28321#0" expanded="true" />
+            <element signature="e#0#44#0" expanded="true" />
+            <element signature="e#139#870#0" expanded="false" />
+            <element signature="e#2274#2358#1" expanded="false" />
+            <element signature="e#12813#13047#1" expanded="false" />
+            <element signature="e#15056#15277#1" expanded="false" />
+            <element signature="e#15978#16062#1" expanded="false" />
+            <element signature="e#24813#25021#1" expanded="false" />
+            <element signature="e#25938#26064#1" expanded="false" />
+            <element signature="e#26294#26376#1" expanded="false" />
+            <element signature="e#26783#29914#0" expanded="true" />
+            <element signature="e#26783#26818#1" expanded="false" />
+            <element signature="e#29962#30206#1" expanded="false" />
           </folding>
         </state>
       </provider>

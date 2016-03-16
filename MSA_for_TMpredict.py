@@ -34,6 +34,8 @@ class single_fasta:
         if i + 1 == pos:
             return i - gaps - 1
 
+        return len(self.seq) # if not found, returns the end of the seq
+
     def withgap2nogap(self, pos):
         """
         :param pos: a position coordinate in the aligned seq with gaps
@@ -122,30 +124,40 @@ class TMpredict_MSA:
                             self.poly_param, name, gap_remover(best_win.seq)[::-1])
 
 
-def retrieve_seqs(msa, start, end, direction, inner_tail_length=5):
-    from WinGrade import WinGrade, grade_segment
+def retrieve_seqs(msa, start, end, direction, inner_tail_length=5, outer_tail_length=5):
+    from WinGrade import WinGrade
 
     start_wg = msa.query.nogap2withgap(start)
     end_wg = msa.query.nogap2withgap(end)
 
     # calculate inner tail KR addition
     if direction == 'fwd':
-        inner_tail_start_wg = max(0, msa.query.nogap2withgap(start-inner_tail_length))
+        inner_tail_start_wg = max([0, msa.query.nogap2withgap(start-inner_tail_length)])
         inner_tail_end_wg = msa.query.nogap2withgap(start)
+
+        outer_tail_start_wg = msa.query.nogap2withgap(start)+1
+        outer_tail_end_wg = min([msa.query.nogap2withgap(len(msa.query.seq)),
+                                 msa.query.nogap2withgap(start)+outer_tail_length])+1
         # print 'AAAAAAAAAAAAAAA', inner_tail_start_wg, inner_tail_end_wg, start
     else:
-        inner_tail_start_wg = msa.query.nogap2withgap(end)
-        inner_tail_end_wg = min(msa.query.nogap2withgap(len(msa.query.seq)), msa.query.nogap2withgap(end+inner_tail_length))
+        inner_tail_start_wg = msa.query.nogap2withgap(end)+1
+        inner_tail_end_wg = min([msa.query.nogap2withgap(len(msa.query.seq)),
+                                 msa.query.nogap2withgap(end+inner_tail_length)])+1
+
+        outer_tail_start_wg = max(0, msa.query.nogap2withgap(start)-outer_tail_length)
+        outer_tail_end_wg = msa.query.nogap2withgap(start)
         # print 'BBBBBBBBBBBBBBB', inner_tail_start_wg, inner_tail_end_wg
 
     if direction == 'fwd':
         query_grade = WinGrade(start, end, direction, gap_remover(msa.query.seq[start_wg:end_wg]), msa.polyval,
                             msa.poly_param,
-                               inner_tail=gap_remover(msa.query.seq[inner_tail_start_wg:inner_tail_end_wg])).grade
+                               inner_tail=gap_remover(msa.query.seq[inner_tail_start_wg:inner_tail_end_wg]),
+                               outer_tail=gap_remover(msa.query.seq[outer_tail_start_wg:outer_tail_end_wg])).grade
     elif direction == 'rev':
         query_grade = WinGrade(start, end, direction, gap_remover(msa.query.seq[start_wg:end_wg])[::-1],
                             msa.polyval, msa.poly_param,
-                               inner_tail=gap_remover(msa.query.seq[inner_tail_start_wg:inner_tail_end_wg])).grade
+                               inner_tail=gap_remover(msa.query.seq[inner_tail_start_wg:inner_tail_end_wg]),
+                               outer_tail=gap_remover(msa.query.seq[outer_tail_start_wg:outer_tail_end_wg])).grade
     grade_stack = {}
 
     for target in msa.stack:
@@ -153,33 +165,37 @@ def retrieve_seqs(msa, start, end, direction, inner_tail_length=5):
             if direction == 'fwd':
                 temp_win_grade = WinGrade(start, end, direction, gap_remover(target.seq[start_wg:end_wg]),
                                           msa.polyval, msa.poly_param,
-                                          inner_tail=gap_remover(target.seq[inner_tail_start_wg:inner_tail_end_wg]))
+                                          inner_tail=gap_remover(target.seq[inner_tail_start_wg:inner_tail_end_wg]),
+                                          outer_tail=gap_remover(msa.query.seq[outer_tail_start_wg:outer_tail_end_wg]))
                 # print 'A', inner_tail_start_wg, inner_tail_end_wg, gap_remover(target.seq[inner_tail_start_wg:inner_tail_end_wg])
             elif direction == 'rev':
                 temp_win_grade = WinGrade(start, end, direction, gap_remover(target.seq[start_wg:end_wg])[::-1],
                                           msa.polyval, msa.poly_param,
-                                          inner_tail=gap_remover(target.seq[inner_tail_start_wg:inner_tail_end_wg]))
+                                          inner_tail=gap_remover(target.seq[inner_tail_start_wg:inner_tail_end_wg]),
+                                          outer_tail=gap_remover(msa.query.seq[outer_tail_start_wg:outer_tail_end_wg]))
                 # print 'B', inner_tail_start_wg, inner_tail_end_wg, gap_remover(target.seq[inner_tail_start_wg:inner_tail_end_wg])
 
             if abs(temp_win_grade.grade-query_grade) <= msa.poly_param['msa_threshold'] and temp_win_grade.seq != '':
                 grade_stack[temp_win_grade.grade] = {'win': temp_win_grade, 'name': target.name}
 
     # med_grade = median_low(grade_stack.keys())
-    # med_grade = precentile_for_wins(grade_stack.keys(), msa.percentile)
+    med_grade = precentile_for_wins(grade_stack.keys(), msa.percentile)
 
-    med_grade = min(grade_stack.keys())
+    # med_grade = min(grade_stack.keys())
     med_win = grade_stack[med_grade]['win']
     med_name = grade_stack[med_grade]['name']
 
     if direction == 'fwd':
         return WinGrade(start, end, direction, gap_remover(msa.query.seq[start_wg:end_wg]), msa.polyval,
                         msa.poly_param, med_name, gap_remover(med_win.seq),
-                        inner_tail=gap_remover(msa.query.seq[inner_tail_start_wg:inner_tail_end_wg]))
+                        inner_tail=gap_remover(msa.query.seq[inner_tail_start_wg:inner_tail_end_wg]),
+                        outer_tail=gap_remover(msa.query.seq[outer_tail_start_wg:outer_tail_end_wg]))
 
     elif direction == 'rev':
         return WinGrade(start, end, direction, gap_remover(msa.query.seq[start_wg:end_wg])[::-1], msa.polyval,
                         msa.poly_param, med_name, gap_remover(med_win.seq),
-                        inner_tail=gap_remover(msa.query.seq[inner_tail_start_wg:inner_tail_end_wg]))
+                        inner_tail=gap_remover(msa.query.seq[inner_tail_start_wg:inner_tail_end_wg]),
+                        outer_tail=gap_remover(msa.query.seq[outer_tail_start_wg:outer_tail_end_wg]))
 
 
 def median_low(list_):

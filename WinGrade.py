@@ -1,6 +1,7 @@
 #!/usr/bin/env python2.7
 import numpy as np
 MEMBRANE_HALF_WIDTH = 15
+TAIL_LENGTH = 5
 
 
 class WinGrade:
@@ -8,7 +9,7 @@ class WinGrade:
     A class to parameterise a window in hydrophobicity manners.
     """
     def __init__(self, begin, end, direction, seq, polyval=None, poly_param=None, msa_name=None, msa_seq=None,
-                 grade=None, length_element=None, charges=None, inner_tail=''):
+                 grade=None, length_element=None, charges=None, inner_tail='', outer_tail=''):
         """
         :param begin: seq position (from 0) where the window begins
         :param end: seq position (from 0) where the window ends
@@ -41,30 +42,35 @@ class WinGrade:
             self.charges = charges
 
         self.inner_tail_seq = inner_tail
-        self.inner_tail_score = score_KR_tail(self.inner_tail_seq, polyval)
+        self.inner_tail_score = score_KR_tail(self.inner_tail_seq, polyval, inner_outer='inner')
+
+        self.outer_tail_seq = outer_tail
+        self.outer_tail_score = score_KR_tail(self.outer_tail_seq, polyval, inner_outer='outer')
 
         if grade is None:
-            self.grade = self.grade_segment(polyval) + self.length_element + self.inner_tail_score
+            self.grade = self.grade_segment(polyval) + self.length_element + self.inner_tail_score + self.outer_tail_score
         else:
-            self.grade = grade + self.length_element + self.length_element + self.inner_tail_score
+            self.grade = grade + self.length_element + self.length_element + self.inner_tail_score + self.outer_tail_score
         self.direction = direction
         self.span = range(self.begin, self.end+1)
 
         self.msa_name = msa_name
-        if msa_name != None:
+        if msa_name is not None:
             self.msa_seq = msa_seq
             self.msa_grade = grade_segment(msa_seq, polyval) + self.length_element
         if self.seq == 'SO2RCE' or self.seq == 'SINK' or self.seq == 'SOURCEPATH':
             self.grade = 0.0
 
     def __repr__(self):
-        if self.msa_name == None:
-            # print 'you win', self.begin, self.end, self.direction, self.grade, self.seq, self.charges, self.length_element
-            return '%-4i to %-4i in %3s => %2.1f %-35s %i %.1f inner_tail %s %.1f' % (self.begin, self.end, self.direction, self.grade,
-                                                                self.seq, self.charges, self.length_element, self.inner_tail_seq, self.inner_tail_score)
+        if self.msa_name is None:
+            return '%-4i to %-4i in %3s => %2.1f %-35s %i %.1f inner_tail %s %.1f outer_tail %s %1.f' % \
+                   (self.begin, self.end, self.direction, self.grade, self.seq, self.charges, self.length_element,
+                    self.inner_tail_seq, self.inner_tail_score, self.outer_tail_seq, self.outer_tail_score)
         else:
-            return '%-4i to %-4i in %3s => %2.1f %-35s %s %s %.1f inner tail %s %.1f' % (self.begin, self.end, self.direction, self.grade,
-                                                               self.seq, self.msa_name, self.msa_seq, self.msa_grade, self.inner_tail_seq, self.inner_tail_score)
+            return '%-4i to %-4i in %3s => %2.1f %-35s %s %s %.1f inner tail %s %.1f outer_tail %s %.1f' % \
+                   (self.begin, self.end, self.direction, self.grade, self.seq, self.msa_name, self.msa_seq,
+                    self.msa_grade, self.inner_tail_seq, self.inner_tail_score, self.outer_tail_seq,
+                    self.outer_tail_score)
 
     def get_html(self, i):
         return '<tr><td>%i</td><td>%-4.i</td><td>%-4.i</td><td>%3s</td><td>%5.3f</td><td>%-35s</td></tr>' % \
@@ -217,7 +223,7 @@ class WinGradePath:
         self.total_grade = self.grade_path()
 
 
-def score_KR_tail(inner_tail_, polyval):
+def score_KR_tail(inner_tail_, polyval, inner_outer='inner'):
     """
     :param inner_tail_: cytosolic side tail
     :param polyval: polyval dict
@@ -231,9 +237,15 @@ def score_KR_tail(inner_tail_, polyval):
     -1.0
     """
     # return 0.0
-    grade = float(sum([-0.1 for aa in inner_tail_ if aa == 'K']))
-    grade += float(sum([round(np.polyval(polyval[aa], -MEMBRANE_HALF_WIDTH), 1)
-                      for aa in inner_tail_ if aa == 'R']))
+    if inner_outer == 'inner':
+        grade = float(sum([-0.1 for aa in inner_tail_ if aa == 'K']))
+        grade += float(sum([round(np.polyval(polyval[aa], -MEMBRANE_HALF_WIDTH-5), 1)
+                            for aa in inner_tail_ if aa == 'R']))
+    elif inner_outer == 'outer':
+        grade = float(sum([round(np.polyval(polyval[aa], +MEMBRANE_HALF_WIDTH+5), 1)
+                           for aa in inner_tail_ if aa in ['K', 'R']]))
+    else:
+        print 'no tail direction speicified'
     return grade
 
 
@@ -247,7 +259,7 @@ def wgp_msa_total_grade(wgp):
 
 def count_charges(seq):
     import numpy as np
-    membrane_position = np.linspace(-MEMBRANE_HALF_WIDTH, MEMBRANE_HALF_WIDTH, endpoint=True, num=len(seq))
+    membrane_position = np.linspace(-20, 20, endpoint=True, num=len(seq))
     charges = 0
     for i, aa in enumerate(seq):
         if -12.5 <= membrane_position[i] <= 12.5:
@@ -405,3 +417,46 @@ def parse_WGP(text):
                             charges=int(ws[8]), inner_tail=ws[11])
         win_list.append(temp_win)
     return WinGradePath(win_list)
+
+
+def flip_win_grade(w, full_seq):
+    """
+    :param w: a WinGrade instance
+    :param full_seq: the full sequence
+    :return: a flipped WinGrade
+    """
+    inner_tail = find_inner_outer_tail(full_seq, w.begin, w.end, 'fwd' if w.direction == 'rev' else 'rev',
+                                       inner_outer='inner')
+    outer_tail = find_inner_outer_tail(full_seq, w.begin, w.end, 'fwd' if w.direction == 'rev' else 'rev',
+                                       inner_outer='outser')
+    return WinGrade(w.begin, w.end, 'fwd' if w.direction == 'rev' else 'rev', w.seq[::-1], inner_tail=inner_tail,
+                    outer_tail=outer_tail)
+
+
+def find_inner_outer_tail(full_seq, w_begin, w_end, direction, inner_outer):
+    """
+    :param full_seq: full query seq
+    :param w: WinGrade
+    :param direction: fwd / rev
+    :param inner_outer: whther inner or outer
+    :return: seq of inner or outer tail
+    >>> w=WinGrade(begin=2, end=5, direction='fwd', seq='3456')
+    >>> find_inner_outer_tail('1234567890', w.begin, w.end, direction='fwd', inner_outer='inner')
+    '12'
+    >>> find_inner_outer_tail('1234567890', w.begin, w.end, direction='rev', inner_outer='inner')
+    '7890'
+    >>> find_inner_outer_tail('1234567890', w.begin, w.end, direction='fwd', inner_outer='outer')
+    '7890'
+    >>> find_inner_outer_tail('1234567890', w.begin, w.end, direction='rev', inner_outer='outer')
+    '12'
+    """
+    if inner_outer == 'inner':
+        if direction == 'fwd':
+            return full_seq[max([0, w_begin-5]): w_begin]
+        elif direction == 'rev':
+            return full_seq[w_end+1: min([w_end+5, len(full_seq)])+1]
+    elif inner_outer == 'outer':
+        if direction == 'fwd':
+            return full_seq[w_end+1:min([w_end+5, len(full_seq)])+1]
+        elif direction == 'rev':
+            return full_seq[max([0, w_begin-5]): w_begin]

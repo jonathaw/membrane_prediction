@@ -1,4 +1,5 @@
 from TMConstraint import pred2cst, write_cst
+from WinGrade import find_inner_outer_tail, TAIL_LENGTH, score_KR_tail
 
 
 class TopoEntry:
@@ -296,14 +297,17 @@ def msa_paths_to_csts_to_paths(topo_entry, best_path, sec_path, wins, non_tm_cst
     overall_best = [a for a in all_paths if a.total_grade == min([b.total_grade for b in all_paths])][0]
     overall_sec = [a for a in all_paths if a.total_grade ==
                     min([b.total_grade for b in all_paths if b != overall_best
-                         and b.total_grade != overall_best.total_grade])][0]  # and b.c_term != overall_best.c_term])][0]
+                         and b.total_grade != overall_best.total_grade]) and a != overall_best][0]  # and b.c_term != overall_best.c_term])][0]
+
+    for a in all_paths:
+        print 'path', a
 
     tm_nums = [len(a.path) for a in all_paths]
     if len(list(set(tm_nums))) != 1:
         print 'found difference between lengths in the MSA paths'
         overall_sec = [a for a in all_paths if a.total_grade ==
                        min([b.total_grade for b in all_paths if b != overall_best
-                            and len(b.path) != len(overall_best.path)])][0]
+                            and len(b.path) != len(overall_best.path)]) and a != overall_best][0]
     return overall_best, overall_sec
 
 
@@ -338,7 +342,7 @@ def win_grade_generator(topo_entry, mode='all', tm_pos_mode='selective'):
     assert isinstance(topo_entry, TopoEntry)
     MIN_LENGTH = topo_entry.param_list['min_length']
     INC_MAX = topo_entry.param_list['inc_max']
-    inner_tail_length = 5
+    inner_tail_length, outer_tail_length = 5, 5
 
     if topo_entry.param_list['with_msa']:
         from MSA_for_TMpredict import TMpredict_MSA, retrieve_seqs
@@ -369,8 +373,17 @@ def win_grade_generator(topo_entry, mode='all', tm_pos_mode='selective'):
             #     continue
             #
 
-            fwd_inner_tail = topo_entry.seq[max(0, i-inner_tail_length):i]
-            rev_inner_tail = topo_entry.seq[i+MIN_LENGTH+inc:min(topo_entry.seq_length, i+MIN_LENGTH+inc+inner_tail_length)]
+            # fwd_inner_tail = topo_entry.seq[max(0, i-inner_tail_length):i]
+            # rev_inner_tail = topo_entry.seq[i+MIN_LENGTH+inc+1:min(topo_entry.seq_length,
+            #                                                      i+MIN_LENGTH+inc+inner_tail_length)]
+            #
+            # fwd_outer_tail = topo_entry.seq[i+MIN_LENGTH+inc+1:min([topo_entry.seq_length, i+MIN_LENGTH+inc+outer_tail_length])]
+            # rev_outer_tail = topo_entry.seq[max(0, i-outer_tail_length):i]
+            #
+            fwd_inner_tail = find_inner_outer_tail(topo_entry.seq, i, i+INC_MAX+inc, 'fwd', 'inner')
+            rev_inner_tail = find_inner_outer_tail(topo_entry.seq, i, i+INC_MAX+inc, 'rev', 'inner')
+            fwd_outer_tail = find_inner_outer_tail(topo_entry.seq, i, i+INC_MAX+inc, 'fwd', 'outer')
+            rev_outer_tail = find_inner_outer_tail(topo_entry.seq, i, i+INC_MAX+inc, 'rev', 'outer')
 
             if topo_entry.csts.non_tm_pos is not None:
                 if pos_in_non_tm([i, i+MIN_LENGTH+inc], topo_entry.csts.non_tm_pos):
@@ -381,17 +394,24 @@ def win_grade_generator(topo_entry, mode='all', tm_pos_mode='selective'):
             if tm_pos is not False:
                 if topo_entry.param_list['with_msa']:
                     tm_pos_wins[tm_pos].append(retrieve_seqs(msa_obj, i, i + MIN_LENGTH + inc, 'fwd',
-                                                             inner_tail_lenghh=inner_tail_length))
+                                                             inner_tail_lenghh=inner_tail_length,
+                                                             outer_tail_length=outer_tail_length))
                     tm_pos_wins[tm_pos].append(retrieve_seqs(msa_obj, i, i + MIN_LENGTH + inc, 'rev',
-                                                             inner_tail_length=inner_tail_length))
+                                                             inner_tail_length=inner_tail_length,
+                                                             outer_tail_length=outer_tail_length))
                 else:
                     tm_pos_wins[tm_pos].append(
-                        WinGrade(i, i + MIN_LENGTH + inc, 'fwd', topo_entry.seq[i:i + MIN_LENGTH + inc],
-                                 topo_entry.hydro_polyval, topo_entry.param_list, inner_tail=fwd_inner_tail))
-                    tm_pos_wins[tm_pos].append(WinGrade(i, i + MIN_LENGTH + inc, 'rev',
-                                                        topo_entry.seq[i:i + MIN_LENGTH + inc][::-1],
-                                                        topo_entry.hydro_polyval, topo_entry.param_list,
-                                                        inner_tail=rev_inner_tail))
+                        WinGrade(i, i + MIN_LENGTH + inc, 'fwd',
+                                 topo_entry.seq[i:i + MIN_LENGTH + inc],
+                                 topo_entry.hydro_polyval, topo_entry.param_list,
+                                 inner_tail=fwd_inner_tail,
+                                 outer_tail=fwd_outer_tail))
+                    tm_pos_wins[tm_pos].append(
+                        WinGrade(i, i + MIN_LENGTH + inc, 'rev',
+                                 topo_entry.seq[i:i + MIN_LENGTH + inc][::-1],
+                                 topo_entry.hydro_polyval, topo_entry.param_list,
+                                 inner_tail=rev_inner_tail,
+                                 outer_tail=rev_outer_tail))
             else:
                 if not is_not_helical(topo_entry.seq, (i, i + MIN_LENGTH + inc), psi) and \
                                 count_charges(topo_entry.seq[i:i + MIN_LENGTH + inc]) < 3 and \
@@ -399,17 +419,21 @@ def win_grade_generator(topo_entry, mode='all', tm_pos_mode='selective'):
                                         ['R', 'K', 'H', 'D', 'E', 'N', 'Q']]) < 5:
                     if topo_entry.param_list['with_msa']:
                         grades.append(retrieve_seqs(msa_obj, i, i + MIN_LENGTH + inc, 'fwd',
-                                                    inner_tail_length=inner_tail_length))
+                                                    inner_tail_length=inner_tail_length,
+                                                    outer_tail_length=outer_tail_length))
                         grades.append(retrieve_seqs(msa_obj, i, i + MIN_LENGTH + inc, 'rev',
-                                                    inner_tail_length=inner_tail_length))
+                                                    inner_tail_length=inner_tail_length,
+                                                    outer_tail_length=outer_tail_length))
 
                     else:
                         grades.append(WinGrade(i, i + MIN_LENGTH + inc, 'fwd', topo_entry.seq[i:i + MIN_LENGTH + inc],
                                                topo_entry.hydro_polyval, topo_entry.param_list,
-                                               inner_tail=fwd_inner_tail))
-                        grades.append(
-                            WinGrade(i, i + MIN_LENGTH + inc, 'rev', topo_entry.seq[i:i + MIN_LENGTH + inc][::-1],
-                                     topo_entry.hydro_polyval, topo_entry.param_list, inner_tail=rev_inner_tail))
+                                               inner_tail=fwd_inner_tail,
+                                               outer_tail=fwd_outer_tail))
+                        grades.append(WinGrade(i, i + MIN_LENGTH + inc, 'rev', topo_entry.seq[i:i + MIN_LENGTH + inc][::-1],
+                                               topo_entry.hydro_polyval, topo_entry.param_list,
+                                               inner_tail=rev_inner_tail,
+                                               outer_tail=rev_outer_tail))
         sys.stdout.write("-")
         sys.stdout.flush()
     sys.stdout.write("]\n")
@@ -559,6 +583,7 @@ def topo_graph(topo_entry, wins):
         else:
             [G.add_edge(source_node, a, weight=a.grade) for a in wins if a.end <= topo_entry.csts.tm_pos[0][1] +
              topo_entry.csts.tm_pos_fidelity]  # add all win to source edges
+
     for win1 in wins:  # add all win to win edges where condition applies
         cst_after = find_cst_after(topo_entry.csts, win1)
         for win2 in wins:
@@ -571,6 +596,7 @@ def topo_graph(topo_entry, wins):
                         G.add_edge(win1, win2, weight=win2.grade)
                     elif topo_entry.param_list['with_msa']:
                         G.add_edge(win1, win2, weight=win2.msa_grade)
+
     print "About to Bellman-Ford"
     print 'found %i nodes' % G.number_of_nodes()
     if G.number_of_nodes() == 0:
@@ -737,6 +763,31 @@ def topo_graph_only(topo_entry, wins):
         return best_fwd, best_rev
     else:
         return best_rev, best_fwd
+
+
+def edge_grade(w1, w2, polyval):
+    """
+    :type polyval: dict
+    :param polyval:
+    :param w1: WinGrade 1
+    :param w2: WinGrade 2
+    :return: the edges weight, accounting for inner and outer tails
+    """
+    if w1.direction == w2.direction:
+        assert "same direction"
+    overlap = (w1.end + TAIL_LENGTH) - (w2.begin - TAIL_LENGTH)
+    if overlap == 0:
+            return w2.grade
+    if w1.direction == 'fwd' and w2.direction == 'rev':
+        penalty = score_KR_tail(w2.outer_tail[w1.end+TAIL_LENGTH+1:], polyval, inner_outer='outer')
+
+    elif w1.direction == 'rev' and w2.direction == 'fwd':
+        penalty = score_KR_tail(w2.inner_tail[w1.end+TAIL_LENGTH+1:], polyval, inner_outer='inner')
+
+    else:
+        assert "impossible edge"
+
+    return w2.grade - penalty
 
 
 if __name__ == '__main__':
