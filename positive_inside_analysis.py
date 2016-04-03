@@ -3,16 +3,10 @@
 import os
 import argparse
 from scipy import stats
-from TMpredict_WinGrade import parse_rostlab_db
-from WinGrade import parse_WGP, grade_segment, WinGradePath, WinGrade, flip_win_grade
-from TMConstraint import TMConstraint, pred2cst
-from sasa_survey_26Aug import parse_rsa, nacces_for_win, pair_wise_aln_from_seqs, parse_standard_data
-from topo_strings_comparer import spc_parser
-from TMpredict_WinGrade import topo_VH_parser
 import matplotlib.pyplot as plt
-import matplotlib
+import matplotlib as mpl
 from matplotlib.ticker import FuncFormatter
-from ProcessEntry import MakeHydrophobicityGrade
+
 import pickle
 import pandas as pd
 from scipy.stats import gaussian_kde, ttest_1samp, linregress
@@ -20,29 +14,37 @@ import numpy as np
 from collections import OrderedDict
 import sys
 import shutil
-import pandas as pd
 
 from soluble_helix_grade import collect_win_analysis
+from ProcessEntry import MakeHydrophobicityGrade
+from TMpredict_WinGrade import parse_rostlab_db
+from WinGrade import parse_WGP, grade_segment, WinGradePath, WinGrade, flip_win_grade, win_KR_score
+from TMConstraint import TMConstraint, pred2cst
+from sasa_survey_26Aug import parse_rsa, nacces_for_win, pair_wise_aln_from_seqs, parse_standard_data
+from topo_strings_comparer import spc_parser
+from TMpredict_WinGrade import topo_VH_parser
 
-
-matplotlib.rc_context(fname="/home/labs/fleishman/jonathaw/.matplotlib/publishable_matplotlibrc")
-# matplotlib.rc_context(fname="/Volumes/labs/fleishman/jonathaw/.matplotlib/publishable_matplotlibrc")
+mpl.rc_context(fname="/home/labs/fleishman/jonathaw/.matplotlib/publishable_matplotlibrc")
+# matplotlib.rc_context(fname="/home/labs/fleishman/jonathaw/.matplotlib/matplotlibrc_2")
 polyval = MakeHydrophobicityGrade()
 
 
 def to_percent(y, position):
-    if y == 0:
-        return ''
+    val = ''
     # Ignore the passed in position. This has the effect of scaling the default
     # tick locations.
     s = str(int(100 * round(y, 2)))
 
     # The percent symbol needs escaping in latex
 
-    if matplotlib.rcParams['text.usetex'] is True:
-        return s + r'$\%$'
+    if mpl.rcParams['text.usetex'] is True:
+        val = s + r'$\$'
     else:
-        return s + '%'
+        val = s + ''
+    if val == '0':
+        return ''
+    else:
+        return val
 
 
 def analyse_sasa_and_positive(write=False, with_sasa=True, vh=False):
@@ -165,15 +167,16 @@ def analyse_results():
 
 def parse_prd(file_name):
     text = open(file_name, 'r').read()
+    full_seq = text.split('seq')[1].split('\n')[0]
     one_liner = text.split('best_path ')[1].split('sec_path')[0].replace('\n', ':')
     if '{ [ }~> total_grade' in one_liner:
         return None, None
-    best_wgp = parse_WGP(one_liner)
+    best_wgp = parse_WGP(one_liner, full_seq)
 
     one_liner = text.split('sec_path ')[1].split('ddG paths')[0].replace('\n', ':')
     if '{ [ }~> total_grade' in one_liner:
         return None, None
-    sec_wgp = parse_WGP(one_liner)
+    sec_wgp = parse_WGP(one_liner, full_seq)
     return best_wgp, sec_wgp
 
 
@@ -807,8 +810,13 @@ def vh_boxplots():
 def topgraphMSA_phase_diagram():
     from WinGrade import topo_string_to_WGP
     from topo_strings_comparer import overlappM
+    from TMpredict_WinGrade import topo_VH_parser
     # msa_path = '/home/labs/fleishman/elazara/length_21/w_0_with_MSA/'
-    msa_path = '/home/labs/fleishman/elazara/TopGraph/TopGarph_symmetric/vh/msa_no_fildel/for_jonathan/' # vh msa symmetric
+    # msa_path = '/home/labs/fleishman/elazara/TopGraph/TopGarph_symmetric/vh/msa_no_fildel/for_jonathan/' # vh msa symmetric
+    # msa_path = '/home/labs/fleishman/elazara/TopGraph/TopGarph_symmetric/vh/msa/correct_prd/' # vh msa symmetric 20.3
+    # msa_path = '/home/labs/fleishman/elazara/TopGraph/TopGarph_symmetric/vh/plain/correct_c_term/' # vh plain 21.3
+    msa_path = '/home/labs/fleishman/elazara/TopGraph/TopGarph_symmetric/vh/topcons/correct_c_term/' # vh topcons 21.3
+    # msa_path = '/home/labs/fleishman/elazara/TopGraph/TopGarph_symmetric/rost/msa/correct_prd/correct_c_term_prds/' # rost msa 21.3
     prd_files = [a for a in os.listdir(msa_path) if '.prd' in a and 'msa' not in a]
     rost_db = parse_rostlab_db()
     vh_names_lower_to_wierd = vh_name_dict()
@@ -821,9 +829,11 @@ def topgraphMSA_phase_diagram():
             continue
         try:
             spoc = spc_parser(rost_db[prd_file[:-4]]['name'])['topcons']
-            wgp_pdbtm = topo_string_to_WGP(rost_db[prd_file[:-4]]['pdbtm'], rost_db[prd_file[:-4]]['seq'])
+            # wgp_pdbtm = topo_string_to_WGP(rost_db[prd_file[:-4]]['pdbtm'], rost_db[prd_file[:-4]]['seq'])
         except:
-            spoc = spc_parser(vh_names_lower_to_wierd[prd_file[:-4]])['topcons']
+            vh_name = vh_names_lower_to_wierd[prd_file[:-4]]
+            spoc = spc_parser(vh_name)['topcons']
+            vh_db = topo_VH_parser(vh_name)
         signal = [0, spoc.count('s') + spoc.count('S')]
 
         for w in wgp.path:
@@ -836,7 +846,14 @@ def topgraphMSA_phase_diagram():
             #     print 'fail', w
             #     print wgp_pdbtm
             #     false.append([w.grade, w.grade-grade_segment(w.seq[::-1], polyval)])
-            result.append([w.grade, w.grade-grade_segment(w.seq[::-1], polyval)])
+            try:
+                result.append([w.grade_w_tails, w.grade_w_tails-flip_win_grade(w, vh_db['seq']).grade_w_tails])
+                # result.append([w.grade, w.grade-flip_win_grade(w, vh_db['seq']).grade])
+            except:
+                result.append([w.grade_w_tails,
+                               w.grade_w_tails-flip_win_grade(w, rost_db[prd_file.split('.')[0]]['seq']).grade_w_tails])
+                # result.append([w.grade,
+                #                w.grade-flip_win_grade(w, rost_db[prd_file.split('.')[0]]['seq']).grade])
 
     if args['mode'] != 'msa':
         return [a[0] for a in result], [a[1] for a in result]
@@ -886,6 +903,14 @@ def draw_random_combined_scatter_hist():
     plt.show()
 
 
+def nearest_int(num):
+    last_decimal = int((num % 10)*10)
+    if last_decimal < 5:
+        return int(num)
+    else:
+        return int(num+1)
+
+
 def draw_combined_scatter_hist():
     import matplotlib.gridspec as gridspec
     import pickle
@@ -903,51 +928,174 @@ def draw_combined_scatter_hist():
         print 'reading pickled data'
         soluble_dGs, soluble_ddGs, tm_dGs, tm_ddGs = pickle.load(open(wp, 'rb'))
 
-    soluble_color = 'cornflowerblue'
-    tm_color = 'indianred'
+    # calc quartile percentages (what percentage of points are in each quartile)
+    quartiles = {t_: {'pp': 0, 'pn': 0, 'np': 0, 'nn': 0} for t_ in ['sol', 'tm']}
+    for dG, ddG in zip(soluble_dGs, soluble_ddGs):
+        quartiles['sol']['pp'] += 1 if dG > 0 and ddG > 0 else 0
+        quartiles['sol']['pn'] += 1 if dG > 0 and ddG < 0 else 0
+        quartiles['sol']['np'] += 1 if dG < 0 and ddG > 0 else 0
+        quartiles['sol']['nn'] += 1 if dG < 0 and ddG < 0 else 0
+    for dG, ddG in zip(tm_dGs, tm_ddGs):
+        quartiles['tm']['pp'] += 1 if dG > 0 and ddG > 0 else 0
+        quartiles['tm']['pn'] += 1 if dG > 0 and ddG < 0 else 0
+        quartiles['tm']['np'] += 1 if dG < 0 and ddG > 0 else 0
+        quartiles['tm']['nn'] += 1 if dG < 0 and ddG < 0 else 0
+    quartiles_percentage = {'sol': {t_: nearest_int(100.*num/len(soluble_dGs)) for t_, num in quartiles['sol'].items()}}
+    quartiles_percentage['tm'] = {t_: nearest_int(100.*num/len(tm_dGs)) for t_, num in quartiles['tm'].items()}
+    print 'found quartiles percents'
+    print quartiles_percentage
+
+    
+    soluble_color = 'indianred'
+    tm_color = 'cornflowerblue'
 
     formatter = FuncFormatter(to_percent)
+    mpl.rcParams['axes.linewidth'] = 2
+    mpl.rc('font', family='sans-serif') 
+    mpl.rc('font', serif='Helvetica Neue') 
+    mpl.rc('text', usetex='false') 
+    mpl.rcParams.update({'font.size': 22})
 
-    xmin, xmax = min(soluble_dGs+tm_dGs)-1, max(soluble_dGs+tm_dGs)+1
-    ymin, ymax = min(soluble_ddGs+tm_ddGs)-1, max(soluble_ddGs+tm_ddGs)+1
+    # compute density, and density covariance for every distribution
+    # http://stackoverflow.com/questions/4150171/how-to-create-a-density-plot-in-matplotlib
+    print 'calculating densities'
+    covarience_factor_lambda = 0.15  # was .25
+    sol_dG_density = gaussian_kde(soluble_dGs)
+    sol_dG_density.covariance_factor = lambda: covarience_factor_lambda
+    sol_dG_density._compute_covariance()
+    sol_ddG_density = gaussian_kde(soluble_ddGs)
+    sol_ddG_density.covariance_factor = lambda: covarience_factor_lambda
+    sol_ddG_density._compute_covariance()
+    tm_dG_density = gaussian_kde(tm_dGs)
+    tm_dG_density.covariance_factor = lambda: covarience_factor_lambda
+    tm_dG_density._compute_covariance()
+    tm_ddG_density = gaussian_kde(tm_ddGs)
+    tm_ddG_density.covariance_factor = lambda: covarience_factor_lambda
+    tm_ddG_density._compute_covariance()
 
-    # arrang
+    # fig specific lims
+    xlims, ylims = [-17, 11], [-9, 7]
+
+    # find and set ranges
+    xmin, xmax = xlims[0], xlims[1] #round(min(soluble_dGs+tm_dGs)-1), round(max(soluble_dGs+tm_dGs)+1)
+    ymin, ymax = ylims[0], ylims[1] #round(min(soluble_ddGs+tm_ddGs)-1), round(max(soluble_ddGs+tm_ddGs)+1)
+    dG_range = np.linspace(xmin, xmax, 100) # should be 1000
+    ddG_range = np.linspace(ymin, ymax, 100) # should be 1000
+
+    # compute 2D densities
+    print 'calculating 2D densities'
+    sol_xx, sol_yy = np.mgrid[xmin:xmax:100j, ymin:ymax:100j]
+    sol_positions = np.vstack([sol_xx.ravel(), sol_yy.ravel()])
+    sol_values = np.vstack([soluble_dGs, soluble_ddGs])
+    sol_kernel = stats.gaussian_kde(sol_values)
+    sol_f = np.reshape(sol_kernel(sol_positions).T, sol_xx.shape)
+    
+    tm_xx, tm_yy = np.mgrid[xmin:xmax:100j, ymin:ymax:100j]
+    tm_positions = np.vstack([tm_xx.ravel(), tm_yy.ravel()])
+    tm_values = np.vstack([tm_dGs, tm_ddGs])
+    tm_kernel = stats.gaussian_kde(tm_values)
+    tm_f = np.reshape(tm_kernel(tm_positions).T, tm_xx.shape)
+    print 'finished 2D densities'
+
+    sol_levels = np.linspace(sol_f.min(), sol_f.max(), num=10)
+    tm_levels = np.linspace(tm_f.min(), tm_f.max(), num=10)
+    sol_col_map = plt.cm.get_cmap('Reds')
+    sol_col_map.set_under('white', alpha=1.0)
+    sol_col_map.set_bad(color='white', alpha=1.0)
+    tm_col_map = plt.cm.get_cmap('Blues')
+    tm_col_map.set_under('white', alpha=1.0)
+    tm_col_map.set_bad(color='white', alpha=1.0)
+
+    # arange figure layout
     gs1 = gridspec.GridSpec(3, 3)
     gs1.update(wspace=0.0, hspace=0.0)
     ax_scat = plt.subplot(gs1[1:, :-1])
     ax_hist_dG = plt.subplot(gs1[0, :-1])
     ax_hist_ddG = plt.subplot(gs1[1:, -1])
 
-    ax_scat.axhline(color='k', linestyle='dotted', markeredgewidth=8)
-    ax_scat.axvline(color='k', linestyle='dotted', markeredgewidth=8)
-    ax_scat.scatter(soluble_dGs, soluble_ddGs, alpha=0.2, color=soluble_color)
-    ax_scat.scatter(tm_dGs, tm_ddGs, alpha=0.4, color=tm_color)
-    ax_scat.set_xlim([xmin, xmax])
-    ax_scat.set_ylim([ymin, ymax])
+    # main scatt
+    ax_scat.axhline(color='k', linestyle='dotted', markeredgewidth=60)#, linewidth=16)
+    ax_scat.axvline(color='k', linestyle='dotted', markeredgewidth=60)#, linewidth=16)
+    # ax_scat.scatter(soluble_dGs, soluble_ddGs, alpha=0.4, color=soluble_color)
+    c1 = ax_scat.contourf(sol_xx, sol_yy, sol_f, cmap=sol_col_map, alpha=0.8, levels=sol_levels, extend="both", label='Soluble')#, cmap='Reds')
+    c1.set_clim(sol_f.min(), sol_f.max())
+    c1.cmap.set_under('white')
+    c1.cmap.set_over('white')
+    # ax_scat.imshow(np.rot90(sol_f), cmap='Blues', extent=[xmin, xmax, ymin, ymax])
+    # ax_scat.imshow(np.rot90(tm_f), cmap='Reds', extent=[xmin, xmax, ymin, ymax])
+    c2 = ax_scat.contourf(tm_xx, tm_yy, tm_f, cmap=tm_col_map, alpha=0.4, levels=tm_levels, extend="both", label='Transmembrane')#, cmap='Blues')
+    c2.set_clim(tm_f.min(), tm_f.max())
+    c2.cmap.set_under('white')
+    c2.cmap.set_over('white')
+    # ax_scat.scatter(tm_dGs, tm_ddGs, alpha=0.4, color=tm_color)
+    ax_scat.set_xlim(xlims)
+    ax_scat.set_ylim(ylims)
     ax_scat.set_xlabel('dG')
     ax_scat.set_ylabel('ddG')
+    # label positive-positive quartile
+    left, right, up, down = -13, 9.5, 5.5, -7.5
+    ax_scat.text(right, up,  '{:2.0f}%'.format(quartiles_percentage['sol']['pp']), color=soluble_color, horizontalalignment='right')
+    ax_scat.text(right, up-1, '{:2.0f}%'.format(quartiles_percentage['tm']['pp']), color=tm_color, horizontalalignment='right')
+    # label positive-negative quartile
+    ax_scat.text(right, down, '{:2.0f}%'.format(quartiles_percentage['sol']['pn']), color=soluble_color, horizontalalignment='right')
+    ax_scat.text(right, down-1, '{:2.0f}%'.format(quartiles_percentage['tm']['pn']), color=tm_color, horizontalalignment='right')
+    # label negative-negative quartile
+    ax_scat.text(left, down, '{:2.0f}%'.format(quartiles_percentage['sol']['nn']), color=soluble_color, horizontalalignment='right')
+    ax_scat.text(left, down-1, '{:2.0f}%'.format(quartiles_percentage['tm']['nn']), color=tm_color, horizontalalignment='right')
+    # label negative-positive quartile
+    ax_scat.text(left, up, '{:' '2.0f}%'.format(quartiles_percentage['sol']['np']), color=soluble_color, horizontalalignment='right')
+    ax_scat.text(left, up-1, '{:' '2.0f}%'.format(quartiles_percentage['tm']['np']), color=tm_color, horizontalalignment='right')
 
-    ax_hist_dG.hist(soluble_dGs, color=soluble_color, alpha=0.2, normed=1, bins=50)
-    ax_hist_dG.hist(tm_dGs, color=tm_color, alpha=0.4, normed=1, bins=50)
+    # dG, X density plot
+    # ax_hist_dG.hist(soluble_dGs, color=soluble_color, alpha=0.2, normed=1, bins=50)
+    # ax_hist_dG.hist(tm_dGs, color=tm_color, alpha=0.4, normed=1, bins=50)
+    ax_hist_dG.plot(dG_range, sol_dG_density(dG_range), color=soluble_color, linewidth=2)
+    ax_hist_dG.plot(dG_range, tm_dG_density(dG_range), color=tm_color, linewidth=2)
+    ax_hist_dG.fill_between(dG_range, 0, sol_dG_density(dG_range), facecolor=soluble_color, alpha=0.4)
+    ax_hist_dG.fill_between(dG_range, 0, tm_dG_density(dG_range), facecolor=tm_color, alpha=0.4)
     ax_hist_dG.tick_params(axis='both', which='both', bottom='off', top='off', labelbottom='off', right='off', left='off')
-    ax_hist_dG.set_xlim([xmin, xmax])
+    ax_hist_dG.axvline(color='k', linestyle='dotted', markeredgewidth=60)
+    ax_hist_dG.set_xlim(xlims)
+    ax_hist_dG.set_yticks(np.arange(min(sol_dG_density(dG_range)), max(sol_dG_density(dG_range)), .05))
     ax_hist_dG.yaxis.set_major_formatter(formatter)
-    ax_hist_dG.set_ylabel('Frequency')
+    ax_hist_dG.set_ylabel('Frequency (%)')
 
-    ax_hist_ddG.hist(soluble_ddGs, color=soluble_color, alpha=0.2, orientation='horizontal', normed=1, bins=50)
-    ax_hist_ddG.hist(tm_ddGs, color=tm_color, alpha=0.4, orientation='horizontal', normed=1, bins=50)
+    # ax_hist_ddG.hist(soluble_ddGs, color=soluble_color, alpha=0.2, orientation='horizontal', normed=1, bins=50)
+    # ax_hist_ddG.hist(tm_ddGs, color=tm_color, alpha=0.4, orientation='horizontal', normed=1, bins=50)
+    ax_hist_ddG.plot(sol_ddG_density(ddG_range), ddG_range, color=soluble_color, linewidth=2)
+    ax_hist_ddG.plot(tm_ddG_density(ddG_range), ddG_range, color=tm_color, linewidth=2)
+    ax_hist_ddG.fill_betweenx(ddG_range, 0, sol_ddG_density(ddG_range), facecolor=soluble_color, alpha=0.4)
+    ax_hist_ddG.fill_betweenx(ddG_range, 0, tm_ddG_density(ddG_range), facecolor=tm_color, alpha=0.4)
     ax_hist_ddG.tick_params(axis='both', which='both', bottom='off', top='off', labelleft='off', right='off', left='off')
-    ax_hist_ddG.set_ylim([ymin, ymax])
+    ax_hist_ddG.axhline(color='k', linestyle='dotted', markeredgewidth=60)
+    ax_hist_ddG.set_ylim(ylims)
+    ax_hist_ddG.set_xticks(np.arange(min(sol_ddG_density(ddG_range)), max(sol_ddG_density(ddG_range)), .05))
     ax_hist_ddG.xaxis.set_major_formatter(formatter)
-    ax_hist_ddG.set_xlabel('Frequency')
+    ax_hist_ddG.set_xlabel('Frequency (%)')
 
+    plt.legend(loc='best')
+
+    plt.savefig('/home/labs/fleishman/jonathaw/phase_diagram.pdf', dpi=600, pad_inches=0.3)
+    plt.show()
+
+
+def just_legend():
+    xs = range(10)
+    plt.plot(xs, [np.sin(x) for x in xs], label='Soluble', color='indianred')
+    plt.plot(xs, [np.cos(x) for x in xs], label='Transmembrane', color='cornflowerblue')
+    plt.legend()
     plt.show()
 
 
 def analyse_positive_inside_results(args):
-    score_threshold = -1
+    """
+    full positive inside analysis
+    """
+    score_threshold = -1.5
     # work_path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_10.3/with_msa_no_csts/'
-    work_path = '/home/labs/fleishman/elazara/TopGraph/TopGarph_symmetric/rost/temp_msa_50/correct_only/correct_c_term_non_conservative/' # rostr msa correct by C term
+    # work_path = '/home/labs/fleishman/elazara/TopGraph/TopGarph_symmetric/rost/temp_msa_50/correct_only/correct_c_term_non_conservative/' # rostr msa correct by C term
+    # work_path = '/home/labs/fleishman/elazara/TopGraph/TopGarph_symmetric/rost/msa/correct_prd/correct_c_term_prds/' # rost msa correct C'
+    work_path = '/home/labs/fleishman/elazara/TopGraph/TopGarph_symmetric/rost/msa/c_term_correct_file/'
     prd_files = [a for a in os.listdir(work_path) if '.prd' in a]
 
     rost_db = parse_rostlab_db()
@@ -972,10 +1120,12 @@ def analyse_positive_inside_results(args):
 
         for i, pos_w in enumerate(pos_wins):
             # print 'positive window', pos_w
-            delta_wgp_flipped, flipped_grade, flipped_c_term, flipped_n_term = \
+            delta_wgp_flipped, flipped_grade, flipped_c_term, flipped_n_term, flipped_wgp = \
                 find_constrained_delta(full_wgp, pos_w, rost_prd['seq'])
             w_sasa = win_sasa([pos_w], rost_prd['pdb'], rost_prd['chain'], name, rost_prd['seq'])[0]
             pos_win_index = [i+1 for i, w in enumerate(full_wgp.path) if w == pos_w][0]
+            original_wgp_KR = sum(win_KR_score(w, polyval)+w.inner_tail_score+w.outer_tail_score for w in full_wgp.path)
+            flipped_wgp_KR = sum(win_KR_score(w, polyval)+w.inner_tail_score+w.outer_tail_score  for w in flipped_wgp.path)
             df = df.append({'uniprot': name,
                             'pos_win_grade': pos_w.grade,
                             'pos_win_num': pos_win_index,
@@ -985,9 +1135,41 @@ def analyse_positive_inside_results(args):
                             'pos_total': '%i (%i)' % (pos_win_index, full_wgp.win_num),
                             'seq': pos_w.seq if pos_w.direction == 'fwd' else pos_w.seq[::-1],
                             'flipped_c_term': 'in' if flipped_c_term == 'rev' else 'out',
-                            'flipped_n_term': 'in' if flipped_n_term == 'rev' else 'out'},
+                            'flipped_n_term': 'in' if flipped_n_term == 'fwd' else 'out',
+                            'original_wgp': full_wgp,
+                            'flipped_wgp': flipped_wgp,
+                            'original_KR': original_wgp_KR,
+                            'flipped_KR': flipped_wgp_KR,
+                            'delta_KR': original_wgp_KR-flipped_wgp_KR
+                            },
                            ignore_index=True)
-    print df
+    # print df
+    return df
+
+
+def dG_plot_PI():
+    file_path = '/home/labs/fleishman/jonathaw/membrane_prediciton/data_sets/rostlab_db/positive_inside_10.3/dG_plot_PI.obj'
+    if not os.path.isfile(file_path):
+        print 'creating data'
+        df = analyse_positive_inside_results(args)
+        pickle.dump(df, open(file_path, 'wb'))
+    else:
+        print 'reading data'
+        df = pickle.load(open(file_path, 'rb'))
+    print 'gathered DF'
+    fig = plt.figure()
+    print 'df is sized', df.shape
+    for i, row in df.iterrows():
+        sub = plt.subplot(6, 4, 1+i)
+        print 'at protein %s, pos win is nume %i' % (row['uniprot'], row['pos_win_num'])
+        print row['original_wgp']
+        plt.plot([i-row['pos_win_num']+1 for i, w in enumerate(row['original_wgp'].path)],
+                 [w.grade for w in row['original_wgp'].path])
+        plt.plot([i-row['pos_win_num']+1 for i, w in enumerate(row['original_wgp'].path)],
+                 [w.grade-flip_win_grade(w, row['seq']).grade for w in row['original_wgp'].path], color='red')
+        plt.axhline()
+        plt.title(row['uniprot'])
+    plt.show()
 
 
 def find_constrained_delta(wgp, w_pos, full_seq, verbose=False):
@@ -1012,7 +1194,7 @@ def find_constrained_delta(wgp, w_pos, full_seq, verbose=False):
             #                            inner_tail=find_inner_tail(full_seq, w, 'fwd' if w.direction == 'rev' else 'rev')
             #                            ))
             opt_1_list.append(flip_win_grade(w, full_seq))
-    opt_1_wgp = WinGradePath(opt_1_list)
+    opt_1_wgp = WinGradePath(opt_1_list, full_seq)
 
     # crerate wgp where all wins before pos win are flipped
     opt_2_list = []
@@ -1026,7 +1208,7 @@ def find_constrained_delta(wgp, w_pos, full_seq, verbose=False):
             #                            inner_tail=find_inner_tail(full_seq, w, 'fwd' if w.direction == 'rev' else 'rev')
             #                            ))
             opt_2_list.append(flip_win_grade(w, full_seq))
-    opt_2_wgp = WinGradePath(opt_2_list)
+    opt_2_wgp = WinGradePath(opt_2_list, full_seq)
 
     best_wgp = opt_1_wgp if opt_1_wgp.total_grade < opt_2_wgp.total_grade else opt_2_wgp
 
@@ -1037,7 +1219,7 @@ def find_constrained_delta(wgp, w_pos, full_seq, verbose=False):
         print 'best\n', best_wgp
         print 'seq %s\n' % full_seq
 
-    return wgp.total_grade - best_wgp.total_grade, best_wgp.total_grade, best_wgp.c_term, best_wgp.path[0].direction
+    return wgp.total_grade - best_wgp.total_grade, best_wgp.total_grade, best_wgp.c_term, best_wgp.path[0].direction, best_wgp
 
 
 def find_inner_tail(full_seq, w, direction):
@@ -1045,7 +1227,6 @@ def find_inner_tail(full_seq, w, direction):
         return full_seq[max([0, w.begin-5]): w.begin]
     elif direction == 'rev':
         return full_seq[w.end: min([w.end+5, len(full_seq)])]
-
 
 
 def vh_name_dict():
@@ -1095,7 +1276,13 @@ if __name__ == '__main__':
         draw_combined_scatter_hist()
 
     elif args['mode'] == 'new_pos':
-        analyse_positive_inside_results(args)
+        print analyse_positive_inside_results(args)
+
+    elif args['mode'] == 'legend':
+        just_legend()
+
+    elif args['mode'] == 'dG_plot_PI':
+        dG_plot_PI()
 
     elif args['mode'] == 'test':
         draw_combined_scatter_hist()
