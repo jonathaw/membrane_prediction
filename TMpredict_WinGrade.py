@@ -1,7 +1,8 @@
 #!/usr/bin/env python2.7
 # coding=utf-8
-from WinGrade import *
-from HphobicityScore import *
+from WinGrade import WinGrade
+# from HphobicityScore import *
+from ProcessEntry import create_topo_entry, process_entry
 
 
 def main():
@@ -40,7 +41,7 @@ def main():
     parser.add_argument('-db', default=None)
     parser.add_argument('-run_type', default='msa2plain')
     parser.add_argument('-ss2', default=None, type=str, help='name of ss2 file. if none is provided name.ss2 will be assumed')
-    parser.add_argument('-create_html', default=True, help='whther to create an html')
+    parser.add_argument('-create_html', type=bool)#, default=True, help='whther to create an html', action='store_true')
     parser.add_argument('-with_sp', default=True, help='whether to check the TOPCONS output for spoctopus on signal peptide')
     args = vars(parser.parse_args())
 
@@ -50,12 +51,15 @@ def main():
 
     if args['with_msa'] == 'False':
         args['with_msa'] = False
+
+    args['create_html'] = True
     # if args['create_html'] == 'True':
     #     args['create_html'] = True
     # else:
     #     args['create_html'] = False
     # else:
     #     args['create_html'] = False
+    # args['create_html'] = False
     if args['in_path'][-1] != '/':
         args['in_path'] += '/'
 
@@ -104,7 +108,6 @@ def process_user(args):
 
 
 def process_single_new(args):
-    from ProcessEntry import create_topo_entry, process_entry
     import TMConstraint
     import os
 
