@@ -1,5 +1,7 @@
 #!/usr/bin/env python2.7
+import operator
 import numpy as np
+
 MEMBRANE_HALF_WIDTH = 15
 TAIL_LENGTH = 5
 
@@ -48,29 +50,45 @@ class WinGrade:
         self.outer_tail_score = score_KR_tail(self.outer_tail_seq, polyval, inner_outer='outer')
 
         if grade is None:
-            self.grade = self.grade_segment(polyval) + self.length_element + self.inner_tail_score + self.outer_tail_score
+            self.grade = self.grade_segment(polyval)  # + self.inner_tail_score + self.outer_tail_score
+
         else:
-            self.grade = grade + self.length_element + self.length_element + self.inner_tail_score + self.outer_tail_score
+            self.grade = grade  # + self.inner_tail_score + self.outer_tail_score
+
+        self.grade_w_tails = self.grade + self.inner_tail_score + self.outer_tail_score
+
         self.direction = direction
         self.span = range(self.begin, self.end+1)
 
         self.msa_name = msa_name
         if msa_name is not None:
             self.msa_seq = msa_seq
-            self.msa_grade = grade_segment(msa_seq, polyval) + self.length_element
+            self.msa_grade = grade_segment(msa_seq, polyval) #+ self.length_element
         if self.seq == 'SO2RCE' or self.seq == 'SINK' or self.seq == 'SOURCEPATH':
             self.grade = 0.0
 
     def __repr__(self):
         if self.msa_name is None:
-            return '%-4i to %-4i in %3s => %2.1f %-35s %i %.1f inner_tail %s %.1f outer_tail %s %1.f' % \
-                   (self.begin, self.end, self.direction, self.grade, self.seq, self.charges, self.length_element,
+            return '%-4i to %-4i in %3s => %2.1f %-35s %i 0 inner_tail %s %.1f outer_tail %s %.1f' % \
+                   (self.begin, self.end, self.direction, self.grade, self.seq, self.charges,
                     self.inner_tail_seq, self.inner_tail_score, self.outer_tail_seq, self.outer_tail_score)
         else:
-            return '%-4i to %-4i in %3s => %2.1f %-35s %s %s %.1f inner tail %s %.1f outer_tail %s %.1f' % \
+            return '%-4i to %-4i in %3s => %2.1f %-35s %s %s %.1f 0 inner tail %s %.1f outer_tail %s %.1f' % \
                    (self.begin, self.end, self.direction, self.grade, self.seq, self.msa_name, self.msa_seq,
                     self.msa_grade, self.inner_tail_seq, self.inner_tail_score, self.outer_tail_seq,
                     self.outer_tail_score)
+        # the zero is for topostring compare that split's with length element
+
+    def __eq__(self, other):
+        return ((self.begin == other.begin) and (self.end == other.end) and (self.direction == other.direction) and
+                (self.grade == other.grade) and (self.seq == other.seq))
+
+    def __hash__(self):
+        """
+        this is necessary to make WinGrade hashsable so networkx works with it
+        :return:
+        """
+        return id(self)
 
     def get_html(self, i):
         return '<tr><td>%i</td><td>%-4.i</td><td>%-4.i</td><td>%3s</td><td>%5.3f</td><td>%-35s</td></tr>' % \
@@ -136,9 +154,9 @@ class WinGrade:
 
 
 class WinGradePath:
-    def __init__(self, win_list):
-        import operator
+    def __init__(self, win_list, full_seq):
         self.path = sorted(win_list, key=operator.attrgetter('begin'))
+        self.full_seq = full_seq
         self.total_grade = self.grade_path()
         self.win_num = self.path_length()
         if win_list != []:
@@ -171,7 +189,24 @@ class WinGradePath:
         self.c_term = self.path[-1].direction
 
     def grade_path(self):
-        return sum(a.grade for a in self.path if a.seq != '')
+        from ProcessEntry import grade_edge_tails, MakeHydrophobicityGrade
+        polyval = MakeHydrophobicityGrade()
+        total_ = 0.0
+        for i, w in enumerate(self.path):
+            total_ += w.grade
+
+            # add first win's N' tail
+            if w == self.first():
+                total_ += w.inner_tail_score if w.direction == 'fwd' else w.outer_tail_score
+
+            if w != self.first() and w != self.last():
+                total_ += grade_edge_tails(self.path[i-1], w, self.full_seq, polyval)
+
+            # add last win's C' tail
+            if w == self.last():
+                total_ += w.inner_tail_score if w.direction == 'rev' else w.outer_tail_score
+
+        return total_
 
     def path_length(self):
         return len([a for a in self.path if a.seq != ''])
@@ -240,10 +275,11 @@ def score_KR_tail(inner_tail_, polyval, inner_outer='inner'):
     if inner_outer == 'inner':
         grade = float(sum([-0.1 for aa in inner_tail_ if aa == 'K']))
         grade += float(sum([round(np.polyval(polyval[aa], -MEMBRANE_HALF_WIDTH-5), 1)
-                            for aa in inner_tail_ if aa == 'R']))
+                            for aa in inner_tail_ if aa in [ 'H','R']]))
     elif inner_outer == 'outer':
+        # return 0.0
         grade = float(sum([round(np.polyval(polyval[aa], +MEMBRANE_HALF_WIDTH+5), 1)
-                           for aa in inner_tail_ if aa in ['K', 'R']]))
+                           for aa in inner_tail_ if aa in ['K', 'R','H']]))
     else:
         print 'no tail direction speicified'
     return grade
@@ -386,7 +422,7 @@ def topo_string_to_WGP(topo_string, seq):
     False
     """
     import re
-    wgp = WinGradePath([])
+    wgp = WinGradePath([], seq)
     hhh = re.compile('[hH]*')
     h_list = [(a.start(), a.end()) for a in hhh.finditer(topo_string) if a.end()-a.start() > 1
               and a.end()-a.start() >= 10]
@@ -396,7 +432,7 @@ def topo_string_to_WGP(topo_string, seq):
     return wgp
 
 
-def parse_WGP(text):
+def parse_WGP(text, full_seq):
     """
     :param text:
     :return:
@@ -416,7 +452,7 @@ def parse_WGP(text):
         temp_win = WinGrade(int(ws[0]), int(ws[2]), ws[4], ws[7], grade=float(ws[6]), length_element=float(ws[9]),
                             charges=int(ws[8]), inner_tail=ws[11])
         win_list.append(temp_win)
-    return WinGradePath(win_list)
+    return WinGradePath(win_list, full_seq=full_seq)
 
 
 def flip_win_grade(w, full_seq):
@@ -428,7 +464,7 @@ def flip_win_grade(w, full_seq):
     inner_tail = find_inner_outer_tail(full_seq, w.begin, w.end, 'fwd' if w.direction == 'rev' else 'rev',
                                        inner_outer='inner')
     outer_tail = find_inner_outer_tail(full_seq, w.begin, w.end, 'fwd' if w.direction == 'rev' else 'rev',
-                                       inner_outer='outser')
+                                       inner_outer='outer')
     return WinGrade(w.begin, w.end, 'fwd' if w.direction == 'rev' else 'rev', w.seq[::-1], inner_tail=inner_tail,
                     outer_tail=outer_tail)
 
@@ -452,11 +488,19 @@ def find_inner_outer_tail(full_seq, w_begin, w_end, direction, inner_outer):
     """
     if inner_outer == 'inner':
         if direction == 'fwd':
-            return full_seq[max([0, w_begin-5]): w_begin]
+            return full_seq[max([0, w_begin-TAIL_LENGTH]): w_begin]
         elif direction == 'rev':
-            return full_seq[w_end+1: min([w_end+5, len(full_seq)])+1]
+            return full_seq[w_end: min([w_end+TAIL_LENGTH, len(full_seq)])]
     elif inner_outer == 'outer':
         if direction == 'fwd':
-            return full_seq[w_end+1:min([w_end+5, len(full_seq)])+1]
+            return full_seq[w_end:min([w_end+TAIL_LENGTH, len(full_seq)])]
         elif direction == 'rev':
-            return full_seq[max([0, w_begin-5]): w_begin]
+            return full_seq[max([0, w_begin-TAIL_LENGTH]): w_begin]
+
+
+def win_KR_score(win, polyval):
+    """
+    :type win: WinGrade
+    """
+    seq_A = ''.join(a if a in ['K', 'R'] else 'A' for a in win.seq)
+    return grade_segment(seq_A, polyval)
